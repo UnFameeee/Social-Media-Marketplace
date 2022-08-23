@@ -44,8 +44,8 @@ npm install -g npm@8.1.2
 - https://www.eclipse.org/downloads/
 ```
 - React (Front-End)
-- NestJS (Back-End)
-- MySQL (Database) 
+- NEstJS (Back-End)
+- PostgreSQL (Database) 
 
 ```sh
 ```
@@ -68,4 +68,3 @@ quocthang036@gmail.com
 vu2872001@gmail.com
 junloop888@gmail.com
 ```
-
