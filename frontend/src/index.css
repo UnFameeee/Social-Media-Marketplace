@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components{
+    .navBarIcon{
+        @apply text-slate-500 p-[5px] box-border
+    }
+}
