@@ -4,7 +4,11 @@ import { Sequelize } from 'sequelize-typescript';
 import { DB_TYPE } from '../common/constants/database.constant';
 import * as mysql from "mysql2";
 import { Logger } from '@nestjs/common';
-import { Profile } from 'src/social-media/profile/profile.model';
+import { Profile } from 'src/social-media/profile/model/profile.model';
+import { Friendship } from 'src/social-media/profile/model/friendship.model';
+import { Post } from 'src/social-media/post/model/post.model';
+import { PostComment } from 'src/social-media/post/model/post-comment.model';
+import { PostLike } from 'src/social-media/post/model/post-like.model';
 
 
 export const databaseProviders = [
@@ -31,8 +35,26 @@ export const databaseProviders = [
                     idle: 10000
                 },
             });
-            sequelize.options
-            sequelize.addModels([Profile]);
+            // sequelize.options
+            sequelize.addModels([Profile, Friendship, Post, PostLike, PostComment]);
+            //associations
+            Profile.hasMany(Friendship, { foreignKey: "profile_request"});
+            Profile.hasMany(Friendship, { foreignKey: "profile_target"});
+
+            Profile.hasMany(Post, { foreignKey: "profile_id"});
+            
+            Profile.hasMany(PostComment, { foreignKey: "profile_id"});
+            Post.hasMany(PostComment, { foreignKey: "post_id"});
+
+            Profile.hasMany(PostLike, { foreignKey: "profile_id"});
+            Post.hasMany(PostLike, { foreignKey: "post_id"});
+
+
+
+            // Friendship.belongsTo(Profile);
+            // Profile.belongsToMany(Profile, {through: 'Friendships', as: "profile_target", foreignKey: "profile_target"})
+            // Profile.belongsToMany(Profile, {through: 'Friendships', sourceKey: 'profile_id', targetKey: 'profile_target', as: "profile_target"})
+
 
             const connection = mysql.createConnection({
                 host: configService.get('MYSQL_HOST'),
@@ -44,7 +66,7 @@ export const databaseProviders = [
                 async (err, results) => {
                     results ? console.log(`Connect to Database ${configService.get('MYSQL_DB')} complete!`) : console.log(err);
                     try {
-                        await sequelize.sync({ alter: true })
+                        await sequelize.sync({ alter: false, force: true })
                         await sequelize.authenticate();
                     } catch (err) {
                         // throw err;

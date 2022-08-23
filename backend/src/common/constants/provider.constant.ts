@@ -1,4 +1,5 @@
 export enum PROVIDER {
-    User = 'USER_REPOSITORY',
+    Profile = 'PROFILE_REPOSITORY',
     Auth = 'AUTH_REPOSITORY',
+    Post = 'POST_REPOSITOTY'
 }

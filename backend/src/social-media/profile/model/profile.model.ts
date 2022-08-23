@@ -1,9 +1,7 @@
-import { Exclude } from "class-transformer";
-import { AllowNull, AutoIncrement, Column, DataType, Default, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { AllowNull, AutoIncrement, Column, Default, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import { Role } from "src/common/constants/role.constant";
-
 @Table({
-    tableName: 'User_Test_Data',
+    tableName: "Profiles",
     timestamps: true,
     paranoid: true,
 
@@ -17,32 +15,27 @@ import { Role } from "src/common/constants/role.constant";
         attributes: { exclude: ['password'] },
     },
 
-    indexes:[{unique: true, fields: ['id']}]
+    indexes:[{unique: true, fields: ['profile_id']}]
 })
 export class Profile extends Model<Profile> {
     @AutoIncrement
     @PrimaryKey
-    @Unique({ name: 'cdkey_unique', msg: "cdkey_should_be_unique"}) 
     @AllowNull(false)
     @Column
-    id: number;
+    profile_id: number;
     
     @Column
-    username: string;
+    profile_name: string;
 
-    @Column
-    password: string;
-
-    @Column
-    name: string;
-
-    @Default(18)
-    @Column
-    age: number;
-    
     @Unique
     @Column
     email: string;
+
+    @Column
+    hashPassword: string;
+
+    @Column
+    birth: string;
 
     @AllowNull
     @Column
@@ -56,6 +49,7 @@ export class Profile extends Model<Profile> {
     @Column
     role: Role;
 
+    @AllowNull
     @Column
-    permission?: string;
+    permission: string;
 }
