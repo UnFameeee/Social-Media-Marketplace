@@ -13,7 +13,7 @@ import {
 } from "@mui/icons-material";
 function NavigationBar() {
   return (
-    <div className="flex items-center px-5 pb-2 bg-white fixed w-screen">
+    <div className="flex items-center px-5 pb-1 bg-white fixed w-screen drop-shadow-md z-50">
       <div className="rightNav flex items-center w-[25%] gap-1 pt-3">
         <Facebook className=" text-blue8f3 Icon " style={{ fontSize: 40 }} />
         <div className="">
@@ -51,6 +51,7 @@ function NavigationBar() {
             <hr className="navBarIconHr"/>
           </li>
         </ul>
+        
       </div>
       <div className="w-[25%] flex justify-end gap-3 pt-3 items-center mr-5">
         <MarkEmailUnread className="Icon" style={{ fontSize: 25 }} />
