@@ -2,8 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer components{
-    .navBarIcon{
-        @apply text-slate-500 p-[5px] box-border
-    }
+@layer base {
+  html {
+   @apply bg-greyf1 box-border
+  }
+  img{
+    @apply hover:cursor-pointer
+  }
+}
+@layer components {
+  .Icon{
+    @apply hover:cursor-pointer
+  }
+  .navBarIcon {
+    @apply text-slate-500 p-[5px] box-border delay-[0] hover:text-blue8f3;
+  }
+  .navBarIconHr{
+    @apply invisible group-hover:visible delay-100 absolute h-[5px] border-0 bg-blue8f3 rounded-sm  w-full right-[0];
+  }
+  .navBarLi{
+    @apply px-10 pt-3 relative hover:cursor-pointer hover:bg-greyf1 delay-[0];
+  }
 }
