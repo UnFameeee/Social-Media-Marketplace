@@ -15,18 +15,25 @@
 
 .head {
     position: fixed;
-    left: 50%;
-    top: 50%;
     width: 220px;
     /*Chiều rộng khuôn mặt không tính 2 tai*/
     height: 310px;
     /*Chiều cao là chiều dài khuôn mặt*/
     background-color: var(--skin-color);
-    transform: translate(-50%,-50%); 
     border-radius: 110px;
     /* đoạn border này là = 1/2 width */
     box-shadow:inset 0 60px var(--hair),inset 0 -40px var(--beard);
     /* Đoạn này là tóc và râu*/
+}
+.head-center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%); 
+}
+.head-left {    
+    left: 25%;
+    top: 50%;
+    transform: translateY(-50%); 
 }
 /* Vẽ đường viền khuôn mặt */
 .head::before{
@@ -223,17 +230,7 @@
 }
 
 /* Miệng buồn */
-.sad-chin {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    width: 74px;
-    height: 64px;
-    border-radius: 32px;
-    background-color:var(--skin-color);
-    transform: translate(-50%);
-}
-.sad-chin::before {
+.sad::before {
     content: '';
     position: absolute;
     left: 50%;

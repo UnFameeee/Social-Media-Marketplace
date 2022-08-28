@@ -15,6 +15,7 @@ export default function RadioGroup(props) {
     items,
     color = 'primary',
     row,
+    disabled = false,
   } = props;
 
   return (
@@ -30,7 +31,7 @@ export default function RadioGroup(props) {
           <FormControlLabel
             key={item.id}
             value={item.id}
-            control={<Radio color={color} />}
+            control={<Radio color={color} disabled={disabled} />}
             label={item.title}
           />
         ))}

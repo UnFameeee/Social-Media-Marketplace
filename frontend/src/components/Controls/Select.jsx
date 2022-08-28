@@ -13,7 +13,9 @@ export default function Select(props) {
     value,
     onChange,
     options,
+    noneOption = false,
   } = props;
+
   return (
     <FormControl variant={variant}>
       <InputLabel>{label}</InputLabel>
@@ -23,7 +25,7 @@ export default function Select(props) {
         value={value}
         onChange={onChange}
       >
-        <MenuItem value="">None</MenuItem>
+        {noneOption && <MenuItem value="">None</MenuItem>}
         {
             options.map((item) => (
                 <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>

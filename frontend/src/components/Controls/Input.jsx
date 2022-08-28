@@ -8,6 +8,7 @@ export default function Input(props) {
     value,
     error = null,
     onChange,
+    ...other
   } = props;
   
   return (
@@ -18,6 +19,7 @@ export default function Input(props) {
       value={value}
       onChange={onChange}
       {...(error && { error: true, helperText: error })}
+      {...other}
     />
   );
 }
