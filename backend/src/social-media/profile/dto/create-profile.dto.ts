@@ -1,6 +1,6 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString, Matches, Max, MaxLength, Min, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, Matches, Min, Max, MaxLength, MinLength, IsNumber } from "class-validator";
 
-export class RegisterProfileDto {
+export class CreateProfileDto {
     @IsNotEmpty()
     @IsString()
     profile_name: string;
@@ -26,4 +26,5 @@ export class RegisterProfileDto {
     @IsNotEmpty()
     @IsString()
     birth: string;
+
 }

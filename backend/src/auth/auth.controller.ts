@@ -1,6 +1,9 @@
-import { Body, Controller, HttpCode, Post, Request } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Request, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { RegisterProfileDto } from './dto/register-profile.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import RequestWithProfile from './interface/requestWithProfile.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -12,9 +15,10 @@ export class AuthController {
         return this.authService.register(registerProfileDto);
     }
 
+    @UseGuards(AuthGuard('local'))
     @HttpCode(200)
     @Post("/login")
     async logIn(@Request() request: RequestWithProfile){
-        return this,this.authService.login(request.profile);
+        return this.authService.login(request.user);
     }
 }

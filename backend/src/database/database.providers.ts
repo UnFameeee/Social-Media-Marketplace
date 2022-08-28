@@ -49,13 +49,6 @@ export const databaseProviders = [
             Profile.hasMany(PostLike, { foreignKey: "profile_id"});
             Post.hasMany(PostLike, { foreignKey: "post_id"});
 
-
-
-            // Friendship.belongsTo(Profile);
-            // Profile.belongsToMany(Profile, {through: 'Friendships', as: "profile_target", foreignKey: "profile_target"})
-            // Profile.belongsToMany(Profile, {through: 'Friendships', sourceKey: 'profile_id', targetKey: 'profile_target', as: "profile_target"})
-
-
             const connection = mysql.createConnection({
                 host: configService.get('MYSQL_HOST'),
                 user: configService.get('MYSQL_USER'),
@@ -66,7 +59,7 @@ export const databaseProviders = [
                 async (err, results) => {
                     results ? console.log(`Connect to Database ${configService.get('MYSQL_DB')} complete!`) : console.log(err);
                     try {
-                        await sequelize.sync({ alter: false, force: true })
+                        await sequelize.sync({ alter: false, force: false })
                         await sequelize.authenticate();
                     } catch (err) {
                         // throw err;
