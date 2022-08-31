@@ -1,0 +1,317 @@
+:root {
+    --skin-color: #dbb7ab;
+    --ear-nose-color:hsl(355, 50%, 85%);
+    --hair:#291e1a;
+    --beard:#4e4643;
+}
+
+.wrapper {
+    display: grid;
+    width: 100%;
+    height: 100vh;
+    background-color: #eeebe4;
+    grid-template-columns: auto auto auto;
+}
+
+.head {
+    position: fixed;
+    width: 220px;
+    /*Chiều rộng khuôn mặt không tính 2 tai*/
+    height: 310px;
+    /*Chiều cao là chiều dài khuôn mặt*/
+    background-color: var(--skin-color);
+    border-radius: 110px;
+    /* đoạn border này là = 1/2 width */
+    box-shadow:inset 0 60px var(--hair),inset 0 -40px var(--beard);
+    /* Đoạn này là tóc và râu*/
+}
+.head-center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%); 
+}
+.head-left {    
+    left: 25%;
+    top: 50%;
+    transform: translateY(-50%); 
+}
+/* Vẽ đường viền khuôn mặt */
+.head::before{
+    /*Thêm  1 ô ở giữa khuôn măt */
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50px;
+    width: 220px;
+    /* Cùng chiều rộng với khuôn mặt */
+    height: 220px;
+    /* Chiều cao nhỏ hơn khuôn mặt */
+    background-color: var(--skin-color);
+    border-radius: 60px 60px 110px 110px;
+    z-index: 2;
+    transition: all 0.3s ease-in;
+}
+/*Bóng ở dưới*/
+.head::after{
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -80px;
+    width: 140px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: #d1c9bbbf;
+    transform: translate(-50%);
+}
+
+/*Tai*/
+.ear{
+    position: absolute;
+    top: 127px;
+    width: 55px;
+    height: 55px;
+    background-color: var(--skin-color);
+    border-radius: 50%;
+    transition: all 0.3s ease-in;
+}
+/*Sau khi dựng tai, các đặc điểm trên khuôn mặt sẽ che đi phần giữa của tai, vì vậy hãy để tai di chuyển theo các hướng trái và phải tương ứng*/
+.ear_left{
+    left: -28px;
+}
+.ear_right{
+    right: -28px;
+}
+/*Thêm đường viền bên trong tai*/
+.ear::before{
+    content: '';
+    position: absolute;
+    left: 50%;
+    width: 26px;
+    height: 26px;
+    top: 12px;
+    transform: translate(-50%);
+    background-color: var(--ear-nose-color);
+    border-radius: 50%;
+}
+/*Thêm bông tai*/
+.ear::after{
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    bottom: 6px;
+    background-color: white;
+    border-radius: 50%;
+}
+/*Di chuyển bông tai đến đúng vị trí*/
+.ear_left::after{
+    left: 13px;
+}
+.ear_right::after{
+    right: 13px;
+}
+
+/* Các đặc điểm toàn bộ khuôn mặt */
+.face {
+    position: absolute;
+    left: 50%;
+    top: 105px;
+    /* Cách đỉnh đầu 105px trở xuống */
+    width: 110px;
+    /* 1/2 width */
+    height: 165px;
+    /* từ lông mày đến cằm */
+    transform: translate(-50%);
+    z-index: 3;
+    transition: all 0.3s ease-in;
+}
+
+/* mắt */
+.eye {
+    position: absolute;
+    top: 4px;
+    width: 38px;
+    height: 8px;
+    background-color: #000;
+    border-radius: 4px;
+}
+/* Mục đích là đặt lông mày cố định ở trái và phải */
+.eye_left{
+    left: 0;
+}
+.eye_right{
+    right: 0;
+}
+/* Tạo lòng mắt */
+.eye::before{
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 18px;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background-color: black;
+    transform: translate(-50%);
+    transition: all 0.3s ease-in;
+}
+
+/* Mũi */
+.nose {
+    position: absolute;
+    left: 50%;
+    top: 50px;
+    width: 50px;
+    height: 22px;
+    border-radius: 11px;
+    background-color: var(--ear-nose-color);
+    transform: translate(-50%);
+    z-index: 5;
+}
+.nose::before{
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -28px;
+    height: 50px;
+    width: 22px;
+    border-radius: 50%;
+    background-color: var(--ear-nose-color);
+    transform: translate(-50%);
+}
+
+/* Râu */
+.beard {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    width: 90px;
+    height: 120px;
+    border-radius: 45px;
+    background-color: #000;
+    transform: translate(-50%);
+    transition: all 0.3s ease-in;
+}
+/* Chỗ này là râu xung quanh miệng  */
+.beard::before{
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -8px;
+    height: 22px;
+    width: 22px;
+    border-radius: 50%;
+    background-color: var(--skin-color);
+    transform: translate(-50%);
+}
+
+/* Quai hàm */
+.chin {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 74px;
+    height: 64px;
+    border-radius: 32px;
+    background-color:var(--skin-color);
+    transform: translate(-50%);
+}
+/* Miệng */
+.chin::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 12px;
+    width: 44px;
+    height: 20px;
+    border-radius: 0 0 22px 22px;
+    background-color: white;
+    transform: translate(-50%);
+}
+
+/* Miệng buồn */
+.sad::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 12px;
+    width: 44px;
+    height: 10px;
+    border-radius: 22px 22px 0 0;
+    background-color: white;
+    transform: translate(-50%);
+}
+
+/* Ria mép dưới miệng */
+.beard::after{
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 60px;
+    height: 10px;
+    width: 20px;
+    border-radius: 4px;
+    background-color: #000;
+    transform: translate(-50%);
+}
+/* Trạng thái khi di chuột */
+.move.top:hover ~ .head::before {
+    top: 45px;
+}
+.move.top:hover ~ .head .face {
+    top: 90px;
+}
+.move.top:hover ~ .head .face .eye::before {
+    top: 8px;
+}
+.move.top:hover ~ .head .face .beard {
+    top: 74px;
+}
+.move.top:hover ~ .head .ear {
+    top: 132px;
+}
+
+
+.move.bottom:hover ~ .head::before {
+    top: 60px;
+}
+.move.bottom:hover ~ .head .face {
+    top: 125px;
+}
+.move.bottom:hover ~ .head .face .eye::before {
+    top: 28px;
+}
+.move.bottom:hover ~ .head .face .beard {
+    top: 86px;
+}
+.move.bottom:hover ~ .head .ear {
+    top: 122px;
+}
+
+
+.move.left:hover ~ .head .face {
+    left: 45%;
+}
+.move.left:hover ~ .head .face .eye::before {
+    left: 40%;
+}
+.move.left:hover ~ .head .ear_left {
+    left: -23px;
+}
+.move.left:hover ~ .head .ear_right {
+    right: -33px;
+}
+
+
+.move.right:hover ~ .head .face {
+    left: 55%;
+}
+.move.right:hover ~ .head .face .eye::before {
+    left: 60%;
+}
+.move.right:hover ~ .head .ear_left {
+    left: -33px;
+}
+.move.right:hover ~ .head .ear_right {
+    right: -23px;
+}
