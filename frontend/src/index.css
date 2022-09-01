@@ -4,8 +4,13 @@
 
 @layer base {
   html {
-   @apply bg-greyf1 box-border
+   @apply bg-greyf1 box-border text-[62.5%]
   }
+
+  body {
+    @apply text-[1.6rem]
+  }
+
   img{
     @apply hover:cursor-pointer
   }
@@ -15,16 +20,20 @@
     @apply hover:cursor-pointer
   }
   .navBarIcon {
-    @apply text-slate-500 p-[5px] box-border delay-[0] group-hover:text-blue8f3;
+    @apply text-slate-500 p-[0.5rem] box-border delay-[0] group-hover:text-blue8f3;
   }
   .navBarIconHr{
-    @apply invisible group-hover:visible delay-100 absolute h-[5px] border-0 bg-blue8f3 rounded-sm  w-full right-[0];
+    @apply invisible group-hover:visible delay-100 absolute h-[0.5rem] border-0 bg-blue8f3 rounded-sm  w-full right-[0];
   }
   .navBarLi{
-    @apply px-10 pt-3 relative hover:cursor-pointer hover:bg-greyf1 delay-[0];
+    @apply px-[4rem] pt-[1.2rem] relative hover:cursor-pointer hover:bg-greyf1 delay-[0];
   }
   .leftHomeSideBarLi{
-    @apply flex gap-2 items-center py-3 hover:bg-slate-300 hover:cursor-pointer delay-100 px-6 rounded-md w-full
+    @apply flex gap-[0.8rem] items-center py-[1.2rem] hover:bg-slate-300 hover:cursor-pointer delay-100 px-[2.4rem] rounded-md w-full
+  }
+
+  .hoverChangeBg{
+    @apply py-[0.5rem] hover:bg-slate-300 hover:cursor-pointer delay-100 rounded-md items-center
   }
 
 }
