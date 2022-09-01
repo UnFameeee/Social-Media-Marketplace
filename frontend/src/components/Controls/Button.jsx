@@ -3,7 +3,7 @@ import { Button as MuiButton } from '@mui/material';
 export default function Button(props) {
   const {
     variant = 'contained',
-    text,
+    name,
     size = 'large',
     onClick,
     color = 'primary',
@@ -22,7 +22,7 @@ export default function Button(props) {
       {...(pascalCase && { sx: { textTransform: 'none' } })}
       {...other}
     >
-      {text}
+      {name}
     </MuiButton>
   );
 }
