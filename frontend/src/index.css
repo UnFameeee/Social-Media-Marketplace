@@ -73,6 +73,11 @@ body {
 .MuiFormGroup-root,
 .MuiFormLabel-root,
 .MuiInputBase-root,
-.MuiTypography-root {  
+.MuiTypography-root,
+.MuiCalendarPicker-root
+.MuiPickersDay-root,
+.PrivatePickersYear-root button,
+.PrivatePickersFadeTransitionGroup-root 
+{  
   font-size: 1.6rem !important;
 }

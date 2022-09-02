@@ -3,36 +3,10 @@ import { Box } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import { Link } from 'react-router-dom';
 import { Form, Formik } from 'formik';
-import * as Yup from 'yup';
 import Face from '../../components/LookingFace/Face';
 import CustomForm from '../../components/Form';
-
-const initialValues = {
-  profile_name: '',
-  password: '',
-  repassword: '',
-  age: 0,
-  email: '',
-  birth: '',
-};
-
-const schema = Yup.object().shape({
-  profile_name: Yup.string().required('Required'),
-  password: Yup.string()
-    .min(8, 'Your password length must between 8 - 50')
-    .max(50, 'Your password length must between 8 - 50')
-    .required('Required'),
-  repassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    .required('Required'),
-  age: Yup.number()
-    .min(10, 'Your age must between 10 - 110')
-    .max(110, 'Your age must between 10 - 110')
-    .required('Required'),
-  email: Yup.string()
-    .email('Your email is invalid')
-    .required('Required'),
-});
+import { registerModel, registerSchema, setRegisterModel } from './Auth.model';
+import AuthService from './Auth.service';
 
 export default function Register() {
   const [valid, setValid] = useState(true);
@@ -54,18 +28,18 @@ export default function Register() {
       >
         <Box sx={{ textAlign: 'center' }}>
           <Formik
-            initialValues={initialValues}
-            validationSchema={schema}
+            initialValues={registerModel}
+            validationSchema={registerSchema}
             onSubmit={(values) => {
-              console.log(values);
+              setRegisterModel(values)
+              const data = AuthService.register(values);
+              console.log(data)
             }}
           >
             {({ isValid, dirty, touched }) => {
               if (!!Object.keys(touched).length) {
                 setValid(isValid && dirty);
-              } else {
-                setValid(true);
-              }
+              } 
               return (
                 <Form>
                   <h1
@@ -85,21 +59,25 @@ export default function Register() {
                     label="Username"
                     required
                   />
+                  <CustomForm.InputForm
+                    name="email"
+                    label="Email"
+                    required
+                  />
                   <CustomForm.PasswordInputForm
-                    name="password"
+                    name="hashPassword"
                     label="Password"
                     required
                   />
                   <CustomForm.PasswordInputForm
-                    name="repassword"
+                    name="rePassword"
                     label="Confirm Password"
                     required
                   />
-                  <CustomForm.NumberInputForm
-                    name="age"
-                    label="Age"
-                    min={10}
-                    max={110}
+                  <CustomForm.DatePickerForm
+                    name="birth"
+                    label="Birth"
+                    disableFuture
                     required
                   />
                   <CustomForm.ButtonForm
