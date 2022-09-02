@@ -52,10 +52,14 @@
 html {
   width: 100vw;
   height: 100vh;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Roboto', sans-serif !important;
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
+}
+
+.MuiFormHelperText-root {
+  margin-left: 0 !important;
 }
