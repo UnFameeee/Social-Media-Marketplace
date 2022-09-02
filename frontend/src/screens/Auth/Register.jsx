@@ -8,18 +8,29 @@ import Face from '../../components/LookingFace/Face';
 import CustomForm from '../../components/Form';
 
 const initialValues = {
-  username: '',
+  profile_name: '',
   password: '',
   repassword: '',
+  age: 0,
+  email: '',
+  birth: '',
 };
 
 const schema = Yup.object().shape({
-  username: Yup.string()
-    .email('Please enter a valid email')
+  profile_name: Yup.string().required('Required'),
+  password: Yup.string()
+    .min(8, 'Your password length must between 8 - 50')
+    .max(50, 'Your password length must between 8 - 50')
     .required('Required'),
-  password: Yup.string().required('Required'),
   repassword: Yup.string()
     .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Required'),
+  age: Yup.number()
+    .min(10, 'Your age must between 10 - 110')
+    .max(110, 'Your age must between 10 - 110')
+    .required('Required'),
+  email: Yup.string()
+    .email('Your email is invalid')
     .required('Required'),
 });
 
@@ -70,7 +81,7 @@ export default function Register() {
                     Register
                   </h1>
                   <CustomForm.InputForm
-                    name="username"
+                    name="profile_name"
                     label="Username"
                     required
                   />
@@ -82,6 +93,13 @@ export default function Register() {
                   <CustomForm.PasswordInputForm
                     name="repassword"
                     label="Confirm Password"
+                    required
+                  />
+                  <CustomForm.NumberInputForm
+                    name="age"
+                    label="Age"
+                    min={10}
+                    max={110}
                     required
                   />
                   <CustomForm.ButtonForm

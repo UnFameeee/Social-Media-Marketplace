@@ -51,18 +51,15 @@ export default function Login() {
               if(!!Object.keys(touched).length){
                 setValid(isValid && dirty)
               }
-              else {
-                setValid(true)
-              }
               return (
                 <Form>
                   <h1
                     style={{
                       margin: 0,
                       padding: '18px 0',
-                      fontSize: '36px',
+                      fontSize: '3.6rem',
                       color: 'var(--primary-color)',
-                      lineHeight: '36px',
+                      lineHeight: '3.6rem',
                       fontWeight: 900,
                     }}
                   >

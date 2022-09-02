@@ -43,7 +43,12 @@ export default function CheckBoxForm({
       <FormLabel component="legend">{legend}</FormLabel>
       <FormGroup>
         <FormControlLabel
-          control={<Checkbox {...checkBoxProps} />}
+          control={
+            <Checkbox
+              {...checkBoxProps}
+              sx={{ marginLeft: '2px', transform: 'scale(1.3)' }}
+            />
+          }
           label={label}
         />
       </FormGroup>

@@ -1,4 +1,4 @@
-import { TextField, Input } from '@mui/material';
+import { TextField } from '@mui/material';
 import { useField } from 'formik';
 
 export default function InputForm({name, ...props}) {

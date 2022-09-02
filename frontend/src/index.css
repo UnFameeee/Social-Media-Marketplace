@@ -53,13 +53,26 @@ html {
   width: 100vw;
   height: 100vh;
   font-family: 'Roboto', sans-serif !important;
+  font-size: 62.5%;
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  font-size: 1.6rem !important;
 }
 
+
+/* Config MUI components */
 .MuiFormHelperText-root {
   margin-left: 0 !important;
+  font-size: 1.2rem !important;
+}
+.MuiFormControl-root,
+.MuiFormControlLabel-root,
+.MuiFormGroup-root,
+.MuiFormLabel-root,
+.MuiInputBase-root,
+.MuiTypography-root {  
+  font-size: 1.6rem !important;
 }
