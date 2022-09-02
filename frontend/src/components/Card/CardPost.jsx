@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  ThumbUp,
+  ThumbUpOutlined,
   Send,
   ChatBubbleOutline,
   ArrowDropDown,
@@ -40,17 +40,17 @@ function CardPost(props) {
             />
           </div>
           <div className="mb-[0.5rem] px-[2rem]">
-            <ThumbUp
+            <ThumbUpOutlined
               className="Icon text-blue8f3"
               style={{ fontSize: "2rem" }}
             />{" "}
             <span className="text-grey1f">Eric and 45 more peoples</span>
           </div>
           <hr className="mb-[1rem]" />
-          <div className="reactButton flex mb-[1rem] ">
-            <button className="w-full flex justify-center gap-[0.5rem] ">
-              <ThumbUp
-                className="Icon text-blue8f3"
+          <div className="reactButton px-[1rem] flex mb-[1rem] [&>*]:hoverChangeBg ">
+            <button className="w-full flex justify-center gap-[0.5rem] hoverChangeBg ">
+              <ThumbUpOutlined
+                className="Icon "
                 style={{ fontSize: "2.5rem" }}
               />{" "}
               <span>Like</span>
