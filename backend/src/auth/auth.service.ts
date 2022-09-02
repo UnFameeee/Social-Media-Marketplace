@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/common/constants/jwt.constant';
+import { ResponseData } from 'src/common/models/success-message.model';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 import { Profile } from 'src/social-media/profile/model/profile.model';
 import { ProfileRepository } from 'src/social-media/profile/profile.repository';
@@ -24,8 +25,10 @@ export class AuthService {
         return null;
     }
 
-    async register(registerProfileDto: RegisterProfileDto): Promise<Profile> {
+    async register(registerProfileDto: RegisterProfileDto): Promise<ResponseData> {
+        const responseData = new ResponseData;
         try {
+
             if (await this.profileRepository.findProfileByEmail(registerProfileDto.email)) {
                 throw new ConflictException("Email existed!!!");
             } else if (await this.profileRepository.findProfileByProfileName(registerProfileDto.profile_name)) {
@@ -35,8 +38,11 @@ export class AuthService {
             //Hashed password
 
             const user = await this.profileRepository.createNewProfile(registerProfileDto);
-
-            return user;
+            if(user){
+                responseData.status = 201;
+                responseData.message = "Register successfully"
+            }
+            return responseData;
         } catch (err) {
             ExceptionResponse(err);
         }
