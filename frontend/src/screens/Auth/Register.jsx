@@ -32,8 +32,10 @@ export default function Register() {
             validationSchema={registerSchema}
             onSubmit={(values) => {
               setRegisterModel(values)
-              const data = AuthService.register(values);
-              console.log(data)
+              AuthService.register(values).then(value => {
+                console.log(value)
+                //toast here
+              })
             }}
           >
             {({ isValid, dirty, touched }) => {

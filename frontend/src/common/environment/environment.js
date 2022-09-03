@@ -1,4 +1,4 @@
-const apiUrl = "localhost:4321/api";
+const apiUrl = "http://localhost:4321/api";
 
 const api = {
     auth: apiUrl + "/auth",

@@ -2,23 +2,11 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import { Link } from 'react-router-dom';
-import { useFormik, Form, Formik } from 'formik';
-import { object, string } from 'yup';
+import { Form, Formik } from 'formik';
 import Face from '../../components/LookingFace/Face';
 import CustomForm from '../../components/Form';
-
-const initialValues = {
-  username: '',
-  password: '',
-  remember: false,
-};
-
-const schema = object().shape({
-  username: string()
-    .email('Please enter a valid email')
-    .required('Required'),
-  password: string().required('Required'),
-});
+import { loginModel, loginSchema, setLoginModel } from './Auth.model';
+import AuthService from './Auth.service';
 
 export default function Login() {
   const [valid, setValid] = useState(true);
@@ -40,11 +28,14 @@ export default function Login() {
       >
         <Box sx={{ textAlign: 'center' }}>
           <Formik
-            initialValues={initialValues}
-            validationSchema={schema}
+            initialValues={loginModel}
+            validationSchema={loginSchema}
             onSubmit={(values) => {
-              console.log(values);
-              //call api here
+              setLoginModel(values);
+              AuthService.login(values).then(value => {
+                console.log(value)
+                //toast here
+              })
             }}
           >
             {({ isValid, dirty, touched }) => {
@@ -66,12 +57,12 @@ export default function Login() {
                     Login
                   </h1>
                   <CustomForm.InputForm
-                    name="username"
-                    label="Username"
+                    name="email"
+                    label="Email"
                     required
                   />
                   <CustomForm.PasswordInputForm
-                    name="password"
+                    name="hashPassword"
                     label="Password"
                     required
                   />
