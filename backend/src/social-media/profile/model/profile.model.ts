@@ -32,7 +32,7 @@ export class Profile extends Model<Profile> {
     email: string;
 
     @Column
-    hashPassword: string;
+    password: string;
 
     @Column
     birth: string;

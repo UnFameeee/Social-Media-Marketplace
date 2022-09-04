@@ -10,7 +10,7 @@ export class CreateProfileDto {
     @MinLength(8)
     @MaxLength(50)
     @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'password is to weak'})
-    hashPassword: string;
+    password: string;
 
     @IsNotEmpty()
     @IsString()

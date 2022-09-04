@@ -20,7 +20,7 @@ export class AuthController {
                 description: `{
                     "profile_name": "TestProfile123",
                     "email": "test123@gmail.com",
-                    "hashPassword": "Lmao123!!!",
+                    "password": "Lmao123!!!",
                     "birth": "test birth"
                 }`,
                 value: {} as Profile
@@ -31,7 +31,7 @@ export class AuthController {
                 value: {
                     "profile_name": "TestProfile123",
                     "email": "test123@gmail.com",
-                    "hashPassword": "Lmao123!!!",
+                    "password": "Lmao123!!!",
                     "birth": "test birth"
                 } as Profile
             }
@@ -59,7 +59,7 @@ export class AuthController {
             ex2: {
                 summary: "Sample Data",
                 description: "Sample input for this API",
-                value: {email: "test12@gmail.com", hashPassword: "Lmao123!!!"} as Profile
+                value: {email: "test12@gmail.com", password: "Lmao123!!!"} as Profile
             }
         }
     })

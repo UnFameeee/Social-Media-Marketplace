@@ -10,7 +10,7 @@ export class RegisterProfileDto {
     @MaxLength(50)
     @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'password is to weak'})
     @IsNotEmpty()
-    hashPassword: string;
+    password: string;
 
     @IsString()
     @IsEmail()

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProfileController } from './profile.controller';
 import { profileProviders } from './profile.provider';
 import { ProfileRepository } from './profile.repository';
