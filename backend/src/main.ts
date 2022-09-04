@@ -3,8 +3,14 @@ import { DocumentBuilder } from '@nestjs/swagger';
 import { SwaggerModule } from '@nestjs/swagger/dist';
 import { AppModule } from './app.module';
 
+const port = 4321;
+var notify = async () => {
+  console.log(`
+    Backend host at port ${port}
+    Swagger URL: http://localhost:4321/api
+  `)
+}
 async function bootstrap() {
-  const port = 4321;
   const app = await NestFactory.create(AppModule, { cors: true });
 
   const config = new DocumentBuilder()
@@ -20,6 +26,8 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(port);
+
+
+  await app.listen(port, notify);
 }
 bootstrap();

@@ -1,29 +1,23 @@
-import { IsEmail, IsNotEmpty, IsNumber, IsString, Matches, Max, MaxLength, Min, MinLength } from "class-validator";
+import { IsEmail, IsNotEmpty, IsString, Matches, MaxLength, MinLength } from "class-validator";
 
 export class RegisterProfileDto {
-    @IsNotEmpty()
     @IsString()
+    @IsNotEmpty()
     profile_name: string;
 
-    @IsNotEmpty()
     @IsString()
     @MinLength(8)
     @MaxLength(50)
     @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'password is to weak'})
-    password: string;
+    @IsNotEmpty()
+    hashPassword: string;
 
-    @IsNotEmpty()
-    @IsNumber()
-    @Min(10)
-    @Max(110)
-    age: number;
-    
-    @IsNotEmpty()
     @IsString()
     @IsEmail()
+    @IsNotEmpty()
     email: string;
 
-    @IsNotEmpty()
     @IsString()
+    @IsNotEmpty()
     birth: string;
 }
