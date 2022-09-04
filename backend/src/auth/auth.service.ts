@@ -18,7 +18,7 @@ export class AuthService {
     async validateProfile(email: string, hashPassword: string): Promise<any> {
         const profile = await this.profileRepository.findProfileByEmail(email);
         //Need to bcrypt
-        if (profile && profile.hashPassword === hashPassword) {
+        if (profile && profile.password === hashPassword) {
             // const { hashPassword, ...result } = profile;
             return profile;
         }
