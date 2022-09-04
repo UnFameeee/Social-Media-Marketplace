@@ -40,9 +40,9 @@ export default function PasswordInputForm({ name, ...props }) {
               edge="end"
             >
               {showPassword ? (
-                <VisibilityOffOutlinedIcon />
+                <VisibilityOffOutlinedIcon sx={{transform: 'scale(1.3)'}}/>
               ) : (
-                <VisibilityOutlinedIcon />
+                <VisibilityOutlinedIcon sx={{transform: 'scale(1.3)'}}/>
               )}
             </IconButton>
           </InputAdornment>
