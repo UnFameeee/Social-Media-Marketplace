@@ -7,6 +7,7 @@ import Login from "./screens/Auth/Login";
 import Register from "./screens/Auth/Register";
 import WithNav from "./WithNav";
 import WithoutNav from "./WithoutNav";
+import UserProfile from "./screens/UserProfile/UserProfile";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route element={<WithNav/>}>
           <Route path="/" element={<Home />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="/userprofile" element={<UserProfile />} />
         </Route>
       </Routes>
     </>
