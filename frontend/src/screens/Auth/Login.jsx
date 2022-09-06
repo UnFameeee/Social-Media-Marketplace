@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Form, Formik } from 'formik';
 import Face from '../../components/LookingFace/Face';
 import CustomForm from '../../components/Form';
-import { loginModel, loginSchema, setLoginModel } from './Auth.model';
+import { loginModel, loginSchema } from './Auth.model';
 import AuthService from './Auth.service';
 
 export default function Login() {
   const [valid, setValid] = useState(true);
+  var navigate = useNavigate();
 
   return (
     <Box>
@@ -31,10 +32,10 @@ export default function Login() {
             initialValues={loginModel}
             validationSchema={loginSchema}
             onSubmit={(values) => {
-              setLoginModel(values);
               AuthService.login(values).then(value => {
-                console.log(value)
-                //toast here
+                if(value) {
+                  navigate('/')
+                }
               })
             }}
           >
@@ -62,7 +63,7 @@ export default function Login() {
                     required
                   />
                   <CustomForm.PasswordInputForm
-                    name="hashPassword"
+                    name="password"
                     label="Password"
                     required
                   />
@@ -86,7 +87,7 @@ export default function Login() {
                     <Link
                       to="/register"
                       style={{
-                        color: 'var(--primary-color',
+                        color: 'var(--primary-color)',
                         fontWeight: 600,
                       }}
                     >
