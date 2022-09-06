@@ -15,10 +15,10 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) { }
 
-    async validateProfile(email: string, hashPassword: string): Promise<any> {
+    async validateProfile(email: string, password: string): Promise<any> {
         const profile = await this.profileRepository.findProfileByEmail(email);
         //Need to bcrypt
-        if (profile && profile.password === hashPassword) {
+        if (profile && profile.password === password) {
             // const { hashPassword, ...result } = profile;
             return profile;
         }

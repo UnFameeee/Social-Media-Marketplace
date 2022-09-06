@@ -17,6 +17,11 @@ export class PostService {
         }
     }
 
-    // async getPostByProfileId
-
+    async getPostByProfileId(): Promise<Post[]> {
+        try{
+            return null;
+        }catch(err){
+            ExceptionResponse(err);
+        }
+    }
 }
