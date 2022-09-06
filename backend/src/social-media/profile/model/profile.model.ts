@@ -6,14 +6,12 @@ import { Role } from "src/common/constants/role.constant";
     paranoid: true,
 
     scopes: {
-        withPassword: {
-            attributes: [],
+        withoutPass: {
+            attributes: { exclude: ['password'] },
         }
     },
 
-    defaultScope: {
-        attributes: { exclude: ['password'] },
-    },
+    defaultScope: {},
 
     indexes:[{unique: true, fields: ['profile_id']}]
 })
