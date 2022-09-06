@@ -23,14 +23,14 @@ function UserProfile() {
                 border={true}
                 className="relative"
               />
-              <div className="bg-white absolute right-0 top-[12rem] z-10 p-[0.65rem] rounded-[50%] shadow-lg">
+              <div className="bg-white absolute right-0 top-[12rem] z-10 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer">
                 <PhotoCamera
                   className=" bg-white  right-0 top-[12rem] z-10"
                   style={{ fontSize: "2.5rem" }}
                 />
               </div>
             </div>
-            <div className="flex pl-[24rem] pr-[4rem] items-center justify-center pt-[1.5rem] pb-[5rem] ">
+            <div className="flex pl-[24rem] pr-[4rem] items-center justify-center py-[3.5rem] ">
               <div className="flex-1  flex flex-col gap-[0.3rem] ">
                 <span className=" font-semibold text-[3rem]">
                   Lorem, ipsum dolor.
