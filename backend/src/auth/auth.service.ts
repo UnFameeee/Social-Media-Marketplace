@@ -2,8 +2,8 @@ import { ConflictException, Injectable, NotFoundException, UnauthorizedException
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/common/constants/jwt.constant';
 import { ResponseData } from 'src/common/models/success-message.model';
+import { compare, encode } from 'src/common/utils/bcrypt-singleton.utils';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-import { Profile } from 'src/social-media/profile/model/profile.model';
 import { ProfileRepository } from 'src/social-media/profile/profile.repository';
 import { RegisterProfileDto } from './dto/register-profile.dto';
 import { TokenPayload } from './interface/tokenPayload.interface';
@@ -17,9 +17,7 @@ export class AuthService {
 
     async validateProfile(email: string, password: string): Promise<any> {
         const profile = await this.profileRepository.findProfileByEmail(email);
-        //Need to bcrypt
-        if (profile && profile.password === password) {
-            // const { hashPassword, ...result } = profile;
+        if (profile && compare(password, profile.password)) {
             return profile;
         }
         return null;
@@ -36,6 +34,7 @@ export class AuthService {
             }
 
             //Hashed password
+            registerProfileDto.password = await encode(registerProfileDto.password)
 
             const user = await this.profileRepository.createNewProfile(registerProfileDto);
             if(user){
