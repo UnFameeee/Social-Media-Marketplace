@@ -4,7 +4,7 @@ import { PhotoCamera, Edit, AddCircle, MoreHoriz } from "@mui/icons-material";
 function UserProfile() {
   return (
     <>
-      <div className="flex justify-center mx-auto pt-[2%] bg-white shadow-md">
+      <div className="flex justify-center pt-[2%] bg-white shadow-md">
         <div className="relative">
           <img
             src="https://source.unsplash.com/random/100×100"
@@ -67,6 +67,27 @@ function UserProfile() {
               <MoreHoriz className="Icon" style={{ fontSize: "2.2rem" }} />
             </div>
           </div>
+        </div>
+      </div>
+      <div className="mt-[2rem] flex mx-auto w-[120rem] gap-[2rem]">
+        <div className="leftSideInfo bg-white w-[45%] rounded-xl p-[1.5rem] shadow-md ">
+          <div className="flex flex-col">
+            <span className="font-bold text-[2.3rem]">Intro</span>
+            <span className=" text-center">
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+              Delectus, sunt? Lorem ipsum dolor sit amet consectetur adipisicing
+            </span>
+          </div>
+        </div>
+        <div className="rightSidePosts bg-white w-[55%] rounded-xl p-[1.5rem] shadow-md  ">
+          <span>
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores,
+            suscipit quia. Officiis, praesentium cumque perspiciatis harum
+            ratione earum sed, enim tenetur nulla et quae quidem dolor? Quisquam
+            dignissimos porro cumque tempore fugiat harum corporis perspiciatis
+            illo esse quae voluptatem eum minus at labore sequi, molestias
+            perferendis hic laudantium quam numquam.
+          </span>
         </div>
       </div>
     </>
