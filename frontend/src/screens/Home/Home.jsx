@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Coronavirus,
   People,
@@ -8,25 +8,35 @@ import {
   EmergencyRecording,
   Search,
   MoreHoriz,
-} from "@mui/icons-material";
-import RoundedAvatar from "../../components/Avatar/RoundedAvatar";
-import CardPost from "../../components/Card/CardPost";
-import SideBarFunction from "../../components/SideBarFunction/SideBarFunction";
-import RightSideBar from "../../components/RightSideBar/RightSideBar";
+} from '@mui/icons-material';
+import RoundedAvatar from '../../components/Avatar/RoundedAvatar';
+import CardPost from '../../components/Card/CardPost';
+import SideBarFunction from '../../components/SideBarFunction/SideBarFunction';
+import RightSideBar from '../../components/RightSideBar/RightSideBar';
+import LeftBar from '../../components/Layout/SideBar/LeftBar';
 function Home() {
   return (
     <div className="pt-[5.5rem] flex w-full">
-      <div className="leftSideBar w-[18%] pb-[5rem] h-screen bg-white fixed overflow-scroll">
+      {/* <div className="leftSideBar w-[18%] pb-[5rem] h-screen bg-white fixed overflow-scroll">
         <SideBarFunction
-          listFeature={[
+          listFeature={listFeature={[
             { text: "Covid- 19 infomation", iconName: <Coronavirus /> },
             { text: "Friends", iconName: <People /> },
             { text: "Groups", iconName: <Diversity2 /> },
             { text: "Marketplace", iconName: <Storefront /> },
             { text: "Watch", iconName: <LiveTv /> },
-          ]}
+          ]}}
         />
-      </div>
+      </div> */}
+      <LeftBar
+        leftBarList={[
+          { text: 'Covid- 19 infomation', icon: <Coronavirus /> },
+          { text: 'Friends', icon: <People /> },
+          { text: 'Groups', icon: <Diversity2 /> },
+          { text: 'Marketplace', icon: <Storefront /> },
+          { text: 'Watch', icon: <LiveTv /> },
+        ]}
+      />
       <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
         <CardPost
           userName="duy duong"
@@ -51,7 +61,7 @@ function Home() {
         />
       </div>
       <div className="rightSideBar fixed right-0 w-[18%] h-screen overflow-scroll  px-[1rem] pt-[2.5rem] pb-[5rem]">
-        <RightSideBar/>
+        <RightSideBar />
       </div>
     </div>
   );
