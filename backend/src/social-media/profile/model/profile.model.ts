@@ -6,14 +6,12 @@ import { Role } from "src/common/constants/role.constant";
     paranoid: true,
 
     scopes: {
-        withPassword: {
-            attributes: [],
+        withoutPass: {
+            attributes: { exclude: ['password'] },
         }
     },
 
-    defaultScope: {
-        attributes: { exclude: ['password'] },
-    },
+    defaultScope: {},
 
     indexes:[{unique: true, fields: ['profile_id']}]
 })
@@ -32,7 +30,7 @@ export class Profile extends Model<Profile> {
     email: string;
 
     @Column
-    hashPassword: string;
+    password: string;
 
     @Column
     birth: string;

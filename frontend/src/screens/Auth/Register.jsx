@@ -1,30 +1,16 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Form, Formik } from 'formik';
-import * as Yup from 'yup';
 import Face from '../../components/LookingFace/Face';
 import CustomForm from '../../components/Form';
-
-const initialValues = {
-  username: '',
-  password: '',
-  repassword: '',
-};
-
-const schema = Yup.object().shape({
-  username: Yup.string()
-    .email('Please enter a valid email')
-    .required('Required'),
-  password: Yup.string().required('Required'),
-  repassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    .required('Required'),
-});
+import { registerModel, registerSchema } from './Auth.model';
+import AuthService from './Auth.service';
 
 export default function Register() {
   const [valid, setValid] = useState(true);
+  var navigate = useNavigate();
 
   return (
     <Box>
@@ -43,18 +29,20 @@ export default function Register() {
       >
         <Box sx={{ textAlign: 'center' }}>
           <Formik
-            initialValues={initialValues}
-            validationSchema={schema}
+            initialValues={registerModel}
+            validationSchema={registerSchema}
             onSubmit={(values) => {
-              console.log(values);
+              AuthService.register(values).then(value => {
+                if(value) {
+                  navigate("/login")
+                }
+              })
             }}
           >
             {({ isValid, dirty, touched }) => {
               if (!!Object.keys(touched).length) {
                 setValid(isValid && dirty);
-              } else {
-                setValid(true);
-              }
+              } 
               return (
                 <Form>
                   <h1
@@ -70,8 +58,13 @@ export default function Register() {
                     Register
                   </h1>
                   <CustomForm.InputForm
-                    name="username"
+                    name="profile_name"
                     label="Username"
+                    required
+                  />
+                  <CustomForm.InputForm
+                    name="email"
+                    label="Email"
                     required
                   />
                   <CustomForm.PasswordInputForm
@@ -80,8 +73,14 @@ export default function Register() {
                     required
                   />
                   <CustomForm.PasswordInputForm
-                    name="repassword"
+                    name="rePassword"
                     label="Confirm Password"
+                    required
+                  />
+                  <CustomForm.DatePickerForm
+                    name="birth"
+                    label="Birth"
+                    disableFuture
                     required
                   />
                   <CustomForm.ButtonForm
@@ -99,7 +98,7 @@ export default function Register() {
                     <Link
                       to="/login"
                       style={{
-                        color: 'var(--primary-color',
+                        color: 'var(--primary-color)',
                         fontWeight: 600,
                       }}
                     >

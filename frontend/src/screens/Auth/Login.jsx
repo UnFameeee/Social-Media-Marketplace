@@ -1,27 +1,16 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
-import { Link } from 'react-router-dom';
-import { useFormik, Form, Formik } from 'formik';
-import { object, string } from 'yup';
+import { Link, useNavigate } from 'react-router-dom';
+import { Form, Formik } from 'formik';
 import Face from '../../components/LookingFace/Face';
 import CustomForm from '../../components/Form';
-
-const initialValues = {
-  username: '',
-  password: '',
-  remember: false,
-};
-
-const schema = object().shape({
-  username: string()
-    .email('Please enter a valid email')
-    .required('Required'),
-  password: string().required('Required'),
-});
+import { loginModel, loginSchema } from './Auth.model';
+import AuthService from './Auth.service';
 
 export default function Login() {
   const [valid, setValid] = useState(true);
+  var navigate = useNavigate();
 
   return (
     <Box>
@@ -40,19 +29,19 @@ export default function Login() {
       >
         <Box sx={{ textAlign: 'center' }}>
           <Formik
-            initialValues={initialValues}
-            validationSchema={schema}
+            initialValues={loginModel}
+            validationSchema={loginSchema}
             onSubmit={(values) => {
-              console.log(values);
-              //call api here
+              AuthService.login(values).then(value => {
+                if(value) {
+                  navigate('/')
+                }
+              })
             }}
           >
             {({ isValid, dirty, touched }) => {
               if(!!Object.keys(touched).length){
                 setValid(isValid && dirty)
-              }
-              else {
-                setValid(true)
               }
               return (
                 <Form>
@@ -60,17 +49,17 @@ export default function Login() {
                     style={{
                       margin: 0,
                       padding: '18px 0',
-                      fontSize: '36px',
+                      fontSize: '3.6rem',
                       color: 'var(--primary-color)',
-                      lineHeight: '36px',
+                      lineHeight: '3.6rem',
                       fontWeight: 900,
                     }}
                   >
                     Login
                   </h1>
                   <CustomForm.InputForm
-                    name="username"
-                    label="Username"
+                    name="email"
+                    label="Email"
                     required
                   />
                   <CustomForm.PasswordInputForm
@@ -98,7 +87,7 @@ export default function Login() {
                     <Link
                       to="/register"
                       style={{
-                        color: 'var(--primary-color',
+                        color: 'var(--primary-color)',
                         fontWeight: 600,
                       }}
                     >

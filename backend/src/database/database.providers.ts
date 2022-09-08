@@ -49,6 +49,8 @@ export const databaseProviders = [
             Profile.hasMany(PostLike, { foreignKey: "profile_id"});
             Post.hasMany(PostLike, { foreignKey: "post_id"});
 
+
+            //initiate database
             const connection = mysql.createConnection({
                 host: configService.get('MYSQL_HOST'),
                 user: configService.get('MYSQL_USER'),

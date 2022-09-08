@@ -1,8 +1,9 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/common/constants/jwt.constant';
+import { ResponseData } from 'src/common/models/success-message.model';
+import { compare, encode } from 'src/common/utils/bcrypt-singleton.utils';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-import { Profile } from 'src/social-media/profile/model/profile.model';
 import { ProfileRepository } from 'src/social-media/profile/profile.repository';
 import { RegisterProfileDto } from './dto/register-profile.dto';
 import { TokenPayload } from './interface/tokenPayload.interface';
@@ -14,18 +15,18 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) { }
 
-    async validateProfile(email: string, hashPassword: string): Promise<any> {
+    async validateProfile(email: string, password: string): Promise<any> {
         const profile = await this.profileRepository.findProfileByEmail(email);
-        //Need to bcrypt
-        if (profile && profile.hashPassword === hashPassword) {
-            // const { hashPassword, ...result } = profile;
+        if (profile && compare(password, profile.password)) {
             return profile;
         }
         return null;
     }
 
-    async register(registerProfileDto: RegisterProfileDto): Promise<Profile> {
+    async register(registerProfileDto: RegisterProfileDto): Promise<ResponseData> {
+        const responseData = new ResponseData;
         try {
+
             if (await this.profileRepository.findProfileByEmail(registerProfileDto.email)) {
                 throw new ConflictException("Email existed!!!");
             } else if (await this.profileRepository.findProfileByProfileName(registerProfileDto.profile_name)) {
@@ -33,10 +34,14 @@ export class AuthService {
             }
 
             //Hashed password
+            registerProfileDto.password = await encode(registerProfileDto.password)
 
             const user = await this.profileRepository.createNewProfile(registerProfileDto);
-
-            return user;
+            if(user){
+                responseData.status = 201;
+                responseData.message = "Register successfully"
+            }
+            return responseData;
         } catch (err) {
             ExceptionResponse(err);
         }

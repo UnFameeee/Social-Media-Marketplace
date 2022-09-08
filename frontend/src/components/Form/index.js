@@ -1,17 +1,19 @@
 import InputForm from './InputForm'
 import SelectForm from './SelectForm'
-import DateTimePickerForm from './DateTimePickerForm'
+import DatePickerForm from './DatePickerForm'
 import CheckBoxForm from './CheckBoxForm'
 import ButtonForm from './ButtonForm'
 import PasswordInputForm from './PasswordInputForm'
+import NumberInputForm from './NumberInputForm'
 
 const CustomForm = {
     InputForm,
     SelectForm,
-    DateTimePickerForm,
+    DatePickerForm,
     CheckBoxForm,
     ButtonForm,
     PasswordInputForm,
+    NumberInputForm,
 }
 
 export default CustomForm;

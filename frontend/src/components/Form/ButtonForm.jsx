@@ -22,7 +22,7 @@ export default function ButtonForm({ name, ...otherProps }) {
         width: '80%',
         margin: '12px',
         textTransform: 'none',
-        fontSize: '18px',
+        fontSize: '1.8rem',
       }}
     >
       {name}
