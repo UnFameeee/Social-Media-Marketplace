@@ -1,6 +1,13 @@
 import React from "react";
 import RoundedAvatar from "../../components/Avatar/RoundedAvatar";
-import { PhotoCamera, Edit, AddCircle, MoreHoriz } from "@mui/icons-material";
+import {
+  PhotoCamera,
+  Edit,
+  AddCircle,
+  MoreHoriz,
+  School,
+} from "@mui/icons-material";
+import SideBarButton from "./SideBarButton";
 function UserProfile() {
   return (
     <>
@@ -73,10 +80,32 @@ function UserProfile() {
         <div className="leftSideInfo bg-white w-[45%] rounded-xl p-[1.5rem] shadow-md ">
           <div className="flex flex-col">
             <span className="font-bold text-[2.3rem]">Intro</span>
-            <span className=" text-center">
+            <span className=" text-center mt-[2rem]">
               Lorem ipsum dolor sit, amet consectetur adipisicing elit.
               Delectus, sunt? Lorem ipsum dolor sit amet consectetur adipisicing
             </span>
+            <SideBarButton label="Edit bio" /> 
+            <ul className="mt-[2rem] flex flex-col gap-[2rem] [&>li]:flex [&>li]:items-center [&>li]:gap-[1rem]">
+              <li className=" ">
+                <School style={{ fontSize: "2.5rem" }} />
+                <span>Went to Truong THCS Long Duc</span>
+              </li>
+              <li className=" ">
+                <School style={{ fontSize: "2.5rem" }} />
+                <span>Went to Truong THCS Long Duc</span>
+              </li>
+              <li className=" ">
+                <School style={{ fontSize: "2.5rem" }} />
+                <span>Went to Truong THCS Long Duc</span>
+              </li>
+              <li className=" ">
+                <School style={{ fontSize: "2.5rem" }} />
+                <span>Went to Truong THCS Long Duc</span>
+              </li>
+            </ul>
+            <SideBarButton label="Edit details" /> 
+            <SideBarButton label="Add Hobbies" /> 
+            <SideBarButton label="Add Featured" /> 
           </div>
         </div>
         <div className="rightSidePosts bg-white w-[55%] rounded-xl p-[1.5rem] shadow-md  ">
