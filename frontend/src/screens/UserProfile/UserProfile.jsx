@@ -1,14 +1,30 @@
 import React from "react";
-import RoundedAvatar from "../../components/Avatar/RoundedAvatar";
+import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import {
   PhotoCamera,
   Edit,
   AddCircle,
   MoreHoriz,
   School,
+  Home,
+  Favorite,
+  AccessTimeFilled,
+  RssFeed,
 } from "@mui/icons-material";
 import SideBarButton from "./SideBarButton";
+import { style } from "@mui/system";
+import SideBarLi from "./SideBarLi";
+import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
+import HoverButton from "./HoverButton";
+import CardPost from "../../components/Card/CardPost";
 function UserProfile() {
+  const SideBarList = [
+    { text: "Went to Truong THCS Long Duc", icon: <School /> },
+    { text: "Lives in Tra Vinh", icon: <Home /> },
+    { text: "Single", icon: <Favorite /> },
+    { text: "Joined on October 2014", icon: <AccessTimeFilled /> },
+    { text: "Followed by 52 people", icon: <RssFeed /> },
+  ];
   return (
     <>
       <div className="flex justify-center pt-[2%] bg-white shadow-md">
@@ -24,7 +40,7 @@ function UserProfile() {
           </div>
           <div className="">
             <div className="bigRoundAvt absolute  left-[3.5rem] top-[26rem]">
-              <RoundedAvatar
+              <AvatarWithText
                 url="https://source.unsplash.com/random/190×190"
                 size="18rem"
                 border={true}
@@ -63,60 +79,87 @@ function UserProfile() {
             </div>
             <hr className="mt-[1.5rem] h-[0.15rem] border-0 bg-slate-300 rounded-sm  w-full " />
             <div className="flex items-center py-[1.5rem] px-[1rem]">
-              <ul className="flex-1 flex gap-[3rem] [&>*]: text-slate-900 text-[2rem]   ">
-                <li>Post</li>
-                <li>About</li>
-                <li>Friends</li>
-                <li>Photos</li>
-                <li>Videos</li>
-                <li>Check-ins</li>
-              </ul>
+              <HoverButton
+                ulGap="1.5rem"
+                listButton={[
+                  { text: "Post" },
+                  { text: "About" },
+                  { text: "Friends" },
+                  { text: "Photos" },
+                  { text: "Videos" },
+                  { text: "Check-ins" },
+                ]}
+              />
               <MoreHoriz className="Icon" style={{ fontSize: "2.2rem" }} />
             </div>
           </div>
         </div>
       </div>
       <div className="mt-[2rem] flex mx-auto w-[120rem] gap-[2rem]">
-        <div className="leftSideInfo bg-white w-[45%] rounded-xl p-[1.5rem] shadow-md ">
-          <div className="flex flex-col">
-            <span className="font-bold text-[2.3rem]">Intro</span>
-            <span className=" text-center mt-[2rem]">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Delectus, sunt? Lorem ipsum dolor sit amet consectetur adipisicing
-            </span>
-            <SideBarButton label="Edit bio" /> 
-            <ul className="mt-[2rem] flex flex-col gap-[2rem] [&>li]:flex [&>li]:items-center [&>li]:gap-[1rem]">
-              <li className=" ">
-                <School style={{ fontSize: "2.5rem" }} />
-                <span>Went to Truong THCS Long Duc</span>
-              </li>
-              <li className=" ">
-                <School style={{ fontSize: "2.5rem" }} />
-                <span>Went to Truong THCS Long Duc</span>
-              </li>
-              <li className=" ">
-                <School style={{ fontSize: "2.5rem" }} />
-                <span>Went to Truong THCS Long Duc</span>
-              </li>
-              <li className=" ">
-                <School style={{ fontSize: "2.5rem" }} />
-                <span>Went to Truong THCS Long Duc</span>
-              </li>
-            </ul>
-            <SideBarButton label="Edit details" /> 
-            <SideBarButton label="Add Hobbies" /> 
-            <SideBarButton label="Add Featured" /> 
+        <div className="leftSideInfo w-[45%] relative ">
+          <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem] absolute">
+            <div className="flex flex-col">
+              <span className="font-bold text-[2.3rem]">Intro</span>
+              <span className=" text-center mt-[2rem]">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Delectus, sunt? Lorem ipsum dolor sit amet consectetur
+                adipisicing
+              </span>
+              <SideBarButton label="Edit bio" />
+              <ul className="mt-[2rem] flex flex-col gap-[2rem] [&>li]:flex [&>li]:items-center [&>li]:gap-[1rem]">
+                {SideBarList &&
+                  SideBarList.map((li, index) => {
+                    return (
+                      <SideBarLi key={index} text={li.text} icon={li.icon} />
+                    );
+                  })}
+              </ul>
+              <SideBarButton label="Edit details" />
+              <SideBarButton label="Add Hobbies" />
+              <SideBarButton label="Add Featured" />
+            </div>
           </div>
         </div>
-        <div className="rightSidePosts bg-white w-[55%] rounded-xl p-[1.5rem] shadow-md  ">
-          <span>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores,
-            suscipit quia. Officiis, praesentium cumque perspiciatis harum
-            ratione earum sed, enim tenetur nulla et quae quidem dolor? Quisquam
-            dignissimos porro cumque tempore fugiat harum corporis perspiciatis
-            illo esse quae voluptatem eum minus at labore sequi, molestias
-            perferendis hic laudantium quam numquam.
-          </span>
+        <div className="rightSidePosts w-[55%]">
+          <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
+            <AvatarWithText
+              url="https://source.unsplash.com/random/180×180"
+              size={35}
+              haveInput={true}
+              alignCenter={true}
+              inputValue="What's on your mind?"
+            />
+            <FullWidthHr className="mt-[1rem]" />
+            <HoverButton
+              flex1={true}
+              listButton={[
+                { text: "photo", icon: <PhotoCamera /> },
+                { text: "School", icon: <School /> },
+                { text: "Home", icon: <Home /> },
+              ]}
+            />
+          </div>
+          <CardPost
+            userName="duy duong"
+            postTime="1 hour"
+            url="https://source.unsplash.com/random/330×330"
+            content="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste reprehenderit laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
+            imgUrl="https://source.unsplash.com/random/310×310"
+          />
+          <CardPost
+            userName="lmao duke"
+            postTime="5 hour"
+            url="https://source.unsplash.com/random/230×230"
+            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
+            imgUrl="https://source.unsplash.com/random/110×110"
+          />
+          <CardPost
+            userName="Dejavu"
+            postTime="8 hour"
+            url="https://source.unsplash.com/random/120×120"
+            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
+            imgUrl="https://source.unsplash.com/random/175×175"
+          />
         </div>
       </div>
     </>

@@ -9,7 +9,7 @@ import {
   Search,
   MoreHoriz,
 } from '@mui/icons-material';
-import RoundedAvatar from '../../components/Avatar/RoundedAvatar';
+import AvatarWithText from '../../components/Avatar/AvatarWithText';
 import CardPost from '../../components/Card/CardPost';
 import SideBarFunction from '../../components/SideBarFunction/SideBarFunction';
 import RightSideBar from '../../components/RightSideBar/RightSideBar';

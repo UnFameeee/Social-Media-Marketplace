@@ -1,5 +1,5 @@
 import React from "react";
-import RoundedAvatar from "../Avatar/RoundedAvatar";
+import AvatarWithText from "../Avatar/AvatarWithText";
 import { EmergencyRecording, Search, MoreHoriz } from "@mui/icons-material";
 function RightSideBar() {
   return (
@@ -15,7 +15,7 @@ function RightSideBar() {
       </div>
       <ul className="[&>*]:hoverChangeBg [&>*]:mb-0 [&>*]:px-[1rem]">
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/10×10"
             size={35}
             border={false}
@@ -23,7 +23,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/750×750"
             size={35}
             border={false}
@@ -31,7 +31,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/1101×1101"
             size={35}
             border={false}
@@ -39,7 +39,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/13"
             size={35}
             border={false}
@@ -47,7 +47,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/12"
             size={35}
             border={false}
@@ -55,7 +55,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/136"
             size={35}
             border={false}
@@ -63,7 +63,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/146"
             size={35}
             border={false}
@@ -71,7 +71,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/132"
             size={35}
             border={false}
@@ -79,7 +79,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/17"
             size={35}
             border={false}
@@ -87,7 +87,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/80"
             size={35}
             border={false}
@@ -95,7 +95,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/1030"
             size={35}
             border={false}
@@ -103,7 +103,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/1323"
             size={35}
             border={false}
@@ -111,7 +111,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/13012"
             size={35}
             border={false}
@@ -119,7 +119,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/1390"
             size={35}
             border={false}
@@ -127,7 +127,7 @@ function RightSideBar() {
           />
         </li>
         <li>
-          <RoundedAvatar
+          <AvatarWithText
             url="https://source.unsplash.com/random/34130"
             size={35}
             border={false}
