@@ -12,8 +12,9 @@ const useStyles = makeStyles()(() => ({
   root: {
     '& .MuiSvgIcon-root': {
       color: 'var(--primary-color)',
-      fontSize: '3.2rem',
+      fontSize: '3rem',
       marginLeft: '0.8rem',
+      marginBottom: '0.3rem',
     },
     '& .MuiButtonBase-root': {
       padding: '0.8rem 0',
@@ -50,7 +51,7 @@ export default function LeftBar({ leftBarList }) {
       sx={{
         width: '18%',
         height: '100vh',
-        bgcolor: 'white',
+        // bgcolor: 'white',
         overflow: 'scroll',
         position: 'fixed',
       }}

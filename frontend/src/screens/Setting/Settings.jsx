@@ -202,9 +202,7 @@ export default function Settings() {
               stories and soundbites. Use this setting to choose who
               can follow you. Each time you post or create a reel,
               story, or soundbite, you choose which audience you want
-              to share with. This setting doesn't apply to people who
-              follow you on Marketplace and in buy and sell groups.
-              You can manage those settings on Marketplace.
+              to share with.
             </span>
             <Button
               variant="text"
@@ -214,7 +212,7 @@ export default function Settings() {
               Edit
             </Button>
           </li>
-          <div className="w-full border border-[#e3e5e9]"></div>
+          <div className="w-full border border-[#aaa]"></div>
 
           <li className="p-[8px] flex items-center">
             <span className="w-[30rem] font-medium">
@@ -269,6 +267,8 @@ export default function Settings() {
         </ul>
       </div>
       <div className="w-full border border-[#aaa]"></div>
+      {/* navigate to user profile */}
+      Want to know what followers can see? View your public timeline.
     </Layout.SideBarOnly>
   );
 }
