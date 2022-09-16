@@ -96,8 +96,8 @@ function UserProfile() {
         </div>
       </div>
       <div className="mt-[2rem] flex mx-auto w-[120rem] gap-[2rem]">
-        <div className="leftSideInfo w-[45%] relative ">
-          <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem] absolute">
+        <div className="leftSideInfo w-[45%] relative flex flex-col">
+          <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem] ">
             <div className="flex flex-col">
               <span className="font-bold text-[2.3rem]">Intro</span>
               <span className=" text-center mt-[2rem]">
@@ -119,6 +119,29 @@ function UserProfile() {
               <SideBarButton label="Add Featured" />
             </div>
           </div>
+
+          <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem]">
+          <div className="flex flex-col">
+            <span className="font-bold text-[2.3rem]">Intro</span>
+            <span className=" text-center mt-[2rem]">
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+              Delectus, sunt? Lorem ipsum dolor sit amet consectetur
+              adipisicing
+            </span>
+            <SideBarButton label="Edit bio" />
+            <ul className="mt-[2rem] flex flex-col gap-[2rem] [&>li]:flex [&>li]:items-center [&>li]:gap-[1rem]">
+              {SideBarList &&
+                SideBarList.map((li, index) => {
+                  return (
+                    <SideBarLi key={index} text={li.text} icon={li.icon} />
+                  );
+                })}
+            </ul>
+            <SideBarButton label="Edit details" />
+            <SideBarButton label="Add Hobbies" />
+            <SideBarButton label="Add Featured" />
+          </div>
+        </div>
         </div>
         <div className="rightSidePosts w-[55%]">
           <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
