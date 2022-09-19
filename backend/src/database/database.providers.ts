@@ -24,7 +24,7 @@ export const databaseProviders = [
                 username: configService.get('MYSQL_USER'),
                 password: configService.get('MYSQL_PASSWORD'),
                 database: configService.get('MYSQL_DB'),
-                query: { raw: true },
+                // query: { raw: true },
                 pool: {
                     // Never have more than five open connections (max: 5)
                     max: 5,
@@ -38,17 +38,23 @@ export const databaseProviders = [
             // sequelize.options
             sequelize.addModels([Profile, Friendship, Post, PostLike, PostComment]);
             //associations
-            Profile.hasMany(Friendship, { foreignKey: "profile_request"});
-            Profile.hasMany(Friendship, { foreignKey: "profile_target"});
+            Profile.hasMany(Friendship, { foreignKey: {name : "profile_request", field : "profile_request"}});
+            Friendship.belongsTo(Profile, { foreignKey: {name : "profile_request", field : "profile_request"}})
+            Profile.hasMany(Friendship, { foreignKey: {name : "profile_target", field : "profile_target"}});
+            Friendship.belongsTo(Profile, { foreignKey: {name : "profile_target", field : "profile_target"}})
 
-            Profile.hasMany(Post, { foreignKey: "profile_id"});
+            Profile.hasMany(Post, { foreignKey: {name : "profile_id", field : "profile_id"}});
+            Post.belongsTo(Profile, { foreignKey: {name : "profile_id", field : "profile_id"}});
             
-            Profile.hasMany(PostComment, { foreignKey: "profile_id"});
-            Post.hasMany(PostComment, { foreignKey: "post_id"});
+            Profile.hasMany(PostComment, { foreignKey: {name : "profile_id", field : "profile_id"}});
+            PostComment.belongsTo(Profile, { foreignKey: {name : "profile_id", field : "profile_id"}})
+            Post.hasMany(PostComment, { foreignKey: {name : "post_id", field : "post_id"}});
+            PostComment.belongsTo(Post, { foreignKey: {name : "post_id", field : "post_id"}})
 
-            Profile.hasMany(PostLike, { foreignKey: "profile_id"});
-            Post.hasMany(PostLike, { foreignKey: "post_id"});
-
+            Profile.hasMany(PostLike, { foreignKey: {name : "profile_id", field : "profile_id"}});
+            PostLike.belongsTo(Profile, { foreignKey: {name : "profile_id", field : "profile_id"}})
+            Post.hasMany(PostLike, { foreignKey: {name : "post_id", field : "post_id"}});
+            PostLike.belongsTo(Post, { foreignKey: {name : "post_id", field : "post_id"}});
 
             //initiate database
             const connection = mysql.createConnection({

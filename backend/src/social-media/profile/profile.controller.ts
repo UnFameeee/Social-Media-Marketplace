@@ -7,7 +7,7 @@ import { Profile } from './model/profile.model';
 import { ProfileService } from './profile.service';
 
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @ApiTags('Profile')
 @Controller('/api/profile')
 export class ProfileController {
@@ -18,6 +18,7 @@ export class ProfileController {
         return this.profileService.getAllProfile();
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get("/:profile_id")
     GetProfileById(@Param("profile_id") profile_id: number): Promise<Profile>{
         return this.profileService.getProfileById(profile_id);

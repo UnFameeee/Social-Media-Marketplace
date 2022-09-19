@@ -8,7 +8,7 @@ export class RegisterProfileDto {
     @IsString()
     @MinLength(8)
     @MaxLength(50)
-    @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'password is to weak'})
+    @Matches(/((?=.*\d)(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'password is to weak'})
     @IsNotEmpty()
     password: string;
 
