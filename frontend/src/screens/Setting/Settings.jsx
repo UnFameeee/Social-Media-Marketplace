@@ -6,7 +6,7 @@ import {
   Translate,
 } from '@mui/icons-material';
 import { Button } from '@mui/material';
-import Layout from '../../components/Layout';
+import TwoColumns from '../../components/Layout/TwoColumns'
 
 var listFeature = [
   { text: 'General', iconName: <Setting /> },
@@ -183,7 +183,7 @@ export default function Settings() {
   );
 
   return (
-    <Layout.SideBarOnly listFeature={listFeature}>
+    <TwoColumns listFeature={listFeature}>
       <h1 className="text-[2rem] font-medium mb-[1.5rem]">
         Public Post Filters and Tools
       </h1>
@@ -269,6 +269,6 @@ export default function Settings() {
       <div className="w-full border border-[#aaa]"></div>
       {/* navigate to user profile */}
       Want to know what followers can see? View your public timeline.
-    </Layout.SideBarOnly>
+    </TwoColumns>
   );
 }

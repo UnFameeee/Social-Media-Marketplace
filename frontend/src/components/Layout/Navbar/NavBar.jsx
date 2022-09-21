@@ -32,6 +32,25 @@ const useStyles = makeStyles()(() => ({
       marginLeft: '8px',
       '&:hover': { backgroundColor: '#bdbdbd' },
     },
+    '& .MuiOutlinedInput-root': {
+      '& > fieldset': { border: 'none' },
+    },
+    '& .MuiInputBase-root': {
+      background: '#F0F2F5',
+      height: '4.4rem',
+      borderRadius: '5rem',
+    },
+  },
+  grid: {
+    '& .MuiSvgIcon-root': {
+      fontSize: '3rem',
+    },
+    '& .MuiButtonBase-root': {
+      width: '14rem',
+      color: '#65676B',
+      padding: '10px 8px',
+      '&:hover': { backgroundColor: '#F0F2F5' },
+    },
   },
 }));
 export default function NavBar() {
@@ -45,6 +64,7 @@ export default function NavBar() {
         width: '100vw',
         height: '6rem',
         padding: '0 1rem',
+        zIndex: '1',
       }}
     >
       <Grid
@@ -60,7 +80,7 @@ export default function NavBar() {
         <Grid item xs>
           <IconButton
             sx={{
-              '& :hover': { backgroundColor: 'none' },
+              '&:hover': { backgroundColor: 'none' },
             }}
           >
             <FacebookOutlined
@@ -84,14 +104,6 @@ export default function NavBar() {
             }}
             sx={{
               marginLeft: '1.2rem',
-              '& .MuiOutlinedInput-root': {
-                '& > fieldset': { border: 'none' },
-              },
-              '& .MuiInputBase-root': {
-                background: '#F0F2F5',
-                height: '4.4rem',
-                borderRadius: '5rem',
-              },
             }}
           />
         </Grid>
@@ -100,56 +112,22 @@ export default function NavBar() {
           item
           xs={5}
           sx={{ display: 'flex', justifyContent: 'space-evenly' }}
+          className={classes.grid}
         >
-          <Button
-            sx={{
-              width: '14rem',
-              color: '#65676B',
-              padding: '10px 8px',
-              '&:hover': { backgroundColor: '#F0F2F5' },
-            }}
-          >
-            <HomeOutlined sx={{ fontSize: '3rem' }} />
+          <Button>
+            <HomeOutlined />
           </Button>
-          <Button
-            sx={{
-              width: '14rem',
-              color: '#65676B',
-              padding: '10px 8px',
-              '&:hover': { backgroundColor: '#F0F2F5' },
-            }}
-          >
-            <GroupsOutlined sx={{ fontSize: '3rem' }} />
+          <Button>
+            <GroupsOutlined />
           </Button>
-          <Button
-            sx={{
-              width: '14rem',
-              color: '#65676B',
-              padding: '10px 8px',
-              '&:hover': { backgroundColor: '#F0F2F5' },
-            }}
-          >
-            <LiveTvOutlined sx={{ fontSize: '3rem' }} />
+          <Button>
+            <LiveTvOutlined />
           </Button>
-          <Button
-            sx={{
-              width: '14rem',
-              color: '#65676B',
-              padding: '10px 8px',
-              '&:hover': { backgroundColor: '#F0F2F5' },
-            }}
-          >
-            <StorefrontOutlined sx={{ fontSize: '3rem' }} />
+          <Button>
+            <StorefrontOutlined />
           </Button>
-          <Button
-            sx={{
-              width: '14rem',
-              color: '#65676B',
-              padding: '10px 8px',
-              '&:hover': { backgroundColor: '#F0F2F5' },
-            }}
-          >
-            <HomeOutlined sx={{ fontSize: '3rem' }} />
+          <Button>
+            <HomeOutlined />
           </Button>
         </Grid>
 
@@ -167,7 +145,10 @@ export default function NavBar() {
           <Avatar>
             <Notifications sx={{ fontSize: '2.4rem' }} />
           </Avatar>
-          <Avatar src='https://img.lovepik.com/element/40144/0477.png_300.png'/>
+          <Avatar
+            src="https://i.pinimg.com/originals/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg"
+            sx={{ marginRight: '2rem' }}
+          />
         </Grid>
       </Grid>
     </Box>
