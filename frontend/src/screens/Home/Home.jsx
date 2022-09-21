@@ -34,10 +34,20 @@ function Home() {
           { text: 'Groups', iconName: <Diversity2 /> },
           { text: 'Marketplace', iconName: <Storefront /> },
           { text: 'Watch', iconName: <LiveTv /> },
+          { text: 'Covid- 19 infomation', iconName: <Coronavirus /> },
+          { text: 'Friends', iconName: <People /> },
+          { text: 'Groups', iconName: <Diversity2 /> },
+          { text: 'Marketplace', iconName: <Storefront /> },
+          { text: 'Watch', iconName: <LiveTv /> },
+          { text: 'Covid- 19 infomation', iconName: <Coronavirus /> },
+          { text: 'Friends', iconName: <People /> },
+          { text: 'Groups', iconName: <Diversity2 /> },
+          { text: 'Marketplace', iconName: <Storefront /> },
+          { text: 'Watch', iconName: <LiveTv /> },
         ]}
       />
       <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
-        <Paper sx={{ height: '15rem', margin: '1.5rem 0' }}>
+        <Paper sx={{ height: '15rem', marginBottom: '1.5rem' }}>
           <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
             <Avatar />
             <TextField

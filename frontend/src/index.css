@@ -43,6 +43,7 @@
   --secondary-color: #8c64cb;
   --text-color: white;
   --background-color: black;
+  --navbar-height: 6rem;
 }
 
 * {

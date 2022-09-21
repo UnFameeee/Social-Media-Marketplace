@@ -13,7 +13,7 @@ export default function TwoColumns(props) {
     //   </div>
     // </div>
 
-    <Box className="pt-[6rem] flex w-full">
+    <Box className="pt-[var(--navbar-height)] flex">
       <LeftBar leftBarList={listFeature} />
       <Box className="pl-[30%] pr-[12%] pt-6 bg-greyf1 w-screen">
         {children}

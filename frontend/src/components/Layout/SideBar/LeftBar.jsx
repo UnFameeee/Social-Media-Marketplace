@@ -72,10 +72,10 @@ export default function LeftBar({ leftBarList }) {
     <Box
       sx={{
         width: '18%',
-        height: '100vh',
-        // bgcolor: 'white',
-        overflow: 'scroll',
+        height: 'calc(100vh - var(--navbar-height))',
+        overflowY: 'scroll',
         position: 'fixed',
+        bottom: 0,
       }}
       className={classes.scrollBar}
     >

@@ -10,7 +10,7 @@ import {
   GroupsOutlined,
 } from '@mui/icons-material';
 import {
-  Box,
+  Paper,
   Grid,
   InputAdornment,
   IconButton,
@@ -57,12 +57,68 @@ export default function NavBar() {
   const { classes } = useStyles();
 
   return (
-    <Box
+    // <div className="flex items-center px-5 py-1 bg-white fixed w-screen drop-shadow-md z-50">
+    //   <div className="rightNav flex items-center w-[25%] gap-1 pt-3">
+    //     <Facebook className=" text-blue8f3 Icon " style={{ fontSize: 40 }} />
+    //     <div className="">
+    //       <form action="">
+    //         <div className="flex relative items-center">
+    //           <Search className=" absolute left-2 text-slate-500 pointer-events-none rotate-90 " style={{ fontSize: 25 }}/>
+    //           <input
+    //             type="text"
+    //             className="pl-[3.3rem] py-[0.75rem] rounded-xl outline-none bg-greyf1"
+    //           />
+    //         </div>
+    //       </form>
+    //     </div>
+    //   </div>
+
+    //   <div className="centerNav flex-1">
+    //     <ul className="listNav flex justify-center gap-0">
+    //       <li className="navBarLi group">
+    //         <Home className="navBarIcon" style={{ fontSize: 40 }} />
+    //         <hr className="navBarIconHr"/>
+    //       </li>
+    //       <li className="navBarLi group  ">
+    //         <Storefront className="navBarIcon" style={{ fontSize: 40 }} />
+    //         <hr className="navBarIconHr"/>
+    //       </li>
+    //       <li className="navBarLi group ">
+    //         <LiveTv className="navBarIcon" style={{ fontSize: 40 }} />
+    //         <hr className="navBarIconHr"/>
+    //       </li>
+    //       <li className="navBarLi group ">
+    //         <Groups className="navBarIcon" style={{ fontSize: 40 }} />
+    //         <hr className="navBarIconHr"/>
+    //       </li>
+    //       <li className="navBarLi group ">
+    //         <SportsEsports className="navBarIcon" style={{ fontSize: 40 }} />
+    //         <hr className="navBarIconHr"/>
+    //       </li>
+    //     </ul>
+        
+    //   </div>
+    //   <div className="w-[25%] flex justify-end gap-3 items-center mr-5">
+    //     <MarkEmailUnread className="Icon" style={{ fontSize: 25 }} />
+    //     <Notifications className="Icon" style={{ fontSize: 25 }} />
+    //     <div className="flex gap-2 items-center bg-greyf1 rounded-xl p-1">
+    //       <img
+    //         src="https://source.unsplash.com/random/300×300"
+    //         className="w-[30px] h-[30px] rounded-[50%] border-2 border-blue-300"
+    //         alt=""
+    //       />
+    //       <span>Hexa Pentania</span>
+    //       <KeyboardArrowDown className="Icon" />
+    //     </div>
+    //   </div>
+    // </div>
+
+    <Paper
       sx={{
-        bgcolor: 'white',
+        boxShadow: 'none',
         position: 'fixed',
         width: '100vw',
-        height: '6rem',
+        height: 'var(--navbar-height)',
         padding: '0 1rem',
         zIndex: '1',
       }}
@@ -73,7 +129,7 @@ export default function NavBar() {
           margin: 0,
           height: '100%',
           alignItems: 'center',
-          // paddingRight: '20px',
+          paddingRight: '14px',
         }}
         className={classes.root}
       >
@@ -147,10 +203,10 @@ export default function NavBar() {
           </Avatar>
           <Avatar
             src="https://i.pinimg.com/originals/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg"
-            sx={{ marginRight: '2rem' }}
+            sx={{ marginRight: '0.8rem' }}
           />
         </Grid>
       </Grid>
-    </Box>
+    </Paper>
   );
 }

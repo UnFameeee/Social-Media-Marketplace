@@ -8,7 +8,7 @@ export default function OneColumn(props) {
     //   </div>
     // </div>
     
-    <Box className="pt-[6rem] flex w-full">
+    <Box className="pt-[var(--navbar-height)] flex w-full">
       <Box className="px-[18%] pt-6 bg-greyf1 w-screen">
         {props.children}
       </Box>
