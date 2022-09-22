@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Chat,
   FacebookOutlined,
@@ -19,12 +20,10 @@ import {
   Avatar,
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+import MUI from '../../MUI'
 
 const useStyles = makeStyles()(() => ({
   root: {
-    '& .MuiIconButton-root': {
-      padding: 0,
-    },
     '& .MuiAvatar-root': {
       cursor: 'pointer',
       color: '#050505',
@@ -53,8 +52,14 @@ const useStyles = makeStyles()(() => ({
     },
   },
 }));
+
 export default function NavBar() {
+  const [value, setValue] = useState('');  
   const { classes } = useStyles();
+
+  function handleSearch() {
+
+  }
 
   return (
     // <div className="flex items-center px-5 py-1 bg-white fixed w-screen drop-shadow-md z-50">
@@ -96,7 +101,7 @@ export default function NavBar() {
     //         <hr className="navBarIconHr"/>
     //       </li>
     //     </ul>
-        
+
     //   </div>
     //   <div className="w-[25%] flex justify-end gap-3 items-center mr-5">
     //     <MarkEmailUnread className="Icon" style={{ fontSize: 25 }} />
@@ -120,7 +125,6 @@ export default function NavBar() {
         width: '100vw',
         height: 'var(--navbar-height)',
         padding: '0 1rem',
-        zIndex: '1',
       }}
     >
       <Grid
@@ -134,11 +138,7 @@ export default function NavBar() {
         className={classes.root}
       >
         <Grid item xs>
-          <IconButton
-            sx={{
-              '&:hover': { backgroundColor: 'none' },
-            }}
-          >
+          <IconButton sx={{ padding: 0}}>
             <FacebookOutlined
               sx={{
                 fontSize: '4.4rem',
@@ -147,21 +147,7 @@ export default function NavBar() {
             />
           </IconButton>
 
-          <TextField
-            placeholder="Search Facebook"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <IconButton>
-                    <SearchOutlined sx={{ fontSize: '2.2rem' }} />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              marginLeft: '1.2rem',
-            }}
-          />
+          <MUI.SearchBar placeHolder='Search FB' getData={(input) => setValue(input)} handleSearch={handleSearch}/>
         </Grid>
 
         <Grid
