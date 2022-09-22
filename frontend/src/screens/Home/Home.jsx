@@ -12,7 +12,6 @@ import {
 } from '@mui/icons-material';
 import RoundedAvatar from '../../components/Avatar/RoundedAvatar';
 import CardPost from '../../components/Card/CardPost';
-import RightSideBar from '../../components/RightSideBar/RightSideBar';
 import LeftBar from '../../components/Layout/SideBar/LeftBar';
 import RightBar from '../../components/Layout/SideBar/RightBar';
 import {
@@ -97,9 +96,6 @@ function Home() {
           imgUrl="https://source.unsplash.com/random/175×175"
         />
       </div>
-      {/* <div className="rightSideBar fixed right-0 w-[18%] h-screen overflow-scroll  px-[1rem] pt-[2.5rem]">
-        <RightSideBar />
-      </div> */}
       <RightBar />
     </div>
   );

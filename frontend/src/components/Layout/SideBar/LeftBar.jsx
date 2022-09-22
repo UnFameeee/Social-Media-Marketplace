@@ -71,7 +71,7 @@ export default function LeftBar({ leftBarList }) {
     
     <Box
       sx={{
-        width: '18%',
+        width: 'var(--sidebar-width)',
         height: 'calc(100vh - var(--navbar-height))',
         overflowY: 'scroll',
         position: 'fixed',

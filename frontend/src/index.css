@@ -44,6 +44,8 @@
   --text-color: white;
   --background-color: black;
   --navbar-height: 6rem;
+  --sidebar-width: 18%;
+  
 }
 
 * {

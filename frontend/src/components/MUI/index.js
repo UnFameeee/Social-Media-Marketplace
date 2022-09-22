@@ -4,7 +4,7 @@ import Select from './Select'
 import CheckBox from './CheckBox'
 import Button from './Button'
 
-const Controls = {
+const MUI = {
     Input,
     RadioGroup,
     Select,
@@ -12,4 +12,4 @@ const Controls = {
     Button,
 }
 
-export default Controls;
+export default MUI;
