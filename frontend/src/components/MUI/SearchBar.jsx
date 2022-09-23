@@ -1,6 +1,5 @@
 import { TextField, IconButton, InputAdornment } from '@mui/material';
 import { SearchOutlined } from '@mui/icons-material';
-import { useState } from 'react';
 
 export default function SearchBar(props) {
   const { placeHolder, getData, handleSearch, ...others } = props;
