@@ -20,7 +20,7 @@ import {
   Avatar,
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
-import MUI from '../../MUI'
+import MUI from '../../MUI';
 
 const useStyles = makeStyles()(() => ({
   root: {
@@ -54,12 +54,10 @@ const useStyles = makeStyles()(() => ({
 }));
 
 export default function NavBar() {
-  const [value, setValue] = useState('');  
+  const [value, setValue] = useState('');
   const { classes } = useStyles();
 
-  function handleSearch() {
-
-  }
+  function handleSearch() {}
 
   return (
     // <div className="flex items-center px-5 py-1 bg-white fixed w-screen drop-shadow-md z-50">
@@ -125,6 +123,7 @@ export default function NavBar() {
         width: '100vw',
         height: 'var(--navbar-height)',
         padding: '0 1rem',
+        zIndex: 1,
       }}
     >
       <Grid
@@ -137,8 +136,8 @@ export default function NavBar() {
         }}
         className={classes.root}
       >
-        <Grid item xs>
-          <IconButton sx={{ padding: 0}}>
+        <Grid item xs sx={{ display: 'flex' }}>
+          <IconButton sx={{ padding: 0 }}>
             <FacebookOutlined
               sx={{
                 fontSize: '4.4rem',
@@ -147,7 +146,11 @@ export default function NavBar() {
             />
           </IconButton>
 
-          <MUI.SearchBar placeHolder='Search FB' getData={(input) => setValue(input)} handleSearch={handleSearch}/>
+          <MUI.SearchBar
+            placeHolder="Search FB"
+            getData={(input) => setValue(input)}
+            handleSearch={handleSearch}
+          />
         </Grid>
 
         <Grid
