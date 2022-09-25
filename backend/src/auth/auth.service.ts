@@ -1,11 +1,11 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/common/constants/jwt.constant';
-import { ResponseData } from 'src/common/models/success-message.model';
+import { ResponseData } from 'src/common/models/view-model/success-message.model';
 import { compare, encode } from 'src/common/utils/bcrypt-singleton.utils';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 import { ProfileRepository } from 'src/social-media/profile/profile.repository';
-import { RegisterProfileDto } from './dto/register-profile.dto';
+import { RegisterProfileDto } from '../common/models/dtos/register-profile.dto';
 import { TokenPayload } from './interface/tokenPayload.interface';
 
 @Injectable()
@@ -23,8 +23,8 @@ export class AuthService {
         return null;
     }
 
-    async register(registerProfileDto: RegisterProfileDto): Promise<ResponseData> {
-        const responseData = new ResponseData;
+    async register(registerProfileDto: RegisterProfileDto): Promise<ResponseData<string>> {
+        const responseData = new ResponseData<string>();
         try {
 
             if (await this.profileRepository.findProfileByEmail(registerProfileDto.email)) {
@@ -38,8 +38,7 @@ export class AuthService {
 
             const user = await this.profileRepository.createNewProfile(registerProfileDto);
             if(user){
-                responseData.status = 201;
-                responseData.message = "Register successfully"
+                responseData.results = "Register successfully"
             }
             return responseData;
         } catch (err) {
