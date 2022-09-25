@@ -1,5 +1,5 @@
 import React from "react";
-import RoundedAvatar from "../Avatar/RoundedAvatar";
+import AvatarWithText from "../Avatar/AvatarWithText";
 import { ArrowDropDown } from "@mui/icons-material";
 function UserComenting() {
   return (
@@ -9,14 +9,14 @@ function UserComenting() {
         <ArrowDropDown style={{ fontSize: "2.5rem" }} />
       </div>
       <div className="GroupUserCommenting px-[2rem] ">
-        <RoundedAvatar
+        <AvatarWithText
           url="https://source.unsplash.com/random/100×100"
           size={35}
           border={false}
           userName="Duy duong"
           comment="shinra tensie"
         />
-        <RoundedAvatar
+        <AvatarWithText
           url="https://source.unsplash.com/random/130×130"
           size={35}
           border={false}

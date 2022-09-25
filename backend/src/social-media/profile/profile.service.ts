@@ -1,6 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
+import { UpdateProfileDto } from 'src/common/models/dtos/update-profile.dto';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-import { UpdateProfileDto } from './dto/update-profile.dto';
+
 import { Profile } from './model/profile.model';
 import { ProfileRepository } from './profile.repository';
 

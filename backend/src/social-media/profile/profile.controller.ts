@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { Delete, Patch, Put } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { UpdateProfileDto } from './dto/update-profile.dto';
+import { UpdateProfileDto } from 'src/common/models/dtos/update-profile.dto';
 import { Profile } from './model/profile.model';
 import { ProfileService } from './profile.service';
 
