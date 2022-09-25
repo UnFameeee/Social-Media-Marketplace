@@ -67,7 +67,7 @@ function GridSideInfo(props) {
                       <img
                         src={item.url}
                         alt=""
-                        className="photoGridImage rounded-[1rem]"
+                        className="photoGridImage"
                       />
                       {props.type === "friendPhoto" && <span>Name</span>}
                     </li>
