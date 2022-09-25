@@ -3,8 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Profile } from 'src/social-media/profile/model/profile.model';
 import { AuthService } from './auth.service';
-import { RegisterProfileDto } from './dto/register-profile.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RegisterProfileDto } from '../common/models/dtos/register-profile.dto';
 import RequestWithProfile from './interface/requestWithProfile.interface';
 
 @ApiTags('Auth')
@@ -69,11 +68,5 @@ export class AuthController {
     @Post("/login")
     async logIn(@Request() request: RequestWithProfile) {
         return this.authService.login(request.user);
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Get('/testget')
-    async getProfile(@Request() req: any) {
-        return await req.user;
     }
 }
