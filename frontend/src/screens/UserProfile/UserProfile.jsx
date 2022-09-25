@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useLayoutEffect, useState } from "react";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import {
   PhotoCamera,
@@ -17,6 +17,7 @@ import SideBarLi from "./SideBarLi";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import HoverButton from "./HoverButton";
 import CardPost from "../../components/Card/CardPost";
+import GridSideInfo from "./GridSideInfo";
 function UserProfile() {
   const SideBarList = [
     { text: "Went to Truong THCS Long Duc", icon: <School /> },
@@ -25,6 +26,7 @@ function UserProfile() {
     { text: "Joined on October 2014", icon: <AccessTimeFilled /> },
     { text: "Followed by 52 people", icon: <RssFeed /> },
   ];
+
   return (
     <>
       <div className="flex justify-center pt-[2%] bg-white shadow-md">
@@ -96,52 +98,90 @@ function UserProfile() {
         </div>
       </div>
       <div className="mt-[2rem] flex mx-auto w-[120rem] gap-[2rem]">
-        <div className="leftSideInfo w-[45%] relative flex flex-col">
-          <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem] ">
-            <div className="flex flex-col">
-              <span className="font-bold text-[2.3rem]">Intro</span>
-              <span className=" text-center mt-[2rem]">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                Delectus, sunt? Lorem ipsum dolor sit amet consectetur
-                adipisicing
-              </span>
-              <SideBarButton label="Edit bio" />
-              <ul className="mt-[2rem] flex flex-col gap-[2rem] [&>li]:flex [&>li]:items-center [&>li]:gap-[1rem]">
-                {SideBarList &&
-                  SideBarList.map((li, index) => {
-                    return (
-                      <SideBarLi key={index} text={li.text} icon={li.icon} />
-                    );
-                  })}
-              </ul>
-              <SideBarButton label="Edit details" />
-              <SideBarButton label="Add Hobbies" />
-              <SideBarButton label="Add Featured" />
+        <div className="leftSideInfo w-[45%]  flex flex-col relative">
+          <div className="sticky top-[-83.5rem] ">
+            <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem] ">
+              <div className="flex flex-col">
+                <span className="font-bold text-[2.3rem]">Intro</span>
+                <span className=" text-center mt-[2rem]">
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                  Delectus, sunt? Lorem ipsum dolor sit amet consectetur
+                  adipisicing
+                </span>
+                <SideBarButton label="Edit bio" />
+                <ul className="mt-[2rem] flex flex-col gap-[2rem] [&>li]:flex [&>li]:items-center [&>li]:gap-[1rem]">
+                  {SideBarList &&
+                    SideBarList.map((li, index) => {
+                      return (
+                        <SideBarLi key={index} text={li.text} icon={li.icon} />
+                      );
+                    })}
+                </ul>
+                <SideBarButton label="Edit details" />
+                <SideBarButton label="Add Hobbies" />
+                <SideBarButton label="Add Featured" />
+              </div>
             </div>
+            <GridSideInfo
+              type="photo"
+              leftLabel="Photo"
+              rightLabel="See all Photos"
+              listImg={[
+                { url: "https://source.unsplash.com/random/211×212" },
+                { url: "https://source.unsplash.com/random/211×211" },
+                { url: "https://source.unsplash.com/random/211×213" },
+                { url: "https://source.unsplash.com/random/211×214" },
+                { url: "https://source.unsplash.com/random/211×215" },
+                { url: "https://source.unsplash.com/random/211×216" },
+                { url: "https://source.unsplash.com/random/211×218" },
+                { url: "https://source.unsplash.com/random/211×217" },
+                { url: "https://source.unsplash.com/random/211×219" },
+              ]}
+            />
+            <GridSideInfo
+              type="friendPhoto"
+              leftLabel="Friends"
+              rightLabel="See all Friends"
+              listImg={[
+                {
+                  url: "https://source.unsplash.com/random/211×202",
+                  name: "madara",
+                },
+                {
+                  url: "https://source.unsplash.com/random/211×201",
+                  name: "naruto",
+                },
+                {
+                  url: "https://source.unsplash.com/random/211×203",
+                  name: "pain",
+                },
+                {
+                  url: "https://source.unsplash.com/random/211×204",
+                  name: "sasuke",
+                },
+                {
+                  url: "https://source.unsplash.com/random/211×205",
+                  name: "obito",
+                },
+                {
+                  url: "https://source.unsplash.com/random/211×206",
+                  name: "kakashi",
+                },
+                {
+                  url: "https://source.unsplash.com/random/211×208",
+                  name: "minato",
+                },
+                {
+                  url: "https://source.unsplash.com/random/211×207",
+                  name: "itatchi",
+                },
+                {
+                  url: "https://source.unsplash.com/random/211×209",
+                  name: "sisui",
+                },
+              ]}
+            />
           </div>
-
-          <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem]">
-          <div className="flex flex-col">
-            <span className="font-bold text-[2.3rem]">Intro</span>
-            <span className=" text-center mt-[2rem]">
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-              Delectus, sunt? Lorem ipsum dolor sit amet consectetur
-              adipisicing
-            </span>
-            <SideBarButton label="Edit bio" />
-            <ul className="mt-[2rem] flex flex-col gap-[2rem] [&>li]:flex [&>li]:items-center [&>li]:gap-[1rem]">
-              {SideBarList &&
-                SideBarList.map((li, index) => {
-                  return (
-                    <SideBarLi key={index} text={li.text} icon={li.icon} />
-                  );
-                })}
-            </ul>
-            <SideBarButton label="Edit details" />
-            <SideBarButton label="Add Hobbies" />
-            <SideBarButton label="Add Featured" />
-          </div>
-        </div>
         </div>
         <div className="rightSidePosts w-[55%]">
           <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
@@ -165,23 +205,44 @@ function UserProfile() {
           <CardPost
             userName="duy duong"
             postTime="1 hour"
-            url="https://source.unsplash.com/random/330×330"
+            url="https://source.unsplash.com/random/330×333"
             content="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste reprehenderit laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/310×310"
+            imgUrl="https://source.unsplash.com/random/310×312"
           />
           <CardPost
             userName="lmao duke"
             postTime="5 hour"
-            url="https://source.unsplash.com/random/230×230"
+            url="https://source.unsplash.com/random/230×235"
             content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/110×110"
+            imgUrl="https://source.unsplash.com/random/110×118"
+          />
+          <CardPost
+            userName="Dejavu"
+            postTime="8 hour"
+            url="https://source.unsplash.com/random/120×124"
+            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
+            imgUrl="https://source.unsplash.com/random/175×177"
+          />
+          <CardPost
+            userName="Dejavu"
+            postTime="8 hour"
+            url="https://source.unsplash.com/random/120×126"
+            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
+            imgUrl="https://source.unsplash.com/random/175×275"
           />
           <CardPost
             userName="Dejavu"
             postTime="8 hour"
             url="https://source.unsplash.com/random/120×120"
             content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/175×175"
+            imgUrl="https://source.unsplash.com/random/175×132"
+          />
+          <CardPost
+            userName="Dejavu"
+            postTime="8 hour"
+            url="https://source.unsplash.com/random/120×140"
+            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
+            imgUrl="https://source.unsplash.com/random/175×165"
           />
         </div>
       </div>

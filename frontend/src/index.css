@@ -36,6 +36,10 @@
     @apply py-[0.5rem] hover:bg-slate-300 hover:cursor-pointer delay-100 rounded-md items-center
   }
 
+  .photoGridImage{
+  @apply w-[100%] h-[150px] object-cover
+  }
+
 }
 
 :root {
