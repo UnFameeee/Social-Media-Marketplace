@@ -123,7 +123,7 @@ export default function NavBar() {
         width: '100vw',
         height: 'var(--navbar-height)',
         padding: '0 1rem',
-        zIndex: 2,
+        zIndex: 10,
       }}
     >
       <Grid
