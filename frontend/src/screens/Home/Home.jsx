@@ -10,7 +10,7 @@ import {
   MoreHoriz,
   SearchOutlined,
 } from '@mui/icons-material';
-import RoundedAvatar from '../../components/Avatar/RoundedAvatar';
+import AvatarWithText from '../../components/Avatar/AvatarWithText';
 import CardPost from '../../components/Card/CardPost';
 import LeftBar from '../../components/Layout/SideBar/LeftBar';
 import RightBar from '../../components/Layout/SideBar/RightBar';
