@@ -8,36 +8,72 @@ import {
   EmergencyRecording,
   Search,
   MoreHoriz,
+  SearchOutlined,
 } from '@mui/icons-material';
-import RoundedAvatar from '../../components/Avatar/RoundedAvatar';
+import AvatarWithText from '../../components/Avatar/AvatarWithText';
 import CardPost from '../../components/Card/CardPost';
-import SideBarFunction from '../../components/SideBarFunction/SideBarFunction';
-import RightSideBar from '../../components/RightSideBar/RightSideBar';
 import LeftBar from '../../components/Layout/SideBar/LeftBar';
+import RightBar from '../../components/Layout/SideBar/RightBar';
+import {
+  Box,
+  Avatar,
+  Paper,
+  TextField,
+  IconButton,
+  InputAdornment,
+} from '@mui/material';
+
 function Home() {
   return (
-    <div className="pt-[5.5rem] flex w-full">
-      {/* <div className="leftSideBar w-[18%] pb-[5rem] h-screen bg-white fixed overflow-scroll">
-        <SideBarFunction
-          listFeature={listFeature={[
-            { text: "Covid- 19 infomation", iconName: <Coronavirus /> },
-            { text: "Friends", iconName: <People /> },
-            { text: "Groups", iconName: <Diversity2 /> },
-            { text: "Marketplace", iconName: <Storefront /> },
-            { text: "Watch", iconName: <LiveTv /> },
-          ]}}
-        />
-      </div> */}
+    <div className="pt-[6rem] flex w-full">
       <LeftBar
         leftBarList={[
-          { text: 'Covid- 19 infomation', icon: <Coronavirus /> },
-          { text: 'Friends', icon: <People /> },
-          { text: 'Groups', icon: <Diversity2 /> },
-          { text: 'Marketplace', icon: <Storefront /> },
-          { text: 'Watch', icon: <LiveTv /> },
+          { text: 'Covid- 19 infomation', iconName: <Coronavirus /> },
+          { text: 'Friends', iconName: <People /> },
+          { text: 'Groups', iconName: <Diversity2 /> },
+          { text: 'Marketplace', iconName: <Storefront /> },
+          { text: 'Watch', iconName: <LiveTv /> },
+          { text: 'Covid- 19 infomation', iconName: <Coronavirus /> },
+          { text: 'Friends', iconName: <People /> },
+          { text: 'Groups', iconName: <Diversity2 /> },
+          { text: 'Marketplace', iconName: <Storefront /> },
+          { text: 'Watch', iconName: <LiveTv /> },
+          { text: 'Covid- 19 infomation', iconName: <Coronavirus /> },
+          { text: 'Friends', iconName: <People /> },
+          { text: 'Groups', iconName: <Diversity2 /> },
+          { text: 'Marketplace', iconName: <Storefront /> },
+          { text: 'Watch', iconName: <LiveTv /> },
         ]}
       />
       <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
+        <Paper sx={{ height: '15rem', marginBottom: '1.5rem' }}>
+          <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <Avatar />
+            <TextField
+              placeholder="Search Facebook"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <IconButton>
+                      <SearchOutlined sx={{ fontSize: '2.2rem' }} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                marginLeft: '1.2rem',
+                '& .MuiOutlinedInput-root': {
+                  '& > fieldset': { border: 'none' },
+                },
+                '& .MuiInputBase-root': {
+                  background: '#F0F2F5',
+                  height: '4.4rem',
+                  borderRadius: '5rem',
+                },
+              }}
+            />
+          </Box>          
+        </Paper>
         <CardPost
           userName="duy duong"
           postTime="1 hour"
@@ -60,9 +96,7 @@ function Home() {
           imgUrl="https://source.unsplash.com/random/175×175"
         />
       </div>
-      <div className="rightSideBar fixed right-0 w-[18%] h-screen overflow-scroll  px-[1rem] pt-[2.5rem] pb-[5rem]">
-        <RightSideBar />
-      </div>
+      <RightBar />
     </div>
   );
 }

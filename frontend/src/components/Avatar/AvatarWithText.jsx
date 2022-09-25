@@ -1,14 +1,19 @@
 import React from "react";
 
-function RoundedAvatar(props) {
+function AvatarWithText(props) {
   var classBorder;
   if (props.border) {
     classBorder = "border-2 border-blue-300";
   }
+  var alignCenter =''
+  if (props.alignCenter) {
+    alignCenter = "items-center";
+  }
   var primaryBg = props.primaryBg ?? "bg-none";
   var secondaryBg = props.secondaryBg ?? "bg-greyf1";
+
   return (
-    <div className={`flex gap-2 rounded-xl p-1 ${primaryBg} `}>
+    <div className={`flex gap-2 rounded-xl p-1 ${primaryBg} ${alignCenter} `}>
       {props.url && (
         <img
           src={props.url}
@@ -35,12 +40,12 @@ function RoundedAvatar(props) {
         </div>
       )}
 
-      {props.userName && props.haveInput && (
+      {props.haveInput && (
         <div className="w-full">
           <input
             type="text"
-            placeholder="write your comment"
-            className="bg-greyf1 outline-none py-[1rem] px-[1.5rem] rounded-xl w-full"
+            placeholder={props.inputValue}
+            className="bg-greyf1 outline-none py-[0.65rem] px-[1.5rem] rounded-[5rem] w-full"
           />
         </div>
       )}
@@ -55,4 +60,4 @@ function RoundedAvatar(props) {
   );
 }
 
-export default RoundedAvatar;
+export default AvatarWithText;

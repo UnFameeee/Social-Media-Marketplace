@@ -1,12 +1,11 @@
-import { Navbar } from "react-bootstrap";
 import { Route, Routes } from "react-router-dom";
-import NavigationBar from "./components/Navbar/NavigationBar";
 import Home from "./screens/Home/Home";
 import NotFoundPage from "./screens/NotFoundPage/NotFoundPage";
 import Login from "./screens/Auth/Login";
 import Register from "./screens/Auth/Register";
-import WithNav from "./WithNav";
-import WithoutNav from "./WithoutNav";
+import WithNav from "../src/components/Layout/Navbar/WithNav"
+import WithoutNav from "../src/components/Layout/Navbar/WithoutNav";
+import UserProfile from "./screens/UserProfile/UserProfile";
 import Settings from "./screens/Setting/Settings";
 
 function App() {
@@ -20,6 +19,7 @@ function App() {
         <Route element={<WithNav/>}>
           <Route path="/" element={<Home />} />
           <Route path="*" element={<NotFoundPage />} />
+          <Route path="/userprofile" element={<UserProfile />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>
