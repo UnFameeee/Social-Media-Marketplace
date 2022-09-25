@@ -1,15 +1,16 @@
-import { Body, Controller, HttpCode, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { Profile } from 'src/social-media/profile/model/profile.model';
 import { AuthService } from './auth.service';
 import { RegisterProfileDto } from './dto/register-profile.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import RequestWithProfile from './interface/requestWithProfile.interface';
 
 @ApiTags('Auth')
 @Controller('/api/auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {};
+    constructor(private readonly authService: AuthService) { };
 
     @ApiBody({
         type: Profile,
@@ -39,7 +40,7 @@ export class AuthController {
     })
     @HttpCode(201)
     @Post("/register")
-    async register(@Body() registerProfileDto: RegisterProfileDto){
+    async register(@Body() registerProfileDto: RegisterProfileDto) {
         return this.authService.register(registerProfileDto);
     }
 
@@ -47,26 +48,32 @@ export class AuthController {
     @ApiBody({
         type: Profile,
         description: `
-        Login API. This will need {email, hashPassword} to use. 
+        Login API. This will need {email, password} to use. 
         The reponse will be {access_token, refresh_token}
         path: /api/auth/login`,
         examples: {
             ex1: {
                 summary: "Empty Data",
-                description: `{ 'email': 'test12@gmail.com', 'hashPassword': 'Lmao123!!!'}`,
+                description: `{ 'email': 'test123@gmail.com', 'hashPassword': 'Lmao123!!!'}`,
                 value: {} as Profile
             },
             ex2: {
                 summary: "Sample Data",
                 description: "Sample input for this API",
-                value: {email: "test12@gmail.com", password: "Lmao123!!!"} as Profile
+                value: { email: "test123@gmail.com", password: "Lmao123!!!" } as Profile
             }
         }
     })
     @UseGuards(AuthGuard('local'))
     @HttpCode(200)
     @Post("/login")
-    async logIn(@Request() request: RequestWithProfile){
+    async logIn(@Request() request: RequestWithProfile) {
         return this.authService.login(request.user);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('/testget')
+    async getProfile(@Request() req: any) {
+        return await req.user;
     }
 }
