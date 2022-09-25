@@ -48,9 +48,9 @@ function UserProfile() {
                 border={true}
                 className="relative"
               />
-              <div className="bg-white absolute right-0 top-[12rem] z-10 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer">
+              <div className="bg-white absolute right-0 top-[12rem] z-1 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer">
                 <PhotoCamera
-                  className=" bg-white  right-0 top-[12rem] z-10"
+                  className=" bg-white  right-0 top-[12rem] z-1"
                   style={{ fontSize: "2.5rem" }}
                 />
               </div>
