@@ -28,7 +28,7 @@ const useStyles = makeStyles()(() => ({
       cursor: 'pointer',
       color: '#050505',
       backgroundColor: '#E4E6EB',
-      marginLeft: '8px',
+      marginRight: '0.8rem',
       '&:hover': { backgroundColor: '#bdbdbd' },
     },
     '& .MuiOutlinedInput-root': {
@@ -47,7 +47,7 @@ const useStyles = makeStyles()(() => ({
     '& .MuiButtonBase-root': {
       width: '14rem',
       color: '#65676B',
-      padding: '10px 8px',
+      padding: '1rem 0.8rem',
       '&:hover': { backgroundColor: '#F0F2F5' },
     },
   },
@@ -150,6 +150,20 @@ export default function NavBar() {
             placeHolder="Search FB"
             getData={(input) => setValue(input)}
             handleSearch={handleSearch}
+            recentSearchs={[
+              {
+                url: "https://source.unsplash.com/random/300×300",
+                name: "Thạch Dương Duy",
+              },
+              {
+                url: "https://source.unsplash.com/random/300×300",
+                name: "Nguyễn Hoàng Vũ",
+              },
+              {
+                url: "https://source.unsplash.com/random/300×300",
+                name: "Nguyễn Phạm Quốc Thắng",
+              },
+            ]}
           />
         </Grid>
 
@@ -190,10 +204,7 @@ export default function NavBar() {
           <Avatar>
             <Notifications sx={{ fontSize: '2.4rem' }} />
           </Avatar>
-          <Avatar
-            src="https://i.pinimg.com/originals/8b/16/7a/8b167af653c2399dd93b952a48740620.jpg"
-            sx={{ marginRight: '0.8rem' }}
-          />
+          <Avatar src="https://source.unsplash.com/random/300×300" />
         </Grid>
       </Grid>
     </Paper>

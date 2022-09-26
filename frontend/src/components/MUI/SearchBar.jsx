@@ -9,22 +9,46 @@ import {
   Avatar,
   Typography,
 } from '@mui/material';
-import { SearchOutlined } from '@mui/icons-material';
+import { Search, Close } from '@mui/icons-material';
 import { useState } from 'react';
+import { makeStyles } from 'tss-react/mui';
+
+const useStyles = makeStyles()(() => ({
+  root: {
+    '& .MuiAvatar-root': {
+      // cursor: 'pointer',
+      // color: '#050505',
+      // backgroundColor: '#E4E6EB',
+      marginRight: '0.8rem',
+      '&:hover': { backgroundColor: '#E4E6EB' },
+    },
+  },
+}));
 
 export default function SearchBar(props) {
   const [open, setOpen] = useState(false);
 
-  const { placeHolder, getData, handleSearch, ...others } = props;
+  const {
+    placeHolder,
+    getData,
+    handleSearch,
+    recentSearchs,
+    ...others
+  } = props;
   function handleKeyDown(event) {
     if (event.key === 'Enter') {
       handleSearch();
     }
   }
 
+  const { classes } = useStyles();
   return (
-    <ClickAwayListener onClickAway={() => {setOpen(false)}}>
-      <Box sx={{position: 'relative'}}>
+    <ClickAwayListener
+      onClickAway={() => {
+        setOpen(false);
+      }}
+    >
+      <Box sx={{ position: 'relative' }} className={classes.root}>
         <TextField
           placeholder={placeHolder}
           InputProps={{
@@ -34,7 +58,7 @@ export default function SearchBar(props) {
                   sx={{ padding: '0.4rem' }}
                   onClick={handleSearch}
                 >
-                  <SearchOutlined sx={{ fontSize: '2.2rem' }} />
+                  <Search sx={{ fontSize: '2.2rem' }} />
                 </IconButton>
               </InputAdornment>
             ),
@@ -52,21 +76,53 @@ export default function SearchBar(props) {
           }}
           onChange={(event) => getData(event.target.value)}
           onKeyDown={(event) => handleKeyDown(event)}
-          onClick={() => {setOpen(true)}}
+          onClick={() => {
+            setOpen(true);
+          }}
           {...others}
         />
 
-        {open && (
+        {open && recentSearchs && (
           <MenuList
-            style={{ position: 'absolute', backgroundColor: 'white', marginTop: '8px' }}
+            style={{
+              position: 'absolute',
+              backgroundColor: 'white',
+              marginTop: '0.8rem',
+              width: '100%',
+              borderRadius: '4px',
+            }}
           >
-            <MenuItem>
-              <Avatar sx={{width: '3.5rem', height: '3.5rem'}}/>
-              <Typography>Dibu</Typography>
-              <IconButton>
+            <Typography sx={{ marginLeft: '1.6rem' }}>
+              Recent Searchs
+            </Typography>
 
-              </IconButton>
-            </MenuItem>
+            {recentSearchs.map((item) => (
+              <MenuItem
+                sx={{
+                  margin: '0.8rem 0.8rem 0 0.8rem',
+                  borderRadius: '8px',
+                  padding: '0.6rem 0.8rem',
+                }}
+              >
+                {item.url && (
+                  <Avatar
+                    sx={{ width: '3.5rem', height: '3.5rem' }}
+                    src={item.url}
+                  />
+                )}
+                <Typography>{item.name}</Typography>
+                <IconButton
+                  sx={{
+                    padding: '0.4rem',
+                    position: 'absolute',
+                    right: '0.8rem',
+                    // '&:hover': {backgroundColor: '#bdbdbd'}
+                  }}
+                >
+                  <Close sx={{ fontSize: '1.6rem' }} />
+                </IconButton>
+              </MenuItem>
+            ))}
           </MenuList>
         )}
       </Box>
