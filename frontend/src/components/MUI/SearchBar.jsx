@@ -12,6 +12,7 @@ import {
 import { Search, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
+import ReactTooltip from 'react-tooltip';
 
 const useStyles = makeStyles()(() => ({
   root: {
@@ -96,8 +97,10 @@ export default function SearchBar(props) {
               Recent Searchs
             </Typography>
 
-            {recentSearchs.map((item) => (
+            {recentSearchs.map((item, index) => (
               <MenuItem
+                data-tip
+                data-for={index.toString()}
                 sx={{
                   margin: '0.8rem 0.8rem 0 0.8rem',
                   borderRadius: '8px',
@@ -110,7 +113,15 @@ export default function SearchBar(props) {
                     src={item.url}
                   />
                 )}
-                <Typography>{item.name}</Typography>
+                <Typography
+                  sx={{
+                    width: '16.5rem',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {item.name}
+                </Typography>
                 <IconButton
                   sx={{
                     padding: '0.4rem',
@@ -121,6 +132,10 @@ export default function SearchBar(props) {
                 >
                   <Close sx={{ fontSize: '1.6rem' }} />
                 </IconButton>
+
+                <ReactTooltip id={index.toString()}>
+                  {item.name}
+                </ReactTooltip>
               </MenuItem>
             ))}
           </MenuList>

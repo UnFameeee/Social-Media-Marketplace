@@ -1,11 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Chat,
   FacebookOutlined,
   HomeOutlined,
   LiveTvOutlined,
   Notifications,
-  SearchOutlined,
   StorefrontOutlined,
   Menu,
   GroupsOutlined,
@@ -13,13 +13,12 @@ import {
 import {
   Paper,
   Grid,
-  InputAdornment,
   IconButton,
-  TextField,
   Button,
   Avatar,
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
+import ReactTooltip from 'react-tooltip';
 import MUI from '../../MUI';
 
 const useStyles = makeStyles()(() => ({
@@ -53,12 +52,40 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
+const navIcons = [
+  {
+    id: "navHome",
+    icon: <HomeOutlined />,
+    tooltip: "Home"
+  },
+  {
+    id: "navFriends",
+    icon: <GroupsOutlined />,
+    tooltip: "Friends"
+  },
+  {
+    id: "navWatch",
+    icon: <LiveTvOutlined />,
+    tooltip: "Watch"
+  },
+  {
+    id: "navMarketplace",
+    icon: <StorefrontOutlined />,
+    tooltip: "Marketplace"
+  },
+  {
+    id: "navf",
+    icon: <HomeOutlined />,
+    tooltip: "f"
+  },
+];
+
 export default function NavBar() {
+  const navigate = useNavigate();
   const [value, setValue] = useState('');
   const { classes } = useStyles();
 
   function handleSearch() {}
-
   return (
     // <div className="flex items-center px-5 py-1 bg-white fixed w-screen drop-shadow-md z-50">
     //   <div className="rightNav flex items-center w-[25%] gap-1 pt-3">
@@ -137,7 +164,10 @@ export default function NavBar() {
         className={classes.root}
       >
         <Grid item xs sx={{ display: 'flex' }}>
-          <IconButton sx={{ padding: 0 }}>
+          <IconButton
+            sx={{ padding: 0 }}
+            onClick={() => navigate('/')}
+          >
             <FacebookOutlined
               sx={{
                 fontSize: '4.4rem',
@@ -152,16 +182,16 @@ export default function NavBar() {
             handleSearch={handleSearch}
             recentSearchs={[
               {
-                url: "https://source.unsplash.com/random/300×300",
-                name: "Thạch Dương Duy",
+                url: 'https://source.unsplash.com/random/300×300',
+                name: 'Thạch Dương Duy',
               },
               {
-                url: "https://source.unsplash.com/random/300×300",
-                name: "Nguyễn Hoàng Vũ",
+                url: 'https://source.unsplash.com/random/300×300',
+                name: 'Nguyễn Hoàng Vũ',
               },
               {
-                url: "https://source.unsplash.com/random/300×300",
-                name: "Nguyễn Phạm Quốc Thắng",
+                url: 'https://source.unsplash.com/random/300×300',
+                name: 'Nguyễn Phạm Quốc Thắng',
               },
             ]}
           />
@@ -173,21 +203,11 @@ export default function NavBar() {
           sx={{ display: 'flex', justifyContent: 'space-evenly' }}
           className={classes.grid}
         >
-          <Button>
-            <HomeOutlined />
-          </Button>
-          <Button>
-            <GroupsOutlined />
-          </Button>
-          <Button>
-            <LiveTvOutlined />
-          </Button>
-          <Button>
-            <StorefrontOutlined />
-          </Button>
-          <Button>
-            <HomeOutlined />
-          </Button>
+          {navIcons.map(item => (
+            <MUI.ButtonToolTip id={item.id} tooltip={item.tooltip}>
+              {item.icon}
+            </MUI.ButtonToolTip>
+          ))}
         </Grid>
 
         <Grid
