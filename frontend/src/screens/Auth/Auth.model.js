@@ -33,6 +33,7 @@ export const registerSchema = Yup.object().shape({
 export const loginModel = {
   email: '',
   password: '',
+  remember: false,
 };
 
 export const loginSchema = Yup.object().shape({

@@ -4,7 +4,7 @@ import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import { Link, useNavigate } from 'react-router-dom';
 import { Form, Formik } from 'formik';
 import Face from '../../components/LookingFace/Face';
-import CustomForm from '../../components/Form';
+import { FormChildren } from '../../components/Form';
 import { registerModel, registerSchema } from './Auth.model';
 import AuthService from './Auth.service';
 
@@ -57,33 +57,33 @@ export default function Register() {
                   >
                     Register
                   </h1>
-                  <CustomForm.InputForm
+                  <FormChildren.InputForm
                     name="profile_name"
                     label="Username"
                     required
                   />
-                  <CustomForm.InputForm
+                  <FormChildren.InputForm
                     name="email"
                     label="Email"
                     required
                   />
-                  <CustomForm.PasswordInputForm
+                  <FormChildren.PasswordInputForm
                     name="password"
                     label="Password"
                     required
                   />
-                  <CustomForm.PasswordInputForm
+                  <FormChildren.PasswordInputForm
                     name="rePassword"
                     label="Confirm Password"
                     required
                   />
-                  <CustomForm.DatePickerForm
+                  <FormChildren.DatePickerForm
                     name="birth"
                     label="Birth"
                     disableFuture
                     required
                   />
-                  <CustomForm.ButtonForm
+                  <FormChildren.ButtonForm
                     name="Register"
                     disabled={!(isValid && dirty)}
                     startIcon={<LoginOutlinedIcon />}
