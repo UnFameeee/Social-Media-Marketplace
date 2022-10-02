@@ -13,6 +13,7 @@ import { Search, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import ReactTooltip from 'react-tooltip';
+import { IconButtonWithoutBackground } from './Button/IconButton';
 
 const useStyles = makeStyles()(() => ({
   root: {
@@ -36,6 +37,7 @@ export default function SearchBar(props) {
     recentSearchs,
     ...others
   } = props;
+  
   function handleKeyDown(event) {
     if (event.key === 'Enter') {
       handleSearch();
@@ -99,12 +101,12 @@ export default function SearchBar(props) {
 
             {recentSearchs.map((item, index) => (
               <MenuItem
-                data-tip
-                data-for={index.toString()}
+                key={index}
                 sx={{
                   margin: '0.8rem 0.8rem 0 0.8rem',
                   borderRadius: '8px',
                   padding: '0.6rem 0.8rem',
+                  minHeight: '46px !important',
                 }}
               >
                 {item.url && (
@@ -114,6 +116,8 @@ export default function SearchBar(props) {
                   />
                 )}
                 <Typography
+                  data-tip
+                  data-for={index.toString()}
                   sx={{
                     width: '16.5rem',
                     overflow: 'hidden',
@@ -122,7 +126,9 @@ export default function SearchBar(props) {
                 >
                   {item.name}
                 </Typography>
-                <IconButton
+                <IconButtonWithoutBackground
+                  id="recentSearchIcon"
+                  tooltip="Delete"
                   sx={{
                     padding: '0.4rem',
                     position: 'absolute',
@@ -131,7 +137,7 @@ export default function SearchBar(props) {
                   }}
                 >
                   <Close sx={{ fontSize: '1.6rem' }} />
-                </IconButton>
+                </IconButtonWithoutBackground>
 
                 <ReactTooltip id={index.toString()}>
                   {item.name}

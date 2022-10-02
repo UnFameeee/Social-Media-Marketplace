@@ -14,11 +14,9 @@ import {
   Paper,
   Grid,
   IconButton,
-  Button,
   Avatar,
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
-import ReactTooltip from 'react-tooltip';
 import MUI from '../../MUI';
 
 const useStyles = makeStyles()(() => ({
@@ -52,7 +50,7 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
-const navIcons = [
+const middleNavIcons = [
   {
     id: "navHome",
     icon: <HomeOutlined />,
@@ -84,6 +82,8 @@ export default function NavBar() {
   const navigate = useNavigate();
   const [value, setValue] = useState('');
   const { classes } = useStyles();
+
+  console.log('rerender')
 
   function handleSearch() {}
   return (
@@ -203,10 +203,10 @@ export default function NavBar() {
           sx={{ display: 'flex', justifyContent: 'space-evenly' }}
           className={classes.grid}
         >
-          {navIcons.map(item => (
-            <MUI.ButtonToolTip id={item.id} tooltip={item.tooltip}>
+          {middleNavIcons.map(item => (
+            <MUI.ButtonWithIcon key={item.id} id={item.id} tooltip={item.tooltip}>
               {item.icon}
-            </MUI.ButtonToolTip>
+            </MUI.ButtonWithIcon>
           ))}
         </Grid>
 
