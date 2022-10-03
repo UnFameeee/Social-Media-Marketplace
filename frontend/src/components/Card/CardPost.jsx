@@ -6,8 +6,18 @@ import {
   ArrowDropDown,
   MoreHoriz,
 } from "@mui/icons-material";
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import AvatarWithText from "../Avatar/AvatarWithText";
+import { makeStyles } from 'tss-react/mui';
 function CardPost(props) {
+  
   return (
     <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
       <div className="w-full bg">
@@ -47,7 +57,7 @@ function CardPost(props) {
             <span className="text-grey1f">Eric and 45 more peoples</span>
           </div>
           <hr className="mb-[1rem]" />
-          <div className="reactButton px-[1rem] flex mb-[1rem] [&>*]:hoverChangeBg ">
+          <div className="reactButton px-[1rem] flex mb-[1rem]  ">
             <button className="w-full flex justify-center gap-[0.5rem] hoverChangeBg ">
               <ThumbUpOutlined
                 className="Icon "
