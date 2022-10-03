@@ -2,12 +2,11 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import { Link, useNavigate } from 'react-router-dom';
-import { Form, Formik } from 'formik';
 import Face from '../../components/LookingFace/Face';
 import { ValidateForm, FormChildren } from '../../components/Form';
 import { loginModel, loginSchema } from './Auth.model';
 import AuthService from './Auth.service';
-import { VapeFreeRounded } from '@mui/icons-material';
+import './Auth.css';
 
 export default function Login() {
   const [valid, setValid] = useState(false);
@@ -16,18 +15,7 @@ export default function Login() {
   return (
     <Box>
       <Face happy={valid} />
-      <Box
-        sx={{
-          position: 'fixed',
-          top: '50%',
-          right: '25%',
-          width: '25vw',
-          borderRadius: '10px',
-          padding: '20px',
-          background: 'white',
-          transform: 'translateY(-50%)',
-        }}
-      >
+      <Box className="form-wrap">
         <Box sx={{ textAlign: 'center' }}>
           <ValidateForm
             initialValues={loginModel}
@@ -45,18 +33,7 @@ export default function Login() {
               }
             }}
           >
-            <h1
-              style={{
-                margin: 0,
-                padding: '18px 0',
-                fontSize: '3.6rem',
-                color: 'var(--primary-color)',
-                lineHeight: '3.6rem',
-                fontWeight: 900,
-              }}
-            >
-              Login
-            </h1>
+            <h1 className="form-title">Login</h1>
             <FormChildren.InputForm
               name="email"
               label="Email"
@@ -77,20 +54,9 @@ export default function Login() {
               disabled={!valid}
               startIcon={<LoginOutlinedIcon />}
             />
-            <div
-              style={{
-                color: '#b3b3b3',
-                paddingBottom: '20px',
-              }}
-            >
+            <div className="form-bottom">
               You don't have an account yet?{' '}
-              <Link
-                to="/register"
-                style={{
-                  color: 'var(--primary-color)',
-                  fontWeight: 600,
-                }}
-              >
+              <Link className="form-bottom-special" to="/register">
                 Register now
               </Link>
             </div>
