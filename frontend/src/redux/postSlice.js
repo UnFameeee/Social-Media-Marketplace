@@ -1,4 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { revertAll } from "./resetStore";
+const initialState = {
+  get: {
+    posts: null,
+    isFetching: false,
+    error: false,
+  },
+  create: {
+    post: null,
+    isFetching: false,
+    error: false,
+  },
+}
 export const postSlice = createSlice({
   name: "post",
   initialState: {
@@ -13,6 +26,7 @@ export const postSlice = createSlice({
       error: false,
     },
   },
+  extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
     createStart: (state) => {
       state.create.isFetching = true;

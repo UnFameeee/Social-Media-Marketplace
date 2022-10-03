@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import { createPost } from "../../redux/apiRequest";
@@ -28,6 +29,12 @@ function CreatePostModal({ showModal, setShowModal, avtUrl }) {
       [event.target.name]: event.target.value,
     });
   };
+  const isPosting = useSelector((state) => state.post.create.isFetching)
+  useEffect(() =>{
+    if(isPosting === true){
+      closeModal();
+    }
+  },)
   return (
     <>
       {showModal ? (
@@ -73,6 +80,7 @@ function CreatePostModal({ showModal, setShowModal, avtUrl }) {
               <button
                 onClick={handlePost}
                 className="w-full bg-blue8f3 text-white rounded-[0.5rem] py-[0.75rem]"
+               disabled={written_text.length === 0}
               >
                 Post
               </button>

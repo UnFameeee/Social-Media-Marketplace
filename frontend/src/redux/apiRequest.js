@@ -8,9 +8,51 @@ import {
   getSuccess,
 } from "./postSlice";
 import { apiUrl } from "../common/environment/environment";
-const accessToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjEsInByb2ZpbGVfbmFtZSI6IlRlc3RQcm9maWxlMTIzIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJGtSZXR3ZHJQaDJmdnF1ek9BaUhJRWVXWHgydFlUdzVhWEpIcmtrbUdMMzBHTUg1eUxhenk2IiwiYmlydGgiOiJ0ZXN0IGJpcnRoIiwiY3VycmVudEhhc2hlZFJlZnJlc2hUb2tlbiI6bnVsbCwiaXNBY3RpdmF0ZSI6dHJ1ZSwicm9sZSI6IlVzZXIiLCJwZXJtaXNzaW9uIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIyLTEwLTAyVDA4OjU1OjA2LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIyLTEwLTAyVDA4OjU1OjA2LjAwMFoiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE2NjQ3NjE5MzYsImV4cCI6MTY2NDc2NTUzNn0.lPIQIf-fyV17V6G59liAu62CYl2zpnnuMJ6i5wOnvLk";
-export const createPost = async (post, dispatch) => {
+import {
+  loginFailed,
+  loginStart,
+  loginSuccess,
+  logOutFailed,
+  logOutStart,
+  logOutSuccess,
+  registerFailed,
+  registerStart,
+  registerSuccess,
+} from "./authSlice";
+export const register = async (model, dispatch, navigate) => {
+  dispatch(registerStart());
+  try {
+    const res = await axios.post(`${apiUrl}/auth/register`, model);
+    if (res.data) {
+      dispatch(registerSuccess(res.data));
+      navigate("/login");
+    }
+  } catch (error) {
+    dispatch(registerFailed());
+  }
+};
+export const login = async (model, dispatch, navigate) => {
+  debugger
+  dispatch(loginStart());
+  try {
+    const res = await axios.post(`${apiUrl}/auth/login`, model);
+    if (res.data) {
+      dispatch(loginSuccess(res.data));
+      navigate("/");
+    }
+  } catch (error) {
+    dispatch(loginFailed());
+  }
+};
+export const logOut = async (dispatch) => {
+  dispatch(logOutStart());
+  try {
+    dispatch(logOutSuccess());
+  } catch (err) {
+    dispatch(logOutFailed());
+  }
+};
+export const createPost = async (accessToken,post, dispatch) => {
   dispatch(createStart());
   try {
     const config = {
@@ -21,25 +63,28 @@ export const createPost = async (post, dispatch) => {
     };
     const res = await axios.post(`${apiUrl}/post/newPost`, post, config);
     dispatch(createSuccess(res.data));
-  } catch (err) {
+  } catch (error) {
     dispatch(createFailed());
   }
 };
 
-export const getAllPost = async (dispatch) => {
+export const getAllPost = async (accessToken,dispatch) => {
   dispatch(getStart());
   try {
+    debugger
+    const config = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
     const paging = {
       page: 1,
       pageSize: 5,
     };
-    const res = await axios.get(
-      `${apiUrl}/post/all`,
-      { params: { paging } },
-      { headers: { 'Authorization': `Bearer ${accessToken}` } }
-    );
+    const res = await axios.post(`${apiUrl}/post/all`, paging,config);
     dispatch(getSuccess(res.data));
-  } catch (err) {
+  } catch (error) {
     dispatch(getFailed());
   }
 };

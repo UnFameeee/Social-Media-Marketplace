@@ -7,11 +7,13 @@ import { ValidateForm, FormChildren } from '../../components/Form';
 import { loginModel, loginSchema } from './Auth.model';
 import AuthService from './Auth.service';
 import './Auth.css';
+import { login } from '../../redux/apiRequest';
+import { useDispatch } from 'react-redux';
 
 export default function Login() {
   const [valid, setValid] = useState(false);
   var navigate = useNavigate();
-
+  const dispatch = useDispatch()
   return (
     <Box>
       <Face happy={valid} />
@@ -21,11 +23,7 @@ export default function Login() {
             initialValues={loginModel}
             validationSchema={loginSchema}
             onSubmit={(values) => {
-              AuthService.login(values).then((value) => {
-                if (value) {
-                  navigate('/');
-                }
-              });
+              login(values,dispatch,navigate)
             }}
             handleValid={(isValid, dirty, touched) => {
               if (Object.keys(touched).length) {
