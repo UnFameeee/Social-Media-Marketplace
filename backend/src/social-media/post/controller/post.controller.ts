@@ -1,13 +1,11 @@
 import { Controller, Param, UseGuards } from '@nestjs/common';
-import { Body, Delete, Get, Post, Put, Request, UploadedFile, UseInterceptors } from '@nestjs/common/decorators';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { Body, Delete, Post, Put, Request } from '@nestjs/common/decorators';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { storage } from 'src/common/utils/storage.utils';
-import { Profile } from '../profile/model/profile.model';
-import { PostData } from '../../common/models/dtos/post-data.dto';
-import { PostService } from './post.service';
 import { Page } from 'src/common/models/view-model/page-model';
+import { PostData } from 'src/common/models/dtos/post-data.dto';
+import { PostService } from '../service/post.service';
+import { Profile } from 'src/social-media/profile/model/profile.model';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Post')
@@ -15,12 +13,12 @@ import { Page } from 'src/common/models/view-model/page-model';
 export class PostController {
     constructor(private readonly postService: PostService) { };
 
-    @Get('/all')
+    @Post('/all')
     async getAllPost(@Body() page: Page){
         return await this.postService.getAllPost(page);
     }
 
-    @Get('/profile')
+    @Post('/profile')
     async getPostByProfileId(@Request() request: any, @Body() page: Page) {
         const profile = <Profile>request.user;
         return await this.postService.getPostByProfileId(profile, page);
@@ -42,12 +40,5 @@ export class PostController {
     async deletePost(@Request() request: any, @Param('post_id') post_id: number) {
         const profile = <Profile>request.user;
         return this.postService.deletePost(profile, post_id);
-    }
-
-    @Post('upload')
-    @UseInterceptors(FileInterceptor('file', storage))
-    uploadFile(@UploadedFile() file: Express.Multer.File) {
-        console.log(file.path);
-        return file;
     }
 }
