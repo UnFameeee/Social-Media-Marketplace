@@ -1,0 +1,26 @@
+.form-wrap {
+  position: fixed;
+  top: 50%;
+  right: 25%;
+  width: 25vw;
+  border-radius: 10px;
+  padding: 20px;
+  background: white;
+  transform: translateY(-50%);
+}
+.form-title {
+  margin: 0;
+  padding: 18px 0;
+  font-size: 3.6rem;
+  color: var(--primary-color);
+  line-height: 3.6rem;
+  font-weight: 900;
+}
+.form-bottom {
+  color: #b3b3b3;
+  padding-bottom: 20px;
+}
+.form-bottom-special {
+  color: var(--primary-color);
+  font-weight: 600;
+}

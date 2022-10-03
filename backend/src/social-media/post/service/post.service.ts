@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ResponseData } from 'src/common/models/view-model/success-message.model';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-import { Profile } from '../profile/model/profile.model';
-import { PostData } from '../../common/models/dtos/post-data.dto';
-import { Post } from './model/post.model';
-import { PostRepository } from './post.repository';
+import { Profile } from '../../profile/model/profile.model';
+import { PostData } from '../../../common/models/dtos/post-data.dto';
+import { Post } from '../model/post.model';
+import { PostRepository } from '../repository/post.repository';
 import { PagingData } from 'src/common/models/view-model/paging.model';
 import { Page } from 'src/common/models/view-model/page-model';
 

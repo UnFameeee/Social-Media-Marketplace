@@ -1,4 +1,4 @@
 export class ResponseData<T> {
-    message: string;
-    results?: T
+    message: string = null;
+    results?: T = null;
 }
