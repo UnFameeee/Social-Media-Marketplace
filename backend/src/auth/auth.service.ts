@@ -51,7 +51,8 @@ export class AuthService {
             const profile = await this.profileRepository.findProfileById(profile_id);
             const payload: TokenPayload = { profile };
             const token = this.jwtService.sign(payload);
-            return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${jwtConstants.access_expires}`
+            // return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${jwtConstants.access_expires}`
+            return token;
         } catch (err) {
             ExceptionResponse(err);
         }
@@ -87,7 +88,8 @@ export class AuthService {
 
             const access = await this.getAccessTokenThroughCookie(checkProfile.profile_id);
             const refresh = await this.getRefreshTokenThroughCookie(checkProfile.profile_id)
-            const result = { access, refresh };
+            // const result = { access, refresh };
+            const result = {access};
             return result;
         } catch (err) {
             ExceptionResponse(err);
