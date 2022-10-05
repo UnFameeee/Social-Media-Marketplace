@@ -19,7 +19,8 @@ import {
   registerStart,
   registerSuccess,
 } from "./authSlice";
-const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjEsInByb2ZpbGVfbmFtZSI6IlRlc3RQcm9maWxlMTIzIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJGtSZXR3ZHJQaDJmdnF1ek9BaUhJRWVXWHgydFlUdzVhWEpIcmtrbUdMMzBHTUg1eUxhenk2IiwiYmlydGgiOiJ0ZXN0IGJpcnRoIiwiY3VycmVudEhhc2hlZFJlZnJlc2hUb2tlbiI6bnVsbCwiaXNBY3RpdmF0ZSI6dHJ1ZSwicm9sZSI6IlVzZXIiLCJwZXJtaXNzaW9uIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIyLTEwLTAyVDA4OjU1OjA2LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIyLTEwLTAyVDA4OjU1OjA2LjAwMFoiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE2NjQ4OTg2NzIsImV4cCI6MTY2NDkwMjI3Mn0.-ACXXQ5wqoCxwc7aawymlvYDex6JROuOWI77yU0XD_M"
+const token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjEsInByb2ZpbGVfbmFtZSI6IlRlc3RQcm9maWxlMTIzIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJGtSZXR3ZHJQaDJmdnF1ek9BaUhJRWVXWHgydFlUdzVhWEpIcmtrbUdMMzBHTUg1eUxhenk2IiwiYmlydGgiOiJ0ZXN0IGJpcnRoIiwiY3VycmVudEhhc2hlZFJlZnJlc2hUb2tlbiI6bnVsbCwiaXNBY3RpdmF0ZSI6dHJ1ZSwicm9sZSI6IlVzZXIiLCJwZXJtaXNzaW9uIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIyLTEwLTAyVDA4OjU1OjA2LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIyLTEwLTAyVDA4OjU1OjA2LjAwMFoiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE2NjQ4OTg2NzIsImV4cCI6MTY2NDkwMjI3Mn0.-ACXXQ5wqoCxwc7aawymlvYDex6JROuOWI77yU0XD_M";
 export const register = async (model, dispatch, navigate) => {
   dispatch(registerStart());
   try {
@@ -32,13 +33,13 @@ export const register = async (model, dispatch, navigate) => {
     dispatch(registerFailed());
   }
 };
-export const login = async (model, dispatch, navigate,from) => {
+export const login = async (model, dispatch, navigate, from) => {
   dispatch(loginStart());
   try {
     const res = await axios.post(`${apiUrl}/auth/login`, model);
     if (res.data) {
       dispatch(loginSuccess(res.data));
-      navigate(from, {replace:true});
+      navigate(from, { replace: true });
     }
   } catch (error) {
     dispatch(loginFailed());
@@ -52,7 +53,7 @@ export const logOut = async (dispatch) => {
     dispatch(logOutFailed());
   }
 };
-export const createPost = async (accessToken,post, dispatch) => {
+export const createPost = async (accessToken, post, dispatch) => {
   dispatch(createStart());
   try {
     const config = {
@@ -68,7 +69,7 @@ export const createPost = async (accessToken,post, dispatch) => {
   }
 };
 
-export const getAllPost = async (accessToken,dispatch) => {
+export const getAllPost = async (accessToken, dispatch) => {
   dispatch(getStart());
   try {
     const config = {
@@ -81,7 +82,7 @@ export const getAllPost = async (accessToken,dispatch) => {
       page: 1,
       pageSize: 5,
     };
-    const res = await axios.post(`${apiUrl}/post/all`, paging,config);
+    const res = await axios.post(`${apiUrl}/post/all`, paging, config);
     dispatch(getSuccess(res.data));
   } catch (error) {
     dispatch(getFailed());

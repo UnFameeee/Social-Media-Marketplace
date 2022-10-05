@@ -13,14 +13,14 @@ function CreatePostModal({ showModal, setShowModal, avtUrl }) {
     media_location: "",
   });
   const { written_text, media_type, media_location } = newPost;
-
+  const accessToken = useSelector((state) => state.auth.login.currentUser.access)
   const closeModal = () => {
     setShowModal(false);
   };
   const handlePost = (e) => {
     e.preventDefault();
     newPost.media_location = "test";
-    createPost(newPost, dispatch);
+    createPost(accessToken,newPost, dispatch);
   };
 
   const handleOnChangePost = (event) => {
@@ -29,12 +29,15 @@ function CreatePostModal({ showModal, setShowModal, avtUrl }) {
       [event.target.name]: event.target.value,
     });
   };
-  const isPosting = useSelector((state) => state.post.create.isFetching)
-  useEffect(() =>{
-    if(isPosting === true){
+  const isPosting = useSelector((state) => state.post.create.isFetching);
+  useEffect(() => {
+    if (isPosting === true) {
       closeModal();
     }
-  },)
+  });
+  useEffect(() => {
+    console.log(written_text)
+  },[written_text]);
   return (
     <>
       {showModal ? (
@@ -80,7 +83,7 @@ function CreatePostModal({ showModal, setShowModal, avtUrl }) {
               <button
                 onClick={handlePost}
                 className="w-full bg-blue8f3 text-white rounded-[0.5rem] py-[0.75rem]"
-               disabled={written_text.length === 0}
+                disabled={written_text.length === 0}
               >
                 Post
               </button>

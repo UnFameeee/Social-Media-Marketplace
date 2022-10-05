@@ -41,7 +41,7 @@ export const postSlice = createSlice({
     },
 
     getStart: (state) => {
-      state.create.isFetching = true;
+      state.get.isFetching = true;
     },
     getSuccess: (state, action) => {
       state.get.isFetching = false;
