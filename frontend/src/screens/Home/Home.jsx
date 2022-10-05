@@ -31,16 +31,19 @@ import { getAllPost } from "../../redux/apiRequest";
 import { useEffect } from "react";
 
 function Home() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const handleOpenCreatePost = () => {
     setOpenCreatePost((prev) => !prev);
   };
-  const posts = useSelector((state) => state.post.get.posts)
-  // const accessToken = useSelector((state) => state.auth.login.currentUser.refresh.token)
+  const posts = useSelector((state) => state.post.get.posts?.results?.data);
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
   useEffect(() => {
-    // getAllPost(accessToken,dispatch)
-  }, []);
+    getAllPost(accessToken, dispatch);
+  }, [accessToken]);
+  useEffect(() => {}, [posts]);
   return (
     <>
       <CreatePostModal
@@ -104,27 +107,17 @@ function Home() {
               />
             </Box>
           </Paper>
-          <CardPost
-            userName="duy duong"
-            postTime="1 hour"
-            url="https://source.unsplash.com/random/330×330"
-            content="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste reprehenderit laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/310×310"
-          />
-          <CardPost
-            userName="lmao duke"
-            postTime="5 hour"
-            url="https://source.unsplash.com/random/230×230"
-            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/110×110"
-          />
-          <CardPost
-            userName="Dejavu"
-            postTime="8 hour"
-            url="https://source.unsplash.com/random/120×120"
-            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/175×175"
-          />
+          {posts &&
+            posts.map((post) => 
+              <CardPost
+                key={post.post_id}
+                userName="duy duongss"
+                postTime="1 hour"
+                content={post.written_text}
+                url={post.media_type}
+                imgUrl={post.media_type}
+              />
+            )}
         </div>
         <RightBar />
       </div>

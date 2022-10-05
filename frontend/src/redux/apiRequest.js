@@ -32,13 +32,13 @@ export const register = async (model, dispatch, navigate) => {
     dispatch(registerFailed());
   }
 };
-export const login = async (model, dispatch, navigate) => {
+export const login = async (model, dispatch, navigate,from) => {
   dispatch(loginStart());
   try {
     const res = await axios.post(`${apiUrl}/auth/login`, model);
     if (res.data) {
       dispatch(loginSuccess(res.data));
-      navigate("/");
+      navigate(from, {replace:true});
     }
   } catch (error) {
     dispatch(loginFailed());
