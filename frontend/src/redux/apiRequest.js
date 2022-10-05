@@ -19,6 +19,7 @@ import {
   registerStart,
   registerSuccess,
 } from "./authSlice";
+const token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjEsInByb2ZpbGVfbmFtZSI6IlRlc3RQcm9maWxlMTIzIiwiZW1haWwiOiJ0ZXN0QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJGtSZXR3ZHJQaDJmdnF1ek9BaUhJRWVXWHgydFlUdzVhWEpIcmtrbUdMMzBHTUg1eUxhenk2IiwiYmlydGgiOiJ0ZXN0IGJpcnRoIiwiY3VycmVudEhhc2hlZFJlZnJlc2hUb2tlbiI6bnVsbCwiaXNBY3RpdmF0ZSI6dHJ1ZSwicm9sZSI6IlVzZXIiLCJwZXJtaXNzaW9uIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIyLTEwLTAyVDA4OjU1OjA2LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIyLTEwLTAyVDA4OjU1OjA2LjAwMFoiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE2NjQ4OTg2NzIsImV4cCI6MTY2NDkwMjI3Mn0.-ACXXQ5wqoCxwc7aawymlvYDex6JROuOWI77yU0XD_M"
 export const register = async (model, dispatch, navigate) => {
   dispatch(registerStart());
   try {
@@ -32,7 +33,6 @@ export const register = async (model, dispatch, navigate) => {
   }
 };
 export const login = async (model, dispatch, navigate) => {
-  debugger
   dispatch(loginStart());
   try {
     const res = await axios.post(`${apiUrl}/auth/login`, model);
@@ -71,7 +71,6 @@ export const createPost = async (accessToken,post, dispatch) => {
 export const getAllPost = async (accessToken,dispatch) => {
   dispatch(getStart());
   try {
-    debugger
     const config = {
       headers: {
         "content-type": "application/json; charset=utf-8",

@@ -37,11 +37,10 @@ function Home() {
     setOpenCreatePost((prev) => !prev);
   };
   const posts = useSelector((state) => state.post.get.posts)
-  const accessToken = useSelector((state) => state.auth.login.currentUser.refresh.token)
-  console.log("access",accessToken)
+  // const accessToken = useSelector((state) => state.auth.login.currentUser.refresh.token)
   useEffect(() => {
-    getAllPost(accessToken,dispatch)
-  }, [accessToken]);
+    // getAllPost(accessToken,dispatch)
+  }, []);
   return (
     <>
       <CreatePostModal
