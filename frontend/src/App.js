@@ -24,9 +24,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>
-        <Route element={<RequireAuth />}>
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </>
   );

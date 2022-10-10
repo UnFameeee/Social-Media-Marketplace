@@ -5,13 +5,8 @@ import {
   Diversity2,
   Storefront,
   LiveTv,
-  EmergencyRecording,
-  Search,
-  MoreHoriz,
   SearchOutlined,
 } from "@mui/icons-material";
-import AvatarWithText from "../../components/Avatar/AvatarWithText";
-import CreatePostModal from "./CreatePostModal";
 import CardPost from "../../components/Card/CardPost";
 import LeftBar from "../../components/Layout/SideBar/LeftBar";
 import RightBar from "../../components/Layout/SideBar/RightBar";
@@ -25,6 +20,7 @@ import {
   Modal,
   Button,
 } from "@mui/material";
+import PostModal from "./PostModal";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPost } from "../../redux/apiRequest";
@@ -46,7 +42,7 @@ function Home() {
   useEffect(() => {}, [posts]);
   return (
     <>
-      <CreatePostModal
+      <PostModal
         showModal={openCreatePost}
         setShowModal={setOpenCreatePost}
         avtUrl="https://source.unsplash.com/random/330×320"
@@ -108,8 +104,9 @@ function Home() {
             </Box>
           </Paper>
           {posts &&
-            posts.map((post) => 
+            posts.map((post) => (
               <CardPost
+                id={post.post_id}
                 key={post.post_id}
                 userName="duy duongss"
                 postTime="1 hour"
@@ -117,7 +114,7 @@ function Home() {
                 url={post.media_type}
                 imgUrl={post.media_type}
               />
-            )}
+            ))}
         </div>
         <RightBar />
       </div>

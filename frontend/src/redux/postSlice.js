@@ -11,7 +11,12 @@ const initialState = {
     isFetching: false,
     error: false,
   },
-}
+  delete: {
+    success: false,
+    isFetching: false,
+    error: false,
+  },
+};
 export const postSlice = createSlice({
   name: "post",
   initialState: {
@@ -25,41 +30,61 @@ export const postSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    delete: {
+      success: false,
+      isFetching: false,
+      error: false,
+    },
   },
   extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
-    createStart: (state) => {
+    createPostStart: (state) => {
       state.create.isFetching = true;
     },
-    createSuccess: (state, action) => {
+    createPostSuccess: (state, action) => {
       state.create.isFetching = false;
       state.create.post = action.payload;
     },
-    createFailed: (state) => {
+    createPostFailed: (state) => {
       state.create.isFetching = false;
       state.create.error = true;
     },
 
-    getStart: (state) => {
+    getPostStart: (state) => {
       state.get.isFetching = true;
     },
-    getSuccess: (state, action) => {
+    getPostSuccess: (state, action) => {
       state.get.isFetching = false;
       state.get.posts = action.payload;
     },
-    getFailed: (state) => {
+    getPostFailed: (state) => {
       state.get.isFetching = false;
       state.get.error = true;
+    },
+    deletePostStart: (state) => {
+      state.delete.isFetching = true;
+    },
+    deletePostSuccess: (state) => {
+      state.delete.isFetching = false;
+      state.delete.success = true;
+    },
+    deletePostFailed: (state) => {
+      state.delete.isFetching = false;
+      state.delete.success = false;
+      state.delete.error = true;
     },
   },
 });
 
 export const {
-  createStart,
-  createSuccess,
-  createFailed,
-  getStart,
-  getSuccess,
-  getFailed,
+  createPostStart,
+  createPostSuccess,
+  createPostFailed,
+  getPostStart,
+  getPostSuccess,
+  getPostFailed,
+  deletePostStart,
+  deletePostSuccess,
+  deletePostFailed
 } = postSlice.actions;
 export default postSlice.reducer;
