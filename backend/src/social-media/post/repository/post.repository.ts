@@ -9,6 +9,7 @@ import { Page } from "src/common/models/view-model/page-model";
 import { paginate } from "src/common/utils/paginate.utils";
 import { Sequelize } from "sequelize-typescript";
 import { PostLikeRepository } from "./post-like.repository";
+import { ResponseData } from "src/common/models/view-model/success-message.model";
 
 @Injectable()
 export class PostRepository {
@@ -75,6 +76,23 @@ export class PostRepository {
         }
     }
 
+    async getSinglePostDetail(post_id: number): Promise<Post>{
+        try {
+            // var result = new PagingData<Post>();
+            return await this.postRepository.findOne({
+                attributes:["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
+                include: [{
+                    model: Profile,
+                    attributes: [],
+                }],
+                where: {post_id: post_id}
+            });
+
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
     async createNewPost(newPost: PostData): Promise<Post> {
         try {
             const res = await this.postRepository.create(newPost);
@@ -99,7 +117,6 @@ export class PostRepository {
                 where: {
                     post_id: post_id
                 }
-                //Include profile_id
             });
             return res ? true : false;
         } catch (err) {

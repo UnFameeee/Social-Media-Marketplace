@@ -51,10 +51,22 @@ export class PostService {
     async updatePost(profile: Profile, postData: PostData): Promise<ResponseData<string>>{
         try{
             const response = new ResponseData<string>();
-            const data = await this.postRepository.updatePost(postData);
-            if(data){
-                response.results = "Update post successfully"
+            var tempPostDetail= await this.postRepository.getSinglePostDetail(postData.post_id);
+            if(tempPostDetail){
+                if(tempPostDetail["profile_id"] == profile.profile_id){
+                    const data = await this.postRepository.updatePost(postData);
+                    if(data){
+                        response.results = "Update post successfully"
+                    }
+                }
+                else{
+                    response.message = "You only can modify your post"
+                }
+            }else{
+                response.message = "Post isn't exist"
             }
+
+            
             return response;
         }catch(err){
             ExceptionResponse(err);
@@ -64,9 +76,21 @@ export class PostService {
     async deletePost(profile: Profile, post_id: number): Promise<ResponseData<string>>{
         try{
             const response = new ResponseData<string>();
-            const res = await this.postRepository.deletePost(profile.profile_id, post_id);
-            if(res){
-                response.results = "Delete post successfully"
+
+            var tempPostDetail= await this.postRepository.getSinglePostDetail(post_id);
+
+            if(tempPostDetail){
+                if(tempPostDetail["profile_id"] == profile.profile_id){
+                    const res = await this.postRepository.deletePost(profile.profile_id, post_id);
+                    if(res){
+                        response.results = "Delete post successfully"
+                    }   
+                }
+                else{
+                    response.message = "You only can modify your post"
+                }
+            }else{
+                response.message = "Post isn't exist"
             }
             return response;
         }catch(err){
