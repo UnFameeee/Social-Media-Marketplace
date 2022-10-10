@@ -7,16 +7,20 @@ import { Post } from "../model/post.model";
 import { PagingData } from "src/common/models/view-model/paging.model";
 import { Page } from "src/common/models/view-model/page-model";
 import { paginate } from "src/common/utils/paginate.utils";
-import { PostLike } from "../model/post-like.model";
+import { Sequelize } from "sequelize-typescript";
+import { PostLikeRepository } from "./post-like.repository";
 
 @Injectable()
 export class PostRepository {
-    constructor(@Inject(PROVIDER.Post) private postRepository: typeof Post) { }
+    constructor(@Inject(PROVIDER.Post) private postRepository: typeof Post,
+        @Inject(PostLikeRepository) private postLikeRepository: PostLikeRepository
+    ) { }
 
     async getAllPost(page: Page): Promise<PagingData<Post[]>> {
         try {
             var result = new PagingData<Post[]>();
             var queryData = await this.postRepository.findAndCountAll({
+                attributes:["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
                 include: [{
                     model: Profile,
                     attributes: [],
@@ -24,8 +28,14 @@ export class PostRepository {
                 order: [
                     ['createdAt', 'DESC']
                 ],
+                raw: false,
                 ...paginate({ page })
             });
+
+            for (const element of queryData.rows){
+                var totalLike = await this.postLikeRepository.allLikeOfPost(element["profile_id"], element.post_id);
+                element.setDataValue("totalLike", totalLike);
+            }
             result.data = queryData.rows;
             page.totalElement = queryData.count;
             result.page = page;
@@ -39,6 +49,7 @@ export class PostRepository {
         try {
             var result = new PagingData<Post[]>();
             var queryData = await this.postRepository.findAndCountAll({
+                attributes:["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
                 include: [{
                     model: Profile,
                     attributes: [],
@@ -49,6 +60,12 @@ export class PostRepository {
                 ],
                 ...paginate({ page })
             });
+
+            for (const element of queryData.rows){
+                var totalLike = await this.postLikeRepository.allLikeOfPost(element["profile_id"], element.post_id);
+                element.setDataValue("totalLike", totalLike);
+            }
+
             result.data = queryData.rows;
             page.totalElement = queryData.count;
             result.page = page;

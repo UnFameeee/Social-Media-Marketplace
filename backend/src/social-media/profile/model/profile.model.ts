@@ -37,7 +37,7 @@ export class Profile extends Model<Profile> {
 
     @AllowNull
     @Column
-    currentHashedRefreshToken: string;
+    picture: string;
     
     @Default(true)
     @Column

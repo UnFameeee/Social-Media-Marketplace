@@ -61,7 +61,7 @@ export class ProfileService {
         try {
             await this.profileRepository.deActivateProfileById(profile_id);
         } catch (err) {
-
+            ExceptionResponse(err)
         }
     }
 
