@@ -92,8 +92,6 @@ export class PostLikeRepository {
                     }
                 ],
             });
-
-            console.log(allPostLikeModel.length);
             return allPostLikeModel ? allPostLikeModel.length : 0;
 
         } catch (err) {
