@@ -12,7 +12,7 @@ export class ProfileRepository {
 
     async getAllProfile(): Promise<Profile[]> {
         try {
-            return this.profileRepository.findAll();
+            return this.profileRepository.scope("withoutPass").findAll();
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
@@ -20,7 +20,7 @@ export class ProfileRepository {
 
     async findProfileById(profile_id: number): Promise<Profile> {
         try {
-            return this.profileRepository.findOne({ where: { profile_id: profile_id } })
+            return this.profileRepository.scope("withoutPass").findOne({ where: { profile_id: profile_id } })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
