@@ -15,6 +15,10 @@ import {
   Grid,
   IconButton,
   Avatar,
+  MenuItem,
+  MenuList,
+  Box,
+  Typography,
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import MUI from '../../MUI';
@@ -52,38 +56,44 @@ const useStyles = makeStyles()(() => ({
 
 const middleNavIcons = [
   {
-    id: "navHome",
+    id: 'navHome',
     icon: <HomeOutlined />,
-    tooltip: "Home"
+    tooltip: 'Home',
+    onClick: () => {},
   },
   {
-    id: "navFriends",
+    id: 'navFriends',
     icon: <GroupsOutlined />,
-    tooltip: "Friends"
+    tooltip: 'Friends',
+    onClick: () => {},
   },
   {
-    id: "navWatch",
+    id: 'navWatch',
     icon: <LiveTvOutlined />,
-    tooltip: "Watch"
+    tooltip: 'Watch',
+    onClick: () => {},
   },
   {
-    id: "navMarketplace",
+    id: 'navMarketplace',
     icon: <StorefrontOutlined />,
-    tooltip: "Marketplace"
+    tooltip: 'Marketplace',
+    onClick: () => {},
   },
   {
-    id: "navf",
+    id: 'navf',
     icon: <HomeOutlined />,
-    tooltip: "f"
+    tooltip: 'f',
+    onClick: () => {},
   },
 ];
 
 export default function NavBar() {
   const navigate = useNavigate();
   const [value, setValue] = useState('');
+  const [open, setOpen] = useState(false);
   const { classes } = useStyles();
 
-  console.log('rerender')
+  console.log('rerender');
 
   function handleSearch() {}
   return (
@@ -182,16 +192,16 @@ export default function NavBar() {
             handleSearch={handleSearch}
             recentSearchs={[
               {
-                url: 'https://source.unsplash.com/random/300×300',
-                name: 'Thạch Dương Duy',
+                left: 'https://source.unsplash.com/random/300×300',
+                middle: 'Thạch Dương Duy',
               },
               {
-                url: 'https://source.unsplash.com/random/300×300',
-                name: 'Nguyễn Hoàng Vũ',
+                left: 'https://source.unsplash.com/random/300×300',
+                middle: 'Nguyễn Hoàng Vũ',
               },
               {
-                url: 'https://source.unsplash.com/random/300×300',
-                name: 'Nguyễn Phạm Quốc Thắng',
+                left: 'https://source.unsplash.com/random/300×300',
+                middle: 'Nguyễn Phạm Quốc Thắng',
               },
             ]}
           />
@@ -203,8 +213,13 @@ export default function NavBar() {
           sx={{ display: 'flex', justifyContent: 'space-evenly' }}
           className={classes.grid}
         >
-          {middleNavIcons.map(item => (
-            <MUI.ButtonWithIcon key={item.id} id={item.id} tooltip={item.tooltip}>
+          {middleNavIcons.map((item) => (
+            <MUI.ButtonWithIcon
+              key={item.id}
+              id={item.id}
+              tooltip={item.tooltip}
+              onClick={item.onClick}
+            >
               {item.icon}
             </MUI.ButtonWithIcon>
           ))}
@@ -224,7 +239,17 @@ export default function NavBar() {
           <Avatar>
             <Notifications sx={{ fontSize: '2.4rem' }} />
           </Avatar>
-          <Avatar src="https://source.unsplash.com/random/300×300" />
+          <Box sx={{ position: 'relative' }}>
+            <Avatar
+              src="https://source.unsplash.com/random/300×300"
+              onClick={() => setOpen(!open)}
+            />
+
+            {open && (
+              <MUI.Menu 
+              />
+            )}
+          </Box>
         </Grid>
       </Grid>
     </Paper>

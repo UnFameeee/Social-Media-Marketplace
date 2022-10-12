@@ -14,6 +14,7 @@ import { useState } from 'react';
 import { makeStyles } from 'tss-react/mui';
 import ReactTooltip from 'react-tooltip';
 import { IconButtonWithoutBackground } from './Button/IconButton';
+import Menu from './Menu';
 
 const useStyles = makeStyles()(() => ({
   root: {
@@ -21,8 +22,8 @@ const useStyles = makeStyles()(() => ({
       // cursor: 'pointer',
       // color: '#050505',
       // backgroundColor: '#E4E6EB',
-      marginRight: '0.8rem',
-      '&:hover': { backgroundColor: '#E4E6EB' },
+      // marginRight: '0.8rem',
+      // '&:hover': { backgroundColor: '#E4E6EB' },
     },
   },
 }));
@@ -37,7 +38,7 @@ export default function SearchBar(props) {
     recentSearchs,
     ...others
   } = props;
-  
+
   function handleKeyDown(event) {
     if (event.key === 'Enter') {
       handleSearch();
@@ -85,9 +86,9 @@ export default function SearchBar(props) {
           {...others}
         />
 
-        {open && recentSearchs && (
+        {/* {open && recentSearchs && (
           <MenuList
-            style={{
+            sx={{
               position: 'absolute',
               backgroundColor: 'white',
               marginTop: '0.8rem',
@@ -145,6 +146,17 @@ export default function SearchBar(props) {
               </MenuItem>
             ))}
           </MenuList>
+        )} */}
+
+        {open && recentSearchs && (
+          <Menu
+            list={recentSearchs}
+            before={
+              <Typography sx={{ marginLeft: '1.6rem' }}>
+                Recent Searchs
+              </Typography>
+            }
+          />
         )}
       </Box>
     </ClickAwayListener>

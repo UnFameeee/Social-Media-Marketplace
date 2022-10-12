@@ -7,6 +7,7 @@ import { ButtonWithIcon } from './Button/IconButton';
 import { IconButtonWithoutBackground } from './Button/IconButton';
 import { IconButtonWithBackground } from './Button/IconButton';
 import SearchBar from './SearchBar';
+import Menu from './Menu';
 
 const MUI = {
   Input,
@@ -18,6 +19,7 @@ const MUI = {
   ButtonWithIcon,
   IconButtonWithoutBackground,
   IconButtonWithBackground,
+  Menu,
 };
 
 export default MUI;
