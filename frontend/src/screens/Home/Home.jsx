@@ -29,9 +29,14 @@ import { useEffect } from "react";
 function Home() {
   const dispatch = useDispatch();
   const [openCreatePost, setOpenCreatePost] = useState(false);
-  const handleOpenCreatePost = () => {
+  const [postUpdateData, setPostUpdateData] = useState();
+  const handleOpenPostModel = () => {
     setOpenCreatePost((prev) => !prev);
   };
+  
+  const passPostUpdateData = (data) =>{
+    setPostUpdateData(data)
+  }
   const posts = useSelector((state) => state.post.get.posts?.results?.data);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
@@ -39,11 +44,12 @@ function Home() {
   useEffect(() => {
     getAllPost(accessToken, dispatch);
   }, [accessToken]);
-  useEffect(() => {}, [posts]);
   return (
     <>
       <PostModal
         showModal={openCreatePost}
+        postUpdateData={postUpdateData}
+        setPostUpdateData= {setPostUpdateData}
         setShowModal={setOpenCreatePost}
         avtUrl="https://source.unsplash.com/random/330×320"
       />
@@ -78,7 +84,7 @@ function Home() {
             >
               <Avatar />
               <TextField
-                onClick={handleOpenCreatePost}
+                onClick={handleOpenPostModel}
                 placeholder="Search Facebook"
                 InputProps={{
                   startAdornment: (
@@ -106,13 +112,16 @@ function Home() {
           {posts &&
             posts.map((post) => (
               <CardPost
+                postData ={post}
                 id={post.post_id}
                 key={post.post_id}
                 userName="duy duongss"
                 postTime="1 hour"
                 content={post.written_text}
-                url={post.media_type}
+                avtUrl={post.media_type}
                 imgUrl={post.media_type}
+                handleAction={handleOpenPostModel}
+                getPostUpdateData = {passPostUpdateData}
               />
             ))}
         </div>

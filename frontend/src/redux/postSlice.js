@@ -16,6 +16,11 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  update:{
+    success: false,
+    isFetching: false,
+    error: false,
+  }
 };
 export const postSlice = createSlice({
   name: "post",
@@ -35,6 +40,11 @@ export const postSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    update:{
+      success: false,
+      isFetching: false,
+      error: false,
+    }
   },
   extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
@@ -61,6 +71,7 @@ export const postSlice = createSlice({
       state.get.isFetching = false;
       state.get.error = true;
     },
+
     deletePostStart: (state) => {
       state.delete.isFetching = true;
     },
@@ -72,6 +83,19 @@ export const postSlice = createSlice({
       state.delete.isFetching = false;
       state.delete.success = false;
       state.delete.error = true;
+    },
+
+    updatePostStart: (state) => {
+      state.update.isFetching = true;
+    },
+    updatePostSuccess: (state) => {
+      state.update.isFetching = false;
+      state.update.success = true;
+    },
+    updatePostFailed: (state) => {
+      state.update.isFetching = false;
+      state.update.success = false;
+      state.update.error = true;
     },
   },
 });
@@ -85,6 +109,9 @@ export const {
   getPostFailed,
   deletePostStart,
   deletePostSuccess,
-  deletePostFailed
+  deletePostFailed,
+  updatePostStart,
+  updatePostSuccess,
+  updatePostFailed,
 } = postSlice.actions;
 export default postSlice.reducer;

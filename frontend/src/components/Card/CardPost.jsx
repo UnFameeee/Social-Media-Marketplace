@@ -17,6 +17,16 @@ function CardPost(props) {
   const handleOnClickShowAction = () => {
     setShowAction(!showAction);
   };
+  const handleShowUpdateModal = () => {
+    debugger
+    let tempPostData = {
+      written_text: props.content,
+      media_type: props.imgUrl,
+      avtUrl:"https://source.unsplash.com/random/330×320"
+    };
+    props.getPostUpdateData(tempPostData);
+    props.handleAction();
+  };  
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -29,7 +39,7 @@ function CardPost(props) {
         <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
           <div className="flex flex-1 gap-[1rem]">
             <img
-              src={props.url}
+              src={props.avtUrl}
               className="w-[4.5rem] h-[4.5rem] rounded-[50%] border-2 border-blue-300"
               alt=""
             />
@@ -50,7 +60,7 @@ function CardPost(props) {
               <div className="bg-white floatingAction absolute  right-0  p-[1rem] drop-shadow-sm rounded-xl border-[0.1rem] cursor-pointer">
                 <ul className="flex gap-[1rem] flex-col ">
                   <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
-                    <button>Update</button>
+                    <button onClick={handleShowUpdateModal}>Update</button>
                   </li>
                   <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
                     <button onClick={handleDeletePost}>Delete</button>

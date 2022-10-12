@@ -18,11 +18,18 @@ function PostModal(props) {
   );
   const closeModal = () => {
     props.setShowModal(false);
+    props.setPostUpdateData(null);
   };
   const handlePost = (e) => {
     e.preventDefault();
     post.media_location = "test";
     createPost(accessToken, post, dispatch);
+  };
+  const handleOnChangeUpdatePost = (event) => {
+    props.setPostUpdateData({
+      ...props.postUpdateData,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const handleOnChangePost = (event) => {
@@ -31,9 +38,9 @@ function PostModal(props) {
       [event.target.name]: event.target.value,
     });
   };
-  const handleUpdatePost = () =>{
-
-  }
+  const handleUpdatePost = () => {
+    
+  };
   const isPosting = useSelector((state) => state.post.create.isFetching);
   useEffect(() => {
     if (isPosting === true) {
@@ -42,7 +49,7 @@ function PostModal(props) {
   });
   return (
     <>
-      {props.showModal? (
+      {props.showModal ? (
         <div
           className="w-[100%] h-[100%] fixed left-0 top-0 z-20 "
           style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
@@ -56,7 +63,7 @@ function PostModal(props) {
                 Close
               </button>
               <span className="  text-center w-full px-[2rem] text-[2.4rem] font-semibold">
-               { props.isUpdate ? "Update Post" : "Create Post"}
+                {props.postUpdateData ? "Update Post" : "Create Post"}
               </span>
             </div>
             <FullWidthHr />
@@ -70,24 +77,40 @@ function PostModal(props) {
                 className="w-full outline-none text-[2.4rem] mb-[2rem] resize-none h-[15rem]"
                 cols="30"
                 rows="10"
-                value={props.isUpdate ? props.written_text :written_text}
+                value={
+                  props.postUpdateData
+                    ? props.postUpdateData.written_text
+                    : written_text
+                }
                 name="written_text"
-                onChange={handleOnChangePost}
+                onChange={
+                  props.postUpdateData
+                    ? handleOnChangeUpdatePost
+                    : handleOnChangePost
+                }
               ></textarea>
               <input
                 className="w-full outline-none text-[2.4rem] mb-[2rem]"
                 type="text"
                 placeholder="Add Image link"
-                value={props.isUpdate ? props.media_type :media_type}
+                value={
+                  props.postUpdateData
+                    ? props.postUpdateData.media_type
+                    : media_type
+                }
                 name="media_type"
-                onChange={handleOnChangePost}
+                onChange={
+                  props.postUpdateData
+                    ? handleOnChangeUpdatePost
+                    : handleOnChangePost
+                }
               />
               <button
-                onClick={props.isUpdate ? handleUpdatePost : handlePost}
+                onClick={props.postUpdateData ? handleUpdatePost : handlePost}
                 className="w-full bg-blue8f3 text-white rounded-[0.5rem] py-[0.75rem]"
                 disabled={written_text.length === 0}
               >
-                Post
+                {props.postUpdateData ? "Update" : "Post"}
               </button>
             </div>
           </div>

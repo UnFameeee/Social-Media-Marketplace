@@ -9,6 +9,9 @@ import {
   getPostFailed,
   getPostStart,
   getPostSuccess,
+  updatePostFailed,
+  updatePostStart,
+  updatePostSuccess,
 } from "./postSlice";
 import { apiUrl } from "../common/environment/environment";
 import {
@@ -69,6 +72,23 @@ export const createPost = async (accessToken, post, dispatch) => {
     dispatch(createPostFailed());
   }
 };
+export const updatePost = async (accessToken, dispatch) => {
+  dispatch(updatePostStart()); 
+  try {
+    const config = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios.update(`${apiUrl}/post/updatePost`, config);
+    if(res.result){
+      dispatch(updatePostSuccess());
+    }
+  } catch (error) {
+    dispatch(updatePostFailed())
+  }
+};
 export const deletePost = async (accessToken, postId, dispatch) => {
   dispatch(deletePostStart());
   try {
@@ -96,7 +116,7 @@ export const getAllPost = async (accessToken, dispatch) => {
       },
     };
     const paging = {
-      page: 1,
+      page: 0,
       pageSize: 5,
     };
     const res = await axios.post(`${apiUrl}/post/all`, paging, config);
