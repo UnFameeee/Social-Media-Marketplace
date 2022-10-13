@@ -14,23 +14,26 @@ import { deletePost } from "../../redux/apiRequest";
 function CardPost(props) {
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState();
-  const handleOnClickShowAction = () => {
-    setShowAction(!showAction);
-  };
-  const handleShowUpdateModal = () => {
-    let tempPostData = {
-      written_text: props.written_text,
-      media_type: props.imgUrl,
-      avtUrl:"https://source.unsplash.com/random/330×320"
-    };
-    props.getPostUpdateData(tempPostData);
-    props.handleOpenPostModel();
-  };  
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const handleOnClickShowAction = () => {
+    setShowAction(!showAction);
+  };
+  const handleShowModal = () => {
+    let tempPostData = {
+      post_id: props.postData.post_id,
+      profile_id: props.postData.profile_id,
+      written_text: props.postData.written_text,
+      media_type: props.postData.media_type,
+      media_location: props.postData.media_type,
+      avtUrl: props.postData.media_type,
+    };
+    props.handleGetPostUpdateData(tempPostData);
+    props.handleOpenPostModel();
+  };
   const handleDeletePost = () => {
-    deletePost(accessToken, props.post_id, dispatch);
+    deletePost(accessToken, props.postData.post_id, dispatch);
   };
   return (
     <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
@@ -38,12 +41,12 @@ function CardPost(props) {
         <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
           <div className="flex flex-1 gap-[1rem]">
             <img
-              src={props.avtUrl}
+              src={props.postData.media_type}
               className="w-[4.5rem] h-[4.5rem] rounded-[50%] border-2 border-blue-300"
               alt=""
             />
             <div>
-              <p>{props.profile_name}</p>
+              <p>{props.postData.profile_name}</p>
               <span className=" font-light text-[1.4rem]">
                 {props.postTime} ago
               </span>
@@ -59,7 +62,7 @@ function CardPost(props) {
               <div className="bg-white floatingAction absolute  right-0  p-[1rem] drop-shadow-sm rounded-xl border-[0.1rem] cursor-pointer">
                 <ul className="flex gap-[1rem] flex-col ">
                   <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
-                    <button onClick={handleShowUpdateModal}>Update</button>
+                    <button onClick={handleShowModal}>Update</button>
                   </li>
                   <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
                     <button onClick={handleDeletePost}>Delete</button>
@@ -71,11 +74,11 @@ function CardPost(props) {
         </div>
         <div className="written_text ">
           <div className="paragraph px-[2rem] mb-[1rem]">
-            <span className="text-grey1f">{props.written_text}</span>
+            <span className="text-grey1f">{props.postData.written_text}</span>
           </div>
           <div className="px-[-1rem] mb-[0.5rem]">
             <img
-              src={props.imgUrl}
+              src={props.postData.media_type}
               alt=""
               className="w-full min-w-[20rem] h-[45rem] object-cover"
             />

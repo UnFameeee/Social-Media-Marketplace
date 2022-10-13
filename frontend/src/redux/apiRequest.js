@@ -72,8 +72,8 @@ export const createPost = async (accessToken, post, dispatch) => {
     dispatch(createPostFailed());
   }
 };
-export const updatePost = async (accessToken, dispatch) => {
-  dispatch(updatePostStart()); 
+export const updatePost = async (accessToken, updatePost, dispatch) => {
+  dispatch(updatePostStart());
   try {
     const config = {
       headers: {
@@ -81,12 +81,16 @@ export const updatePost = async (accessToken, dispatch) => {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    const res = await axios.update(`${apiUrl}/post/updatePost`, config);
-    if(res.result){
+    const res = await axios.put(
+      `${apiUrl}/post/updatePost`,
+      updatePost,
+      config
+    );
+    if (res.result) {
       dispatch(updatePostSuccess());
     }
   } catch (error) {
-    dispatch(updatePostFailed())
+    dispatch(updatePostFailed());
   }
 };
 export const deletePost = async (accessToken, postId, dispatch) => {
@@ -99,11 +103,11 @@ export const deletePost = async (accessToken, postId, dispatch) => {
       },
     };
     const res = await axios.delete(`${apiUrl}/post/delete/${postId}`, config);
-    if(res.result){
+    if (res.result) {
       dispatch(deletePostSuccess());
     }
   } catch (error) {
-    dispatch(deletePostFailed())
+    dispatch(deletePostFailed());
   }
 };
 export const getAllPost = async (accessToken, dispatch) => {

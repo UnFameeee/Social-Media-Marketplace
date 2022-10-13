@@ -34,7 +34,7 @@ function Home() {
     setOpenCreatePost((prev) => !prev);
   };
   
-  const getPostUpdateData = (data) =>{
+  const handleGetPostUpdateData = (data) =>{
     setPostUpdateData(data)
   }
   const posts = useSelector((state) => state.post.get.posts?.results?.data);
@@ -43,6 +43,7 @@ function Home() {
   );
   useEffect(() => {
     getAllPost(accessToken, dispatch);
+    console.log(posts)
   }, [accessToken]);
   return (
     <>
@@ -112,17 +113,11 @@ function Home() {
           {posts &&
             posts.map((post) => (
               <CardPost
-                profile_id={post.profile_id}
                 postData ={post}
-                post_id={post.post_id}
                 key={post.post_id}
-                profile_name={post.profile_name}
                 postTime="1 hour"
-                written_text={post.written_text}
-                avtUrl={post.media_type}
-                imgUrl={post.media_type}
                 handleOpenPostModel={handleOpenPostModel}
-                getPostUpdateData = {getPostUpdateData}
+                handleGetPostUpdateData = {handleGetPostUpdateData}
               />
             ))}
         </div>

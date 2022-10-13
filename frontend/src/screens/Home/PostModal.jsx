@@ -3,43 +3,49 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
-import { createPost } from "../../redux/apiRequest";
+import { createPost, updatePost } from "../../redux/apiRequest";
 
 function PostModal(props) {
   const dispatch = useDispatch();
-  const [post, setPost] = useState({
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const [newPost, setNewPost] = useState({
     written_text: "",
     media_type: "",
     media_location: "",
   });
-  const { written_text, media_type, media_location } = post;
-  const accessToken = useSelector(
-    (state) => state.auth.login.currentUser.access
-  );
+  const { written_text, media_type, media_location } = newPost;
   const closeModal = () => {
     props.setShowModal(false);
-    props.setPostUpdateData(null);
+    props.setNewPostUpdateData(null);
   };
   const handlePost = (e) => {
     e.preventDefault();
-    post.media_location = "test";
-    createPost(accessToken, post, dispatch);
+    newPost.media_location = "test";
+    createPost(accessToken, newPost, dispatch);
   };
   const handleOnChangeUpdatePost = (event) => {
-    props.setPostUpdateData({
+    props.setNewPostUpdateData({
       ...props.postUpdateData,
       [event.target.name]: event.target.value,
     });
   };
-
-  const handleOnChangePost = (event) => {
-    setPost({
-      ...post,
+  const handleOnChangeNewPost = (event) => {
+    setNewPost({
+      ...newPost,
       [event.target.name]: event.target.value,
     });
   };
   const handleUpdatePost = () => {
-    
+    var tempUpdatePost = {
+      post_id:props.postUpdateData.post_id,
+      profile_id:props.postUpdateData.profile_id,
+      written_text: props.postUpdateData.written_text,
+      media_type: props.postUpdateData.media_type,
+      media_location: props.postUpdateData.media_location,
+    }
+    updatePost(accessToken,tempUpdatePost,dispatch)
   };
   const isPosting = useSelector((state) => state.post.create.isFetching);
   useEffect(() => {
@@ -86,7 +92,7 @@ function PostModal(props) {
                 onChange={
                   props.postUpdateData
                     ? handleOnChangeUpdatePost
-                    : handleOnChangePost
+                    : handleOnChangeNewPost
                 }
               ></textarea>
               <input
@@ -102,13 +108,13 @@ function PostModal(props) {
                 onChange={
                   props.postUpdateData
                     ? handleOnChangeUpdatePost
-                    : handleOnChangePost
+                    : handleOnChangeNewPost
                 }
               />
               <button
                 onClick={props.postUpdateData ? handleUpdatePost : handlePost}
                 className="w-full bg-blue8f3 text-white rounded-[0.5rem] py-[0.75rem]"
-                disabled={written_text.length === 0}
+                // disabled={written_text.length === 0 || props.postUpdateData.written_text.length ===0}
               >
                 {props.postUpdateData ? "Update" : "Post"}
               </button>
