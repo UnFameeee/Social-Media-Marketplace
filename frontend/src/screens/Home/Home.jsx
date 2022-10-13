@@ -34,7 +34,7 @@ function Home() {
     setOpenCreatePost((prev) => !prev);
   };
   
-  const passPostUpdateData = (data) =>{
+  const getPostUpdateData = (data) =>{
     setPostUpdateData(data)
   }
   const posts = useSelector((state) => state.post.get.posts?.results?.data);
@@ -112,16 +112,17 @@ function Home() {
           {posts &&
             posts.map((post) => (
               <CardPost
+                profile_id={post.profile_id}
                 postData ={post}
-                id={post.post_id}
+                post_id={post.post_id}
                 key={post.post_id}
-                userName="duy duongss"
+                profile_name={post.profile_name}
                 postTime="1 hour"
-                content={post.written_text}
+                written_text={post.written_text}
                 avtUrl={post.media_type}
                 imgUrl={post.media_type}
-                handleAction={handleOpenPostModel}
-                getPostUpdateData = {passPostUpdateData}
+                handleOpenPostModel={handleOpenPostModel}
+                getPostUpdateData = {getPostUpdateData}
               />
             ))}
         </div>

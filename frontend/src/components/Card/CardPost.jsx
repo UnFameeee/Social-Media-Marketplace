@@ -18,20 +18,19 @@ function CardPost(props) {
     setShowAction(!showAction);
   };
   const handleShowUpdateModal = () => {
-    debugger
     let tempPostData = {
-      written_text: props.content,
+      written_text: props.written_text,
       media_type: props.imgUrl,
       avtUrl:"https://source.unsplash.com/random/330×320"
     };
     props.getPostUpdateData(tempPostData);
-    props.handleAction();
+    props.handleOpenPostModel();
   };  
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
   const handleDeletePost = () => {
-    deletePost(accessToken, props.id, dispatch);
+    deletePost(accessToken, props.post_id, dispatch);
   };
   return (
     <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
@@ -44,7 +43,7 @@ function CardPost(props) {
               alt=""
             />
             <div>
-              <p>{props.userName}</p>
+              <p>{props.profile_name}</p>
               <span className=" font-light text-[1.4rem]">
                 {props.postTime} ago
               </span>
@@ -70,9 +69,9 @@ function CardPost(props) {
             )}
           </div>
         </div>
-        <div className="content ">
+        <div className="written_text ">
           <div className="paragraph px-[2rem] mb-[1rem]">
-            <span className="text-grey1f">{props.content}</span>
+            <span className="text-grey1f">{props.written_text}</span>
           </div>
           <div className="px-[-1rem] mb-[0.5rem]">
             <img
@@ -126,14 +125,14 @@ function CardPost(props) {
               url="https://source.unsplash.com/random/100×100"
               size={35}
               border={false}
-              userName="madara"
+              profile_name="madara"
               comment="shinra tensie"
             />
             <AvatarWithText
               url="https://source.unsplash.com/random/130×130"
               size={35}
               border={false}
-              userName="naruto"
+              profile_name="naruto"
               comment="yamero"
             />
             <div className="flex">
