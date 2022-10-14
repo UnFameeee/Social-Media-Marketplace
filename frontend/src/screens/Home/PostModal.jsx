@@ -18,7 +18,7 @@ function PostModal(props) {
   const { written_text, media_type, media_location } = newPost;
   const closeModal = () => {
     props.setShowModal(false);
-    props.setNewPostUpdateData(null);
+    props.setPostUpdateData(null);
   };
   const handlePost = (e) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ function PostModal(props) {
     createPost(accessToken, newPost, dispatch);
   };
   const handleOnChangeUpdatePost = (event) => {
-    props.setNewPostUpdateData({
+    props.setPostUpdateData({
       ...props.postUpdateData,
       [event.target.name]: event.target.value,
     });
