@@ -1,19 +1,15 @@
-import React from 'react';
+import React from "react";
 import {
   Coronavirus,
   People,
   Diversity2,
   Storefront,
   LiveTv,
-  EmergencyRecording,
-  Search,
-  MoreHoriz,
   SearchOutlined,
-} from '@mui/icons-material';
-import AvatarWithText from '../../components/Avatar/AvatarWithText';
-import CardPost from '../../components/Card/CardPost';
-import LeftBar from '../../components/Layout/SideBar/LeftBar';
-import RightBar from '../../components/Layout/SideBar/RightBar';
+} from "@mui/icons-material";
+import CardPost from "../../components/Card/CardPost";
+import LeftBar from "../../components/Layout/SideBar/LeftBar";
+import RightBar from "../../components/Layout/SideBar/RightBar";
 import {
   Box,
   Avatar,
@@ -91,15 +87,9 @@ function Home() {
           <Paper sx={{ height: "15rem", marginBottom: "1.5rem" }}>
             <Box
               sx={{
-                marginLeft: '1.2rem',
-                '& .MuiOutlinedInput-root': {
-                  '& > fieldset': { border: 'none' },
-                },
-                '& .MuiInputBase-root': {
-                  background: '#F0F2F5',
-                  height: '4.4rem',
-                  borderRadius: '5rem',
-                },
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
               <Avatar />

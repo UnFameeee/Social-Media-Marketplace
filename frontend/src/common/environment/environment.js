@@ -1,4 +1,4 @@
-const apiUrl = "http://localhost:4321/api";
+export const apiUrl = "http://localhost:4321/api";
 
 const api = {
     auth: apiUrl + "/auth",

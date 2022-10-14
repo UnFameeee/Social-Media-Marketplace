@@ -9,6 +9,7 @@ import {
   StorefrontOutlined,
   Menu,
   GroupsOutlined,
+  Logout,
 } from '@mui/icons-material';
 import {
   Paper,
@@ -18,6 +19,9 @@ import {
 } from '@mui/material';
 import { makeStyles } from 'tss-react/mui';
 import MUI from '../../MUI';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../../redux/apiRequest';
+import { revertAll } from '../../../redux/resetStore';
 
 const useStyles = makeStyles()(() => ({
   root: {
@@ -82,9 +86,12 @@ export default function NavBar() {
   const navigate = useNavigate();
   const [value, setValue] = useState('');
   const { classes } = useStyles();
-
+  const dispatch = useDispatch()
   console.log('rerender')
-
+  const handleLogout= () =>{
+    // logOut(dispatch) 
+    dispatch(revertAll())
+  }
   function handleSearch() {}
   return (
     // <div className="flex items-center px-5 py-1 bg-white fixed w-screen drop-shadow-md z-50">
@@ -224,7 +231,7 @@ export default function NavBar() {
           <Avatar>
             <Notifications sx={{ fontSize: '2.4rem' }} />
           </Avatar>
-          <Avatar src="https://source.unsplash.com/random/300×300" />
+          <Avatar onClick={handleLogout} src="https://source.unsplash.com/random/300×300" />
         </Grid>
       </Grid>
     </Paper>

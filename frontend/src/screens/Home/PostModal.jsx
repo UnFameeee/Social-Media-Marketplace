@@ -62,7 +62,6 @@ function PostModal(props) {
       [event.target.name]: event.target.value,
     });
   };
-
   const isPosting = useSelector((state) => state.post.create.isFetching);
   useEffect(() => {
     if (isPosting === true) {

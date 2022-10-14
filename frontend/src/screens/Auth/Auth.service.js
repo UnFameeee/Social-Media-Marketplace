@@ -11,6 +11,7 @@ const AuthService = {
       .catch((error) => console.log(error));
   },
   login: function(model) {
+    
     return axios
       .post(`${baseUrl}/login`, model)
       .then((resp) => resp.data)
