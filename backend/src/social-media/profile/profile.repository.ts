@@ -4,6 +4,7 @@ import { PROVIDER } from "src/common/constants/provider.constant";
 import { Profile } from "../profile/model/profile.model";
 import { CreateProfileDto } from "../../common/models/dtos/create-profile.dto";
 import { UpdateProfileDto } from "src/common/models/dtos/update-profile.dto";
+import { SCOPE } from "src/common/constants/sequelize-scope.constant";
 @Injectable()
 export class ProfileRepository {
     constructor(
@@ -12,15 +13,15 @@ export class ProfileRepository {
 
     async getAllProfile(): Promise<Profile[]> {
         try {
-            return this.profileRepository.scope("withoutPass").findAll();
+            return this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findAll();
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
     }
 
-    async findProfileById(profile_id: number): Promise<Profile> {
+    async findProfileById(profile_id: number, scope?: string): Promise<Profile> {
         try {
-            return this.profileRepository.findOne({ where: { profile_id: profile_id } })
+            return this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { profile_id: profile_id } })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
