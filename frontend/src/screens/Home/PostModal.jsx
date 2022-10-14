@@ -4,12 +4,21 @@ import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import { createPost, updatePost } from "../../redux/apiRequest";
+import { toast } from "react-toastify";
 
 function PostModal(props) {
   const dispatch = useDispatch();
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const notify = (message) =>
+    toast.info(message, {
+      autoClose: 1000,
+      hideProgressBar: true,
+      position: toast.POSITION.BOTTOM_RIGHT,
+      pauseOnHover: false,
+      theme: "dark",
+    });
   const [newPost, setNewPost] = useState({
     written_text: "",
     media_type: "",
@@ -24,6 +33,22 @@ function PostModal(props) {
     e.preventDefault();
     newPost.media_location = "test";
     createPost(accessToken, newPost, dispatch);
+    setNewPost({ written_text: "", media_type: "", media_location: "" });
+    props.setReRender((prev) => !prev);
+    notify("Post Created");
+  };
+  const handleUpdatePost = (e) => {
+    var tempUpdatePost = {
+      post_id: props.postUpdateData.post_id,
+      profile_id: props.postUpdateData.profile_id,
+      written_text: props.postUpdateData.written_text,
+      media_type: props.postUpdateData.media_type,
+      media_location: props.postUpdateData.media_location,
+    };
+    updatePost(accessToken, tempUpdatePost, dispatch);
+    props.setReRender((prev) => !prev);
+    closeModal();
+    notify("Post Updated");
   };
   const handleOnChangeUpdatePost = (event) => {
     props.setPostUpdateData({
@@ -36,16 +61,6 @@ function PostModal(props) {
       ...newPost,
       [event.target.name]: event.target.value,
     });
-  };
-  const handleUpdatePost = () => {
-    var tempUpdatePost = {
-      post_id:props.postUpdateData.post_id,
-      profile_id:props.postUpdateData.profile_id,
-      written_text: props.postUpdateData.written_text,
-      media_type: props.postUpdateData.media_type,
-      media_location: props.postUpdateData.media_location,
-    }
-    updatePost(accessToken,tempUpdatePost,dispatch)
   };
   const isPosting = useSelector((state) => state.post.create.isFetching);
   useEffect(() => {

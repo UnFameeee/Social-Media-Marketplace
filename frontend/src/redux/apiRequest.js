@@ -86,7 +86,7 @@ export const updatePost = async (accessToken, updatePost, dispatch) => {
       updatePost,
       config
     );
-    if (res.result) {
+    if (res) {
       dispatch(updatePostSuccess());
     }
   } catch (error) {

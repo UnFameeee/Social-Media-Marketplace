@@ -20,6 +20,7 @@ import {
   Modal,
   Button,
 } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
 import PostModal from "./PostModal";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,30 +31,38 @@ function Home() {
   const dispatch = useDispatch();
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [postUpdateData, setPostUpdateData] = useState();
+  const [reRender, setReRender] = useState(false)
   const handleOpenPostModel = () => {
     setOpenCreatePost((prev) => !prev);
   };
-  
-  const handleGetPostUpdateData = (data) =>{
-    setPostUpdateData(data)
-  }
+  console.log(reRender)
+  const handleGetPostUpdateData = (data) => {
+    setPostUpdateData(data);
+  };
   const posts = useSelector((state) => state.post.get.posts?.results?.data);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
   useEffect(() => {
-    getAllPost(accessToken, dispatch);
-    console.log(posts)
-  }, [accessToken]);
+    let onDestroy = false;
+    if (!onDestroy) {
+      getAllPost(accessToken, dispatch);
+    }
+    return () => {
+      onDestroy = true;
+    };
+  }, [reRender]);
   return (
     <>
       <PostModal
         showModal={openCreatePost}
         postUpdateData={postUpdateData}
-        setPostUpdateData= {setPostUpdateData}
+        setPostUpdateData={setPostUpdateData}
         setShowModal={setOpenCreatePost}
+        setReRender={setReRender}
         avtUrl="https://source.unsplash.com/random/330×320"
       />
+      <ToastContainer />
       <div className="pt-[6rem] flex w-full">
         <LeftBar
           leftBarList={[
@@ -113,16 +122,18 @@ function Home() {
           {posts &&
             posts.map((post) => (
               <CardPost
-                postData ={post}
+                postData={post}
                 key={post.post_id}
                 postTime="1 hour"
+                setReRender={setReRender}
                 handleOpenPostModel={handleOpenPostModel}
-                handleGetPostUpdateData = {handleGetPostUpdateData}
+                handleGetPostUpdateData={handleGetPostUpdateData}
               />
             ))}
         </div>
         <RightBar />
       </div>
+      <RightBar />
     </>
   );
 }
