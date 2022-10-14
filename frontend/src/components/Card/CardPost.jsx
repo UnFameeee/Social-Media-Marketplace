@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ThumbUpOutlined,
   Send,
@@ -6,8 +6,46 @@ import {
   ArrowDropDown,
   MoreHoriz,
 } from "@mui/icons-material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AvatarWithText from "../Avatar/AvatarWithText";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePost } from "../../redux/apiRequest";
 function CardPost(props) {
+  const dispatch = useDispatch(); 
+  const [showAction, setShowAction] = useState();  
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const notify = (message) =>
+    toast.info(message, {
+      autoClose: 1000,
+      hideProgressBar: true,
+      position: toast.POSITION.BOTTOM_RIGHT,
+      pauseOnHover: false,
+      theme: "dark",
+    });
+  const handleOnClickShowAction = () => {
+    setShowAction(!showAction);
+  };
+  const handleShowModal = () => {
+    let tempPostData = {
+      post_id: props.postData.post_id,
+      profile_id: props.postData.profile_id,
+      written_text: props.postData.written_text,
+      media_type: props.postData.media_type,
+      media_location: props.postData.media_type,
+      avtUrl: props.postData.media_type,
+    };
+    props.handleGetPostUpdateData(tempPostData);
+    props.handleOpenPostModel();
+    handleOnClickShowAction();
+  };
+  const handleDeletePost = () => {
+    deletePost(accessToken, props.postData.post_id, dispatch);
+    notify("Post Deleted");
+    props.setReRender((prev) => !prev);
+  };
   return (
     <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
       <div className="w-full bg">
