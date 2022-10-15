@@ -1,8 +1,10 @@
-import { AllowNull, AutoIncrement, Column, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { AllowNull, AutoIncrement, Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
 @Table({
     tableName: 'Posts',
     timestamps: true,
     paranoid: true,
+
+    defaultScope: {attributes: { exclude: ['deletedAt'] },},
 
     // indexes:[{unique: true, fields: ['post_id']}]
 })
@@ -21,4 +23,13 @@ export class Post extends Model<Post> {
 
     @Column
     media_location: string;
+
+    @Column(DataType.VIRTUAL(DataType.NUMBER))
+    get totalLike(): number{
+        return this.getDataValue("totalLike");
+    }
+
+    set totalLike(value: number){
+        this.setDataValue("totalLike", value);
+    }
 }

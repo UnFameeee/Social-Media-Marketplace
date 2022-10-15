@@ -5,13 +5,19 @@ import { Role } from "src/common/constants/role.constant";
     timestamps: true,
     paranoid: true,
 
-    scopes: {
-        withoutPass: {
-            attributes: { exclude: ['password'] },
-        }
+    defaultScope: {
+        attributes: { exclude: ['password'] }
     },
 
-    defaultScope: {},
+    scopes: {
+        WITH_PASSWORD: {
+            attributes: { include: ['password'] }
+        },
+        
+        WITHOUT_PASSWORD: {
+            attributes: { exclude: ['password'] }
+        }
+    },
 
     indexes:[{unique: true, fields: ['profile_id']}]
 })
@@ -37,7 +43,7 @@ export class Profile extends Model<Profile> {
 
     @AllowNull
     @Column
-    currentHashedRefreshToken: string;
+    picture: string;
     
     @Default(true)
     @Column

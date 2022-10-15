@@ -1,6 +1,7 @@
 import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/common/constants/jwt.constant';
+import { SCOPE } from 'src/common/constants/sequelize-scope.constant';
 import { ResponseData } from 'src/common/models/view-model/success-message.model';
 import { compare, encode } from 'src/common/utils/bcrypt-singleton.utils';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
@@ -48,10 +49,11 @@ export class AuthService {
 
     async getAccessTokenThroughCookie(profile_id: number) {
         try {
-            const profile = await this.profileRepository.findProfileById(profile_id);
+            const profile = await this.profileRepository.findProfileById( profile_id, SCOPE.WITH_PASSWORD);
             const payload: TokenPayload = { profile };
             const token = this.jwtService.sign(payload);
-            return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${jwtConstants.access_expires}`
+            // return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${jwtConstants.access_expires}`
+            return token;
         } catch (err) {
             ExceptionResponse(err);
         }
@@ -59,7 +61,7 @@ export class AuthService {
 
     async getRefreshTokenThroughCookie(profile_id: number) {
         try {
-            const profile = await this.profileRepository.findProfileById(profile_id);
+            const profile = await this.profileRepository.findProfileById(profile_id, SCOPE.WITH_PASSWORD);
             const payload: TokenPayload = { profile };
             const token = this.jwtService.sign(payload, {
                 secret: jwtConstants.refresh_secret,
@@ -87,7 +89,8 @@ export class AuthService {
 
             const access = await this.getAccessTokenThroughCookie(checkProfile.profile_id);
             const refresh = await this.getRefreshTokenThroughCookie(checkProfile.profile_id)
-            const result = { access, refresh };
+            // const result = { access, refresh };
+            const result = {access};
             return result;
         } catch (err) {
             ExceptionResponse(err);

@@ -15,15 +15,23 @@ import {
   middleNavIcons,
   rightNavIcons,
 } from '../../../common/layout/navbar';
+import { useDispatch } from 'react-redux';
+import { logOut } from '../../../redux/apiRequest';
+import { revertAll } from '../../../redux/resetStore';
 
 export default function NavBar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const path = location.pathname;
 
-  const [value, setValue] = useState('');
   const [avatarMenu, setAvatarMenu] = useState(false);
+  const [value, setValue] = useState('');
 
+  const handleLogout = () => {
+    // logOut(dispatch)
+    dispatch(revertAll());
+  };
   function handleSearch() {}
 
   function checkUrl(iconName) {
@@ -227,17 +235,31 @@ export default function NavBar() {
                   list={[
                     {
                       left: {
-                        icon: <IoLogOut style={{fontSize: '2.4rem', color: 'black'}}/>,
-                        hasBackground: true
+                        icon: (
+                          <IoLogOut
+                            style={{
+                              fontSize: '2.4rem',
+                              color: 'black',
+                            }}
+                          />
+                        ),
+                        hasBackground: true,
                       },
                       middle: {
                         text: 'Log Out',
-                        hasTooltip: false
+                        hasTooltip: false,
                       },
                       right: {
-                        icon: <IoLogOut style={{fontSize: '2.4rem', color: 'black'}}/>,
-                        hasBackground: true
-                      }
+                        icon: (
+                          <IoLogOut
+                            style={{
+                              fontSize: '2.4rem',
+                              color: 'black',
+                            }}
+                          />
+                        ),
+                        hasBackground: true,
+                      },
                     },
                   ]}
                 />

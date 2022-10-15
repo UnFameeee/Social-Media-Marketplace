@@ -16,7 +16,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
-  
+
   const config = new DocumentBuilder()
     .setTitle('Social Media Marketplace')
     .setDescription(`

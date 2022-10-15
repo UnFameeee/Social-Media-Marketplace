@@ -22,13 +22,13 @@ function AvatarWithText(props) {
           style={{ width: props.size, height: props.size }}
         />
       )}
-      {props.comment && props.userName && (
+      {props.comment && props.profile_name && (
         <div className="flex flex-col">
           <div
             className={` ${secondaryBg} px-[1.5rem] py-[0.5rem] rounded-3xl`}
           >
             <span className=" font-bold hover:cursor-pointer">
-              {props.userName}
+              {props.profile_name}
             </span>
             <p>{props.comment}</p>
           </div>
@@ -49,10 +49,10 @@ function AvatarWithText(props) {
           />
         </div>
       )}
-      {props.userName && !props.comment && !props.haveInput && (
+      {props.profile_name && !props.comment && !props.haveInput && (
         <div className="px-[1rem] py-[0.5rem]">
           <span className="hover:cursor-pointer font-semibold">
-            {props.userName}
+            {props.profile_name}
           </span>
         </div>
       )}

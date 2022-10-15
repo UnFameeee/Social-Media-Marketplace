@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect,useState } from "react";
 import {
   ThumbUpOutlined,
   Send,
@@ -6,35 +6,90 @@ import {
   ArrowDropDown,
   MoreHoriz,
 } from "@mui/icons-material";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AvatarWithText from "../Avatar/AvatarWithText";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePost } from "../../redux/apiRequest";
 function CardPost(props) {
+  const dispatch = useDispatch(); 
+  const [showAction, setShowAction] = useState();  
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const notify = (message) =>
+    toast.info(message, {
+      autoClose: 1000,
+      hideProgressBar: true,
+      position: toast.POSITION.BOTTOM_RIGHT,
+      pauseOnHover: false,
+      theme: "dark",
+    });
+  const handleOnClickShowAction = () => {
+    setShowAction(!showAction);
+  };
+  const handleShowModal = () => {
+    let tempPostData = {
+      post_id: props.postData.post_id,
+      profile_id: props.postData.profile_id,
+      written_text: props.postData.written_text,
+      media_type: props.postData.media_type,
+      media_location: props.postData.media_type,
+      avtUrl: props.postData.media_type,
+    };
+    props.handleGetPostUpdateData(tempPostData);
+    props.handleOpenPostModel();
+    handleOnClickShowAction();
+  };
+  const handleDeletePost = () => {
+    deletePost(accessToken, props.postData.post_id, dispatch);
+    notify("Post Deleted");
+    props.setReRender((prev) => !prev);
+  };
   return (
     <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
       <div className="w-full bg">
         <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
-          <img
-            src={props.url}
-            className="w-[4.5rem] h-[4.5rem] rounded-[50%] border-2 border-blue-300"
-            alt=""
-          />
-          <div className="">
-            <p>{props.userName}</p>
-            <span className=" font-light text-[1.4rem]">
-              {props.postTime} ago
-            </span>
+          <div className="flex flex-1 gap-[1rem]">
+            <img
+              src={props.postData.media_type}
+              className="w-[4.5rem] h-[4.5rem] rounded-[50%] border-2 border-blue-300"
+              alt=""
+            />
+            <div>
+              <p>{props.postData.profile_name}</p>
+              <span className=" font-light text-[1.4rem]">
+                {props.postTime} ago
+              </span>
+            </div>
           </div>
-          <MoreHoriz
-            className="absolute right-[2rem] Icon"
-            style={{ fontSize: "2.5rem" }}
-          />
+          <div className="relative">
+            <MoreHoriz
+              className=" right-[2rem] Icon"
+              style={{ fontSize: "2.5rem" }}
+              onClick={handleOnClickShowAction}
+            />
+            {showAction && (
+              <div className="bg-white floatingAction absolute  right-0  p-[1rem] drop-shadow-sm rounded-xl border-[0.1rem] cursor-pointer">
+                <ul className="flex gap-[1rem] flex-col ">
+                  <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
+                    <button onClick={handleShowModal}>Update</button>
+                  </li>
+                  <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
+                    <button onClick={handleDeletePost}>Delete</button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
-        <div className="content ">
+        <div className="written_text ">
           <div className="paragraph px-[2rem] mb-[1rem]">
-            <span className="text-grey1f">{props.content}</span>
+            <span className="text-grey1f">{props.postData.written_text}</span>
           </div>
           <div className="px-[-1rem] mb-[0.5rem]">
             <img
-              src={props.imgUrl}
+              src={props.postData.media_type}
               alt=""
               className="w-full min-w-[20rem] h-[45rem] object-cover"
             />
@@ -47,7 +102,7 @@ function CardPost(props) {
             <span className="text-grey1f">Eric and 45 more peoples</span>
           </div>
           <hr className="mb-[1rem]" />
-          <div className="reactButton px-[1rem] flex mb-[1rem] [&>*]:hoverChangeBg ">
+          <div className="reactButton px-[1rem] flex mb-[1rem]  ">
             <button className="w-full flex justify-center gap-[0.5rem] hoverChangeBg ">
               <ThumbUpOutlined
                 className="Icon "
@@ -84,14 +139,14 @@ function CardPost(props) {
               url="https://source.unsplash.com/random/100×100"
               size={35}
               border={false}
-              userName="madara"
+              profile_name="madara"
               comment="shinra tensie"
             />
             <AvatarWithText
               url="https://source.unsplash.com/random/130×130"
               size={35}
               border={false}
-              userName="naruto"
+              profile_name="naruto"
               comment="yamero"
             />
             <div className="flex">

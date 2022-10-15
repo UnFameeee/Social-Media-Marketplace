@@ -35,6 +35,7 @@ export const databaseProviders = [
                     idle: 10000
                 },
             });
+            
             // sequelize.options
             sequelize.addModels([Profile, Friendship, Post, PostLike, PostComment]);
             //associations

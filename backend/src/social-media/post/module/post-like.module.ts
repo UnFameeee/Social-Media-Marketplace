@@ -8,6 +8,6 @@ import { PostLikeService } from '../service/post-like.service';
     imports: [],
     controllers: [PostLikeController],
     providers: [PostLikeService, PostLikeRepository, ...postLikeProviders],
-    exports: [PostLikeRepository]
+    exports: [PostLikeRepository, PostLikeService]
 })
 export class PostLikeModule {}
