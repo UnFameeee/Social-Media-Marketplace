@@ -1,101 +1,37 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  Chat,
-  FacebookOutlined,
-  HomeOutlined,
-  LiveTvOutlined,
-  Notifications,
-  StorefrontOutlined,
-  Menu,
-  GroupsOutlined,
-} from '@mui/icons-material';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { FacebookOutlined } from '@mui/icons-material';
 import {
   Paper,
   Grid,
   IconButton,
   Avatar,
-  MenuItem,
-  MenuList,
   Box,
-  Typography,
+  ClickAwayListener,
 } from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
+import { IoLogOut } from 'react-icons/io5';
 import MUI from '../../MUI';
-
-const useStyles = makeStyles()(() => ({
-  root: {
-    '& .MuiAvatar-root': {
-      cursor: 'pointer',
-      color: '#050505',
-      backgroundColor: '#E4E6EB',
-      marginRight: '0.8rem',
-      '&:hover': { backgroundColor: '#bdbdbd' },
-    },
-    '& .MuiOutlinedInput-root': {
-      '& > fieldset': { border: 'none' },
-    },
-    '& .MuiInputBase-root': {
-      background: '#F0F2F5',
-      height: '4.4rem',
-      borderRadius: '5rem',
-    },
-  },
-  grid: {
-    '& .MuiSvgIcon-root': {
-      fontSize: '3rem',
-    },
-    '& .MuiButtonBase-root': {
-      width: '14rem',
-      color: '#65676B',
-      padding: '1rem 0.8rem',
-      '&:hover': { backgroundColor: '#F0F2F5' },
-    },
-  },
-}));
-
-const middleNavIcons = [
-  {
-    id: 'navHome',
-    icon: <HomeOutlined />,
-    tooltip: 'Home',
-    onClick: () => {},
-  },
-  {
-    id: 'navFriends',
-    icon: <GroupsOutlined />,
-    tooltip: 'Friends',
-    onClick: () => {},
-  },
-  {
-    id: 'navWatch',
-    icon: <LiveTvOutlined />,
-    tooltip: 'Watch',
-    onClick: () => {},
-  },
-  {
-    id: 'navMarketplace',
-    icon: <StorefrontOutlined />,
-    tooltip: 'Marketplace',
-    onClick: () => {},
-  },
-  {
-    id: 'navf',
-    icon: <HomeOutlined />,
-    tooltip: 'f',
-    onClick: () => {},
-  },
-];
+import {
+  middleNavIcons,
+  rightNavIcons,
+} from '../../../common/layout/navbar';
 
 export default function NavBar() {
   const navigate = useNavigate();
-  const [value, setValue] = useState('');
-  const [open, setOpen] = useState(false);
-  const { classes } = useStyles();
+  const location = useLocation();
+  const path = location.pathname;
 
-  console.log('rerender');
+  const [value, setValue] = useState('');
+  const [avatarMenu, setAvatarMenu] = useState(false);
 
   function handleSearch() {}
+
+  function checkUrl(iconName) {
+    return (
+      path.slice(1) == iconName || (iconName == 'home' && path == '/')
+    );
+  }
+
   return (
     // <div className="flex items-center px-5 py-1 bg-white fixed w-screen drop-shadow-md z-50">
     //   <div className="rightNav flex items-center w-[25%] gap-1 pt-3">
@@ -171,7 +107,6 @@ export default function NavBar() {
           alignItems: 'center',
           paddingRight: '14px',
         }}
-        className={classes.root}
       >
         <Grid item xs sx={{ display: 'flex' }}>
           <IconButton
@@ -192,15 +127,24 @@ export default function NavBar() {
             handleSearch={handleSearch}
             recentSearchs={[
               {
-                left: 'https://source.unsplash.com/random/300×300',
+                left: {
+                  url: 'https://source.unsplash.com/random/300×300',
+                  name: 'Duy',
+                },
                 middle: 'Thạch Dương Duy',
               },
               {
-                left: 'https://source.unsplash.com/random/300×300',
+                left: {
+                  url: 'https://source.unsplash.com/random/300×300',
+                  name: 'Vũ',
+                },
                 middle: 'Nguyễn Hoàng Vũ',
               },
               {
-                left: 'https://source.unsplash.com/random/300×300',
+                left: {
+                  url: 'https://source.unsplash.com/random/300×300',
+                  name: 'Thắng',
+                },
                 middle: 'Nguyễn Phạm Quốc Thắng',
               },
             ]}
@@ -211,16 +155,34 @@ export default function NavBar() {
           item
           xs={5}
           sx={{ display: 'flex', justifyContent: 'space-evenly' }}
-          className={classes.grid}
         >
-          {middleNavIcons.map((item) => (
+          {middleNavIcons.map((item, index) => (
             <MUI.ButtonWithIcon
-              key={item.id}
-              id={item.id}
+              sx={{
+                width: '14rem',
+                padding: '1rem 0.8rem',
+              }}
+              key={item.id + index}
+              id={item.id + index}
               tooltip={item.tooltip}
-              onClick={item.onClick}
+              style={
+                checkUrl(item.tooltip.toLocaleLowerCase())
+                  ? {
+                      borderBottomLeftRadius: 0,
+                      borderBottomRightRadius: 0,
+                      color: 'var(--primary-color)',
+                      borderBottom: '4px solid var(--primary-color)',
+                    }
+                  : null
+              }
+              onClick={() => {
+                if (item.tooltip == 'Home') navigate('/');
+                else navigate(`/${item.tooltip.toLowerCase()}`);
+              }}
             >
-              {item.icon}
+              {checkUrl(item.tooltip.toLocaleLowerCase())
+                ? item.icon[1]
+                : item.icon[0]}
             </MUI.ButtonWithIcon>
           ))}
         </Grid>
@@ -230,26 +192,58 @@ export default function NavBar() {
           xs
           sx={{ display: 'flex', justifyContent: 'flex-end' }}
         >
-          <Avatar>
-            <Menu sx={{ fontSize: '2.4rem' }} />
-          </Avatar>
-          <Avatar>
-            <Chat sx={{ fontSize: '2.4rem' }} />
-          </Avatar>
-          <Avatar>
-            <Notifications sx={{ fontSize: '2.4rem' }} />
-          </Avatar>
-          <Box sx={{ position: 'relative' }}>
-            <Avatar
-              src="https://source.unsplash.com/random/300×300"
-              onClick={() => setOpen(!open)}
-            />
+          {rightNavIcons.map((item, index) => (
+            <Box key={item.id + index}>
+              <MUI.BetterIconButton
+                hasBackground={true}
+                id={item.id + index}
+                tooltip={item.tooltip}
+                sx={{
+                  '& .MuiSvgIcon-root': {
+                    fontSize: '2.4rem',
+                  },
+                  marginRight: '0.8rem',
+                }}
+              >
+                {item.icon}
+              </MUI.BetterIconButton>
+            </Box>
+          ))}
 
-            {open && (
-              <MUI.Menu 
+          <ClickAwayListener
+            onClickAway={() => {
+              setAvatarMenu(false);
+            }}
+          >
+            <Box sx={{ position: 'relative' }}>
+              <Avatar
+                src="https://source.unsplash.com/random/300×300"
+                onClick={() => setAvatarMenu(!avatarMenu)}
               />
-            )}
-          </Box>
+
+              {avatarMenu && (
+                <MUI.Menu
+                  sx={{ right: '2px', minWidth: '20rem' }}
+                  list={[
+                    {
+                      left: {
+                        icon: <IoLogOut style={{fontSize: '2.4rem', color: 'black'}}/>,
+                        hasBackground: true
+                      },
+                      middle: {
+                        text: 'Log Out',
+                        hasTooltip: false
+                      },
+                      right: {
+                        icon: <IoLogOut style={{fontSize: '2.4rem', color: 'black'}}/>,
+                        hasBackground: true
+                      }
+                    },
+                  ]}
+                />
+              )}
+            </Box>
+          </ClickAwayListener>
         </Grid>
       </Grid>
     </Paper>

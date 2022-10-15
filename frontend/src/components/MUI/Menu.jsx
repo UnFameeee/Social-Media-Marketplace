@@ -1,83 +1,125 @@
-import { Close } from '@mui/icons-material';
 import {
   MenuList,
   MenuItem,
   Avatar,
   Typography,
 } from '@mui/material';
+import React from 'react';
 import ReactTooltip from 'react-tooltip';
-import { IconButtonWithoutBackground } from './Button/IconButton';
+import { BetterIconButton } from './Button/IconButton';
+import './MUI.css';
 
 export default function Menu(props) {
-  const { list, before, ...other } = props;
+  const { list, before, after, left, middle, right, ...other } =
+    props;
+
+  function checkPropsInObject(object, listProps, checkAll) {
+    let res = checkAll;
+    listProps.forEach((value) => {
+      if (checkAll) {
+        if (!object.hasOwnProperty(value)) {
+          res = false;
+        }
+      } else {
+        if (object.hasOwnProperty(value)) {
+          res = true;
+        }
+      }
+    });
+    return res;
+  }
 
   return (
-    <MenuList
-      sx={{
-        position: 'absolute',
-        backgroundColor: 'white',
-        marginTop: '0.8rem',
-        width: '100%',
-        borderRadius: '4px',
-      }}
-      {...other}
-    >
+    <MenuList className="menu" {...other}>
       {before}
-      {list.map((item, index) => {
-        return (
-          <MenuItem
-            key={index}
-            sx={{
-              margin: '0.8rem 0.8rem 0 0.8rem',
-              borderRadius: '8px',
-              padding: '0.6rem 0.8rem',
-              minHeight: '46px !important',
-            }}
-          >
-            {item.left && (
+
+      {list.map((item, index) => (
+        <MenuItem key={index} className="menu-item">
+          {React.isValidElement(left) ? (
+            left
+          ) : React.isValidElement(item.left) ? (
+            item.left
+          ) : typeof item.left == 'object' ? (
+            checkPropsInObject(item.left, ['url', 'name'], false) ? (
               <Avatar
-                sx={{ width: '3.5rem', height: '3.5rem' }}
-                src={item.left}
-              />
-            )}
-
-            {item.middle && (
-              <>
-                <Typography
-                  data-tip
-                  data-for={index.toString()}
-                  sx={{
-                    width: '16.5rem',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
+                className="left-menu"
+                alt={item.left.name}
+                src={item.left.url}
+              >
+                {item.left.name?.at(0)}
+              </Avatar>
+            ) : (
+              checkPropsInObject(item.left, ['icon'], false) && (
+                <BetterIconButton
+                  id={item.left.id + index}
+                  tooltip={item.left.tooltip}
+                  className="left-menu"
+                  hasBackground={item.left.hasBackground}
                 >
-                  {item.middle}
-                </Typography>
+                  {item.left.icon}
+                </BetterIconButton>
+              )
+            )
+          ) : null}
 
-                <ReactTooltip id={index.toString()}>
-                  {item.middle}
-                </ReactTooltip>
-              </>
-            )}
-
-            {item.right && (
-              <IconButtonWithoutBackground
-                id="recentSearchIcon"
-                tooltip="Delete"
+          {React.isValidElement(middle) ? (
+            middle
+          ) : React.isValidElement(item.middle) ? (
+            item.middle
+          ) : typeof item.middle == 'object' ? (
+            <>
+              <Typography
+                data-tip
+                data-for={item.middle.text + index}
                 sx={{
-                  padding: '0.4rem',
-                  position: 'absolute',
-                  right: '0.8rem',
-                  // '&:hover': {backgroundColor: '#bdbdbd'}
+                  width: '16.5rem',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
                 }}
               >
-                <Close sx={{ fontSize: '1.6rem' }} />
-              </IconButtonWithoutBackground>
-            )}
-          </MenuItem>
-        );
-      })}
+                {item.middle.text}
+              </Typography>
+
+              {item.middle.hasTooltip && (
+                <ReactTooltip id={item.middle.text + index}>
+                  {item.middle.text}
+                </ReactTooltip>
+              )}
+            </>
+          ) : (
+            <>
+              <Typography
+                sx={{
+                  width: '16.5rem',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {item.middle}
+              </Typography>
+            </>
+          )}
+
+          {React.isValidElement(right)
+            ? right
+            : React.isValidElement(item.right)
+            ? item.right
+            : typeof item.right == 'object'
+            ? checkPropsInObject(item.left, ['icon'], false) && (
+                <BetterIconButton
+                  id={item.right.id}
+                  tooltip={item.right.tooltip}
+                  className="right-menu"
+                  hasBackground={item.right.hasBackground}
+                >
+                  {item.right.icon}
+                </BetterIconButton>
+              )
+            : null}
+        </MenuItem>
+      ))}
+
+      {after}
     </MenuList>
   );
 }

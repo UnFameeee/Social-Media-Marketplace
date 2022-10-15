@@ -1,32 +1,14 @@
 import {
   ClickAwayListener,
   Box,
-  MenuList,
-  MenuItem,
   TextField,
   IconButton,
   InputAdornment,
-  Avatar,
   Typography,
 } from '@mui/material';
 import { Search, Close } from '@mui/icons-material';
 import { useState } from 'react';
-import { makeStyles } from 'tss-react/mui';
-import ReactTooltip from 'react-tooltip';
-import { IconButtonWithoutBackground } from './Button/IconButton';
 import Menu from './Menu';
-
-const useStyles = makeStyles()(() => ({
-  root: {
-    '& .MuiAvatar-root': {
-      // cursor: 'pointer',
-      // color: '#050505',
-      // backgroundColor: '#E4E6EB',
-      // marginRight: '0.8rem',
-      // '&:hover': { backgroundColor: '#E4E6EB' },
-    },
-  },
-}));
 
 export default function SearchBar(props) {
   const [open, setOpen] = useState(false);
@@ -44,15 +26,13 @@ export default function SearchBar(props) {
       handleSearch();
     }
   }
-
-  const { classes } = useStyles();
   return (
     <ClickAwayListener
       onClickAway={() => {
         setOpen(false);
       }}
     >
-      <Box sx={{ position: 'relative' }} className={classes.root}>
+      <Box sx={{ position: 'relative' }}>
         <TextField
           placeholder={placeHolder}
           InputProps={{
@@ -86,68 +66,6 @@ export default function SearchBar(props) {
           {...others}
         />
 
-        {/* {open && recentSearchs && (
-          <MenuList
-            sx={{
-              position: 'absolute',
-              backgroundColor: 'white',
-              marginTop: '0.8rem',
-              width: '100%',
-              borderRadius: '4px',
-            }}
-          >
-            <Typography sx={{ marginLeft: '1.6rem' }}>
-              Recent Searchs
-            </Typography>
-
-            {recentSearchs.map((item, index) => (
-              <MenuItem
-                key={index}
-                sx={{
-                  margin: '0.8rem 0.8rem 0 0.8rem',
-                  borderRadius: '8px',
-                  padding: '0.6rem 0.8rem',
-                  minHeight: '46px !important',
-                }}
-              >
-                {item.url && (
-                  <Avatar
-                    sx={{ width: '3.5rem', height: '3.5rem' }}
-                    src={item.url}
-                  />
-                )}
-                <Typography
-                  data-tip
-                  data-for={index.toString()}
-                  sx={{
-                    width: '16.5rem',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                  }}
-                >
-                  {item.name}
-                </Typography>
-                <IconButtonWithoutBackground
-                  id="recentSearchIcon"
-                  tooltip="Delete"
-                  sx={{
-                    padding: '0.4rem',
-                    position: 'absolute',
-                    right: '0.8rem',
-                    // '&:hover': {backgroundColor: '#bdbdbd'}
-                  }}
-                >
-                  <Close sx={{ fontSize: '1.6rem' }} />
-                </IconButtonWithoutBackground>
-
-                <ReactTooltip id={index.toString()}>
-                  {item.name}
-                </ReactTooltip>
-              </MenuItem>
-            ))}
-          </MenuList>
-        )} */}
-
         {open && recentSearchs && (
           <Menu
             list={recentSearchs}
@@ -155,6 +73,19 @@ export default function SearchBar(props) {
               <Typography sx={{ marginLeft: '1.6rem' }}>
                 Recent Searchs
               </Typography>
+            }
+            right={
+              <IconButton
+                id="recentSearchIcon"
+                tooltip="Delete"
+                sx={{
+                  padding: '0.4rem',
+                  position: 'absolute',
+                  right: '0.8rem'
+                }}
+              >
+                <Close sx={{ fontSize: '1.6rem' }} />
+              </IconButton>
             }
           />
         )}
