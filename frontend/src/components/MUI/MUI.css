@@ -1,0 +1,48 @@
+/*#region Menu*/
+.MuiList-root.menu {
+  position: absolute;
+  background-color: white;
+  margin-top: 0.8rem;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+.MuiMenuItem-root.menu-item {
+  margin: 0.8rem 0.8rem 0 0.8rem;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  min-height: 46px;
+}
+.MuiMenuItem-root .left-menu {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin-right: 8px;
+}
+.MuiMenuItem-root .right-menu {  
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0.4rem;
+  position: absolute;
+  right: 0.8rem;
+}
+/*#endregion */
+
+/*#region IconButton*/
+.MuiButton-root.button-with-icon {
+  color: #65676b;
+}
+.MuiButton-root.button-with-icon:hover {
+  background-color: #f0f2f5;
+}
+.MuiButton-root.button-with-icon svg {
+  font-size: 3rem;
+}
+.MuiAvatar-root.icon-button-with-background {
+  cursor: pointer;
+  color: #050505;
+  background-color: #e4e6eb;
+}
+.MuiAvatar-root.icon-button-with-background:hover {
+  background-color: #bdbdbd;
+}
+/*#endregion */
