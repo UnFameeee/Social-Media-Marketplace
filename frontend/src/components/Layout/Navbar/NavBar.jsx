@@ -237,6 +237,7 @@ export default function NavBar() {
                       left: {
                         icon: (
                           <IoLogOut
+                            onClick={handleLogout}
                             style={{
                               fontSize: '2.4rem',
                               color: 'black',
@@ -248,17 +249,6 @@ export default function NavBar() {
                       middle: {
                         text: 'Log Out',
                         hasTooltip: false,
-                      },
-                      right: {
-                        icon: (
-                          <IoLogOut
-                            style={{
-                              fontSize: '2.4rem',
-                              color: 'black',
-                            }}
-                          />
-                        ),
-                        hasBackground: true,
                       },
                     },
                   ]}
