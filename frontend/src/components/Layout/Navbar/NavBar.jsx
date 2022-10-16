@@ -171,10 +171,10 @@ export default function NavBar() {
                 padding: '1rem 0.8rem',
               }}
               key={item.id + index}
-              id={item.id + index}
+              id={item.id ? item.id + index : null}
               tooltip={item.tooltip}
               style={
-                checkUrl(item.tooltip.toLocaleLowerCase())
+                checkUrl(item.tooltip?.toLowerCase())
                   ? {
                       borderBottomLeftRadius: 0,
                       borderBottomRightRadius: 0,
@@ -185,10 +185,10 @@ export default function NavBar() {
               }
               onClick={() => {
                 if (item.tooltip == 'Home') navigate('/');
-                else navigate(`/${item.tooltip.toLowerCase()}`);
+                else navigate(`/${item.tooltip?.toLowerCase()}`);
               }}
             >
-              {checkUrl(item.tooltip.toLocaleLowerCase())
+              {checkUrl(item.tooltip?.toLowerCase())
                 ? item.icon[1]
                 : item.icon[0]}
             </MUI.ButtonWithIcon>
@@ -203,8 +203,8 @@ export default function NavBar() {
           {rightNavIcons.map((item, index) => (
             <Box key={item.id + index}>
               <MUI.BetterIconButton
-                hasBackground={true}
-                id={item.id + index}
+                hasBackground
+                id={item.id ? item.id + index : null}
                 tooltip={item.tooltip}
                 sx={{
                   '& .MuiSvgIcon-root': {
