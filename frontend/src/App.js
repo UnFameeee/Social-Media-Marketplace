@@ -8,6 +8,7 @@ import WithoutNav from "../src/components/Layout/Navbar/WithoutNav";
 import UserProfile from "./screens/UserProfile/UserProfile";
 import Settings from "./screens/Setting/Settings";
 import RequireAuth from "./screens/Auth/RequireAuth";
+import Error from "./screens/NotFoundPage/Error";
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Route>
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<Error />} />
       </Routes>
     </>
   );

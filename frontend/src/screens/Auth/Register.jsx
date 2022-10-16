@@ -2,24 +2,24 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useDispatch } from "react-redux";
+import { useDispatch } from 'react-redux';
 import { ValidateForm, FormChildren } from '../../components/Form';
 import Face from '../../components/LookingFace/Face';
 import { registerModel, registerSchema } from './Auth.model';
 import './Auth.css';
-import { register } from "../../redux/apiRequest";
+import { register } from '../../redux/apiRequest';
 
 export default function Register() {
   const dispatch = useDispatch();
   const location = useLocation();
-  const from = location.state?.from.pathname || "/";
+  const from = location.state?.from.pathname || '/';
   var navigate = useNavigate();
 
   const [valid, setValid] = useState(false);
 
   return (
     <Box>
-      <Face happy={valid} />
+      <Face happy={valid} left="25%" />
       <Box className="form-wrap">
         <Box sx={{ textAlign: 'center' }}>
           <ValidateForm

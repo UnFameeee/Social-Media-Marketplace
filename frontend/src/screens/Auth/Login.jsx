@@ -19,7 +19,7 @@ export default function Login() {
 
   return (
     <Box>
-      <Face happy={valid} />
+      <Face happy={valid} left="25%" />
       <Box className="form-wrap">
         <Box sx={{ textAlign: 'center' }}>
           <ValidateForm

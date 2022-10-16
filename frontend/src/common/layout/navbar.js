@@ -16,7 +16,7 @@ export const middleNavIcons = [
   {
     id: 'navHome',
     icon: [<IoHomeOutline />, <IoHomeSharp />],
-    // tooltip: 'Home',
+    tooltip: 'Home',
   },
   {
     id: 'navFriends',
