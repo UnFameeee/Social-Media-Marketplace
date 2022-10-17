@@ -12,7 +12,6 @@ import { Page } from 'src/common/models/view-model/page-model';
 export class PostService {
     constructor(private readonly postRepository: PostRepository) {}
 
-    //Need to improve, paging for example.
     async getAllPost(page: Page): Promise<ResponseData<PagingData<Post[]>>> {
         try{
             var response = new ResponseData<PagingData<Post[]>>();
@@ -22,13 +21,23 @@ export class PostService {
             ExceptionResponse(err);
         }
     }
-    //paging
+
     async getPostByProfileId(profile: Profile, data: Page): Promise<ResponseData<PagingData<Post[]>>> {
         try{
             var response = new ResponseData<PagingData<Post[]>>();
             response.results = await this.postRepository.getPostByProfileId(profile.profile_id, data);
             return response;
         }catch(err){
+            ExceptionResponse(err);
+        }
+    }
+
+    async getSinglePostDetailByPostId(post_id: number): Promise<ResponseData<Post>>{
+        try{
+            var response = new ResponseData<Post>();
+            response.results = await this.postRepository.getSinglePostDetailByPostId(post_id);
+            return response;
+        }catch (err) {
             ExceptionResponse(err);
         }
     }
@@ -51,7 +60,7 @@ export class PostService {
     async updatePost(profile: Profile, postData: PostData): Promise<ResponseData<string>>{
         try{
             const response = new ResponseData<string>();
-            var tempPostDetail= await this.postRepository.getSinglePostDetail(postData.post_id);
+            var tempPostDetail= await this.postRepository.getSinglePostDetailByPostId(postData.post_id);
             if(tempPostDetail){
                 if(tempPostDetail["profile_id"] == profile.profile_id){
                     const data = await this.postRepository.updatePost(postData);
@@ -77,7 +86,7 @@ export class PostService {
         try{
             const response = new ResponseData<string>();
 
-            var tempPostDetail= await this.postRepository.getSinglePostDetail(post_id);
+            var tempPostDetail= await this.postRepository.getSinglePostDetailByPostId(post_id);
 
             if(tempPostDetail){
                 if(tempPostDetail["profile_id"] == profile.profile_id){

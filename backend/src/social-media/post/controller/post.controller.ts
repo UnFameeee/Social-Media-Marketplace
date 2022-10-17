@@ -1,5 +1,5 @@
 import { Controller, Param, UseGuards } from '@nestjs/common';
-import { Body, Delete, Post, Put, Request, UploadedFile, UseInterceptors } from '@nestjs/common/decorators';
+import { Body, Delete, Get, Post, Put, Request, UploadedFile, UseInterceptors } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Page } from 'src/common/models/view-model/page-model';
@@ -62,6 +62,12 @@ export class PostController {
         const profile = <Profile>request.user;
         return await this.postService.getPostByProfileId(profile, page);
     }
+
+    @Get('/:post_id')
+    async getSinglePostDetailByPostId(@Param('post_id') post_id: number) {
+        return await this.postService.getSinglePostDetailByPostId(post_id);
+    }
+
 
     @ApiBody({
         type: Posts,
