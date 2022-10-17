@@ -4,8 +4,19 @@ import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import { createPost, updatePost } from "../../redux/apiRequest";
-import MUI from "../../components/MUI";
+import styled from "styled-components";
 
+const StyledContentEditableSpan = styled.div`
+  span[contenteditable] {
+    display: inline-block;
+  }
+  span[contenteditable]:empty::before {
+    content: attr(data-placeholder);
+    color: #a3a3af;
+    cursor: auto;
+    display: inline-block;
+  }
+`;
 function PostModal(props) {
   //Declare variables
   const dispatch = useDispatch();
@@ -51,6 +62,19 @@ function PostModal(props) {
       [event.target.name]: event.target.value,
     });
   };
+  let written_text_span;
+  const onFocus = (event) => {
+    written_text_span = event.target.innerHTML;
+  };
+  const onBlur = (event) => {
+    if (written_text_span !== event.target.innerHTML) {
+      const html = event.target.innerHTML;
+      setPostData({
+        ...postData,
+        written_text: html,
+      });
+    }
+  };
   //UseEffect
   useEffect(() => {
     if (props.postUpdateData)
@@ -90,15 +114,24 @@ function PostModal(props) {
                 <AvatarWithText url={props.avtUrl} size="5rem" />
                 <span className="font-bold">{props.profile.profile_name}</span>
               </div>
-              <textarea
-                placeholder="What's on your mind, Hai Du?"
-                className="w-full outline-none text-[2.4rem] mb-[2rem] resize-none h-[15rem]"
-                cols="30"
-                rows="10"
-                value={written_text}
-                name="written_text"
-                onChange={handleOnChangePostData}
-              ></textarea>
+              <StyledContentEditableSpan>
+                <span
+                  name="written_text"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleOnChangePostData}
+                  data-placeholder={
+                    props.postUpdateData
+                      ? ""
+                      : `What's on your mind, ${props.profile.profile_name} ?`
+                  }
+                  contentEditable="true"
+                  className="w-full outline-none text-[2.2rem]"
+                >
+                  {written_text}
+                </span>
+              </StyledContentEditableSpan>
+
               <input
                 className="w-full outline-none text-[2.4rem] mb-[2rem]"
                 type="text"
