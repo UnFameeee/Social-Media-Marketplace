@@ -9,6 +9,7 @@ import UserProfile from './screens/UserProfile/UserProfile';
 import Settings from './screens/Setting/Settings';
 import RequireAuth from './screens/Auth/RequireAuth';
 import Error from './screens/NotFoundPage/Error';
+import Friends from './screens/Friends/Friends';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/userprofile" element={<UserProfile />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/friends" element={<Friends />} />
           </Route>
         </Route>
         <Route path="*" element={<Error />} />

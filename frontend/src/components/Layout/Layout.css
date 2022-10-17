@@ -38,4 +38,44 @@
 }
 /* #endregion */
 
+/* #region nav bar */
+.MuiPaper-root.nav-bar {
+  box-shadow: none;
+  position: fixed;
+  width: 100vw;
+  height: var(--navbar-height);
+  padding: 0 var(--padding-layout);
+  z-index: 10;
+}
+.nav-bar-wrapper {
+  /* margin: 0; */
+  height: 100%;
+  align-items: center;
+  padding-right: 14px;
+}
+/* #endregion */
 
+/* #region layout */
+.layout-wrapper {
+  display: flex;
+  padding-top: var(--navbar-height);
+}
+.landing-layout {
+  background-color: rgb(241 241 241 / 1);
+  overflow-y: scroll;
+  width: 100vw;
+  padding-top: 1.5rem;
+}
+.one-column {
+  padding-left: var(--padding-layout);
+  padding-right: var(--padding-layout);
+}
+.two-column {
+  padding-left: calc(var(--sidebar-width) + var(--padding-layout) + 8px);
+  padding-right: var(--padding-layout);
+}
+.three-column {
+  padding-left: calc(var(--sidebar-width) + var(--padding-layout) + 8px);
+  padding-right: calc(var(--sidebar-width) + var(--padding-layout));
+}
+/* #endregion */

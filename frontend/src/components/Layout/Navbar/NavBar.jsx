@@ -18,6 +18,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { logOut } from '../../../redux/apiRequest';
 import { revertAll } from '../../../redux/resetStore';
+import '../Layout.css';
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ export default function NavBar() {
   }
 
   return (
+    // #region oldCode
     // <div className="flex items-center px-5 py-1 bg-white fixed w-screen drop-shadow-md z-50">
     //   <div className="rightNav flex items-center w-[25%] gap-1 pt-3">
     //     <Facebook className=" text-blue8f3 Icon " style={{ fontSize: 40 }} />
@@ -96,26 +98,10 @@ export default function NavBar() {
     //     </div>
     //   </div>
     // </div>
+    // #endregion
 
-    <Paper
-      sx={{
-        boxShadow: 'none',
-        position: 'fixed',
-        width: '100vw',
-        height: 'var(--navbar-height)',
-        padding: '0 1rem',
-        zIndex: 10,
-      }}
-    >
-      <Grid
-        container
-        sx={{
-          margin: 0,
-          height: '100%',
-          alignItems: 'center',
-          paddingRight: '14px',
-        }}
-      >
+    <Paper className="nav-bar">
+      <Grid container className="nav-bar-wrapper">
         <Grid item xs sx={{ display: 'flex' }}>
           <IconButton
             sx={{ padding: 0 }}
