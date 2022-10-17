@@ -1,13 +1,15 @@
-import { Route, Routes } from "react-router-dom";
-import Home from "./screens/Home/Home";
-import NotFoundPage from "./screens/NotFoundPage/NotFoundPage";
-import Login from "./screens/Auth/Login";
-import Register from "./screens/Auth/Register";
-import WithNav from "../src/components/Layout/Navbar/WithNav";
-import WithoutNav from "../src/components/Layout/Navbar/WithoutNav";
-import UserProfile from "./screens/UserProfile/UserProfile";
-import Settings from "./screens/Setting/Settings";
-import RequireAuth from "./screens/Auth/RequireAuth";
+import { Route, Routes } from 'react-router-dom';
+import Home from './screens/Home/Home';
+import NotFoundPage from './screens/NotFoundPage/NotFoundPage';
+import Login from './screens/Auth/Login';
+import Register from './screens/Auth/Register';
+import WithNav from '../src/components/Layout/Navbar/WithNav';
+import WithoutNav from '../src/components/Layout/Navbar/WithoutNav';
+import UserProfile from './screens/UserProfile/UserProfile';
+import Settings from './screens/Setting/Settings';
+import RequireAuth from './screens/Auth/RequireAuth';
+import Error from './screens/NotFoundPage/Error';
+import Friends from './screens/Friends/Friends';
 
 function App() {
   return (
@@ -22,9 +24,11 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/userprofile" element={<UserProfile />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/friends" element={<Friends />} />
           </Route>
         </Route>
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="*" element={<Error />} />
+        <Route path="/forbidden" element={<Error status="403" />} />
       </Routes>
     </>
   );

@@ -17,7 +17,6 @@ export const FormChildren = {
   NumberInputForm,
 };
 
-
 export function ValidateForm(props) {
   const {
     initialValues,
@@ -26,7 +25,7 @@ export function ValidateForm(props) {
     children,
     handleValid,
     ...other
-   } = props;
+  } = props;
 
   return (
     <Formik
@@ -37,8 +36,8 @@ export function ValidateForm(props) {
       }}
       {...other}
     >
-      {({ isValid, dirty, touched }) => {
-        handleValid(isValid, dirty, touched)
+      {(props) => {
+        handleValid(props);
         return <Form>{children}</Form>;
       }}
     </Formik>

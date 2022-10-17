@@ -22,7 +22,7 @@ export default function Button(props) {
       {...(pascalCase && { sx: { textTransform: 'none' } })}
       {...other}
     >
-      {name}
+      {name || props.children}
     </MuiButton>
   );
 }

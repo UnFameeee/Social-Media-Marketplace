@@ -10,8 +10,16 @@ import { BetterIconButton } from './Button/IconButton';
 import './MUI.css';
 
 export default function Menu(props) {
-  const { list, before, after, left, middle, right, ...other } =
-    props;
+  const {
+    list,
+    before,
+    after,
+    left,
+    middle,
+    right,
+    className,
+    ...other
+  } = props;
 
   function checkPropsInObject(object, listProps, checkAll) {
     let res = checkAll;
@@ -30,11 +38,15 @@ export default function Menu(props) {
   }
 
   return (
-    <MenuList className="menu" {...other}>
+    <MenuList className={`menu ${className}`} {...other}>
       {before}
 
       {list.map((item, index) => (
-        <MenuItem key={index} className="menu-item">
+        <MenuItem
+          key={index}
+          className="menu-item"
+          onClick={item.onClick}
+        >
           {React.isValidElement(left) ? (
             left
           ) : React.isValidElement(item.left) ? (
@@ -51,7 +63,7 @@ export default function Menu(props) {
             ) : (
               checkPropsInObject(item.left, ['icon'], false) && (
                 <BetterIconButton
-                  id={item.left.id + index}
+                  id={item.left.id ? item.left.id + index : null}
                   tooltip={item.left.tooltip}
                   className="left-menu"
                   hasBackground={item.left.hasBackground}
@@ -69,8 +81,12 @@ export default function Menu(props) {
           ) : typeof item.middle == 'object' ? (
             <>
               <Typography
-                data-tip
-                data-for={item.middle.text + index}
+                data-tip={item.middle.hasTooltip}
+                data-for={
+                  item.middle.hasTooltip
+                    ? item.middle.text + index
+                    : null
+                }
                 sx={{
                   width: '16.5rem',
                   overflow: 'hidden',
@@ -107,7 +123,7 @@ export default function Menu(props) {
             : typeof item.right == 'object'
             ? checkPropsInObject(item.left, ['icon'], false) && (
                 <BetterIconButton
-                  id={item.right.id}
+                  id={item.right.id ? item.right.id + index : null}
                   tooltip={item.right.tooltip}
                   className="right-menu"
                   hasBackground={item.right.hasBackground}

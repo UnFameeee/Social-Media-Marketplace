@@ -15,50 +15,30 @@ import {
   Search,
   MoreHoriz,
 } from '@mui/icons-material';
-import { makeStyles } from 'tss-react/mui';
+import { makeStyles } from "tss-react/mui";
+import '../Layout.css';
 
 const useStyles = makeStyles()(() => ({
-  root: {
-    '& .MuiSvgIcon-root': {
-      color: 'var(--primary-color)',
-      fontSize: '3rem',
-      marginLeft: '0.8rem',
-      marginBottom: '0.3rem',
-    },
-    '& .MuiButtonBase-root': {
-      padding: '0.8rem 0',
-      '&:hover': {
-        borderRadius: '8px',
-      },
-    },
-    '& .MuiTypography-root': {
-      fontSize: '1.8rem !important',
-      fontWeight: '500',
-    },
-  },
-  scrollBar: {
+  scroll: {
     '&::-webkit-scrollbar': {
       width: '1rem',
     },
-    //cái đường dài chứa thanh kéo
     '&::-webkit-scrollbar-track': {
-      WebkitBoxShadow: 'inset 0 0 6px rgba(0,0,0,0.00)',
+      boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0)',
       borderRadius: '8px',
     },
-    //thanh kéo
     '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(0,0,0,.1)',
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
       borderRadius: '8px',
-      maxHeight: '8px',
     },
   },
 }));
 
 export default function RightBar() {
-  const {classes} = useStyles();
+  const { classes, cx } = useStyles();
 
   return (
-
+    // #region oldCode
     // <>    
     //   <div className="flex items-center [&>*]:text-slate-500 py-[1rem]">
     //     <span className="flex-1 text-[2rem] font-semibold ">Contacts</span>
@@ -192,8 +172,10 @@ export default function RightBar() {
     //   </ul>
     //   <hr className="text-greyf1" />
     // </>
+    // #endregion
 
     <Box
+    className={cx(classes.scroll)}
       sx={{
         position: 'fixed',
         bottom: 0,
@@ -202,7 +184,6 @@ export default function RightBar() {
         height: 'calc(100vh - var(--navbar-height))',
         overflowY: 'scroll',
       }}
-      className={classes.scrollBar}
     >
       <Box
         sx={{

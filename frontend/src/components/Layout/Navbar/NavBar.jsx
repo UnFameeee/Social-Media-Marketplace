@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FacebookOutlined } from '@mui/icons-material';
+import { FacebookOutlined, Close } from '@mui/icons-material';
 import {
   Paper,
   Grid,
   IconButton,
   Avatar,
-  Box,
+  Typography,
   ClickAwayListener,
 } from '@mui/material';
 import { IoLogOut } from 'react-icons/io5';
@@ -18,6 +18,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { logOut } from '../../../redux/apiRequest';
 import { revertAll } from '../../../redux/resetStore';
+import '../Layout.css';
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ export default function NavBar() {
   }
 
   return (
+    // #region oldCode
     // <div className="flex items-center px-5 py-1 bg-white fixed w-screen drop-shadow-md z-50">
     //   <div className="rightNav flex items-center w-[25%] gap-1 pt-3">
     //     <Facebook className=" text-blue8f3 Icon " style={{ fontSize: 40 }} />
@@ -96,26 +98,10 @@ export default function NavBar() {
     //     </div>
     //   </div>
     // </div>
+    // #endregion
 
-    <Paper
-      sx={{
-        boxShadow: 'none',
-        position: 'fixed',
-        width: '100vw',
-        height: 'var(--navbar-height)',
-        padding: '0 1rem',
-        zIndex: 10,
-      }}
-    >
-      <Grid
-        container
-        sx={{
-          margin: 0,
-          height: '100%',
-          alignItems: 'center',
-          paddingRight: '14px',
-        }}
-      >
+    <Paper className="nav-bar drop-shadow-md">
+      <Grid container className="nav-bar-wrapper">
         <Grid item xs sx={{ display: 'flex' }}>
           <IconButton
             sx={{ padding: 0 }}
@@ -133,29 +119,50 @@ export default function NavBar() {
             placeHolder="Search FB"
             getData={(input) => setValue(input)}
             handleSearch={handleSearch}
-            recentSearchs={[
-              {
-                left: {
-                  url: 'https://source.unsplash.com/random/300×300',
-                  name: 'Duy',
+            menuConfig={{
+              className: 'menu navbar-search',
+              list: [
+                {
+                  left: {
+                    url: 'https://source.unsplash.com/random/300×300',
+                    name: 'Duy',
+                  },
+                  middle: 'Thạch Dương Duy',
                 },
-                middle: 'Thạch Dương Duy',
-              },
-              {
-                left: {
-                  url: 'https://source.unsplash.com/random/300×300',
-                  name: 'Vũ',
+                {
+                  left: {
+                    url: 'https://source.unsplash.com/random/300×300',
+                    name: 'Vũ',
+                  },
+                  middle: 'Nguyễn Hoàng Vũ',
                 },
-                middle: 'Nguyễn Hoàng Vũ',
-              },
-              {
-                left: {
-                  url: 'https://source.unsplash.com/random/300×300',
-                  name: 'Thắng',
+                {
+                  left: {
+                    url: 'https://source.unsplash.com/random/300×300',
+                    name: 'Thắng',
+                  },
+                  middle: 'Nguyễn Phạm Quốc Thắng',
                 },
-                middle: 'Nguyễn Phạm Quốc Thắng',
-              },
-            ]}
+              ],
+              before: (
+                <Typography sx={{ marginLeft: '1.6rem' }}>
+                  Recent Searchs
+                </Typography>
+              ),
+              right: (
+                <IconButton
+                  id="recentSearchIcon"
+                  tooltip="Delete"
+                  sx={{
+                    padding: '0.4rem',
+                    position: 'absolute',
+                    right: '0.8rem',
+                  }}
+                >
+                  <Close sx={{ fontSize: '1.6rem' }} />
+                </IconButton>
+              ),
+            }}
           />
         </Grid>
 
@@ -171,11 +178,12 @@ export default function NavBar() {
                 padding: '1rem 0.8rem',
               }}
               key={item.id + index}
-              id={item.id + index}
+              id={item.id ? item.id + index : null}
               tooltip={item.tooltip}
               style={
-                checkUrl(item.tooltip.toLocaleLowerCase())
+                checkUrl(item.tooltip?.toLowerCase())
                   ? {
+                      marginBottom: '-3px',
                       borderBottomLeftRadius: 0,
                       borderBottomRightRadius: 0,
                       color: 'var(--primary-color)',
@@ -185,10 +193,10 @@ export default function NavBar() {
               }
               onClick={() => {
                 if (item.tooltip == 'Home') navigate('/');
-                else navigate(`/${item.tooltip.toLowerCase()}`);
+                else navigate(`/${item.tooltip?.toLowerCase()}`);
               }}
             >
-              {checkUrl(item.tooltip.toLocaleLowerCase())
+              {checkUrl(item.tooltip?.toLowerCase())
                 ? item.icon[1]
                 : item.icon[0]}
             </MUI.ButtonWithIcon>
@@ -201,10 +209,10 @@ export default function NavBar() {
           sx={{ display: 'flex', justifyContent: 'flex-end' }}
         >
           {rightNavIcons.map((item, index) => (
-            <Box key={item.id + index}>
+            <div key={item.id + index}>
               <MUI.BetterIconButton
-                hasBackground={true}
-                id={item.id + index}
+                hasBackground
+                id={item.id ? item.id + index : null}
                 tooltip={item.tooltip}
                 sx={{
                   '& .MuiSvgIcon-root': {
@@ -215,7 +223,7 @@ export default function NavBar() {
               >
                 {item.icon}
               </MUI.BetterIconButton>
-            </Box>
+            </div>
           ))}
 
           <ClickAwayListener
@@ -223,7 +231,7 @@ export default function NavBar() {
               setAvatarMenu(false);
             }}
           >
-            <Box sx={{ position: 'relative' }}>
+            <div style={{ position: 'relative' }}>
               <Avatar
                 src="https://source.unsplash.com/random/300×300"
                 onClick={() => setAvatarMenu(!avatarMenu)}
@@ -234,10 +242,10 @@ export default function NavBar() {
                   sx={{ right: '2px', minWidth: '20rem' }}
                   list={[
                     {
+                      onClick: handleLogout,
                       left: {
                         icon: (
                           <IoLogOut
-                            onClick={handleLogout}
                             style={{
                               fontSize: '2.4rem',
                               color: 'black',
@@ -254,7 +262,7 @@ export default function NavBar() {
                   ]}
                 />
               )}
-            </Box>
+            </div>
           </ClickAwayListener>
         </Grid>
       </Grid>

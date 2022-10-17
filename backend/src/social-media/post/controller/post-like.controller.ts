@@ -14,14 +14,14 @@ export class PostLikeController {
     @Post("/like/:post_id")
     async likePost(@Request() request: any, @Param("post_id") postId: number){
         const profile = <Profile>request.user;
-        return await this.postLikeService.likePost(profile, postId);
+        return await this.postLikeService.likeUnlikePost(profile, postId);
     }
     //Unlike a post
-    @Post("/unlike/:post_id")
-    async unlikePost(@Request() request: any, @Param("post_id") postId: number){
-        const profile = <Profile>request.user;
-        return await this.postLikeService.unlikePost(profile, postId);
-    }
+    // @Post("/unlike/:post_id")
+    // async unlikePost(@Request() request: any, @Param("post_id") postId: number){
+    //     const profile = <Profile>request.user;
+    //     return await this.postLikeService.likeUnlikePost(profile, postId);
+    // }
     //See all like of post
     @Post("/allLikeOfPost/:post_id")
     async allLikeOfPost(@Request() request: any, @Param("post_id") postId: number){

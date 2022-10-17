@@ -1,35 +1,35 @@
 import { useState } from 'react';
-import { Box } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { ValidateForm, FormChildren } from '../../components/Form';
 import Face from '../../components/LookingFace/Face';
 import { registerModel, registerSchema } from './Auth.model';
-import AuthService from './Auth.service';
 import './Auth.css';
+import { register } from '../../redux/apiRequest';
 
 export default function Register() {
-  const [valid, setValid] = useState(false);
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const from = location.state?.from.pathname || '/';
   var navigate = useNavigate();
 
+  const [valid, setValid] = useState(false);
+
   return (
-    <Box>
-      <Face happy={valid} />
-      <Box className="form-wrap">
-        <Box sx={{ textAlign: 'center' }}>
+    <div>
+      <Face happy={valid} left="25%" />
+      <div className="form-wrap">
+        <div style={{ textAlign: 'center' }}>
           <ValidateForm
             initialValues={registerModel}
             validationSchema={registerSchema}
             onSubmit={(values) => {
-              AuthService.register(values).then((value) => {
-                if (value) {
-                  navigate('/login');
-                }
-              });
+              register(values, dispatch, navigate, from);
             }}
-            handleValid={(isValid, dirty, touched) => {
-              if (Object.keys(touched).length) {
-                setValid(isValid && dirty);
+            handleValid={(props) => {
+              if (Object.keys(props.touched).length) {
+                setValid(props.isValid && props.dirty);
               }
             }}
           >
@@ -72,8 +72,8 @@ export default function Register() {
               </Link>
             </div>
           </ValidateForm>
-        </Box>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 }

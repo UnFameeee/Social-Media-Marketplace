@@ -1,7 +1,7 @@
 import './Face.css';
 
 export default function Face(props) {
-  const {happy, center} = props
+  const { happy, left, top } = props;
   return (
     <div className="wrapper">
       <div className="move top left"></div>
@@ -13,7 +13,7 @@ export default function Face(props) {
       <div className="move bottom left"></div>
       <div className="move bottom"></div>
       <div className="move bottom right"></div>
-      <div className={center?"head head-center":"head head-left"}>
+      <div className={'head'} style={{ left: left, top: top }}>
         <div className="ear ear_left"></div>
         <div className="ear ear_right"></div>
         <div className="face">
@@ -21,10 +21,10 @@ export default function Face(props) {
           <div className="eye eye_right"></div>
           <div className="nose"></div>
           <div className="beard">
-            <div className={happy?"chin":"chin sad"}></div>
+            <div className={happy ? 'chin' : 'chin sad'}></div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

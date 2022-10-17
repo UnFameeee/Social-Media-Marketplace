@@ -1,18 +1,12 @@
 import { Button } from '@mui/material';
-import { useFormikContext } from 'formik';
 
 export default function ButtonForm({ name, ...otherProps }) {
-  const { submitForm } = useFormikContext();
-
-  const handleSubmit = () => {
-    submitForm();
-  };
 
   const configButton = {
     ...otherProps,
+    type: 'submit',
     variant: 'contained',
     color: 'primary',
-    onClick: handleSubmit,
   };
 
   return (
