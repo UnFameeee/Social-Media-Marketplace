@@ -65,4 +65,7 @@ export const rightNavIcons = [
     icon: <Notifications />,
     tooltip: 'Notifications',
   },
+  {
+    avatar: true,
+  },
 ];

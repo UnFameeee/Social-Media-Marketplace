@@ -209,35 +209,29 @@ export default function NavBar() {
           sx={{ display: 'flex', justifyContent: 'flex-end' }}
         >
           {rightNavIcons.map((item, index) => (
-            <div key={item.id + index}>
-              <MUI.BetterIconButton
-                hasBackground
-                id={item.id ? item.id + index : null}
-                tooltip={item.tooltip}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    fontSize: '2.4rem',
-                  },
-                  marginRight: '0.8rem',
-                }}
-              >
-                {item.icon}
-              </MUI.BetterIconButton>
-            </div>
-          ))}
+            <div key={index} style={{ position: 'relative' }}>
+              {item.icon ? (
+                <MUI.BetterIconButton
+                  hasBackground
+                  id={item.id ? item.id + index : null}
+                  tooltip={item.tooltip}
+                  sx={{
+                    '& .MuiSvgIcon-root': {
+                      fontSize: '2.4rem',
+                    },
+                    marginRight: '0.8rem',
+                  }}
+                >
+                  {item.icon}
+                </MUI.BetterIconButton>
+              ) : (
+                <Avatar
+                  src="https://source.unsplash.com/random/300×300"
+                  onClick={() => setAvatarMenu(!avatarMenu)}
+                />
+              )}
 
-          <ClickAwayListener
-            onClickAway={() => {
-              setAvatarMenu(false);
-            }}
-          >
-            <div style={{ position: 'relative' }}>
-              <Avatar
-                src="https://source.unsplash.com/random/300×300"
-                onClick={() => setAvatarMenu(!avatarMenu)}
-              />
-
-              {avatarMenu && (
+              {avatarMenu && item.avatar && (
                 <MUI.Menu
                   sx={{ right: '2px', minWidth: '20rem' }}
                   list={[
@@ -263,7 +257,7 @@ export default function NavBar() {
                 />
               )}
             </div>
-          </ClickAwayListener>
+          ))}
         </Grid>
       </Grid>
     </Paper>
