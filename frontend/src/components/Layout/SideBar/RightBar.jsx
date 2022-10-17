@@ -15,9 +15,27 @@ import {
   Search,
   MoreHoriz,
 } from '@mui/icons-material';
-import '../Layout.css'
+import { makeStyles } from "tss-react/mui";
+import '../Layout.css';
+
+const useStyles = makeStyles()(() => ({
+  scroll: {
+    '&::-webkit-scrollbar': {
+      width: '1rem',
+    },
+    '&::-webkit-scrollbar-track': {
+      boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0)',
+      borderRadius: '8px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      borderRadius: '8px',
+    },
+  },
+}));
 
 export default function RightBar() {
+  const { classes, cx } = useStyles();
 
   return (
     // #region oldCode
@@ -157,6 +175,7 @@ export default function RightBar() {
     // #endregion
 
     <Box
+    className={cx(classes.scroll)}
       sx={{
         position: 'fixed',
         bottom: 0,

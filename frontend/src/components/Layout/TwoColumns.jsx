@@ -1,8 +1,9 @@
 import LeftBar from './SideBar/LeftBar';
-import './Layout.css'
+import './Layout.css';
 
 export default function TwoColumns(props) {
-  const { listFeature, children } = props;
+  const { leftBarConfig, children } = props;
+
   return (
     // #region oldCode
     // <div className="pt-[5.5rem] flex w-full">
@@ -16,10 +17,8 @@ export default function TwoColumns(props) {
     // #endregion
 
     <div className="layout-wrapper">
-      <LeftBar leftBarList={listFeature} />
-      <div className="landing-layout two-column">
-        {children}
-      </div>
+      <LeftBar {...leftBarConfig} />
+      <div className="landing-layout two-column">{children}</div>
     </div>
   );
 }

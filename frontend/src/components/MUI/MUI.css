@@ -7,6 +7,14 @@
   border-radius: 8px;
   box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
+.MuiList-root.menu.navbar-search {
+  left: -54px;
+  width: 121%;
+  border-radius: 0;
+  border-bottom-left-radius: 8px; 
+  border-bottom-right-radius: 8px; 
+  box-shadow: 4px 10px 8px rgb(0 0 0 / 10%);
+}
 .MuiMenuItem-root.menu-item {
   margin: 0.8rem 0.8rem 0 0.8rem;
   border-radius: 8px;
@@ -29,6 +37,7 @@
 
 /*#region IconButton*/
 .MuiButton-root.button-with-icon {
+  text-transform: none;
   color: #65676b;
 }
 .MuiButton-root.button-with-icon:hover {

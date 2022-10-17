@@ -6,9 +6,29 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
+import { makeStyles } from "tss-react/mui";
 import '../Layout.css';
 
-export default function LeftBar({ leftBarList }) {
+const useStyles = makeStyles()(() => ({
+  scroll: {
+    '&::-webkit-scrollbar': {
+      width: '1rem',
+    },
+    '&::-webkit-scrollbar-track': {
+      boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0)',
+      borderRadius: '8px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      borderRadius: '8px',
+    },
+  },
+}));
+
+export default function LeftBar(props) {
+  const { before, after, leftBarList, leftBarColor } = props;
+  const { classes, cx } = useStyles();
+
   return (
     // #region oldCode
     // <>
@@ -34,14 +54,23 @@ export default function LeftBar({ leftBarList }) {
     // </>
     // #endregion
 
-    <Box className="left-bar">
+    <Box
+      className={cx(classes.scroll, `left-bar ${leftBarColor ? 'drop-shadow-md' : ''}`)}
+      style={
+        leftBarColor
+          ? {
+              backgroundColor: leftBarColor,
+              boxShadow: '0 0 1px rgba(0,0,0,0.1)',
+            }
+          : null
+      }
+    >
+      {before}
+
       {leftBarList && (
         <List>
           {leftBarList.map((item, index) => (
-            <ListItem
-              key={index}
-              sx={{ padding: '0.8rem' }}
-            >
+            <ListItem key={index} sx={{ padding: '0.8rem' }}>
               <ListItemButton
                 onClick={item.onClick}
                 className="left-bar-button"
@@ -56,6 +85,8 @@ export default function LeftBar({ leftBarList }) {
           ))}
         </List>
       )}
+
+      {after}
     </Box>
   );
 }

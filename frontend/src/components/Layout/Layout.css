@@ -1,17 +1,3 @@
-/* #region scroll bar */
-::-webkit-scrollbar {
-  width: 1rem;
-}
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
-  border-radius: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-/* #endregion */
-
 /* #region left bar */
 .left-bar {
   width: var(--sidebar-width);
@@ -40,12 +26,13 @@
 
 /* #region nav bar */
 .MuiPaper-root.nav-bar {
-  box-shadow: none;
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
   position: fixed;
   width: 100vw;
   height: var(--navbar-height);
   padding: 0 var(--padding-layout);
   z-index: 10;
+  border-radius: 0;
 }
 .nav-bar-wrapper {
   /* margin: 0; */
