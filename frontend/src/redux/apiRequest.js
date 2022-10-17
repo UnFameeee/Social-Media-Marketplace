@@ -57,7 +57,7 @@ export const register = async (model, dispatch, navigate) => {
     const res = await axios.post(`${apiUrl}/auth/register`, model);
     if (res) {
       dispatch(registerSuccess(res.data));
-     
+
       navigate("/login");
     } else {
       dispatch(registerFailed());
@@ -74,7 +74,7 @@ export const login = async (model, dispatch, navigate, from) => {
       var token = res.data.access;
       var decoded = jwt_decode(token);
       dispatch(loginSuccess(res.data));
-      dispatch(userDataAssign(decoded))
+      dispatch(userDataAssign(decoded));
       navigate(from, { replace: true });
     } else {
       dispatch(loginFailed());

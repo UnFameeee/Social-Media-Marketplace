@@ -88,7 +88,7 @@ function PostModal(props) {
             <div className="px-[2rem]">
               <div className="flex items-center gap-[1rem] mb-[1rem]">
                 <AvatarWithText url={props.avtUrl} size="5rem" />
-                <span className="font-bold">Hai Du</span>
+                <span className="font-bold">{props.profile.profile_name}</span>
               </div>
               <textarea
                 placeholder="What's on your mind, Hai Du?"

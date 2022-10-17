@@ -40,13 +40,8 @@ function Home() {
     setPostUpdateData(data);
   };
   const posts = useSelector((state) => state.post.get.posts?.results?.data);
-  const accessToken = useSelector(
-    (state) => state.auth.login.currentUser.access
-  );
-  var token = accessToken;
-  var decoded = jwt_decode(token);
-
-  console.log("decoded",decoded);
+  const accessToken = useSelector((state) => state.auth.login.currentUser.access);
+  const userData = useSelector((state) => state.auth.user.userData);
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -64,6 +59,7 @@ function Home() {
         setPostUpdateData={setPostUpdateData}
         setShowModal={setOpenCreatePost}
         setReRender={setReRender}
+        profile={userData.profile}
         avtUrl="https://source.unsplash.com/random/330×320"
       />
       <ToastContainer />
@@ -128,7 +124,7 @@ function Home() {
               <CardPost
                 postData={post}
                 key={post.post_id}
-                postTime="1 hour"
+                profile={userData.profile}
                 setReRender={setReRender}
                 handleOpenPostModel={handleOpenPostModel}
                 handleGetPostUpdateData={handleGetPostUpdateData}

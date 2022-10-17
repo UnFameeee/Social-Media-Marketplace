@@ -88,25 +88,27 @@ function CardPost(props) {
               </span>
             </div>
           </div>
-          <div className="relative">
-            <MoreHoriz
-              className=" right-[2rem] Icon"
-              style={{ fontSize: "2.5rem" }}
-              onClick={handleOnClickShowAction}
-            />
-            {showAction && (
-              <div className="bg-white floatingAction absolute  right-0  p-[1rem] drop-shadow-sm rounded-xl border-[0.1rem] cursor-pointer">
-                <ul className="flex gap-[1rem] flex-col ">
-                  <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
-                    <button onClick={handleShowModal}>Update</button>
-                  </li>
-                  <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
-                    <button onClick={handleDeletePost}>Delete</button>
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
+          {props.profile.profile_id === props.postData.profile_id && (
+            <div className="relative">
+              <MoreHoriz
+                className=" right-[2rem] Icon"
+                style={{ fontSize: "2.5rem" }}
+                onClick={handleOnClickShowAction}
+              />
+              {showAction && (
+                <div className="bg-white floatingAction absolute  right-0  p-[1rem] drop-shadow-sm rounded-xl border-[0.1rem] cursor-pointer">
+                  <ul className="flex gap-[1rem] flex-col ">
+                    <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
+                      <button onClick={handleShowModal}>Update</button>
+                    </li>
+                    <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
+                      <button onClick={handleDeletePost}>Delete</button>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
         </div>
         <div className="written_text ">
           <div className="paragraph px-[2rem] mb-[1rem]">
