@@ -1,10 +1,8 @@
 import {
   ClickAwayListener,
-  Box,
   TextField,
   IconButton,
   InputAdornment,
-  Typography,
 } from '@mui/material';
 import { Search, Close } from '@mui/icons-material';
 import { useState } from 'react';
@@ -17,7 +15,7 @@ export default function SearchBar(props) {
     placeHolder,
     getData,
     handleSearch,
-    recentSearchs,
+    menuConfig,
     ...others
   } = props;
 
@@ -32,7 +30,7 @@ export default function SearchBar(props) {
         setOpen(false);
       }}
     >
-      <Box sx={{ position: 'relative' }}>
+      <div style={{ position: 'relative' }}>
         <TextField
           placeholder={placeHolder}
           InputProps={{
@@ -66,30 +64,10 @@ export default function SearchBar(props) {
           {...others}
         />
 
-        {open && recentSearchs && (
-          <Menu
-            list={recentSearchs}
-            before={
-              <Typography sx={{ marginLeft: '1.6rem' }}>
-                Recent Searchs
-              </Typography>
-            }
-            right={
-              <IconButton
-                id="recentSearchIcon"
-                tooltip="Delete"
-                sx={{
-                  padding: '0.4rem',
-                  position: 'absolute',
-                  right: '0.8rem'
-                }}
-              >
-                <Close sx={{ fontSize: '1.6rem' }} />
-              </IconButton>
-            }
-          />
-        )}
-      </Box>
+        {open && menuConfig.list.length ? (
+          <Menu {...menuConfig} />
+        ) : null}
+      </div>
     </ClickAwayListener>
   );
 }

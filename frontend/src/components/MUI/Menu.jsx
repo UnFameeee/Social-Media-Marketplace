@@ -10,8 +10,16 @@ import { BetterIconButton } from './Button/IconButton';
 import './MUI.css';
 
 export default function Menu(props) {
-  const { list, before, after, left, middle, right, ...other } =
-    props;
+  const {
+    list,
+    before,
+    after,
+    left,
+    middle,
+    right,
+    className,
+    ...other
+  } = props;
 
   function checkPropsInObject(object, listProps, checkAll) {
     let res = checkAll;
@@ -30,11 +38,15 @@ export default function Menu(props) {
   }
 
   return (
-    <MenuList className="menu" {...other}>
+    <MenuList className={`menu ${className}`} {...other}>
       {before}
 
       {list.map((item, index) => (
-        <MenuItem key={index} className="menu-item">
+        <MenuItem
+          key={index}
+          className="menu-item"
+          onClick={item.onClick}
+        >
           {React.isValidElement(left) ? (
             left
           ) : React.isValidElement(item.left) ? (
@@ -70,7 +82,11 @@ export default function Menu(props) {
             <>
               <Typography
                 data-tip={item.middle.hasTooltip}
-                data-for={item.middle.hasTooltip ? item.middle.text + index : null}
+                data-for={
+                  item.middle.hasTooltip
+                    ? item.middle.text + index
+                    : null
+                }
                 sx={{
                   width: '16.5rem',
                   overflow: 'hidden',

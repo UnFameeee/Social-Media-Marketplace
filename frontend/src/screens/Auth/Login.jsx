@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Box } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -18,10 +17,10 @@ export default function Login() {
   const [valid, setValid] = useState(false);
 
   return (
-    <Box>
+    <div>
       <Face happy={valid} left="25%" />
-      <Box className="form-wrap">
-        <Box sx={{ textAlign: 'center' }}>
+      <div className="form-wrap">
+        <div style={{ textAlign: 'center' }}>
           <ValidateForm
             initialValues={loginModel}
             validationSchema={loginSchema}
@@ -62,8 +61,8 @@ export default function Login() {
               </Link>
             </div>
           </ValidateForm>
-        </Box>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </div>
   );
 }
