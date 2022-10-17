@@ -195,6 +195,7 @@ export default function NavBar() {
                 if (item.tooltip == 'Home') navigate('/');
                 else navigate(`/${item.tooltip?.toLowerCase()}`);
               }}
+              disabled={checkUrl(item.tooltip?.toLowerCase())}
             >
               {checkUrl(item.tooltip?.toLowerCase())
                 ? item.icon[1]

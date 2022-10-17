@@ -8,7 +8,7 @@
   box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
 .MuiList-root.menu.navbar-search {
-  left: -54px;
+  left: -5.4rem;
   width: 121%;
   border-radius: 0;
   border-bottom-left-radius: 8px; 
@@ -19,12 +19,12 @@
   margin: 0.8rem 0.8rem 0 0.8rem;
   border-radius: 8px;
   padding: 0.6rem 0.8rem;
-  min-height: 46px;
+  min-height: 4.6rem;
 }
 .MuiMenuItem-root .left-menu {
   width: 3.5rem;
   height: 3.5rem;
-  margin-right: 8px;
+  margin-right: 0.8rem;
 }
 .MuiMenuItem-root .right-menu {  
   width: 3.5rem;

@@ -6,7 +6,7 @@
   position: fixed;
   bottom: 0;
 }
-.left-bar svg {
+.MuiListItemIcon-root svg {
   color: var(--primary-color);
   font-size: 3rem;
   margin-left: 0.8rem;
@@ -21,6 +21,13 @@
 .left-bar .left-bar-text .MuiTypography-root {
   font-size: 1.8rem !important;
   font-weight: 500;
+}
+.left-bar .left-bar-button.Mui-selected {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+}
+.left-bar .left-bar-button.Mui-selected:hover {
+  background-color: rgba(0, 0, 0, 0.04);
 }
 /* #endregion */
 
@@ -38,7 +45,7 @@
   /* margin: 0; */
   height: 100%;
   align-items: center;
-  padding-right: 14px;
+  padding-right: 1.4rem;
 }
 /* #endregion */
 

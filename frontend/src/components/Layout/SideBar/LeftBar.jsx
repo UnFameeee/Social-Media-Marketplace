@@ -6,7 +6,8 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { makeStyles } from "tss-react/mui";
+import { Link } from 'react-router-dom';
+import { makeStyles } from 'tss-react/mui';
 import '../Layout.css';
 
 const useStyles = makeStyles()(() => ({
@@ -55,7 +56,10 @@ export default function LeftBar(props) {
     // #endregion
 
     <Box
-      className={cx(classes.scroll, `left-bar ${leftBarColor ? 'drop-shadow-md' : ''}`)}
+      className={cx(
+        classes.scroll,
+        `left-bar ${leftBarColor ? 'drop-shadow-md' : ''}`
+      )}
       style={
         leftBarColor
           ? {
@@ -71,16 +75,35 @@ export default function LeftBar(props) {
         <List>
           {leftBarList.map((item, index) => (
             <ListItem key={index} sx={{ padding: '0.8rem' }}>
-              <ListItemButton
-                onClick={item.onClick}
-                className="left-bar-button"
-              >
-                <ListItemIcon>{item.iconName}</ListItemIcon>
-                <ListItemText
-                  primary={item.text}
-                  className="left-bar-text"
-                />
-              </ListItemButton>
+              {item.navigate ? (
+                <Link to={`${item.navigate}`} style={{width: '100%'}}>
+                  <ListItemButton
+                    onClick={item.onClick}
+                    className="left-bar-button"
+                    selected={item.selected}
+                  >
+                    <ListItemIcon>{item.left}</ListItemIcon>
+                    <ListItemText
+                      primary={item.middle}
+                      className="left-bar-text"
+                    />
+                    <ListItemIcon>{item.right}</ListItemIcon>
+                  </ListItemButton>
+                </Link>
+              ) : (
+                <ListItemButton
+                  onClick={item.onClick}
+                  className="left-bar-button"
+                  selected={item.selected}
+                >
+                  <ListItemIcon>{item.left}</ListItemIcon>
+                  <ListItemText
+                    primary={item.middle}
+                    className="left-bar-text"
+                  />
+                  <ListItemIcon>{item.right}</ListItemIcon>
+                </ListItemButton>
+              )}
             </ListItem>
           ))}
         </List>

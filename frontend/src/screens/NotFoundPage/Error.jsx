@@ -34,8 +34,8 @@ export default function Error(props) {
           textAlign: 'center'
         }}
       >
-        <h1 style={{fontSize: '100px'}}>{status}</h1>
-        <h2 style={{fontSize: '22px', marginBottom: '22px'}}>{title}</h2>
+        <h1 style={{fontSize: '10rem'}}>{status}</h1>
+        <h2 style={{fontSize: '2.2rem', marginBottom: '2.2rem'}}>{title}</h2>
         <MUI.Button
           name="Return Home"
           onClick={() => navigate('/')}
