@@ -20,6 +20,7 @@ import {
   Modal,
   Button,
 } from "@mui/material";
+import jwt_decode from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
 import PostModal from "./PostModal";
 import { useState } from "react";
@@ -31,7 +32,7 @@ function Home() {
   const dispatch = useDispatch();
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [postUpdateData, setPostUpdateData] = useState();
-  const [reRender, setReRender] = useState(false)
+  const [reRender, setReRender] = useState(false);
   const handleOpenPostModel = () => {
     setOpenCreatePost((prev) => !prev);
   };
@@ -42,6 +43,10 @@ function Home() {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  var token = accessToken;
+  var decoded = jwt_decode(token);
+
+  console.log("decoded",decoded);
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {

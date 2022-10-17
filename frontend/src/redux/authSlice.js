@@ -15,6 +15,9 @@ const initialState = {
       isFetching: false,
       error: false,
     },
+    user:{
+      userData:null,
+    }
 }
 export const authSlice = createSlice({
   name: "auth",
@@ -33,6 +36,9 @@ export const authSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    user:{
+      userData:null,
+    }
   },
   extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
@@ -73,6 +79,9 @@ export const authSlice = createSlice({
       state.logout.isFetching = false;
       state.logout.error = true;
     },
+    userDataAssign:(state, action) =>{
+      state.user.userData = action.payload;
+    }
   },
 });
 export const {
@@ -84,7 +93,8 @@ export const {
     registerSuccess,
     logOutFailed,
     logOutStart,
-    logOutSuccess
+    logOutSuccess,
+    userDataAssign
 } = authSlice.actions
 
 export default authSlice.reducer

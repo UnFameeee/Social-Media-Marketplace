@@ -144,11 +144,11 @@ function CardPost(props) {
                 className=" outline-none"
                 style={{ fontSize: "2.5rem" }}
               />
-              <span lassName=" leading-[1.3rem]">Comment</span>
+              <span className=" leading-[1.3rem]">Comment</span>
             </MUI.ButtonWithIcon>
             <MUI.ButtonWithIcon className="button-with-icon flex gap-[0.5rem] w-full">
               <Send className="" style={{ fontSize: "2.5rem" }} />
-              <span lassName=" leading-[1.3rem]">Send</span>
+              <span className=" leading-[1.3rem]">Send</span>
             </MUI.ButtonWithIcon>
           </div>
           <hr className="mb-[0.5rem] " />

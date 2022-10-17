@@ -27,8 +27,10 @@ import {
   registerFailed,
   registerStart,
   registerSuccess,
+  userDataAssign,
 } from "./authSlice";
 import { toast } from "react-toastify";
+import jwt_decode from "jwt-decode";
 
 const notify = (message, type) => {
   if (type === "info") {
@@ -55,6 +57,7 @@ export const register = async (model, dispatch, navigate) => {
     const res = await axios.post(`${apiUrl}/auth/register`, model);
     if (res) {
       dispatch(registerSuccess(res.data));
+     
       navigate("/login");
     } else {
       dispatch(registerFailed());
@@ -68,7 +71,10 @@ export const login = async (model, dispatch, navigate, from) => {
   try {
     const res = await axios.post(`${apiUrl}/auth/login`, model);
     if (res) {
+      var token = res.data.access;
+      var decoded = jwt_decode(token);
       dispatch(loginSuccess(res.data));
+      dispatch(userDataAssign(decoded))
       navigate(from, { replace: true });
     } else {
       dispatch(loginFailed());
@@ -97,10 +103,10 @@ export const createPost = async (accessToken, post, dispatch) => {
     const res = await axios.post(`${apiUrl}/post/newPost`, post, config);
     if (!res.data.message) {
       dispatch(createPostSuccess(res.data));
-      notify("Post Created","info");
+      notify("Post Created", "info");
     } else {
       dispatch(createPostFailed());
-      notify(res.data.message,"error");
+      notify(res.data.message, "error");
     }
   } catch (error) {
     dispatch(createPostFailed());
@@ -122,10 +128,10 @@ export const updatePost = async (accessToken, updatePost, dispatch) => {
     );
     if (!res.data.message) {
       dispatch(updatePostSuccess());
-      notify("Post Updated","info");
+      notify("Post Updated", "info");
     } else {
       dispatch(updatePostFailed());
-      notify(res.data.message,"error");
+      notify(res.data.message, "error");
     }
   } catch (error) {
     dispatch(updatePostFailed());
@@ -143,10 +149,10 @@ export const deletePost = async (accessToken, postId, dispatch) => {
     const res = await axios.delete(`${apiUrl}/post/delete/${postId}`, config);
     if (!res.data.message) {
       dispatch(deletePostSuccess());
-      notify("Post Deleted","info");
+      notify("Post Deleted", "info");
     } else {
       dispatch(deletePostFailed());
-      notify(res.data.message,"error");
+      notify(res.data.message, "error");
     }
   } catch (error) {
     dispatch(deletePostFailed());
@@ -161,12 +167,12 @@ export const likePost = async (accessToken, postId, dispatch) => {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    const res = await axios.post(`${apiUrl}/post/like/${postId}`,{}, config);
+    const res = await axios.post(`${apiUrl}/post/like/${postId}`, {}, config);
     if (!res.data.message) {
       dispatch(likePostSuccess());
     } else {
       dispatch(likePostFailed());
-      notify(res.data.message,"error");
+      notify(res.data.message, "error");
     }
   } catch (error) {
     dispatch(likePostFailed());

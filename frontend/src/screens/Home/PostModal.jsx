@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import { createPost, updatePost } from "../../redux/apiRequest";
+import MUI from "../../components/MUI";
 
 function PostModal(props) {
   //Declare variables
@@ -19,7 +20,7 @@ function PostModal(props) {
   });
   const { written_text, media_type, media_location } = postData;
 
-//Function
+  //Function
   const closeModal = () => {
     props.setShowModal(false);
     props.setPostUpdateData(null);
@@ -50,7 +51,7 @@ function PostModal(props) {
       [event.target.name]: event.target.value,
     });
   };
-//UseEffect
+  //UseEffect
   useEffect(() => {
     if (props.postUpdateData)
       setPostData({
