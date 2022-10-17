@@ -1,5 +1,5 @@
 import { Controller, Param, UseGuards } from '@nestjs/common';
-import { Body, Delete, Post, Put, Request } from '@nestjs/common/decorators';
+import { Body, Delete, Post, Put, Request, UploadedFile, UseInterceptors } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Page } from 'src/common/models/view-model/page-model';
@@ -7,6 +7,7 @@ import { PostData } from 'src/common/models/dtos/post-data.dto';
 import { PostService } from '../service/post.service';
 import { Profile } from 'src/social-media/profile/model/profile.model';
 import { Post as Posts } from '../model/post.model';
+
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Post')
