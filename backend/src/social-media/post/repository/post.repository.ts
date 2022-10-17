@@ -82,10 +82,9 @@ export class PostRepository {
         }
     }
 
-    async getSinglePostDetail(post_id: number): Promise<Post>{
+    async getSinglePostDetailByPostId(post_id: number): Promise<Post>{
         try {
-            // var result = new PagingData<Post>();
-            return await this.postRepository.findOne({
+            const dataQuery = await this.postRepository.findOne({
                 attributes:["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
                 include: [{
                     model: Profile,
@@ -93,7 +92,11 @@ export class PostRepository {
                 }],
                 where: {post_id: post_id}
             });
-
+            var totalLike = await this.postLikeRepository.allLikeOfPost(dataQuery["profile_id"], post_id);
+            var isLiked = await this.postLikeRepository.isLikedPost(dataQuery["profile_id"], post_id);
+            dataQuery.setDataValue("totalLike", totalLike);
+            dataQuery.setDataValue("isLiked", isLiked);
+            return dataQuery;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
