@@ -8,10 +8,10 @@ import { PostLikeRepository } from '../repository/post-like.repository';
 export class PostLikeService {
     constructor(private readonly postLikeRepository: PostLikeRepository) {}
 
-    async likePost(profile: Profile, post_id: number): Promise<ResponseData<boolean>>{
+    async likeUnlikePost(profile: Profile, post_id: number): Promise<ResponseData<boolean>>{
         try{
             const response = new ResponseData<boolean>();
-            var res = await this.postLikeRepository.likePost(profile.profile_id, post_id);
+            var res = await this.postLikeRepository.likeUnlikePost(profile.profile_id, post_id);
             response.results = res ? true : false;
             return response;
         }catch(err){
@@ -19,17 +19,17 @@ export class PostLikeService {
         }
     }
 
-    async unlikePost(profile: Profile, post_id: number): Promise<ResponseData<boolean>>{
-        try{
-            const response = new ResponseData<boolean>();
-            var res = await this.postLikeRepository.unlikePost(profile.profile_id, post_id);
-            response.results = res ? true : false;
-            return response;
-        }
-        catch(err){
-            ExceptionResponse(err);
-        }   
-    }
+    // async unlikePost(profile: Profile, post_id: number): Promise<ResponseData<boolean>>{
+    //     try{
+    //         const response = new ResponseData<boolean>();
+    //         var res = await this.postLikeRepository.unlikePost(profile.profile_id, post_id);
+    //         response.results = res ? true : false;
+    //         return response;
+    //     }
+    //     catch(err){
+    //         ExceptionResponse(err);
+    //     }   
+    // }
 
     async allLikeOfPost(profile: Profile, post_id: number): Promise<ResponseData<number>>{
         try{
