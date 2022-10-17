@@ -35,7 +35,6 @@ function Home() {
   const handleOpenPostModel = () => {
     setOpenCreatePost((prev) => !prev);
   };
-  console.log(reRender)
   const handleGetPostUpdateData = (data) => {
     setPostUpdateData(data);
   };

@@ -4,65 +4,61 @@ import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import { createPost, updatePost } from "../../redux/apiRequest";
-import { toast } from "react-toastify";
 
 function PostModal(props) {
+  //Declare variables
   const dispatch = useDispatch();
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
-  const notify = (message) =>
-    toast.info(message, {
-      autoClose: 1000,
-      hideProgressBar: true,
-      position: toast.POSITION.BOTTOM_RIGHT,
-      pauseOnHover: false,
-      theme: "dark",
-    });
-  const [newPost, setNewPost] = useState({
+  const isPosting = useSelector((state) => state.post.create.isFetching);
+  const [postData, setPostData] = useState({
     written_text: "",
     media_type: "",
     media_location: "",
   });
-  const { written_text, media_type, media_location } = newPost;
+  const { written_text, media_type, media_location } = postData;
+
+//Function
   const closeModal = () => {
     props.setShowModal(false);
     props.setPostUpdateData(null);
+    setPostData({ written_text: "", media_type: "", media_location: "" });
   };
   const handlePost = (e) => {
     e.preventDefault();
-    newPost.media_location = "test";
-    createPost(accessToken, newPost, dispatch);
-    setNewPost({ written_text: "", media_type: "", media_location: "" });
+    postData.media_location = "test";
+    createPost(accessToken, postData, dispatch);
+    setPostData({ written_text: "", media_type: "", media_location: "" });
     props.setReRender((prev) => !prev);
-    notify("Post Created");
   };
   const handleUpdatePost = (e) => {
     var tempUpdatePost = {
       post_id: props.postUpdateData.post_id,
       profile_id: props.postUpdateData.profile_id,
-      written_text: props.postUpdateData.written_text,
-      media_type: props.postUpdateData.media_type,
-      media_location: props.postUpdateData.media_location,
+      written_text: postData.written_text,
+      media_type: postData.media_type,
+      media_location: postData.media_location,
     };
     updatePost(accessToken, tempUpdatePost, dispatch);
     props.setReRender((prev) => !prev);
     closeModal();
-    notify("Post Updated");
   };
-  const handleOnChangeUpdatePost = (event) => {
-    props.setPostUpdateData({
-      ...props.postUpdateData,
+  const handleOnChangePostData = (event) => {
+    setPostData({
+      ...postData,
       [event.target.name]: event.target.value,
     });
   };
-  const handleOnChangeNewPost = (event) => {
-    setNewPost({
-      ...newPost,
-      [event.target.name]: event.target.value,
-    });
-  };
-  const isPosting = useSelector((state) => state.post.create.isFetching);
+//UseEffect
+  useEffect(() => {
+    if (props.postUpdateData)
+      setPostData({
+        written_text: props.postUpdateData.written_text,
+        media_type: props.postUpdateData.media_type,
+        media_location: props.postUpdateData.media_location,
+      });
+  }, [props.postUpdateData]);
   useEffect(() => {
     if (isPosting === true) {
       closeModal();
@@ -98,38 +94,22 @@ function PostModal(props) {
                 className="w-full outline-none text-[2.4rem] mb-[2rem] resize-none h-[15rem]"
                 cols="30"
                 rows="10"
-                value={
-                  props.postUpdateData
-                    ? props.postUpdateData.written_text
-                    : written_text
-                }
+                value={written_text}
                 name="written_text"
-                onChange={
-                  props.postUpdateData
-                    ? handleOnChangeUpdatePost
-                    : handleOnChangeNewPost
-                }
+                onChange={handleOnChangePostData}
               ></textarea>
               <input
                 className="w-full outline-none text-[2.4rem] mb-[2rem]"
                 type="text"
                 placeholder="Add Image link"
-                value={
-                  props.postUpdateData
-                    ? props.postUpdateData.media_type
-                    : media_type
-                }
+                value={media_type}
                 name="media_type"
-                onChange={
-                  props.postUpdateData
-                    ? handleOnChangeUpdatePost
-                    : handleOnChangeNewPost
-                }
+                onChange={handleOnChangePostData}
               />
               <button
                 onClick={props.postUpdateData ? handleUpdatePost : handlePost}
-                className="w-full bg-blue8f3 text-white rounded-[0.5rem] py-[0.75rem]"
-                // disabled={written_text.length === 0 || props.postUpdateData.written_text.length ===0}
+                className="w-full bg-blue8f3 text-white rounded-[0.5rem] py-[0.75rem] "
+                disabled={!postData.written_text}
               >
                 {props.postUpdateData ? "Update" : "Post"}
               </button>

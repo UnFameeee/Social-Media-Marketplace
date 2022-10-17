@@ -20,7 +20,12 @@ const initialState = {
     success: false,
     isFetching: false,
     error: false,
-  }
+  },
+  like:{
+    success: false,
+    isFetching: false,
+    error: false,
+  },
 };
 export const postSlice = createSlice({
   name: "post",
@@ -44,7 +49,12 @@ export const postSlice = createSlice({
       success: false,
       isFetching: false,
       error: false,
-    }
+    },
+    like:{
+      success: false,
+      isFetching: false,
+      error: false,
+    },
   },
   extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
@@ -97,6 +107,19 @@ export const postSlice = createSlice({
       state.update.success = false;
       state.update.error = true;
     },
+
+    likePostStart: (state) => {
+      state.like.isFetching = true;
+    },
+    likePostSuccess: (state) => {
+      state.like.isFetching = false;
+      state.like.success = true;
+    },
+    likePostFailed: (state) => {
+      state.like.isFetching = false;
+      state.like.success = false;
+      state.like.error = true;
+    },
   },
 });
 
@@ -113,5 +136,8 @@ export const {
   updatePostStart,
   updatePostSuccess,
   updatePostFailed,
+  likePostStart,
+  likePostSuccess,
+  likePostFailed,
 } = postSlice.actions;
 export default postSlice.reducer;
