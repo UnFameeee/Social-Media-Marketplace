@@ -49,7 +49,7 @@ export class AuthService {
 
     async getAccessTokenThroughCookie(profile_id: number) {
         try {
-            const profile = await this.profileRepository.findProfileById( profile_id, SCOPE.WITH_PASSWORD);
+            const profile = await this.profileRepository.findProfileById( profile_id, SCOPE.WITHOUT_PASSWORD);
             const payload: TokenPayload = { profile };
             const token = this.jwtService.sign(payload);
             // return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${jwtConstants.access_expires}`
@@ -61,7 +61,7 @@ export class AuthService {
 
     async getRefreshTokenThroughCookie(profile_id: number) {
         try {
-            const profile = await this.profileRepository.findProfileById(profile_id, SCOPE.WITH_PASSWORD);
+            const profile = await this.profileRepository.findProfileById(profile_id, SCOPE.WITHOUT_PASSWORD);
             const payload: TokenPayload = { profile };
             const token = this.jwtService.sign(payload, {
                 secret: jwtConstants.refresh_secret,
