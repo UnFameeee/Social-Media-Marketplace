@@ -133,7 +133,6 @@ function Home() {
         </div>
         <RightBar />
       </div>
-      <RightBar />
     </>
   );
 }
