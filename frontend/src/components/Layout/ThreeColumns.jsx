@@ -1,10 +1,11 @@
-import RightSideBar from '../RightSideBar/RightSideBar';
-import { Box } from '@mui/material';
+import RightBar from './SideBar/RightBar';
 import LeftBar from './SideBar/LeftBar';
+import './Layout.css'
 
 export default function ThreeColumns(props) {
-  const { listFeature, children } = props;
+  const { leftBarConfig, rightBarConfig, children } = props;
   return (
+    // #region oldCode
     // <div className="pt-[5.5rem] flex w-full">
     //   <div className="leftSideBar w-[18%] pb-[5rem] h-screen bg-white fixed overflow-scroll">
     //     <LeftBar listFeature={listFeature} />
@@ -16,12 +17,14 @@ export default function ThreeColumns(props) {
     //     <RightSideBar />
     //   </div>
     // </div>
+    // #endregion
 
-    <Box className="pt-[var(--navbar-height)] flex">
-      <LeftBar leftBarList={listFeature}/>
-      <Box className="px-[30%] pt-6 bg-greyf1 w-screen">
+    <div className="layout-wrapper">
+      <LeftBar {...leftBarConfig} />
+      <div className="landing-layout three-column">
         {children}
-      </Box>
-    </Box>
+      </div>
+      <RightBar {...rightBarConfig} />
+    </div>
   );
 }
