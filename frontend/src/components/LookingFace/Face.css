@@ -28,16 +28,6 @@
     top: 50%;
     transform: translate(-50%,-50%); 
 }
-/* .head-center {
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%,-50%); 
-}
-.head-left {    
-    left: 25%;
-    top: 50%;
-    transform: translateY(-50%); 
-} */
 /* Vẽ đường viền khuôn mặt */
 .head::before{
     /*Thêm  1 ô ở giữa khuôn măt */

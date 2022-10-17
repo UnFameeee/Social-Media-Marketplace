@@ -76,6 +76,7 @@ body {
   margin-left: 0 !important;
   font-size: 1.2rem !important;
 }
+.MuiButtonBase-root,
 .MuiFormControl-root,
 .MuiFormControlLabel-root,
 .MuiFormGroup-root,
