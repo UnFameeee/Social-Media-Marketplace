@@ -1,0 +1,41 @@
+/* #region scroll bar */
+::-webkit-scrollbar {
+  width: 1rem;
+}
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+/* #endregion */
+
+/* #region left bar */
+.left-bar {
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--navbar-height));
+  overflow-y: scroll;
+  position: fixed;
+  bottom: 0;
+}
+.left-bar svg {
+  color: var(--primary-color);
+  font-size: 3rem;
+  margin-left: 0.8rem;
+  margin-bottom: 0.3rem;
+}
+.left-bar .left-bar-button {
+  padding: 0.8rem 0;
+}
+.left-bar .left-bar-button:hover {
+  border-radius: 8px;
+}
+.left-bar .left-bar-text .MuiTypography-root {
+  font-size: 1.8rem !important;
+  font-weight: 500;
+}
+/* #endregion */
+
+

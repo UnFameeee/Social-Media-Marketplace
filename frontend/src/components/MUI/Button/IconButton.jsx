@@ -14,8 +14,8 @@ export function BetterIconButton(props) {
     <>
       {hasBackground == true ? (
         <Avatar
-          data-tip
-          data-for={id}
+          data-tip={id && tooltip ? true : null}
+          data-for={id && tooltip ? id : null}
           className="icon-button-with-background"
           {...other}
         >
@@ -26,7 +26,9 @@ export function BetterIconButton(props) {
           {children}
         </IconButton>
       )}
-      {tooltip && <ReactTooltip id={id}>{tooltip}</ReactTooltip>}
+      {id && tooltip && (
+        <ReactTooltip id={id}>{tooltip}</ReactTooltip>
+      )}
     </>
   );
 }
@@ -37,14 +39,16 @@ export function ButtonWithIcon(props) {
   return (
     <>
       <Button
-        data-tip
-        data-for={id}
+        data-tip={id && tooltip ? true : null}
+        data-for={id && tooltip ? id : null}
         className="button-with-icon"
         {...other}
       >
         {children}
       </Button>
-      <ReactTooltip id={id}>{tooltip}</ReactTooltip>
+      {id && tooltip && (
+        <ReactTooltip id={id}>{tooltip}</ReactTooltip>
+      )}
     </>
   );
 }

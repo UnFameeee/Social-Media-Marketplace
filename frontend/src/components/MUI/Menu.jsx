@@ -51,7 +51,7 @@ export default function Menu(props) {
             ) : (
               checkPropsInObject(item.left, ['icon'], false) && (
                 <BetterIconButton
-                  id={item.left.id + index}
+                  id={item.left.id ? item.left.id + index : null}
                   tooltip={item.left.tooltip}
                   className="left-menu"
                   hasBackground={item.left.hasBackground}
@@ -69,8 +69,8 @@ export default function Menu(props) {
           ) : typeof item.middle == 'object' ? (
             <>
               <Typography
-                data-tip
-                data-for={item.middle.text + index}
+                data-tip={item.middle.hasTooltip}
+                data-for={item.middle.hasTooltip ? item.middle.text + index : null}
                 sx={{
                   width: '16.5rem',
                   overflow: 'hidden',
@@ -107,7 +107,7 @@ export default function Menu(props) {
             : typeof item.right == 'object'
             ? checkPropsInObject(item.left, ['icon'], false) && (
                 <BetterIconButton
-                  id={item.right.id}
+                  id={item.right.id ? item.right.id + index : null}
                   tooltip={item.right.tooltip}
                   className="right-menu"
                   hasBackground={item.right.hasBackground}
