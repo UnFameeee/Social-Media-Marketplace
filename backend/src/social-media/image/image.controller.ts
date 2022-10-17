@@ -35,4 +35,3 @@ export class ImageController {
         return response;
     }
 }
-//: Array<Express.Multer.File>
