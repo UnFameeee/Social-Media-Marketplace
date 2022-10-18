@@ -120,7 +120,7 @@ export default function NavBar() {
             getData={(input) => setValue(input)}
             handleSearch={handleSearch}
             menuConfig={{
-              className: 'menu navbar-search',
+              className: 'navbar-search',
               list: [
                 {
                   left: {
@@ -150,15 +150,7 @@ export default function NavBar() {
                 </Typography>
               ),
               right: (
-                <IconButton
-                  id="recentSearchIcon"
-                  tooltip="Delete"
-                  sx={{
-                    padding: '0.4rem',
-                    position: 'absolute',
-                    right: '0.8rem',
-                  }}
-                >
+                <IconButton className="right-menu">
                   <Close sx={{ fontSize: '1.6rem' }} />
                 </IconButton>
               ),
@@ -177,8 +169,7 @@ export default function NavBar() {
                 width: '14rem',
                 padding: '1rem 0.8rem',
               }}
-              key={item.id + index}
-              id={item.id ? item.id + index : null}
+              key={index}
               tooltip={item.tooltip}
               style={
                 checkUrl(item.tooltip?.toLowerCase())
@@ -192,7 +183,7 @@ export default function NavBar() {
                   : null
               }
               onClick={() => {
-                if (item.tooltip == 'Home') navigate('/');
+                if (item.tooltip === 'Home') navigate('/');
                 else navigate(`/${item.tooltip?.toLowerCase()}`);
               }}
               disabled={checkUrl(item.tooltip?.toLowerCase())}
@@ -214,7 +205,6 @@ export default function NavBar() {
               {item.icon ? (
                 <MUI.BetterIconButton
                   hasBackground
-                  id={item.id ? item.id + index : null}
                   tooltip={item.tooltip}
                   sx={{
                     '& .MuiSvgIcon-root': {

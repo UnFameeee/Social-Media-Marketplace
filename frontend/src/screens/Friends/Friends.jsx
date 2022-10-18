@@ -39,40 +39,405 @@ export default function Friends() {
         leftBarColor: 'white',
       }}
     >
-      <Grid container>
+      <h2
+        style={{
+          fontSize: '20px',
+          fontWeight: '500',
+          padding: '4px 0 0 24px',
+        }}
+      >
+        Friend Requests
+      </h2>
+      <Grid container sx={{ padding: '2rem' }}>
         <Grid
           item
           xs
           style={{
             maxWidth: '250px',
             minWidth: '200px',
-            backgroundColor: 'white',
+            padding: '4px',
             borderRadius: '8px',
           }}
         >
-          <div>
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+            }}
+          >
             <div>
               <img
                 alt="avatar"
                 src="https://www.thetonyrobbinsfoundation.org/wp-content/uploads/2017/09/Cool-avatars-anonymous-avatar.jpg"
                 style={{
-                  minWidth: '240px',
-                  minHeight: '240px',
                   borderTopLeftRadius: '8px',
                   borderTopRightRadius: '8px',
                 }}
               />
             </div>
-            <div style={{ padding: '12px' }}>
-              <div>
-                <span style={{ fontWeight: '500' }}>Duy Dương</span>
-              </div>
-              <div>
-                <MUI.Button>Confirm</MUI.Button>
-              </div>
-              <div>
-                <MUI.Button>Deny</MUI.Button>
-              </div>
+            <div
+              style={{
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Duy DươngDuy DươngDuy DươngDuy DươngDuy Dương
+              </span>
+              <MUI.Button style={{ marginTop: '12px' }}>
+                Confirm
+              </MUI.Button>
+              <MUI.Button
+                color="secondary"
+                style={{ marginTop: '12px' }}
+              >
+                Deny
+              </MUI.Button>
+            </div>
+          </div>
+        </Grid>
+        <Grid
+          item
+          xs
+          style={{
+            maxWidth: '250px',
+            minWidth: '200px',
+            padding: '4px',
+            borderRadius: '8px',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+            }}
+          >
+            <div>
+              <img
+                alt="avatar"
+                src="https://www.thetonyrobbinsfoundation.org/wp-content/uploads/2017/09/Cool-avatars-anonymous-avatar.jpg"
+                style={{
+                  borderTopLeftRadius: '8px',
+                  borderTopRightRadius: '8px',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Duy DươngDuy DươngDuy DươngDuy DươngDuy Dương
+              </span>
+              <MUI.Button style={{ marginTop: '12px' }}>
+                Confirm
+              </MUI.Button>
+              <MUI.Button
+                color="secondary"
+                style={{ marginTop: '12px' }}
+              >
+                Deny
+              </MUI.Button>
+            </div>
+          </div>
+        </Grid>
+        <Grid
+          item
+          xs
+          style={{
+            maxWidth: '250px',
+            minWidth: '200px',
+            padding: '4px',
+            borderRadius: '8px',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+            }}
+          >
+            <div>
+              <img
+                alt="avatar"
+                src="https://www.thetonyrobbinsfoundation.org/wp-content/uploads/2017/09/Cool-avatars-anonymous-avatar.jpg"
+                style={{
+                  borderTopLeftRadius: '8px',
+                  borderTopRightRadius: '8px',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Duy DươngDuy DươngDuy DươngDuy DươngDuy Dương
+              </span>
+              <MUI.Button style={{ marginTop: '12px' }}>
+                Confirm
+              </MUI.Button>
+              <MUI.Button
+                color="secondary"
+                style={{ marginTop: '12px' }}
+              >
+                Deny
+              </MUI.Button>
+            </div>
+          </div>
+        </Grid>
+        <Grid
+          item
+          xs
+          style={{
+            maxWidth: '250px',
+            minWidth: '200px',
+            padding: '4px',
+            borderRadius: '8px',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+            }}
+          >
+            <div>
+              <img
+                alt="avatar"
+                src="https://www.thetonyrobbinsfoundation.org/wp-content/uploads/2017/09/Cool-avatars-anonymous-avatar.jpg"
+                style={{
+                  borderTopLeftRadius: '8px',
+                  borderTopRightRadius: '8px',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Duy DươngDuy DươngDuy DươngDuy DươngDuy Dương
+              </span>
+              <MUI.Button style={{ marginTop: '12px' }}>
+                Confirm
+              </MUI.Button>
+              <MUI.Button
+                color="secondary"
+                style={{ marginTop: '12px' }}
+              >
+                Deny
+              </MUI.Button>
+            </div>
+          </div>
+        </Grid>
+        <Grid
+          item
+          xs
+          style={{
+            maxWidth: '250px',
+            minWidth: '200px',
+            padding: '4px',
+            borderRadius: '8px',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+            }}
+          >
+            <div>
+              <img
+                alt="avatar"
+                src="https://www.thetonyrobbinsfoundation.org/wp-content/uploads/2017/09/Cool-avatars-anonymous-avatar.jpg"
+                style={{
+                  borderTopLeftRadius: '8px',
+                  borderTopRightRadius: '8px',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Duy DươngDuy DươngDuy DươngDuy DươngDuy Dương
+              </span>
+              <MUI.Button style={{ marginTop: '12px' }}>
+                Confirm
+              </MUI.Button>
+              <MUI.Button
+                color="secondary"
+                style={{ marginTop: '12px' }}
+              >
+                Deny
+              </MUI.Button>
+            </div>
+          </div>
+        </Grid>
+        <Grid
+          item
+          xs
+          style={{
+            maxWidth: '250px',
+            minWidth: '200px',
+            padding: '4px',
+            borderRadius: '8px',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+            }}
+          >
+            <div>
+              <img
+                alt="avatar"
+                src="https://www.thetonyrobbinsfoundation.org/wp-content/uploads/2017/09/Cool-avatars-anonymous-avatar.jpg"
+                style={{
+                  borderTopLeftRadius: '8px',
+                  borderTopRightRadius: '8px',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Duy DươngDuy DươngDuy DươngDuy DươngDuy Dương
+              </span>
+              <MUI.Button style={{ marginTop: '12px' }}>
+                Confirm
+              </MUI.Button>
+              <MUI.Button
+                color="secondary"
+                style={{ marginTop: '12px' }}
+              >
+                Deny
+              </MUI.Button>
+            </div>
+          </div>
+        </Grid>
+        <Grid
+          item
+          xs
+          style={{
+            maxWidth: '250px',
+            minWidth: '200px',
+            padding: '4px',
+            borderRadius: '8px',
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '8px',
+            }}
+          >
+            <div>
+              <img
+                alt="avatar"
+                src="https://www.thetonyrobbinsfoundation.org/wp-content/uploads/2017/09/Cool-avatars-anonymous-avatar.jpg"
+                style={{
+                  borderTopLeftRadius: '8px',
+                  borderTopRightRadius: '8px',
+                }}
+              />
+            </div>
+            <div
+              style={{
+                padding: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <span
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                Duy DươngDuy DươngDuy DươngDuy DươngDuy Dương
+              </span>
+              <MUI.Button style={{ marginTop: '12px' }}>
+                Confirm
+              </MUI.Button>
+              <MUI.Button
+                color="secondary"
+                style={{ marginTop: '12px' }}
+              >
+                Deny
+              </MUI.Button>
             </div>
           </div>
         </Grid>

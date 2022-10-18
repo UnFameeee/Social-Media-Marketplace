@@ -8,6 +8,7 @@ import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import { BetterIconButton } from './Button/IconButton';
 import './MUI.css';
+import { Helper } from '../../utils/Helper' 
 
 export default function Menu(props) {
   const {
@@ -20,22 +21,6 @@ export default function Menu(props) {
     className,
     ...other
   } = props;
-
-  function checkPropsInObject(object, listProps, checkAll) {
-    let res = checkAll;
-    listProps.forEach((value) => {
-      if (checkAll) {
-        if (!object.hasOwnProperty(value)) {
-          res = false;
-        }
-      } else {
-        if (object.hasOwnProperty(value)) {
-          res = true;
-        }
-      }
-    });
-    return res;
-  }
 
   return (
     <MenuList className={`menu ${className}`} {...other}>
@@ -52,7 +37,7 @@ export default function Menu(props) {
           ) : React.isValidElement(item.left) ? (
             item.left
           ) : typeof item.left == 'object' ? (
-            checkPropsInObject(item.left, ['url', 'name'], false) ? (
+            Helper.checkPropsInObject(item.left, ['url', 'name'], false) ? (
               <Avatar
                 className="left-menu"
                 alt={item.left.name}
@@ -61,7 +46,7 @@ export default function Menu(props) {
                 {item.left.name?.at(0)}
               </Avatar>
             ) : (
-              checkPropsInObject(item.left, ['icon'], false) && (
+              Helper.checkPropsInObject(item.left, ['icon'], false) && (
                 <BetterIconButton
                   id={item.left.id ? item.left.id + index : null}
                   tooltip={item.left.tooltip}
@@ -88,7 +73,8 @@ export default function Menu(props) {
                     : null
                 }
                 sx={{
-                  width: '16.5rem',
+                  // width: '16.5rem',
+                  whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                 }}
@@ -106,7 +92,8 @@ export default function Menu(props) {
             <>
               <Typography
                 sx={{
-                  width: '16.5rem',
+                  // width: '16.5rem',
+                  whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis',
                 }}
@@ -121,7 +108,7 @@ export default function Menu(props) {
             : React.isValidElement(item.right)
             ? item.right
             : typeof item.right == 'object'
-            ? checkPropsInObject(item.left, ['icon'], false) && (
+            ? Helper.checkPropsInObject(item.left, ['icon'], false) && (
                 <BetterIconButton
                   id={item.right.id ? item.right.id + index : null}
                   tooltip={item.right.tooltip}
