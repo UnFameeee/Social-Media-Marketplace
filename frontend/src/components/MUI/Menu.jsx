@@ -8,7 +8,7 @@ import React from 'react';
 import ReactTooltip from 'react-tooltip';
 import { BetterIconButton } from './Button/IconButton';
 import './MUI.css';
-import { Helper } from '../../utils/Helper' 
+import { Helper } from '../../utils/Helper';
 
 export default function Menu(props) {
   const {
@@ -18,18 +18,26 @@ export default function Menu(props) {
     left,
     middle,
     right,
-    className,
+    classNameConfig = {},
     ...other
   } = props;
 
+  const {
+    menuClass,
+    menuItemClass,
+    leftClass,
+    middleClass,
+    rightClass,
+  } = classNameConfig;
+
   return (
-    <MenuList className={`menu ${className}`} {...other}>
+    <MenuList className={`menu ${menuClass}`} {...other}>
       {before}
 
       {list.map((item, index) => (
         <MenuItem
           key={index}
-          className="menu-item"
+          className={`menu-item ${menuItemClass}`}
           onClick={item.onClick}
         >
           {React.isValidElement(left) ? (
@@ -37,20 +45,27 @@ export default function Menu(props) {
           ) : React.isValidElement(item.left) ? (
             item.left
           ) : typeof item.left == 'object' ? (
-            Helper.checkPropsInObject(item.left, ['url', 'name'], false) ? (
+            Helper.checkPropsInObject(
+              item.left,
+              ['url', 'name'],
+              false
+            ) ? (
               <Avatar
-                className="left-menu"
+                className={`left-menu ${leftClass}`}
                 alt={item.left.name}
                 src={item.left.url}
               >
                 {item.left.name?.at(0)}
               </Avatar>
             ) : (
-              Helper.checkPropsInObject(item.left, ['icon'], false) && (
+              Helper.checkPropsInObject(
+                item.left,
+                ['icon'],
+                false
+              ) && (
                 <BetterIconButton
-                  id={item.left.id ? item.left.id + index : null}
                   tooltip={item.left.tooltip}
-                  className="left-menu"
+                  className={`left-menu ${leftClass}`}
                   hasBackground={item.left.hasBackground}
                 >
                   {item.left.icon}
@@ -66,18 +81,13 @@ export default function Menu(props) {
           ) : typeof item.middle == 'object' ? (
             <>
               <Typography
+                className={`middle-menu ${middleClass}`}
                 data-tip={item.middle.hasTooltip}
                 data-for={
                   item.middle.hasTooltip
                     ? item.middle.text + index
                     : null
                 }
-                sx={{
-                  // width: '16.5rem',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
               >
                 {item.middle.text}
               </Typography>
@@ -90,14 +100,7 @@ export default function Menu(props) {
             </>
           ) : (
             <>
-              <Typography
-                sx={{
-                  // width: '16.5rem',
-                  whiteSpace: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                }}
-              >
+              <Typography className={`middle-menu ${middleClass}`}>
                 {item.middle}
               </Typography>
             </>
@@ -108,11 +111,14 @@ export default function Menu(props) {
             : React.isValidElement(item.right)
             ? item.right
             : typeof item.right == 'object'
-            ? Helper.checkPropsInObject(item.left, ['icon'], false) && (
+            ? Helper.checkPropsInObject(
+                item.right,
+                ['icon'],
+                false
+              ) && (
                 <BetterIconButton
-                  id={item.right.id ? item.right.id + index : null}
                   tooltip={item.right.tooltip}
-                  className="right-menu"
+                  className={`right-menu ${rightClass}`}
                   hasBackground={item.right.hasBackground}
                 >
                   {item.right.icon}

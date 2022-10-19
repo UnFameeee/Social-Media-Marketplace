@@ -120,7 +120,10 @@ export default function NavBar() {
             getData={(input) => setValue(input)}
             handleSearch={handleSearch}
             menuConfig={{
-              className: 'navbar-search',
+              classNameConfig: {
+                menuClass: 'navbar-search',
+                middleClass: 'navbar-search'
+              },
               list: [
                 {
                   left: {
