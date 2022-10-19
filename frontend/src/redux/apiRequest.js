@@ -201,3 +201,23 @@ export const getAllPost = async (accessToken, dispatch) => {
     dispatch(getPostFailed());
   }
 };
+
+export const uploadImages = async (accessToken, uploadImages) => {
+  debugger
+ 
+  try {
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data;",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios.post(`${apiUrl}/image/post/upload`, uploadImages, config);
+    if (res.data.message) {
+      notify(res.data.message, "error");
+    } 
+  } catch (error) {
+    console.log(error);
+  }
+};
+

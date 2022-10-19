@@ -3,8 +3,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
-import { createPost, updatePost } from "../../redux/apiRequest";
+import { createPost, updatePost, uploadImages } from "../../redux/apiRequest";
 import styled from "styled-components";
+import { PhotoLibrary, HighlightOff, Close } from "@mui/icons-material";
 
 const StyledContentEditableSpan = styled.div`
   span[contenteditable] {
@@ -36,6 +37,7 @@ function PostModal(props) {
     props.setShowModal(false);
     props.setPostUpdateData(null);
     setPostData({ written_text: "", media_type: "", media_location: "" });
+    setUpLoadImage([]);
   };
   const handlePost = (e) => {
     e.preventDefault();
@@ -75,6 +77,28 @@ function PostModal(props) {
       });
     }
   };
+  const [uploadImage, setUpLoadImage] = useState([]);
+  const handlePreviewUploadImage = (e) => {
+    const files = e.target.files;
+    console.log(files);
+    for (let i = 0; i < files.length; i++) {
+      setUpLoadImage([...uploadImage, { files: files[i] }]);
+    }
+    // files.forEach(file => {
+    //   setUpLoadImage([...uploadImage, {files: file}]);
+    // });
+    // console.log(URL.createObjectURL(files));
+  };
+  useEffect(() => {
+    let onDestroy = false;
+    if(!onDestroy){
+      uploadImages(accessToken,uploadImage);
+      console.log("uploadImage",uploadImage)
+    }
+    return () =>{
+      onDestroy = true;
+    }
+  }, [uploadImage]);
   //UseEffect
   useEffect(() => {
     if (props.postUpdateData)
@@ -114,7 +138,18 @@ function PostModal(props) {
                 <AvatarWithText url={props.avtUrl} size="5rem" />
                 <span className="font-bold">{props.profile.profile_name}</span>
               </div>
-              <StyledContentEditableSpan>
+              <textarea
+                onChange={handleOnChangePostData}
+                name="written_text"
+                rows="5"
+                className=" resize-none w-full outline-none text-[1.8rem] max-h-[25rem] overflow-y-scroll mb-[2rem]"
+                placeholder={
+                  props.postUpdateData
+                    ? ""
+                    : `What's on your mind, ${props.profile.profile_name}?`
+                }
+              ></textarea>
+              {/*<StyledContentEditableSpan>
                 <span
                   name="written_text"
                   onFocus={onFocus}
@@ -123,15 +158,33 @@ function PostModal(props) {
                   data-placeholder={
                     props.postUpdateData
                       ? ""
-                      : `What's on your mind, ${props.profile.profile_name} ?`
+                      : `What's on your mind, ${props.profile.profile_name}?`
                   }
                   contentEditable="true"
-                  className="w-full outline-none text-[2.2rem]"
+                  className="w-full outline-none text-[1.8rem] max-h-[25rem] overflow-y-scroll mb-[2rem]"
                 >
                   {written_text}
                 </span>
-              </StyledContentEditableSpan>
-
+                </StyledContentEditableSpan> */}
+              <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer">
+                <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
+                  <div className="bg-gray-300 p-[1rem] rounded-[50%]">
+                    <PhotoLibrary className=" " style={{ fontSize: "3rem" }} />
+                  </div>
+                  <input
+                    type="file"
+                    id="upload_input"
+                    multiple
+                    name="upload"
+                    title=" "
+                    className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 cursor-pointer"
+                    onChange={handlePreviewUploadImage}
+                  />
+                  {/* <div className="absolute right-[0.5rem] top-[0.5rem] text-gray-400 rounded-[50%] ">
+                    <HighlightOff style={{ fontSize: "3rem" }} />
+                  </div> */}
+                </div>
+              </div>
               <input
                 className="w-full outline-none text-[2.4rem] mb-[2rem]"
                 type="text"
