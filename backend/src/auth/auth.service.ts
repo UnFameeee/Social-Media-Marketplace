@@ -51,7 +51,10 @@ export class AuthService {
         try {
             const profile = await this.profileRepository.findProfileById( profile_id, SCOPE.WITHOUT_PASSWORD);
             const payload: TokenPayload = { profile };
-            const token = this.jwtService.sign(payload);
+            const token = this.jwtService.sign(payload, {
+                secret: jwtConstants.access_secret,
+                expiresIn: jwtConstants.access_expires,
+            });
             // return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${jwtConstants.access_expires}`
             return token;
         } catch (err) {
@@ -63,15 +66,17 @@ export class AuthService {
         try {
             const profile = await this.profileRepository.findProfileById(profile_id, SCOPE.WITHOUT_PASSWORD);
             const payload: TokenPayload = { profile };
+            
             const token = this.jwtService.sign(payload, {
                 secret: jwtConstants.refresh_secret,
                 expiresIn: jwtConstants.refresh_expires,
             });
-            const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${jwtConstants.refresh_expires}`;
-            return {
-                cookie: cookie,
-                token: token,
-            };
+            // const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${jwtConstants.refresh_expires}`;
+            // return {
+            //     cookie: cookie,
+            //     token: token,
+            // };
+            return token;
         } catch (err) {
             ExceptionResponse(err);
         }
@@ -89,8 +94,8 @@ export class AuthService {
 
             const access = await this.getAccessTokenThroughCookie(checkProfile.profile_id);
             const refresh = await this.getRefreshTokenThroughCookie(checkProfile.profile_id)
-            // const result = { access, refresh };
-            const result = {access};
+            const result = { access, refresh };
+            // const result = {access};
             return result;
         } catch (err) {
             ExceptionResponse(err);
