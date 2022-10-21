@@ -5,7 +5,7 @@ import { SCOPE } from 'src/common/constants/sequelize-scope.constant';
 import { ResponseData } from 'src/common/models/view-model/success-message.model';
 import { compare, encode } from 'src/common/utils/bcrypt-singleton.utils';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-import { ProfileRepository } from 'src/social-media/profile/profile.repository';
+import { ProfileRepository } from 'src/social-media/profile/repository/profile.repository';
 import { RegisterProfileDto } from '../common/models/dtos/register-profile.dto';
 import { TokenPayload } from './interface/tokenPayload.interface';
 

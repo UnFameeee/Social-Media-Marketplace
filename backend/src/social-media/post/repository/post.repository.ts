@@ -22,7 +22,7 @@ export class PostRepository {
         try {
             var result = new PagingData<Post[]>();
             var queryData = await this.postRepository.findAndCountAll({
-                attributes:["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
+                attributes: ["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
                 include: [{
                     model: Profile,
                     attributes: [],
@@ -34,7 +34,7 @@ export class PostRepository {
                 ...paginate({ page })
             });
 
-            for (const element of queryData.rows){
+            for (const element of queryData.rows) {
                 var totalLike = await this.postLikeRepository.allLikeOfPost(element["profile_id"], element.post_id);
                 var isLiked = await this.postLikeRepository.isLikedPost(element["profile_id"], element.post_id);
                 element.setDataValue("totalLike", totalLike);
@@ -54,7 +54,7 @@ export class PostRepository {
         try {
             var result = new PagingData<Post[]>();
             var queryData = await this.postRepository.findAndCountAll({
-                attributes:["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
+                attributes: ["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
                 include: [{
                     model: Profile,
                     attributes: [],
@@ -66,7 +66,7 @@ export class PostRepository {
                 ...paginate({ page })
             });
 
-            for (const element of queryData.rows){
+            for (const element of queryData.rows) {
                 var totalLike = await this.postLikeRepository.allLikeOfPost(element["profile_id"], element.post_id);
                 var isLiked = await this.postLikeRepository.isLikedPost(element["profile_id"], element.post_id);
                 element.setDataValue("totalLike", totalLike);
@@ -82,15 +82,15 @@ export class PostRepository {
         }
     }
 
-    async getSinglePostDetailByPostId(post_id: number): Promise<Post>{
+    async getSinglePostDetailByPostId(post_id: number): Promise<Post> {
         try {
             const dataQuery = await this.postRepository.findOne({
-                attributes:["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
+                attributes: ["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
                 include: [{
                     model: Profile,
                     attributes: [],
                 }],
-                where: {post_id: post_id}
+                where: { post_id: post_id }
             });
             var totalLike = await this.postLikeRepository.allLikeOfPost(dataQuery["profile_id"], post_id);
             var isLiked = await this.postLikeRepository.isLikedPost(dataQuery["profile_id"], post_id);
