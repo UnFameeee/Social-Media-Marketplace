@@ -6,7 +6,9 @@ import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import { createPost, updatePost, uploadImages } from "../../redux/apiRequest";
 import styled from "styled-components";
 import { PhotoLibrary, HighlightOff, Close } from "@mui/icons-material";
-
+import { resetUploadImagePostState } from "../../redux/uploadImageSlice";
+import { ImageList, ImageListItem } from "@mui/material";
+import { height } from "@mui/system";
 const StyledContentEditableSpan = styled.div`
   span[contenteditable] {
     display: inline-block;
@@ -25,6 +27,9 @@ function PostModal(props) {
     (state) => state.auth.login.currentUser.access
   );
   const isPosting = useSelector((state) => state.post.create.isFetching);
+  const uploadImageLinkLst = useSelector(
+    (state) => state.uploadImage.uploadImagePost?.uploadImages
+  );
   const [postData, setPostData] = useState({
     written_text: "",
     media_type: "",
@@ -38,6 +43,8 @@ function PostModal(props) {
     props.setPostUpdateData(null);
     setPostData({ written_text: "", media_type: "", media_location: "" });
     setUpLoadImage([]);
+    dispatch(resetUploadImagePostState());
+    setImgArray([]);
   };
   const handlePost = (e) => {
     e.preventDefault();
@@ -80,24 +87,21 @@ function PostModal(props) {
   const [uploadImage, setUpLoadImage] = useState([]);
   const handlePreviewUploadImage = (e) => {
     const files = e.target.files;
-    console.log(files);
+    var temp = [];
     for (let i = 0; i < files.length; i++) {
-      setUpLoadImage([...uploadImage, { files: files[i] }]);
+      temp.push({ files: files[i] });
     }
-    // files.forEach(file => {
-    //   setUpLoadImage([...uploadImage, {files: file}]);
-    // });
-    // console.log(URL.createObjectURL(files));
+    setUpLoadImage([temp]);
+    e.target.value = null;
   };
   useEffect(() => {
     let onDestroy = false;
-    if(!onDestroy){
-      uploadImages(accessToken,uploadImage);
-      console.log("uploadImage",uploadImage)
+    if (!onDestroy && uploadImage.length > 0) {
+      uploadImages(accessToken, uploadImage, dispatch);
     }
-    return () =>{
+    return () => {
       onDestroy = true;
-    }
+    };
   }, [uploadImage]);
   //UseEffect
   useEffect(() => {
@@ -113,6 +117,17 @@ function PostModal(props) {
       closeModal();
     }
   });
+  const imgElement = React.useRef(null);
+  if (uploadImageLinkLst) {
+  }
+
+  const [imgArray, setImgArray] = useState([]);
+  const addToUploadImgArray = (height, url) => {
+    setImgArray([...imgArray, { height: height, url: url }]);
+  };
+  useEffect(() => {
+    console.log("imgArray", imgArray);
+  }, [imgArray]);
   return (
     <>
       {props.showModal ? (
@@ -120,7 +135,7 @@ function PostModal(props) {
           className="w-[100%] h-[100%] fixed left-0 top-0 z-20 "
           style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
         >
-          <div className="mainContent rounded-xl fixed overflow-hidden py-[2rem] top-[50%] left-[50%] w-[50rem]  bg-white translate-x-[-50%] translate-y-[-50%]">
+          <div className="mainContent rounded-xl fixed overflow-hidden py-[2rem] top-[50%] left-[50%] w-[70rem]  bg-white translate-x-[-50%] translate-y-[-50%]">
             <div className="flex items-center relative">
               <button
                 className="absolute right-[2rem] top-[0rem] bg-slate-200 p-[0.5rem] rounded-md"
@@ -166,25 +181,66 @@ function PostModal(props) {
                   {written_text}
                 </span>
                 </StyledContentEditableSpan> */}
-              <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer">
-                <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
-                  <div className="bg-gray-300 p-[1rem] rounded-[50%]">
-                    <PhotoLibrary className=" " style={{ fontSize: "3rem" }} />
+              {!uploadImageLinkLst.length > 0 && (
+                <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer">
+                  <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
+                    <div className="bg-gray-300 p-[1rem] rounded-[50%]">
+                      <PhotoLibrary
+                        className=" "
+                        style={{ fontSize: "3rem" }}
+                      />
+                    </div>
+                    <input
+                      type="file"
+                      id="upload_input"
+                      multiple
+                      name="upload"
+                      title=" "
+                      className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 cursor-pointer"
+                      onChange={handlePreviewUploadImage}
+                    />
+                    {/* <div className="absolute right-[0.5rem] top-[0.5rem] text-gray-400 rounded-[50%] ">
+                        <HighlightOff style={{ fontSize: "3rem" }} />
+                      </div> */}
                   </div>
-                  <input
-                    type="file"
-                    id="upload_input"
-                    multiple
-                    name="upload"
-                    title=" "
-                    className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 cursor-pointer"
-                    onChange={handlePreviewUploadImage}
-                  />
-                  {/* <div className="absolute right-[0.5rem] top-[0.5rem] text-gray-400 rounded-[50%] ">
-                    <HighlightOff style={{ fontSize: "3rem" }} />
-                  </div> */}
                 </div>
-              </div>
+              )}
+              {uploadImageLinkLst && uploadImageLinkLst.length > 0 && (
+                <div className="relative bg-slate-100 rounded-xl p-[0.2rem] h-[300px] overflow-y-scroll  ">
+                  <ul className="flex flex-wrap gap-[1rem]  ">
+                    {uploadImageLinkLst.map((item) => (
+                      <li key={item} className=" w-full ">
+                        <img
+                          src={item}
+                          alt=""
+                          className=" w-[100%] object-fill rounded-xl "
+                          style={{ cursor: "default" }}
+                          ref={imgElement}
+                          onLoad={() =>
+                            addToUploadImgArray(
+                              imgElement.current.naturalHeight,
+                              item
+                            )
+                          }
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                  <div className=" bg-slate-300 inline-block p-[1rem] rounded-lg cursor-pointer absolute top-0 right-0">
+                    <span>Add Photos</span>
+                    <input
+                      type="file"
+                      id="upload_input"
+                      multiple
+                      name="upload"
+                      title=" "
+                      className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 "
+                      onChange={handlePreviewUploadImage}
+                      style={{ cursor: "pointer" }}
+                    />
+                  </div>
+                </div>
+              )}
               <input
                 className="w-full outline-none text-[2.4rem] mb-[2rem]"
                 type="text"

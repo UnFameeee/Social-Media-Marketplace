@@ -31,6 +31,11 @@ import {
 } from "./authSlice";
 import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
+import {
+  uploadImagePostFailed,
+  uploadImagePostStart,
+  uploadImagePostSuccess,
+} from "./uploadImageSlice";
 
 const notify = (message, type) => {
   if (type === "info") {
@@ -202,9 +207,8 @@ export const getAllPost = async (accessToken, dispatch) => {
   }
 };
 
-export const uploadImages = async (accessToken, uploadImages) => {
-  debugger
- 
+export const uploadImages = async (accessToken, uploadImages, dispatch) => {
+  dispatch(uploadImagePostStart());
   try {
     const config = {
       headers: {
@@ -212,12 +216,22 @@ export const uploadImages = async (accessToken, uploadImages) => {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    const res = await axios.post(`${apiUrl}/image/post/upload`, uploadImages, config);
+    let formData = new FormData();
+    uploadImages[0].forEach((file) => {
+      formData.append("files", file.files);
+    });
+    const res = await axios.post(
+      `${apiUrl}/image/post/upload`,
+      formData,
+      config
+    );
     if (res.data.message) {
       notify(res.data.message, "error");
-    } 
+    } else {
+      dispatch(uploadImagePostSuccess(res.data.results));
+    }
   } catch (error) {
     console.log(error);
+    dispatch(uploadImagePostFailed());
   }
 };
-
