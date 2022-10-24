@@ -48,8 +48,12 @@
   --text-color: white;
   --background-color: black;
   --navbar-height: 6rem;
-  --sidebar-width: 18%;
+  --sidebar-width: 20%;
   --padding-layout: 1rem;
+  --shadow-1: rgba(0, 0, 0, 0.1);
+  --shadow-2: rgba(0, 0, 0, 0.2);
+  --shadow-5: rgba(0, 0, 0, 0.5);
+  --shadow-8: rgba(0, 0, 0, 0.8);
 }
 
 * {

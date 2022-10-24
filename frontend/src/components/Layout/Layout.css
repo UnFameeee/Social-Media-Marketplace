@@ -6,10 +6,10 @@
   position: fixed;
   bottom: 0;
 }
-.left-bar svg {
+.left-bar-button svg {
   color: var(--primary-color);
   font-size: 3rem;
-  margin-left: 0.8rem;
+  margin-left: 0.2rem;
   margin-bottom: 0.3rem;
 }
 .left-bar .left-bar-button {
@@ -22,11 +22,59 @@
   font-size: 1.8rem !important;
   font-weight: 500;
 }
+.left-bar .left-bar-button.Mui-selected {
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 8px;
+}
+.left-bar .left-bar-button.Mui-selected:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+.left-bar .list {
+  padding: 0.4rem 0.8rem;
+}
+.left-bar .left-bar-button.multi {
+  margin-bottom: 1.2rem;
+}
+.left-bar .left-bar-title {
+  font-size: 2.4rem;
+  font-weight: 500;
+  padding: 0.8rem 0 0.8rem 1.6rem;
+}
+.left-bar .left-bar-title.second {
+  padding: 1.6rem 0 0.8rem 1.6rem;
+}
+.left-bar-button .left {  
+  pointer-events: none;
+  margin-left: 0.6rem;
+}
+.left-bar-button .left .rounded {  
+  width: 3.6rem;
+  height: 3.6rem;
+  pointer-events: none;
+  background-color: #dadada;
+}
+.left-bar-button .left .rounded svg {
+  font-size: 2.6rem;
+  margin: 0;
+  color: black;
+}
+.left-bar-button .left.selected .rounded {
+  background-color: var(--primary-color);
+}
+.left-bar-button .left.selected .rounded svg {
+  color: white;
+}
+.left-bar-button .right {
+  padding-left: 1.2rem;
+}
+.left-bar-button .right svg {
+  color: black
+}
 /* #endregion */
 
 /* #region nav bar */
 .MuiPaper-root.nav-bar {
-  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 1px 0 var(--shadow-1);
   position: fixed;
   width: 100vw;
   height: var(--navbar-height);
@@ -38,7 +86,7 @@
   /* margin: 0; */
   height: 100%;
   align-items: center;
-  padding-right: 14px;
+  padding-right: 1.4rem;
 }
 /* #endregion */
 

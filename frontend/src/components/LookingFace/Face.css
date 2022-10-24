@@ -15,9 +15,9 @@
 
 .head {
     position: fixed;
-    width: 220px;
+    width: 22rem;
     /*Chiều rộng khuôn mặt không tính 2 tai*/
-    height: 310px;
+    height: 31rem;
     /*Chiều cao là chiều dài khuôn mặt*/
     background-color: var(--skin-color);
     border-radius: 110px;
@@ -34,10 +34,10 @@
     content: '';
     position: absolute;
     left: 0;
-    top: 50px;
-    width: 220px;
+    top: 5rem;
+    width: 22rem;
     /* Cùng chiều rộng với khuôn mặt */
-    height: 220px;
+    height: 22rem;
     /* Chiều cao nhỏ hơn khuôn mặt */
     background-color: var(--skin-color);
     border-radius: 60px 60px 110px 110px;
@@ -49,9 +49,9 @@
     content: '';
     position: absolute;
     left: 50%;
-    bottom: -80px;
-    width: 140px;
-    height: 35px;
+    bottom: -8rem;
+    width: 14rem;
+    height: 3.5rem;
     border-radius: 50%;
     background-color: #d1c9bbbf;
     transform: translate(-50%);
@@ -60,28 +60,28 @@
 /*Tai*/
 .ear{
     position: absolute;
-    top: 127px;
-    width: 55px;
-    height: 55px;
+    top: 12.7rem;
+    width: 5.5rem;
+    height: 5.5rem;
     background-color: var(--skin-color);
     border-radius: 50%;
     transition: all 0.3s ease-in;
 }
 /*Sau khi dựng tai, các đặc điểm trên khuôn mặt sẽ che đi phần giữa của tai, vì vậy hãy để tai di chuyển theo các hướng trái và phải tương ứng*/
 .ear_left{
-    left: -28px;
+    left: -2.8rem;
 }
 .ear_right{
-    right: -28px;
+    right: -2.8rem;
 }
 /*Thêm đường viền bên trong tai*/
 .ear::before{
     content: '';
     position: absolute;
     left: 50%;
-    width: 26px;
-    height: 26px;
-    top: 12px;
+    width: 2.6rem;
+    height: 2.6rem;
+    top: 1.2rem;
     transform: translate(-50%);
     background-color: var(--ear-nose-color);
     border-radius: 50%;
@@ -90,29 +90,29 @@
 .ear::after{
     content: '';
     position: absolute;
-    width: 8px;
-    height: 8px;
-    bottom: 6px;
+    width: 0.8rem;
+    height: 0.8rem;
+    bottom: 0.6rem;
     background-color: white;
     border-radius: 50%;
 }
 /*Di chuyển bông tai đến đúng vị trí*/
 .ear_left::after{
-    left: 13px;
+    left: 1.3rem;
 }
 .ear_right::after{
-    right: 13px;
+    right: 1.3rem;
 }
 
 /* Các đặc điểm toàn bộ khuôn mặt */
 .face {
     position: absolute;
     left: 50%;
-    top: 105px;
+    top: 10.5rem;
     /* Cách đỉnh đầu 105px trở xuống */
-    width: 110px;
+    width: 11rem;
     /* 1/2 width */
-    height: 165px;
+    height: 16.5rem;
     /* từ lông mày đến cằm */
     transform: translate(-50%);
     z-index: 3;
@@ -122,9 +122,9 @@
 /* mắt */
 .eye {
     position: absolute;
-    top: 4px;
-    width: 38px;
-    height: 8px;
+    top: 0.4rem;
+    width: 3.8rem;
+    height: 0.8rem;
     background-color: #000;
     border-radius: 4px;
 }
@@ -140,9 +140,9 @@
     content: '';
     position: absolute;
     left: 50%;
-    top: 18px;
-    height: 16px;
-    width: 16px;
+    top: 1.8rem;
+    height: 1.6rem;
+    width: 1.6rem;
     border-radius: 50%;
     background-color: black;
     transform: translate(-50%);
@@ -153,9 +153,9 @@
 .nose {
     position: absolute;
     left: 50%;
-    top: 50px;
-    width: 50px;
-    height: 22px;
+    top: 5rem;
+    width: 5rem;
+    height: 2.2rem;
     border-radius: 11px;
     background-color: var(--ear-nose-color);
     transform: translate(-50%);
@@ -165,9 +165,9 @@
     content: '';
     position: absolute;
     left: 50%;
-    top: -28px;
-    height: 50px;
-    width: 22px;
+    top: -2.8rem;
+    height: 5rem;
+    width: 2.2rem;
     border-radius: 50%;
     background-color: var(--ear-nose-color);
     transform: translate(-50%);
@@ -176,11 +176,11 @@
 /* Râu */
 .beard {
     position: absolute;
-    top: 80px;
+    top: 8rem;
     left: 50%;
-    width: 90px;
-    height: 120px;
-    border-radius: 45px;
+    width: 9rem;
+    height: 12rem;
+    border-radius: 4.5rem;
     background-color: #000;
     transform: translate(-50%);
     transition: all 0.3s ease-in;
@@ -190,9 +190,9 @@
     content: '';
     position: absolute;
     left: 50%;
-    top: -8px;
-    height: 22px;
-    width: 22px;
+    top: -0.8rem;
+    height: 2.2rem;
+    width: 2.2rem;
     border-radius: 50%;
     background-color: var(--skin-color);
     transform: translate(-50%);
@@ -201,10 +201,10 @@
 /* Quai hàm */
 .chin {
     position: absolute;
-    top: 20px;
+    top: 2rem;
     left: 50%;
-    width: 74px;
-    height: 64px;
+    width: 7.4rem;
+    height: 6.4rem;
     border-radius: 32px;
     background-color:var(--skin-color);
     transform: translate(-50%);
@@ -214,9 +214,9 @@
     content: '';
     position: absolute;
     left: 50%;
-    top: 12px;
-    width: 44px;
-    height: 20px;
+    top: 1.2rem;
+    width: 4.4rem;
+    height: 2rem;
     border-radius: 0 0 22px 22px;
     background-color: white;
     transform: translate(-50%);
@@ -227,9 +227,9 @@
     content: '';
     position: absolute;
     left: 50%;
-    top: 12px;
-    width: 44px;
-    height: 10px;
+    top: 1.2rem;
+    width: 4.4rem;
+    height: 1rem;
     border-radius: 22px 22px 0 0;
     background-color: white;
     transform: translate(-50%);
@@ -240,45 +240,45 @@
     content: '';
     position: absolute;
     left: 50%;
-    top: 60px;
-    height: 10px;
-    width: 20px;
+    top: 6rem;
+    height: 1rem;
+    width: 2rem;
     border-radius: 4px;
     background-color: #000;
     transform: translate(-50%);
 }
 /* Trạng thái khi di chuột */
 .move.top:hover ~ .head::before {
-    top: 45px;
+    top: 4.5rem;
 }
 .move.top:hover ~ .head .face {
-    top: 90px;
+    top: 9rem;
 }
 .move.top:hover ~ .head .face .eye::before {
-    top: 8px;
+    top: 0.8rem;
 }
 .move.top:hover ~ .head .face .beard {
-    top: 74px;
+    top: 7.4rem;
 }
 .move.top:hover ~ .head .ear {
-    top: 132px;
+    top: 13.2rem;
 }
 
 
 .move.bottom:hover ~ .head::before {
-    top: 60px;
+    top: 6rem;
 }
 .move.bottom:hover ~ .head .face {
-    top: 125px;
+    top: 12.5rem;
 }
 .move.bottom:hover ~ .head .face .eye::before {
-    top: 28px;
+    top: 2.8rem;
 }
 .move.bottom:hover ~ .head .face .beard {
-    top: 86px;
+    top: 8.6rem;
 }
 .move.bottom:hover ~ .head .ear {
-    top: 122px;
+    top: 12.2rem;
 }
 
 
@@ -289,10 +289,10 @@
     left: 40%;
 }
 .move.left:hover ~ .head .ear_left {
-    left: -23px;
+    left: -2.3rem;
 }
 .move.left:hover ~ .head .ear_right {
-    right: -33px;
+    right: -3.3rem;
 }
 
 
