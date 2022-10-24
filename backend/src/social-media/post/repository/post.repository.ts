@@ -9,8 +9,6 @@ import { Page } from "src/common/models/view-model/page-model";
 import { paginate } from "src/common/utils/paginate.utils";
 import { Sequelize } from "sequelize-typescript";
 import { PostLikeRepository } from "./post-like.repository";
-import { ResponseData } from "src/common/models/view-model/success-message.model";
-import { boolean } from "joi";
 
 @Injectable()
 export class PostRepository {

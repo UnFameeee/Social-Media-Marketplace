@@ -40,9 +40,9 @@ export const databaseProviders = [
             sequelize.addModels([Profile, Friendship, Post, PostLike, PostComment]);
             //associations
             Profile.hasMany(Friendship, { foreignKey: {name : "profile_request", field : "profile_request"}});
-            Friendship.belongsTo(Profile, { foreignKey: {name : "profile_request", field : "profile_request"}})
+            Friendship.belongsTo(Profile, { foreignKey: {name : "profile_request", field : "profile_request"}, as: "profile_request_id"})
             Profile.hasMany(Friendship, { foreignKey: {name : "profile_target", field : "profile_target"}});
-            Friendship.belongsTo(Profile, { foreignKey: {name : "profile_target", field : "profile_target"}})
+            Friendship.belongsTo(Profile, { foreignKey: {name : "profile_target", field : "profile_target"}, as: "profile_target_id"})
 
             Profile.hasMany(Post, { foreignKey: {name : "profile_id", field : "profile_id"}});
             Post.belongsTo(Profile, { foreignKey: {name : "profile_id", field : "profile_id"}});
