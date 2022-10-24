@@ -21,7 +21,7 @@ export class Post extends Model<Post> {
     @Column
     media_type: string;
 
-    @Column
+    @Column(DataType.TEXT)
     media_location: string;
 
     @Column(DataType.VIRTUAL(DataType.NUMBER))

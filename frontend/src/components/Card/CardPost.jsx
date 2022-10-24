@@ -43,6 +43,7 @@ function CardPost(props) {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+   const arrayImgs = JSON.parse(props.postData.media_location);
   // Function
   const handleOnClickShowAction = () => {
     setShowAction(!showAction);
@@ -53,8 +54,8 @@ function CardPost(props) {
       profile_id: props.postData.profile_id,
       written_text: props.postData.written_text,
       media_type: props.postData.media_type,
-      media_location: props.postData.media_type,
-      avtUrl: props.postData.media_type,
+      media_location: props.postData.media_location,
+      avtUrl: props.postData.picture,
     };
     props.handleGetPostUpdateData(tempPostData);
     props.handleOpenPostModel();
@@ -77,7 +78,7 @@ function CardPost(props) {
         <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
           <div className="flex flex-1 gap-[1rem]">
             <img
-              src={props.postData.media_type}
+              src={props.postData.picture}
               className="w-[4.5rem] h-[4.5rem] rounded-[50%] border-2 border-blue-300"
               alt=""
             />
@@ -115,11 +116,15 @@ function CardPost(props) {
             <span className="text-grey1f">{props.postData.written_text}</span>
           </div>
           <div className="px-[-1rem] mb-[0.5rem]">
-            <img
-              src={props.postData.media_type}
-              alt=""
-              className="w-full min-w-[20rem] h-[45rem] object-cover"
-            />
+            { props.postData.media_location &&
+              arrayImgs&& arrayImgs.map((item) => (
+                <img
+                  src={item}
+                  key={item}
+                  alt=""
+                  className="w-full min-w-[20rem] h-[45rem] object-cover"
+                />
+              ))  }
           </div>
           <div className="mb-[0.5rem] px-[2rem] flex gap-[0.5rem]">
             <ThumbUpOutlined

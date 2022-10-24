@@ -7,19 +7,6 @@ import { createPost, updatePost, uploadImages } from "../../redux/apiRequest";
 import styled from "styled-components";
 import { PhotoLibrary, HighlightOff, Close } from "@mui/icons-material";
 import { resetUploadImagePostState } from "../../redux/uploadImageSlice";
-import { ImageList, ImageListItem } from "@mui/material";
-import { height } from "@mui/system";
-const StyledContentEditableSpan = styled.div`
-  span[contenteditable] {
-    display: inline-block;
-  }
-  span[contenteditable]:empty::before {
-    content: attr(data-placeholder);
-    color: #a3a3af;
-    cursor: auto;
-    display: inline-block;
-  }
-`;
 function PostModal(props) {
   //Declare variables
   const dispatch = useDispatch();
@@ -27,16 +14,20 @@ function PostModal(props) {
     (state) => state.auth.login.currentUser.access
   );
   const isPosting = useSelector((state) => state.post.create.isFetching);
-  const uploadImageLinkLst = useSelector(
+  let uploadImageLinkLst = useSelector(
     (state) => state.uploadImage.uploadImagePost?.uploadImages
   );
+  if (props.postUpdateData) {
+    uploadImageLinkLst = JSON.parse(props.postUpdateData.media_location);
+  }
   const [postData, setPostData] = useState({
     written_text: "",
     media_type: "",
     media_location: "",
   });
   const { written_text, media_type, media_location } = postData;
-
+  const imgElement = React.useRef(null);
+  const [imgArray, setImgArray] = useState([]);
   //Function
   const closeModal = () => {
     props.setShowModal(false);
@@ -48,7 +39,7 @@ function PostModal(props) {
   };
   const handlePost = (e) => {
     e.preventDefault();
-    postData.media_location = "test";
+    postData.media_location = JSON.stringify(uploadImageLinkLst);
     createPost(accessToken, postData, dispatch);
     setPostData({ written_text: "", media_type: "", media_location: "" });
     props.setReRender((prev) => !prev);
@@ -70,19 +61,6 @@ function PostModal(props) {
       ...postData,
       [event.target.name]: event.target.value,
     });
-  };
-  let written_text_span;
-  const onFocus = (event) => {
-    written_text_span = event.target.innerHTML;
-  };
-  const onBlur = (event) => {
-    if (written_text_span !== event.target.innerHTML) {
-      const html = event.target.innerHTML;
-      setPostData({
-        ...postData,
-        written_text: html,
-      });
-    }
   };
   const [uploadImage, setUpLoadImage] = useState([]);
   const handlePreviewUploadImage = (e) => {
@@ -117,11 +95,7 @@ function PostModal(props) {
       closeModal();
     }
   });
-  const imgElement = React.useRef(null);
-  if (uploadImageLinkLst) {
-  }
 
-  const [imgArray, setImgArray] = useState([]);
   const addToUploadImgArray = (height, url) => {
     setImgArray([...imgArray, { height: height, url: url }]);
   };
@@ -150,7 +124,14 @@ function PostModal(props) {
             <FullWidthHr />
             <div className="px-[2rem]">
               <div className="flex items-center gap-[1rem] mb-[1rem]">
-                <AvatarWithText url={props.avtUrl} size="5rem" />
+                <AvatarWithText
+                  url={
+                    props.postUpdateData
+                      ? props.postUpdateData.avtUrl
+                      : props.profile.picture
+                  }
+                  size="5rem"
+                />
                 <span className="font-bold">{props.profile.profile_name}</span>
               </div>
               <textarea
@@ -163,24 +144,8 @@ function PostModal(props) {
                     ? ""
                     : `What's on your mind, ${props.profile.profile_name}?`
                 }
+                value={written_text}
               ></textarea>
-              {/*<StyledContentEditableSpan>
-                <span
-                  name="written_text"
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                  onChange={handleOnChangePostData}
-                  data-placeholder={
-                    props.postUpdateData
-                      ? ""
-                      : `What's on your mind, ${props.profile.profile_name}?`
-                  }
-                  contentEditable="true"
-                  className="w-full outline-none text-[1.8rem] max-h-[25rem] overflow-y-scroll mb-[2rem]"
-                >
-                  {written_text}
-                </span>
-                </StyledContentEditableSpan> */}
               {!uploadImageLinkLst.length > 0 && (
                 <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer">
                   <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
@@ -241,14 +206,6 @@ function PostModal(props) {
                   </div>
                 </div>
               )}
-              <input
-                className="w-full outline-none text-[2.4rem] mb-[2rem]"
-                type="text"
-                placeholder="Add Image link"
-                value={media_type}
-                name="media_type"
-                onChange={handleOnChangePostData}
-              />
               <button
                 onClick={props.postUpdateData ? handleUpdatePost : handlePost}
                 className="w-full bg-blue8f3 text-white rounded-[0.5rem] py-[0.75rem] "
