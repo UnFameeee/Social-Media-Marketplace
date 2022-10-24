@@ -9,7 +9,7 @@ import {
 } from '@mui/icons-material';
 import TwoColumns from '../../components/Layout/TwoColumns';
 import { Helper } from '../../utils/Helper';
-import './Friends.css';
+import './index.css';
 import { useState } from 'react';
 
 export function StaticLeftbarLayout() {
@@ -45,7 +45,7 @@ export function StaticLeftbarLayout() {
             },
             middle: 'Friend Suggestions',
             right: <KeyboardArrowRight />,
-            navigate: 'requests',
+            navigate: 'suggestions',
           },
           {
             left: {
@@ -72,4 +72,8 @@ export function StaticLeftbarLayout() {
       <Outlet context={() => setReRender(!reRender)} />
     </TwoColumns>
   );
+}
+
+export function DynamicLeftbarLayout() {
+  return <Outlet />;
 }

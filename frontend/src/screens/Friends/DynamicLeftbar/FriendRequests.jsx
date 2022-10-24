@@ -1,7 +1,26 @@
-import React from 'react'
+import {
+  Avatar,
+  Box,
+  Button,
+  Typography,
+} from '@mui/material';
+import React from 'react';
+import TwoColumns from '../../../components/Layout/TwoColumns';
 
 export default function FriendRequests() {
   return (
-    <h1>con chó quốc cac</h1>
-  )
+    <TwoColumns
+      leftBarConfig={{
+        leftBarList: [
+          {
+            middle: (
+              <>
+              </>
+            ),
+          },
+        ],
+        leftBarColor: 'white',
+      }}
+    ></TwoColumns>
+  );
 }

@@ -8,8 +8,9 @@ import UserProfile from './screens/UserProfile/UserProfile';
 import Settings from './screens/Setting/Settings';
 import RequireAuth from './screens/Auth/RequireAuth';
 import Error from './screens/Error/Error';
-import { FriendHome, Birthday } from './screens/Friends/StaticLeftbar';
-import { StaticLeftbarLayout } from './screens/Friends';
+import { FriendHome, Birthday, } from './screens/Friends/StaticLeftbar';
+import { DynamicLeftbarLayout, StaticLeftbarLayout } from './screens/Friends';
+import FriendRequests from './screens/Friends/DynamicLeftbar/FriendRequests';
 
 function App() {
   return (
@@ -25,12 +26,16 @@ function App() {
             <Route path="/userprofile" element={<UserProfile />} />
             <Route path="/settings" element={<Settings />} />
 
-            <Route path="friends" element={<StaticLeftbarLayout />} >              
+            <Route path="friends" element={<StaticLeftbarLayout />}>
               <Route path="" element={<FriendHome />} />
               <Route path="birthdays" element={<Birthday />} />
             </Route>
 
+            <Route path="friends/" element={<DynamicLeftbarLayout />}>
+              <Route path="requests" element={<FriendRequests />} />
+            </Route>
           </Route>
+
         </Route>
         <Route path="*" element={<Error />} />
         <Route path="forbidden" element={<Error status="403" />} />

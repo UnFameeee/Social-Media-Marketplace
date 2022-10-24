@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Box,
   Avatar,
@@ -7,9 +8,8 @@ import {
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import React from 'react';
-import { Link } from 'react-router-dom';
 import { makeStyles } from 'tss-react/mui';
+import { Link } from 'react-router-dom';
 import { Helper } from '../../../utils/Helper';
 import MiddleHr from '../../FullWidthHr/MiddleHr';
 import '../Layout.css';
@@ -154,19 +154,30 @@ function LeftBarListItem({ item, classNameConfig }) {
       selected={item.selected}
       className={`left-bar-button ${classNameConfig}`}
     >
-      <ListItemIcon
-        className={`left ${item.selected ? 'selected' : ''}`}
-      >
-        {typeof item.left == 'object' && item.left.iconButton ? (
-          <Avatar className="rounded">{item.left.icon}</Avatar>
-        ) : (
-          item.left
-        )}
-      </ListItemIcon>
+      {item.left && (
+        <ListItemIcon
+          className={`left ${item.selected ? 'selected' : ''}`}
+        >
+          {typeof item.left == 'object' && item.left.iconButton ? (
+            <Avatar className="rounded">{item.left.icon}</Avatar>
+          ) : (
+            item.left
+          )}
+        </ListItemIcon>
+      )}
 
-      <ListItemText primary={item.middle} className="left-bar-text" />
+      {React.isValidElement(item.middle) ? (
+        item.middle
+      ) : (
+        <ListItemText
+          primary={item.middle}
+          className="left-bar-text"
+        />
+      )}
 
-      <ListItemIcon className='right'>{item.right}</ListItemIcon>
+      {item.right && (
+        <ListItemIcon className="right">{item.right}</ListItemIcon>
+      )}
     </ListItemButton>
   );
 }
