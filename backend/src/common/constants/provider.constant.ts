@@ -4,4 +4,5 @@ export enum PROVIDER {
     Post = 'POST_REPOSITOTY',
     PostLike = 'POSTLIKE_REPOSITOTY',
     PostComment = 'POSTCOMMENT_REPOSITOTY',
+    Friendship = 'FRIENDSHIP_REPOSITOTY',
 }

@@ -3,6 +3,7 @@ import { PostComment } from "src/social-media/post/model/post-comment.model";
 import { PostLike } from "src/social-media/post/model/post-like.model";
 import { Post } from "src/social-media/post/model/post.model";
 import { Profile } from "src/social-media/profile/model/profile.model";
+import { Friendship } from 'src/social-media/profile/model/friendship.model';
 
 export const postProviders = [
     {
@@ -29,5 +30,12 @@ export const profileProviders = [
     {
         provide: PROVIDER.Profile,
         useValue: Profile
+    }
+]
+
+export const friendshipProviders = [
+    {
+        provide: PROVIDER.Friendship,
+        useValue: Friendship
     }
 ]
