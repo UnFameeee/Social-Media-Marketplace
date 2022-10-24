@@ -32,4 +32,13 @@ export class Post extends Model<Post> {
     set totalLike(value: number){
         this.setDataValue("totalLike", value);
     }
+
+    @Column(DataType.VIRTUAL(DataType.BOOLEAN))
+    get isLiked(): boolean{
+        return this.getDataValue("isLiked");
+    }
+
+    set isLiked(value: boolean){
+        this.setDataValue("isLiked", value);
+    }
 }
