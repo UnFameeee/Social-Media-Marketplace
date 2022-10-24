@@ -1,12 +1,17 @@
+import React from 'react';
 import {
   Box,
+  Avatar,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
 } from '@mui/material';
-import { makeStyles } from "tss-react/mui";
+import { makeStyles } from 'tss-react/mui';
+import { Link } from 'react-router-dom';
+import { Helper } from '../../../utils/Helper';
+import MiddleHr from '../../FullWidthHr/MiddleHr';
 import '../Layout.css';
 
 const useStyles = makeStyles()(() => ({
@@ -26,8 +31,11 @@ const useStyles = makeStyles()(() => ({
 }));
 
 export default function LeftBar(props) {
-  const { before, after, leftBarList, leftBarColor } = props;
   const { classes, cx } = useStyles();
+
+  const { leftBarList, classNameConfig = {}, leftBarColor } = props;
+
+  const { listWrapper, listClassname } = classNameConfig;
 
   return (
     // #region oldCode
@@ -55,38 +63,121 @@ export default function LeftBar(props) {
     // #endregion
 
     <Box
-      className={cx(classes.scroll, `left-bar ${leftBarColor ? 'drop-shadow-md' : ''}`)}
+      className={cx(
+        classes.scroll,
+        `left-bar ${
+          leftBarColor ? 'drop-shadow-md' : ''
+        } ${listWrapper}`
+      )}
       style={
         leftBarColor
           ? {
               backgroundColor: leftBarColor,
-              boxShadow: '0 0 1px rgba(0,0,0,0.1)',
+              // boxShadow: '0 0 1px rgba(0,0,0,0.1)',
             }
           : null
       }
     >
-      {before}
+      <List className={listClassname}>
+        {Helper.isArrayList(leftBarList)
+          ? leftBarList.map((list, index) => {
+              return (
+                <ul key={index}>
+                  <LeftBarList leftBarList={list} multiList={index} />
+                  {index !== leftBarList.length - 1 && <MiddleHr />}
+                </ul>
+              );
+            })
+          : Array.isArray(leftBarList) && (
+              <LeftBarList leftBarList={leftBarList} />
+            )}
+      </List>
+    </Box>
+  );
+}
 
-      {leftBarList && (
-        <List>
-          {leftBarList.map((item, index) => (
-            <ListItem key={index} sx={{ padding: '0.8rem' }}>
-              <ListItemButton
-                onClick={item.onClick}
-                className="left-bar-button"
+function LeftBarList({ leftBarList, multiList }) {
+  return (
+    <>
+      {leftBarList.map((item, index) => {
+        return (
+          <div key={index}>
+            {item.title && (
+              <div
+                className={`left-bar-title ${
+                  multiList ? 'second' : ''
+                }`}
               >
-                <ListItemIcon>{item.iconName}</ListItemIcon>
-                <ListItemText
-                  primary={item.text}
-                  className="left-bar-text"
+                {item.title}
+              </div>
+            )}
+            <ListItem className="list">
+              {item.navigate ? (
+                <Link
+                  to={`${item.navigate}`}
+                  style={{ width: '100%' }}
+                  disabled={item.disabled}
+                >
+                  <LeftBarListItem
+                    item={item}
+                    classNameConfig={`${
+                      index === leftBarList.length - 1 &&
+                      multiList >= 0
+                        ? 'multi'
+                        : ''
+                    }`}
+                  />
+                </Link>
+              ) : (
+                <LeftBarListItem
+                  item={item}
+                  classNameConfig={`${
+                    index === leftBarList.length - 1 && multiList >= 0
+                      ? 'multi'
+                      : ''
+                  }`}
                 />
-              </ListItemButton>
+              )}
             </ListItem>
-          ))}
-        </List>
+            {item.after}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+function LeftBarListItem({ item, classNameConfig }) {
+  return (
+    <ListItemButton
+      onClick={item.onClick}
+      selected={item.selected}
+      className={`left-bar-button ${classNameConfig}`}
+    >
+      {item.left && (
+        <ListItemIcon
+          className={`left ${item.selected ? 'selected' : ''}`}
+        >
+          {typeof item.left == 'object' && item.left.iconButton ? (
+            <Avatar className="rounded">{item.left.icon}</Avatar>
+          ) : (
+            item.left
+          )}
+        </ListItemIcon>
       )}
 
-      {after}
-    </Box>
+      {React.isValidElement(item.middle) ? (
+        item.middle
+      ) : (
+        <ListItemText
+          primary={item.middle}
+          className="left-bar-text"
+        />
+      )}
+
+      {item.right && (
+        <ListItemIcon className="right">{item.right}</ListItemIcon>
+      )}
+    </ListItemButton>
   );
 }

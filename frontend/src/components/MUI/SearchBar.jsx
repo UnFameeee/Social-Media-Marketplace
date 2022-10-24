@@ -4,9 +4,10 @@ import {
   IconButton,
   InputAdornment,
 } from '@mui/material';
-import { Search, Close } from '@mui/icons-material';
+import { Search } from '@mui/icons-material';
 import { useState } from 'react';
 import Menu from './Menu';
+import { Helper } from '../../utils/Helper'
 
 export default function SearchBar(props) {
   const [open, setOpen] = useState(false);
@@ -19,11 +20,6 @@ export default function SearchBar(props) {
     ...others
   } = props;
 
-  function handleKeyDown(event) {
-    if (event.key === 'Enter') {
-      handleSearch();
-    }
-  }
   return (
     <ClickAwayListener
       onClickAway={() => {
@@ -57,10 +53,8 @@ export default function SearchBar(props) {
             },
           }}
           onChange={(event) => getData(event.target.value)}
-          onKeyDown={(event) => handleKeyDown(event)}
-          onClick={() => {
-            setOpen(true);
-          }}
+          onKeyDown={(event) => Helper.handleEnterKeyPress(event, handleSearch)}
+          onClick={() =>  setOpen(true) }
           {...others}
         />
 

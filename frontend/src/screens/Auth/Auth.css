@@ -4,13 +4,13 @@
   right: 25%;
   width: 25vw;
   border-radius: 10px;
-  padding: 20px;
+  padding: 2rem;
   background: white;
   transform: translateY(-50%);
 }
 .form-title {
   margin: 0;
-  padding: 18px 0;
+  padding: 1.8rem 0;
   font-size: 3.6rem;
   color: var(--primary-color);
   line-height: 3.6rem;
@@ -18,7 +18,7 @@
 }
 .form-bottom {
   color: #b3b3b3;
-  padding-bottom: 20px;
+  padding-bottom: 2rem;
 }
 .form-bottom-special {
   color: var(--primary-color);
