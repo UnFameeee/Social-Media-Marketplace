@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import { logOut } from '../../../redux/apiRequest';
 import { revertAll } from '../../../redux/resetStore';
 import '../Layout.css';
+import { Helper } from '../../../utils/Helper';
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -34,12 +35,6 @@ export default function NavBar() {
     dispatch(revertAll());
   };
   function handleSearch() {}
-
-  function checkUrl(iconName) {
-    return (
-      path.slice(1) == iconName || (iconName == 'home' && path == '/')
-    );
-  }
 
   return (
     // #region oldCode
@@ -122,7 +117,7 @@ export default function NavBar() {
             menuConfig={{
               classNameConfig: {
                 menuClass: 'navbar-search',
-                middleClass: 'navbar-search'
+                middleClass: 'navbar-search',
               },
               list: [
                 {
@@ -175,13 +170,16 @@ export default function NavBar() {
               key={index}
               tooltip={item.tooltip}
               style={
-                checkUrl(item.tooltip?.toLowerCase())
+                Helper.checkURL(item.tooltip?.toLowerCase(), {
+                  url: 'home',
+                  path: '',
+                })
                   ? {
-                      marginBottom: '-3px',
+                      marginBottom: '-0.4rem',
                       borderBottomLeftRadius: 0,
                       borderBottomRightRadius: 0,
                       color: 'var(--primary-color)',
-                      borderBottom: '4px solid var(--primary-color)',
+                      borderBottom: '0.4rem solid var(--primary-color)',
                     }
                   : null
               }
@@ -189,9 +187,15 @@ export default function NavBar() {
                 if (item.tooltip === 'Home') navigate('/');
                 else navigate(`/${item.tooltip?.toLowerCase()}`);
               }}
-              disabled={checkUrl(item.tooltip?.toLowerCase())}
+              disabled={Helper.checkURL(item.tooltip?.toLowerCase(), {
+                url: 'home',
+                path: '',
+              })}
             >
-              {checkUrl(item.tooltip?.toLowerCase())
+              {Helper.checkURL(item.tooltip?.toLowerCase(), {
+                url: 'home',
+                path: '',
+              })
                 ? item.icon[1]
                 : item.icon[0]}
             </MUI.ButtonWithIcon>
@@ -210,9 +214,6 @@ export default function NavBar() {
                   hasBackground
                   tooltip={item.tooltip}
                   sx={{
-                    '& .MuiSvgIcon-root': {
-                      fontSize: '2.4rem',
-                    },
                     marginRight: '0.8rem',
                   }}
                 >
@@ -242,10 +243,7 @@ export default function NavBar() {
                         ),
                         hasBackground: true,
                       },
-                      middle: {
-                        text: 'Log Out',
-                        hasTooltip: false,
-                      },
+                      middle: 'Log Out',
                     },
                   ]}
                 />

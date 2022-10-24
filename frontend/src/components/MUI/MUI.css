@@ -57,9 +57,6 @@
 .MuiButton-root.button-with-icon:hover {
   background-color: #f0f2f5;
 }
-.MuiButton-root.button-with-icon svg {
-  font-size: 3rem;
-}
 .MuiAvatar-root.icon-button-with-background {
   cursor: pointer;
   color: #050505;
@@ -67,5 +64,11 @@
 }
 .MuiAvatar-root.icon-button-with-background:hover {
   background-color: #bdbdbd;
+}
+svg {
+  font-size: 3.2rem;
+}
+.MuiTooltip-tooltip {
+  font-size: 1.2rem !important;
 }
 /*#endregion */

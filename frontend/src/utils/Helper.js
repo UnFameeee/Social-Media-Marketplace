@@ -6,19 +6,22 @@ function generateId(input) {
 }
 
 function checkPropsInObject(object, listProps, checkAll) {
-  let res = checkAll;
-  listProps.forEach((value) => {
-    if (checkAll) {
-      if (!object.hasOwnProperty(value)) {
-        res = false;
+  if (!object) return false;
+  else {
+    let res = checkAll;
+    listProps.forEach((value) => {
+      if (checkAll) {
+        if (!object.hasOwnProperty(value)) {
+          res = false;
+        }
+      } else {
+        if (object.hasOwnProperty(value)) {
+          res = true;
+        }
       }
-    } else {
-      if (object.hasOwnProperty(value)) {
-        res = true;
-      }
-    }
-  });
-  return res;
+    });
+    return res;
+  }
 }
 
 function formatDate(date) {
@@ -91,6 +94,51 @@ function handleEnterKeyPress(event, func) {
   }
 }
 
+function isNullOrEmpty(value) {
+  return (
+    !value ||
+    value === undefined ||
+    value === '' ||
+    value.length === 0
+  );
+}
+
+function isArrayList(value) {
+  if (!Array.isArray(value) || !value.length) return false;
+  else {
+    let res = true;
+    value.map((item) => {
+      if (!Array.isArray(item)) res = false;
+    });
+    return res;
+  }
+}
+
+function isObjectList(value) {
+  if (!Array.isArray(value) || !value.length) return false;
+  else {
+    let res = true;
+    value.map((item) => {
+      if (item === Object(item)) res = false;
+    });
+    return res;
+  }
+}
+
+function checkURL(value, defaultConfig = {}, lastOnly = false) {
+  const pathArray = window.location.pathname.split('/');
+
+  if (lastOnly) {
+    return pathArray[pathArray.length - 1] === value.toLowerCase();
+  } else {
+    return (
+      pathArray.includes(value.toLowerCase()) ||
+      (value === defaultConfig.url &&
+        pathArray[pathArray.length - 1] === defaultConfig.path)
+    );
+  }
+}
+
 export const Helper = {
   generateId,
   checkPropsInObject,
@@ -103,4 +151,8 @@ export const Helper = {
   splitSpaceString,
   createSpaceString,
   handleEnterKeyPress,
+  isNullOrEmpty,
+  isArrayList,
+  isObjectList,
+  checkURL,
 };

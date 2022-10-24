@@ -1,4 +1,3 @@
-import { Chat, Notifications, Menu } from '@mui/icons-material';
 import {
   IoHomeOutline,
   IoHomeSharp,
@@ -10,7 +9,10 @@ import {
   IoPlayCircle,
   IoBagOutline,
   IoBag,
+  IoChatbubbleEllipses,
+  IoNotifications,
 } from 'react-icons/io5';
+import { CgMenuGridO } from "react-icons/cg";
 
 export const middleNavIcons = [
   {
@@ -19,8 +21,8 @@ export const middleNavIcons = [
   },
   {
     icon: [
-      <IoPeopleOutline style={{ fontSize: '3.2rem' }} />,
-      <IoPeople style={{ fontSize: '3.2rem' }} />,
+      <IoPeopleOutline />,
+      <IoPeople />,
     ],
     tooltip: 'Friends',
   },
@@ -30,15 +32,15 @@ export const middleNavIcons = [
   },
   {
     icon: [
-      <IoPeopleCircleOutline style={{ fontSize: '3.4rem' }} />,
-      <IoPeopleCircle style={{ fontSize: '3.4rem' }} />,
+      <IoPeopleCircleOutline />,
+      <IoPeopleCircle />,
     ],
     tooltip: 'Groups',
   },
   {
     icon: [
-      <IoPlayCircleOutline style={{ fontSize: '3.4rem' }} />,
-      <IoPlayCircle style={{ fontSize: '3.4rem' }} />,
+      <IoPlayCircleOutline />,
+      <IoPlayCircle />,
     ],
     tooltip: 'Watch',
   },
@@ -46,15 +48,15 @@ export const middleNavIcons = [
 
 export const rightNavIcons = [
   {
-    icon: <Menu />,
+    icon: <CgMenuGridO />,
     tooltip: 'Menu',
   },
   {
-    icon: <Chat />,
+    icon: <IoChatbubbleEllipses style={{ fontSize: '2.4rem' }} />,
     tooltip: 'Chat',
   },
   {
-    icon: <Notifications />,
+    icon: <IoNotifications style={{ fontSize: '2.4rem' }} />,
     tooltip: 'Notifications',
   },
   {

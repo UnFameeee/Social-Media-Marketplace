@@ -31,12 +31,20 @@ export default function Error(props) {
           top: '70%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          textAlign: 'center'
+          textAlign: 'center',
         }}
       >
-        <h1 style={{fontSize: '10rem'}}>{status}</h1>
-        <h2 style={{fontSize: '2.2rem', marginBottom: '2.2rem'}}>{title}</h2>
+        <h1 style={{ fontSize: '10rem' }}>{status}</h1>
+        <h2 style={{ fontSize: '2.2rem', marginBottom: '2.2rem' }}>
+          {title}
+        </h2>
         <MUI.Button
+          name="Go back"
+          onClick={() => navigate(-1)}
+          style={{ width: '144px' }}
+        />
+        <MUI.Button
+          style={{ marginLeft: '14px' }}
           name="Return Home"
           onClick={() => navigate('/')}
         />

@@ -15,7 +15,7 @@ import {
   Search,
   MoreHoriz,
 } from '@mui/icons-material';
-import { makeStyles } from "tss-react/mui";
+import { makeStyles } from 'tss-react/mui';
 import '../Layout.css';
 
 const useStyles = makeStyles()(() => ({
@@ -39,7 +39,7 @@ export default function RightBar() {
 
   return (
     // #region oldCode
-    // <>    
+    // <>
     //   <div className="flex items-center [&>*]:text-slate-500 py-[1rem]">
     //     <span className="flex-1 text-[2rem] font-semibold ">Contacts</span>
     //     <div className="flex gap-[1rem] ">
@@ -175,7 +175,7 @@ export default function RightBar() {
     // #endregion
 
     <Box
-    className={cx(classes.scroll)}
+      className={cx(classes.scroll)}
       sx={{
         position: 'fixed',
         bottom: 0,
@@ -196,7 +196,7 @@ export default function RightBar() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 8px'
+            padding: '0 8px',
           }}
         >
           <Typography>Friend Requests</Typography>
@@ -264,7 +264,7 @@ export default function RightBar() {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            padding: '0 8px'
+            padding: '0 8px',
           }}
         >
           <Typography>Contacts</Typography>
@@ -282,65 +282,125 @@ export default function RightBar() {
         </Box>
 
         <Box>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
-          <Button sx={{width: '99%', justifyContent: 'left',}}>
-            <Avatar/>
-            <Typography sx={{textTransform: 'none', marginLeft: '10px'}}>Nguyễn Hoàng Hai Dụ</Typography>
+          <Button sx={{ width: '99%', justifyContent: 'left' }}>
+            <Avatar />
+            <Typography
+              sx={{ textTransform: 'none', marginLeft: '10px' }}
+            >
+              Nguyễn Hoàng Hai Dụ
+            </Typography>
           </Button>
         </Box>
       </Box>

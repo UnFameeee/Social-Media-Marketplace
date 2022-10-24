@@ -6,10 +6,10 @@
   position: fixed;
   bottom: 0;
 }
-.MuiListItemIcon-root svg {
+.left-bar-button svg {
   color: var(--primary-color);
   font-size: 3rem;
-  margin-left: 0.8rem;
+  margin-left: 0.2rem;
   margin-bottom: 0.3rem;
 }
 .left-bar .left-bar-button {
@@ -28,6 +28,47 @@
 }
 .left-bar .left-bar-button.Mui-selected:hover {
   background-color: rgba(0, 0, 0, 0.04);
+}
+.left-bar .list {
+  padding: 0.4rem 0.8rem;
+}
+.left-bar .left-bar-button.multi {
+  margin-bottom: 1.2rem;
+}
+.left-bar .left-bar-title {
+  font-size: 2.4rem;
+  font-weight: 500;
+  padding: 0.8rem 0 0.8rem 1.6rem;
+}
+.left-bar .left-bar-title.second {
+  padding: 1.6rem 0 0.8rem 1.6rem;
+}
+.left-bar-button .left {  
+  pointer-events: none;
+  margin-left: 0.6rem;
+}
+.left-bar-button .left .rounded {  
+  width: 3.6rem;
+  height: 3.6rem;
+  pointer-events: none;
+  background-color: #dadada;
+}
+.left-bar-button .left .rounded svg {
+  font-size: 2.6rem;
+  margin: 0;
+  color: black;
+}
+.left-bar-button .left.selected .rounded {
+  background-color: var(--primary-color);
+}
+.left-bar-button .left.selected .rounded svg {
+  color: white;
+}
+.left-bar-button .right {
+  padding-left: 1.2rem;
+}
+.left-bar-button .right svg {
+  color: black
 }
 /* #endregion */
 
