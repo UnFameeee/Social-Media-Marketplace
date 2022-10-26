@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
@@ -7,6 +7,7 @@ import { createPost, updatePost, uploadImages } from "../../redux/apiRequest";
 import styled from "styled-components";
 import { PhotoLibrary, HighlightOff, Close } from "@mui/icons-material";
 import { resetUploadImagePostState } from "../../redux/uploadImageSlice";
+import {Link} from "react-router-dom";
 function PostModal(props) {
   //Declare variables
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ function PostModal(props) {
     flagAction = "update";
   }
   const { written_text, media_type, media_location } = postData;
-  const imgElement = React.useRef(null);
+  const imgElement = useRef(null);
   const [imgArray, setImgArray] = useState([]);
   const [uploadFlag, setUpLoadFlag] = useState(false);
   const accessToken = useSelector(
@@ -80,26 +81,25 @@ function PostModal(props) {
     setUpLoadFlag((prev) => !prev);
     e.target.value = null;
   };
-  const handleRemoveUploadImage = (imageKey) =>{
-    let filterMedia_Location = media_location.filter(x => x !=imageKey)
-    console.log(filterMedia_Location);
+  const handleRemoveUploadImage = (imageKey) => {
+    let filterMedia_Location = media_location.filter((x) => x !== imageKey);
     setPostData({
       ...postData,
       media_location: [...filterMedia_Location],
     });
-  }
-  const addToUploadImgArray = (height, url) => {
-    setImgArray([...imgArray, { height: height, url: url }]);
+  };
+  const addToUploadImgArray = (height,width, url) => {
+    setImgArray([...imgArray, { height: height,width:width, url: url }]);
   };
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy && uploadImageLinkLst.length > 0) {
-      if (flagAction == "post") {
+      if (flagAction === "post") {
         setPostData({
           ...postData,
           media_location: [...uploadImageLinkLst],
         });
-      } else if (flagAction == "update") {
+      } else if (flagAction === "update") {
         dispatch(resetUploadImagePostState());
         setPostData({
           ...postData,
@@ -111,9 +111,10 @@ function PostModal(props) {
       onDestroy = true;
     };
   }, [uploadFlag]);
-  // useEffect(() => {
-  //   console.log("imgArray", imgArray);
-  // }, [imgArray]);
+  useEffect(() => {
+    console.log("imgArray", imgArray);
+  }, [imgArray]);
+
   // useEffect(() => {
   //   if (isPosting === true) {
   //     closeModal();
@@ -185,24 +186,30 @@ function PostModal(props) {
                 </div>
               )}
               {media_location && media_location.length > 0 && (
-                <div className="relative bg-slate-100 rounded-xl p-[0.2rem] h-[300px] overflow-y-scroll  ">
+                <div className="relative bg-slate-100 rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll  ">
                   <ul className="flex flex-wrap gap-[1rem]  ">
                     {media_location.map((item) => (
                       <li key={item} className=" w-full relative ">
-                        <img
-                          src={item}
-                          alt=""
-                          className=" w-[100%] object-fill rounded-xl "
-                          style={{ cursor: "default" }}
-                          ref={imgElement}
-                          onLoad={() =>
-                            addToUploadImgArray(
-                              imgElement.current.naturalHeight,
-                              item
-                            )
-                          }
-                        />
-                        <div onClick={() => handleRemoveUploadImage(item)} className="absolute cursor-pointer top-0 w-[30px] h-[30px] bg-slate-200 rounded-lg flex items-center justify-center">
+                        <a href={item}>
+                          <img
+                            src={item}
+                            alt=""
+                            className=" w-[100%] object-fill rounded-xl "
+                            style={{ cursor: "default" }}
+                            ref={imgElement}
+                            onLoad={() =>
+                              addToUploadImgArray(
+                                imgElement.current.naturalHeight,
+                                imgElement.current.naturalWidth,
+                                item
+                              )
+                            }
+                          />
+                        </a>
+                        <div
+                          onClick={() => handleRemoveUploadImage(item)}
+                          className="absolute cursor-pointer top-0 w-[30px] h-[30px] bg-slate-200 rounded-lg flex items-center justify-center"
+                        >
                           <span>x</span>
                         </div>
                       </li>
