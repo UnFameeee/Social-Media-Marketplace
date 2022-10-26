@@ -97,12 +97,12 @@ function CardPost(props) {
                 onClick={handleOnClickShowAction}
               />
               {showAction && (
-                <div className="bg-white floatingAction absolute  right-0  p-[1rem] drop-shadow-sm rounded-xl border-[0.1rem] cursor-pointer">
+                <div className="bg-white floatingAction absolute  right-0  p-[1rem] drop-shadow-sm rounded-xl border-[0.1rem] ">
                   <ul className="flex gap-[1rem] flex-col ">
-                    <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
+                    <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem] cursor-pointer">
                       <button onClick={handleShowModal}>Update</button>
                     </li>
-                    <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem]">
+                    <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem] cursor-pointer">
                       <button onClick={handleDeletePost}>Delete</button>
                     </li>
                   </ul>

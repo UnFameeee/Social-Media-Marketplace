@@ -80,6 +80,14 @@ function PostModal(props) {
     setUpLoadFlag((prev) => !prev);
     e.target.value = null;
   };
+  const handleRemoveUploadImage = (imageKey) =>{
+    let filterMedia_Location = media_location.filter(x => x !=imageKey)
+    console.log(filterMedia_Location);
+    setPostData({
+      ...postData,
+      media_location: [...filterMedia_Location],
+    });
+  }
   const addToUploadImgArray = (height, url) => {
     setImgArray([...imgArray, { height: height, url: url }]);
   };
@@ -173,9 +181,6 @@ function PostModal(props) {
                       className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 cursor-pointer"
                       onChange={handlePreviewUploadImage}
                     />
-                    {/* <div className="absolute right-[0.5rem] top-[0.5rem] text-gray-400 rounded-[50%] ">
-                        <HighlightOff style={{ fontSize: "3rem" }} />
-                      </div> */}
                   </div>
                 </div>
               )}
@@ -183,7 +188,7 @@ function PostModal(props) {
                 <div className="relative bg-slate-100 rounded-xl p-[0.2rem] h-[300px] overflow-y-scroll  ">
                   <ul className="flex flex-wrap gap-[1rem]  ">
                     {media_location.map((item) => (
-                      <li key={item} className=" w-full ">
+                      <li key={item} className=" w-full relative ">
                         <img
                           src={item}
                           alt=""
@@ -197,6 +202,9 @@ function PostModal(props) {
                             )
                           }
                         />
+                        <div onClick={() => handleRemoveUploadImage(item)} className="absolute cursor-pointer top-0 w-[30px] h-[30px] bg-slate-200 rounded-lg flex items-center justify-center">
+                          <span>x</span>
+                        </div>
                       </li>
                     ))}
                   </ul>
