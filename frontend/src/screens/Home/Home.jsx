@@ -33,15 +33,19 @@ function Home() {
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [postUpdateData, setPostUpdateData] = useState();
   const [reRender, setReRender] = useState(false);
+  const posts = useSelector((state) => state.post.get.posts?.results?.data);
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const userData = useSelector((state) => state.auth.user.userData);
+
   const handleOpenPostModel = () => {
     setOpenCreatePost((prev) => !prev);
   };
   const handleGetPostUpdateData = (data) => {
     setPostUpdateData(data);
   };
-  const posts = useSelector((state) => state.post.get.posts?.results?.data);
-  const accessToken = useSelector((state) => state.auth.login.currentUser.access);
-  const userData = useSelector((state) => state.auth.user.userData);
+
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -53,15 +57,17 @@ function Home() {
   }, [reRender]);
   return (
     <>
-      <PostModal
-        showModal={openCreatePost}
-        postUpdateData={postUpdateData}
-        setPostUpdateData={setPostUpdateData}
-        setShowModal={setOpenCreatePost}
-        setReRender={setReRender}
-        profile={userData.profile}
-        avtUrl="https://source.unsplash.com/random/330×320"
-      />
+      {openCreatePost && (
+        <PostModal
+          showModal={openCreatePost}
+          postUpdateData={postUpdateData}
+          setPostUpdateData={setPostUpdateData}
+          setShowModal={setOpenCreatePost}
+          setReRender={setReRender}
+          profile={userData.profile}
+          avtUrl="https://source.unsplash.com/random/330×320"
+        />
+      )}
       <ToastContainer />
       <div className="pt-[6rem] flex w-full">
         <LeftBar

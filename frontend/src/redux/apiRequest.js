@@ -217,7 +217,7 @@ export const uploadImages = async (accessToken, uploadImages, dispatch) => {
       },
     };
     let formData = new FormData();
-    uploadImages[0].forEach((file) => {
+    uploadImages.forEach((file) => {
       formData.append("files", file.files);
     });
     const res = await axios.post(

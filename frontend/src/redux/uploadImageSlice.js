@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { revertAll } from "./resetStore";
 const initialState = {
   uploadImagePost: {
-    uploadImages: [],
+    data: [],
     isFetching: false,
     error: false,
   },
@@ -11,7 +11,7 @@ export const uploadImageSlice = createSlice({
   name: "uploadImage",
   initialState: {
     uploadImagePost: {
-      uploadImages: [],
+      data: [],
       isFetching: false,
       error: false,
     },
@@ -26,8 +26,8 @@ export const uploadImageSlice = createSlice({
     },
     uploadImagePostSuccess: (state, action) => {
       state.uploadImagePost.isFetching = false;
-      const preState = state.uploadImagePost.uploadImages;
-      state.uploadImagePost.uploadImages = [...preState, ...action.payload];
+      const preState = state.uploadImagePost.data;
+      state.uploadImagePost.data = [...preState, ...action.payload];
     },
     uploadImagePostFailed: (state) => {
       state.uploadImagePost.isFetching = false;

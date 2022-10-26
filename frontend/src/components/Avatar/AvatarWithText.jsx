@@ -17,7 +17,7 @@ function AvatarWithText(props) {
       {props.url && (
         <img
           src={props.url}
-          className={`rounded-[50%] ${classBorder}`}
+          className={`rounded-[50%] ${classBorder} object-fit `}
           alt=""
           style={{ width: props.size, height: props.size }}
         />

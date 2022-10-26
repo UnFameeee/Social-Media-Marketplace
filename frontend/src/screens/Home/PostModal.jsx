@@ -10,39 +10,47 @@ import { resetUploadImagePostState } from "../../redux/uploadImageSlice";
 function PostModal(props) {
   //Declare variables
   const dispatch = useDispatch();
+  let flagAction = "post";
+  const [postData, setPostData] = useState({
+    written_text: props.postUpdateData?.written_text
+      ? props.postUpdateData.written_text
+      : "",
+    media_type: props.postUpdateData?.media_type
+      ? props.postUpdateData.media_type
+      : "",
+    media_location: props.postUpdateData?.media_location
+      ? JSON.parse(props.postUpdateData.media_location)
+      : "",
+  });
+  let uploadImageLinkLst = useSelector(
+    (state) => state.uploadImage?.uploadImagePost?.data
+  );
+  if (props.postUpdateData) {
+    flagAction = "update";
+  }
+  const { written_text, media_type, media_location } = postData;
+  const imgElement = React.useRef(null);
+  const [imgArray, setImgArray] = useState([]);
+  const [uploadFlag, setUpLoadFlag] = useState(false);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
   const isPosting = useSelector((state) => state.post.create.isFetching);
-  let uploadImageLinkLst = useSelector(
-    (state) => state.uploadImage.uploadImagePost?.uploadImages
-  );
-  if (props.postUpdateData) {
-    uploadImageLinkLst = JSON.parse(props.postUpdateData.media_location);
-  }
-  const [postData, setPostData] = useState({
-    written_text: "",
-    media_type: "",
-    media_location: "",
-  });
-  const { written_text, media_type, media_location } = postData;
-  const imgElement = React.useRef(null);
-  const [imgArray, setImgArray] = useState([]);
+
   //Function
   const closeModal = () => {
     props.setShowModal(false);
     props.setPostUpdateData(null);
-    setPostData({ written_text: "", media_type: "", media_location: "" });
-    setUpLoadImage([]);
+    setPostData({ written_text: "", media_type: "", media_location: [] });
     dispatch(resetUploadImagePostState());
     setImgArray([]);
+    props.setReRender((prev) => !prev);
   };
   const handlePost = (e) => {
     e.preventDefault();
     postData.media_location = JSON.stringify(uploadImageLinkLst);
     createPost(accessToken, postData, dispatch);
-    setPostData({ written_text: "", media_type: "", media_location: "" });
-    props.setReRender((prev) => !prev);
+    closeModal();
   };
   const handleUpdatePost = (e) => {
     var tempUpdatePost = {
@@ -50,10 +58,9 @@ function PostModal(props) {
       profile_id: props.postUpdateData.profile_id,
       written_text: postData.written_text,
       media_type: postData.media_type,
-      media_location: postData.media_location,
+      media_location: JSON.stringify(postData.media_location),
     };
     updatePost(accessToken, tempUpdatePost, dispatch);
-    props.setReRender((prev) => !prev);
     closeModal();
   };
   const handleOnChangePostData = (event) => {
@@ -62,46 +69,48 @@ function PostModal(props) {
       [event.target.name]: event.target.value,
     });
   };
-  const [uploadImage, setUpLoadImage] = useState([]);
-  const handlePreviewUploadImage = (e) => {
+
+  const handlePreviewUploadImage = async (e) => {
     const files = e.target.files;
     var temp = [];
     for (let i = 0; i < files.length; i++) {
       temp.push({ files: files[i] });
     }
-    setUpLoadImage([temp]);
+    await uploadImages(accessToken, temp, dispatch);
+    setUpLoadFlag((prev) => !prev);
     e.target.value = null;
   };
-  useEffect(() => {
-    let onDestroy = false;
-    if (!onDestroy && uploadImage.length > 0) {
-      uploadImages(accessToken, uploadImage, dispatch);
-    }
-    return () => {
-      onDestroy = true;
-    };
-  }, [uploadImage]);
-  //UseEffect
-  useEffect(() => {
-    if (props.postUpdateData)
-      setPostData({
-        written_text: props.postUpdateData.written_text,
-        media_type: props.postUpdateData.media_type,
-        media_location: props.postUpdateData.media_location,
-      });
-  }, [props.postUpdateData]);
-  useEffect(() => {
-    if (isPosting === true) {
-      closeModal();
-    }
-  });
-
   const addToUploadImgArray = (height, url) => {
     setImgArray([...imgArray, { height: height, url: url }]);
   };
   useEffect(() => {
-    console.log("imgArray", imgArray);
-  }, [imgArray]);
+    let onDestroy = false;
+    if (!onDestroy && uploadImageLinkLst.length > 0) {
+      if (flagAction == "post") {
+        setPostData({
+          ...postData,
+          media_location: [...uploadImageLinkLst],
+        });
+      } else if (flagAction == "update") {
+        dispatch(resetUploadImagePostState());
+        setPostData({
+          ...postData,
+          media_location: [...postData.media_location, ...uploadImageLinkLst],
+        });
+      }
+    }
+    return () => {
+      onDestroy = true;
+    };
+  }, [uploadFlag]);
+  // useEffect(() => {
+  //   console.log("imgArray", imgArray);
+  // }, [imgArray]);
+  // useEffect(() => {
+  //   if (isPosting === true) {
+  //     closeModal();
+  //   }
+  // });
   return (
     <>
       {props.showModal ? (
@@ -146,7 +155,7 @@ function PostModal(props) {
                 }
                 value={written_text}
               ></textarea>
-              {!uploadImageLinkLst.length > 0 && (
+              {!media_location.length > 0 && (
                 <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer">
                   <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
                     <div className="bg-gray-300 p-[1rem] rounded-[50%]">
@@ -170,10 +179,10 @@ function PostModal(props) {
                   </div>
                 </div>
               )}
-              {uploadImageLinkLst && uploadImageLinkLst.length > 0 && (
+              {media_location && media_location.length > 0 && (
                 <div className="relative bg-slate-100 rounded-xl p-[0.2rem] h-[300px] overflow-y-scroll  ">
                   <ul className="flex flex-wrap gap-[1rem]  ">
-                    {uploadImageLinkLst.map((item) => (
+                    {media_location.map((item) => (
                       <li key={item} className=" w-full ">
                         <img
                           src={item}
