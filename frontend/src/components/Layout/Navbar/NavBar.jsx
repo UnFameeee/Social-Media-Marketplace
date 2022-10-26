@@ -19,6 +19,7 @@ import { useDispatch } from 'react-redux';
 import { logOut } from '../../../redux/apiRequest';
 import { revertAll } from '../../../redux/resetStore';
 import '../Layout.css';
+import { Helper } from '../../../utils/Helper';
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -34,12 +35,6 @@ export default function NavBar() {
     dispatch(revertAll());
   };
   function handleSearch() {}
-
-  function checkUrl(iconName) {
-    return (
-      path.slice(1) == iconName || (iconName == 'home' && path == '/')
-    );
-  }
 
   return (
     // #region oldCode
@@ -120,7 +115,10 @@ export default function NavBar() {
             getData={(input) => setValue(input)}
             handleSearch={handleSearch}
             menuConfig={{
-              className: 'menu navbar-search',
+              classNameConfig: {
+                menuClass: 'navbar-search',
+                middleClass: 'navbar-search',
+              },
               list: [
                 {
                   left: {
@@ -150,15 +148,7 @@ export default function NavBar() {
                 </Typography>
               ),
               right: (
-                <IconButton
-                  id="recentSearchIcon"
-                  tooltip="Delete"
-                  sx={{
-                    padding: '0.4rem',
-                    position: 'absolute',
-                    right: '0.8rem',
-                  }}
-                >
+                <IconButton className="right-menu">
                   <Close sx={{ fontSize: '1.6rem' }} />
                 </IconButton>
               ),
@@ -177,26 +167,35 @@ export default function NavBar() {
                 width: '14rem',
                 padding: '1rem 0.8rem',
               }}
-              key={item.id + index}
-              id={item.id ? item.id + index : null}
+              key={index}
               tooltip={item.tooltip}
               style={
-                checkUrl(item.tooltip?.toLowerCase())
+                Helper.checkURL(item.tooltip?.toLowerCase(), {
+                  url: 'home',
+                  path: '',
+                })
                   ? {
-                      marginBottom: '-3px',
+                      marginBottom: '-0.4rem',
                       borderBottomLeftRadius: 0,
                       borderBottomRightRadius: 0,
                       color: 'var(--primary-color)',
-                      borderBottom: '4px solid var(--primary-color)',
+                      borderBottom: '0.4rem solid var(--primary-color)',
                     }
                   : null
               }
               onClick={() => {
-                if (item.tooltip == 'Home') navigate('/');
+                if (item.tooltip === 'Home') navigate('/');
                 else navigate(`/${item.tooltip?.toLowerCase()}`);
               }}
+              disabled={Helper.checkURL(item.tooltip?.toLowerCase(), {
+                url: 'home',
+                path: '',
+              })}
             >
-              {checkUrl(item.tooltip?.toLowerCase())
+              {Helper.checkURL(item.tooltip?.toLowerCase(), {
+                url: 'home',
+                path: '',
+              })
                 ? item.icon[1]
                 : item.icon[0]}
             </MUI.ButtonWithIcon>
@@ -209,35 +208,25 @@ export default function NavBar() {
           sx={{ display: 'flex', justifyContent: 'flex-end' }}
         >
           {rightNavIcons.map((item, index) => (
-            <div key={item.id + index}>
-              <MUI.BetterIconButton
-                hasBackground
-                id={item.id ? item.id + index : null}
-                tooltip={item.tooltip}
-                sx={{
-                  '& .MuiSvgIcon-root': {
-                    fontSize: '2.4rem',
-                  },
-                  marginRight: '0.8rem',
-                }}
-              >
-                {item.icon}
-              </MUI.BetterIconButton>
-            </div>
-          ))}
+            <div key={index} style={{ position: 'relative' }}>
+              {item.icon ? (
+                <MUI.BetterIconButton
+                  hasBackground
+                  tooltip={item.tooltip}
+                  sx={{
+                    marginRight: '0.8rem',
+                  }}
+                >
+                  {item.icon}
+                </MUI.BetterIconButton>
+              ) : (
+                <Avatar
+                  src="https://source.unsplash.com/random/300×300"
+                  onClick={() => setAvatarMenu(!avatarMenu)}
+                />
+              )}
 
-          <ClickAwayListener
-            onClickAway={() => {
-              setAvatarMenu(false);
-            }}
-          >
-            <div style={{ position: 'relative' }}>
-              <Avatar
-                src="https://source.unsplash.com/random/300×300"
-                onClick={() => setAvatarMenu(!avatarMenu)}
-              />
-
-              {avatarMenu && (
+              {avatarMenu && item.avatar && (
                 <MUI.Menu
                   sx={{ right: '2px', minWidth: '20rem' }}
                   list={[
@@ -254,16 +243,13 @@ export default function NavBar() {
                         ),
                         hasBackground: true,
                       },
-                      middle: {
-                        text: 'Log Out',
-                        hasTooltip: false,
-                      },
+                      middle: 'Log Out',
                     },
                   ]}
                 />
               )}
             </div>
-          </ClickAwayListener>
+          ))}
         </Grid>
       </Grid>
     </Paper>

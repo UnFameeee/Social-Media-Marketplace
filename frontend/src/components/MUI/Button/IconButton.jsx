@@ -1,9 +1,7 @@
-import { IconButton, Avatar, Button } from '@mui/material';
-import ReactTooltip from 'react-tooltip';
+import { IconButton, Avatar, Button, Tooltip } from '@mui/material';
 
 export function BetterIconButton(props) {
   const {
-    id,
     children,
     tooltip,
     hasBackground = false,
@@ -12,44 +10,36 @@ export function BetterIconButton(props) {
   } = props;
 
   return (
-    <>
-      {hasBackground == true ? (
-        <Avatar
-          data-tip={id && tooltip ? true : null}
-          data-for={id && tooltip ? id : null}
-          className={`icon-button-with-background ${className}`}
-          {...other}
-        >
-          {children}
-        </Avatar>
-      ) : (
-        <IconButton data-tip data-for={id} {...other}>
-          {children}
-        </IconButton>
-      )}
-      {id && tooltip && (
-        <ReactTooltip id={id}>{tooltip}</ReactTooltip>
-      )}
-    </>
+    <Tooltip title={tooltip ?? ''}>
+      <div>
+        {hasBackground === true ? (
+          <Avatar
+            className={`icon-button-with-background ${className}`}
+            {...other}
+          >
+            {children}
+          </Avatar>
+        ) : (
+          <IconButton {...other}>{children}</IconButton>
+        )}
+      </div>
+    </Tooltip>
   );
 }
 
 export function ButtonWithIcon(props) {
-  const { id, children, tooltip, className, ...other } = props;
+  const { children, tooltip, className, ...other } = props;
 
   return (
-    <>
-      <Button
-        data-tip={id && tooltip ? true : null}
-        data-for={id && tooltip ? id : null}
-        className={`button-with-icon ${className}`}
-        {...other}
-      >
-        {children}
-      </Button>
-      {id && tooltip && (
-        <ReactTooltip id={id}>{tooltip}</ReactTooltip>
-      )}
-    </>
+    <Tooltip title={tooltip ?? ''}>
+      <div>
+        <Button
+          className={`button-with-icon ${className}`}
+          {...other}
+        >
+          {children}
+        </Button>
+      </div>
+    </Tooltip>
   );
 }

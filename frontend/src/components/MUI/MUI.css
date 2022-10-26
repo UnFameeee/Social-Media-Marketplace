@@ -5,34 +5,48 @@
   margin-top: 0.8rem;
   width: 100%;
   border-radius: 8px;
-  box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
 }
+.MuiMenuItem-root.menu-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.8rem 0.8rem 0 0.8rem;
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  min-height: 4.6rem;
+}
+
+/* #region recent search in navbar */
 .MuiList-root.menu.navbar-search {
-  left: -54px;
+  left: -5.4rem;
   width: 121%;
   border-radius: 0;
   border-bottom-left-radius: 8px; 
   border-bottom-right-radius: 8px; 
-  box-shadow: 4px 10px 8px rgb(0 0 0 / 10%);
+  box-shadow: 4px 10px 8px var(--shadow-1);
 }
-.MuiMenuItem-root.menu-item {
-  margin: 0.8rem 0.8rem 0 0.8rem;
-  border-radius: 8px;
-  padding: 0.6rem 0.8rem;
-  min-height: 46px;
+.MuiMenuItem-root .middle-menu.navbar-search {
+  width: auto;
 }
+/* #endregion */
+
 .MuiMenuItem-root .left-menu {
   width: 3.5rem;
   height: 3.5rem;
-  margin-right: 8px;
+  margin-right: 0.8rem;
+}
+.MuiMenuItem-root .middle-menu {  
+  width: 16.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .MuiMenuItem-root .right-menu {  
   width: 3.5rem;
   height: 3.5rem;
   padding: 0.4rem;
-  position: absolute;
-  right: 0.8rem;
 }
+
 /*#endregion */
 
 /*#region IconButton*/
@@ -43,9 +57,6 @@
 .MuiButton-root.button-with-icon:hover {
   background-color: #f0f2f5;
 }
-.MuiButton-root.button-with-icon svg {
-  font-size: 3rem;
-}
 .MuiAvatar-root.icon-button-with-background {
   cursor: pointer;
   color: #050505;
@@ -53,5 +64,11 @@
 }
 .MuiAvatar-root.icon-button-with-background:hover {
   background-color: #bdbdbd;
+}
+svg {
+  font-size: 3.2rem;
+}
+.MuiTooltip-tooltip {
+  font-size: 1.2rem !important;
 }
 /*#endregion */

@@ -2,15 +2,14 @@ import { ConflictException, Injectable } from '@nestjs/common';
 import { UpdateProfileDto } from 'src/common/models/dtos/update-profile.dto';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 
-import { Profile } from './model/profile.model';
-import { ProfileRepository } from './profile.repository';
+import { Profile } from '../model/profile.model';
+import { ProfileRepository } from '../repository/profile.repository';
 
 @Injectable()
 export class ProfileService {
 
     constructor(private readonly profileRepository: ProfileRepository) { }
 
-    //Need to improve, paging for example.
     async getAllProfile(): Promise<Profile[]> {
         try {
             return await this.profileRepository.getAllProfile();

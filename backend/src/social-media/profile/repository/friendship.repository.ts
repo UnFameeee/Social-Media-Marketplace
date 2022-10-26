@@ -1,0 +1,294 @@
+import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { PROVIDER } from 'src/common/constants/provider.constant';
+import { Friendship } from './../model/friendship.model';
+import { PagingData } from 'src/common/models/view-model/paging.model';
+import { paginate } from "src/common/utils/paginate.utils";
+import { Page } from "src/common/models/view-model/page-model";
+import { Profile } from 'src/social-media/profile/model/profile.model';
+import { Sequelize } from "sequelize-typescript";
+import { FRIENDSHIP_STATUS } from "src/common/constants/friendship.constant";
+import { FriendshipEntity } from "src/common/models/entity/friendship";
+import { Op } from "sequelize";
+
+@Injectable()
+export class FriendshipRepository {
+    constructor(
+        @Inject(PROVIDER.Friendship) private friendshipRepository: typeof Friendship,
+        // @Inject(ProfileRepository) private ProfileRepository: ProfileRepository 
+    ) { }
+
+    async getAllFriendRequest(profile_id: number, page: Page): Promise<PagingData<Friendship[]>> {
+        try {
+            var result = new PagingData<Friendship[]>();
+            var queryData = await this.friendshipRepository.findAndCountAll({
+                where: { status: FRIENDSHIP_STATUS.PENDING },
+                attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"]],
+                include: [
+                    {
+                        model: Profile,
+                        as: "profile_request_id",
+                        where: { profile_id: profile_id },
+                        attributes: []
+                    },
+                    {
+                        model: Profile,
+                        as: "profile_target_id",
+                        attributes: []
+                    }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                raw: false,
+                ...paginate({ page })
+            })
+
+            for (const element of queryData.rows) {
+                var mutualFriend = await this.getMutualFriend(profile_id, element["profile_target"]);
+                element.setDataValue("mutualFriend", mutualFriend);
+            }
+
+            result.data = queryData.rows;
+            page.totalElement = queryData.count;
+            result.page = page;
+            return result;
+        }
+        catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async getAllFriend(profile_id: number, page: Page): Promise<PagingData<Friendship[]>> {
+        try {
+            var result = new PagingData<Friendship[]>();
+            var queryData = await this.friendshipRepository.findAndCountAll({
+                where: { status: FRIENDSHIP_STATUS.ACCEPTED },
+                attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"]],
+                include: [
+                    {
+                        model: Profile,
+                        as: "profile_request_id",
+                        where: { profile_id: profile_id },
+                        attributes: []
+                    },
+                    {
+                        model: Profile,
+                        as: "profile_target_id",
+                        attributes: []
+                    }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                raw: false,
+                ...paginate({ page })
+            })
+
+            for (const element of queryData.rows) {
+                var mutualFriend = await this.getMutualFriend(profile_id, element["profile_target"]);
+                element.setDataValue("mutualFriend", mutualFriend);
+            }
+
+            result.data = queryData.rows;
+            page.totalElement = queryData.count;
+            result.page = page;
+            return result;
+        }
+        catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async addFriend(profile_id: number, profile_target_id: number): Promise<boolean> {
+        try {
+            var model = new FriendshipEntity();
+            model.profile_request = profile_id;
+            model.profile_target = profile_target_id;
+            var recentModified: Friendship;
+
+            var queryData = await this.friendshipRepository.findOne({
+                include: [
+                    {
+                        model: Profile,
+                        as: "profile_request_id",
+                        where: { profile_id: profile_id },
+                        attributes: []
+                    },
+                    {
+                        model: Profile,
+                        as: "profile_target_id",
+                        where: { profile_id: profile_target_id },
+                        attributes: []
+                    }
+                ],
+            })
+
+            if (!queryData) {
+                model.status = FRIENDSHIP_STATUS.PENDING;
+                var res = await this.friendshipRepository.create(model);
+                recentModified = await this.friendshipRepository.findOne({
+                    where: {
+                        id: res.id
+                    }
+                })
+            } else {
+                await this.friendshipRepository.destroy({
+                    where: {
+                        id: queryData.id
+                    },
+                    force: true
+                }),
+                    recentModified = await this.friendshipRepository.findOne({
+                        where: {
+                            id: queryData.id,
+                        }
+                    })
+            }
+            return recentModified ? true : false;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async acceptFriendRequest(profile_id: number, profile_request_id: number): Promise<boolean> {
+        try {
+            var queryData = await this.friendshipRepository.findOne({
+                where: {
+                    status: FRIENDSHIP_STATUS.PENDING
+                },
+                include: [
+                    {
+                        model: Profile,
+                        as: "profile_request_id",
+                        where: { profile_id: profile_request_id },
+                        attributes: []
+                    },
+                    {
+                        model: Profile,
+                        as: "profile_target_id",
+                        where: { profile_id: profile_id },
+                        attributes: []
+                    }
+                ],
+            })
+            var res: any;
+            if (queryData) {
+                queryData.status = FRIENDSHIP_STATUS.ACCEPTED;
+                res = await queryData.save();
+            }
+            return res ? true : false;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async getMutualFriend(profile_id: number, profile_target_id: number): Promise<number> {
+        try {
+            var profile_request_friend = await this.friendshipRepository.findAll({
+                attributes: [[Sequelize.col("profile_target_id.profile_id"), "profile_target"], [Sequelize.col("profile_request_id.profile_id"), "profile_request"]],
+                where: {
+                    status: FRIENDSHIP_STATUS.ACCEPTED,
+                    [Op.or]: [{ "$profile_request_id.profile_id$": profile_id }, { "$profile_target_id.profile_id$": profile_id }],
+                },
+                include: [
+                    {
+                        model: Profile,
+                        as: "profile_request_id",
+                        attributes: []
+                    },
+                    {
+                        model: Profile,
+                        as: "profile_target_id",
+                        attributes: []
+                    },
+                ],
+            })
+
+
+            var profile_target_friend = await this.friendshipRepository.findAll({
+                attributes: [[Sequelize.col("profile_target_id.profile_id"), "profile_target"], [Sequelize.col("profile_request_id.profile_id"), "profile_request"]],
+                where: {
+                    status: FRIENDSHIP_STATUS.ACCEPTED,
+                    [Op.or]: [{ "$profile_request_id.profile_id$": profile_target_id }, { "$profile_target_id.profile_id$": profile_target_id }],
+                },
+                include: [
+                    {
+                        model: Profile,
+                        as: "profile_request_id",
+                        attributes: []
+                    },
+                    {
+                        model: Profile,
+                        as: "profile_target_id",
+                        attributes: []
+                    },
+                ],
+            })
+
+            var profile_request_friend_array: any[] = [];
+            var profile_target_friend_array: any[] = [];
+
+            for (const x of profile_request_friend) {
+                if (x["profile_target"] == profile_id) {
+                    profile_request_friend_array.push(x["profile_request"]);
+                } else if (x["profile_request"] == profile_id) {
+                    profile_request_friend_array.push(x["profile_target"]);
+                }
+            }
+            for (const x of profile_target_friend) {
+                if (x["profile_target"] == profile_target_id) {
+                    profile_target_friend_array.push(x["profile_request"]);
+                } else if (x["profile_request"] == profile_target_id) {
+                    profile_target_friend_array.push(x["profile_target"]);
+                }
+            }
+
+            var res: number = 0;
+
+            for (const x of profile_target_friend_array) {
+                if (profile_request_friend_array.find(element => element == x) != undefined) {
+                    res++;
+                }
+            }
+
+            return res;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+
+    async isFriend(profile_id: number, profile_target_id: number): Promise<boolean> {
+        try {
+            var queryData = await this.friendshipRepository.findOne({
+                where: {
+                    status: FRIENDSHIP_STATUS.ACCEPTED,
+                    [Op.or]: [
+                        {
+                            [Op.and]: [{ "$profile_request_id.profile_id$": profile_id }, { "$profile_target_id.profile_id$": profile_target_id }],
+                        },
+                        {
+                            [Op.and]: [{ "$profile_request_id.profile_id$": profile_target_id }, { "$profile_target_id.profile_id$": profile_id }],
+                        }
+                    ]
+                },
+                include: [
+                    {
+                        model: Profile,
+                        as: "profile_request_id",
+                        attributes: []
+                    },
+                    {
+                        model: Profile,
+                        as: "profile_target_id",
+                        attributes: []
+                    }
+                ],
+            })
+            return queryData ? true : false;
+
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+}

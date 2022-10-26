@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { profileProviders } from 'src/common/providers/all.providers';
-import { ProfileController } from './profile.controller';
-import { ProfileRepository } from './profile.repository';
-import { ProfileService } from './profile.service';
+import { ProfileController } from '../controller/profile.controller';
+import { ProfileRepository } from '../repository/profile.repository';
+import { ProfileService } from '../service/profile.service';
 
 @Module({
   imports: [],

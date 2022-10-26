@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "4e63eba7-e4cb-4c26-9409-edd825793497",
+		"_postman_id": "5a792e79-e054-4f6e-b7f1-1c6bf64050d8",
 		"name": "Social Media Marketplace",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "18450268"
+		"_exporter_id": "23972093"
 	},
 	"item": [
 		{
@@ -45,7 +45,36 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"Lmao123!!!\"\r\n}\r\n\r\n",
+							"raw": "{\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"Lmao123!!!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4321/api/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "4321",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Profile 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"bosco.garland@example.org\",\r\n    \"password\": \"Lmao123!!!\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -415,7 +444,7 @@
 							"query": [
 								{
 									"key": "file",
-									"value": null,
+									"value": "",
 									"disabled": true
 								}
 							]
@@ -492,6 +521,214 @@
 			"name": "Profile",
 			"item": [
 				{
+					"name": "Friendship",
+					"item": [
+						{
+							"name": "Get All Friend Request",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY2NjE2NDgxLCJleHAiOjE2NjY2MjAwODF9.dw0YDGpMvy2-XWk41ghoXcEjjm06jzPZtwzVd_Of3_4",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"page\": 0,\r\n    \"pageSize\": 10\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:4321/api/friendship/request/all",
+									"host": [
+										"localhost"
+									],
+									"port": "4321",
+									"path": [
+										"api",
+										"friendship",
+										"request",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get All Friend",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY2NjE2NDgxLCJleHAiOjE2NjY2MjAwODF9.dw0YDGpMvy2-XWk41ghoXcEjjm06jzPZtwzVd_Of3_4",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"page\": 0,\r\n    \"pageSize\": 10\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:4321/api/friendship/all",
+									"host": [
+										"localhost"
+									],
+									"port": "4321",
+									"path": [
+										"api",
+										"friendship",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Friend",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY2NTk2NDA5LCJleHAiOjE2NjY2MDAwMDl9.tysAOkspEE2sLs-ivCi01hdrfK0vX2gSIn7oRphHCbU",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "localhost:4321/api/friendship/addFriend/10",
+									"host": [
+										"localhost"
+									],
+									"port": "4321",
+									"path": [
+										"api",
+										"friendship",
+										"addFriend",
+										"10"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Accept Friend Request",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjEwLCJwcm9maWxlX25hbWUiOiJldCIsImVtYWlsIjoiYm9zY28uZ2FybGFuZEBleGFtcGxlLm9yZyIsImJpcnRoIjpudWxsLCJwaWN0dXJlIjpudWxsLCJpc0FjdGl2YXRlIjp0cnVlLCJyb2xlIjoiVXNlciIsInBlcm1pc3Npb24iOm51bGwsImNyZWF0ZWRBdCI6IjIwMTEtMDItMDdUMTc6MzI6MzkuMDAwWiIsInVwZGF0ZWRBdCI6IjE5NzUtMDUtMDRUMTE6NTk6MDUuMDAwWiIsImRlbGV0ZWRBdCI6bnVsbH0sImlhdCI6MTY2NjYwMTE5OSwiZXhwIjoxNjY2NjA0Nzk5fQ.VnXeMyIiBdNkuOkqJvapN8cyg9QkRu3khTRMhnoV3dA",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "localhost:4321/api/friendship/acceptFriendRequest/9",
+									"host": [
+										"localhost"
+									],
+									"port": "4321",
+									"path": [
+										"api",
+										"friendship",
+										"acceptFriendRequest",
+										"9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Mutual Friend",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY2NjExOTEwLCJleHAiOjE2NjY2MTU1MTB9.HkvDssudQkTPruB8S-EpvG3KssM7cwKZQ9MPe0coBKc",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:4321/api/friendship/getMutualFriend/10",
+									"host": [
+										"localhost"
+									],
+									"port": "4321",
+									"path": [
+										"api",
+										"friendship",
+										"getMutualFriend",
+										"10"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Is Friend",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY2NjE4OTIyLCJleHAiOjE2NjY2MjI1MjJ9._2rxnZkCbzlV7Cl6MJ337P4HcA_pK4wG9dAkGd47NL4",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:4321/api/friendship/isFriend/5",
+									"host": [
+										"localhost"
+									],
+									"port": "4321",
+									"path": [
+										"api",
+										"friendship",
+										"isFriend",
+										"5"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Get All Profile",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -502,7 +739,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmEkMTAkLmVlQXRrNVQvcnVDMVgvYm5XaHF1LmxOQjBWdXEuVUNlV05LRGJFZ0UwVC9HVW94VEVkUzIiLCJiaXJ0aCI6bnVsbCwicGljdHVyZSI6bnVsbCwiaXNBY3RpdmF0ZSI6dHJ1ZSwicm9sZSI6IlVzZXIiLCJwZXJtaXNzaW9uIjpudWxsLCJjcmVhdGVkQXQiOiIxOTk0LTA0LTAxVDIwOjE5OjE2LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIxLTAyLTEyVDEwOjQ5OjI0LjAwMFoiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE2NjU2NjIwOTMsImV4cCI6MTY2NTY2NTY5M30.2pGg3mdav0tONzD5y4Affe3rtw3UifRUOw7-2zpDGEw",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY2NjE4OTIyLCJleHAiOjE2NjY2MjI1MjJ9._2rxnZkCbzlV7Cl6MJ337P4HcA_pK4wG9dAkGd47NL4",
 									"type": "string"
 								}
 							]

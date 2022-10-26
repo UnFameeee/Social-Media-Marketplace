@@ -72,21 +72,21 @@ function Home() {
       <div className="pt-[6rem] flex w-full">
         <LeftBar
           leftBarList={[
-            { text: "Covid- 19 infomation", iconName: <Coronavirus /> },
-            { text: "Friends", iconName: <People /> },
-            { text: "Groups", iconName: <Diversity2 /> },
-            { text: "Marketplace", iconName: <Storefront /> },
-            { text: "Watch", iconName: <LiveTv /> },
-            { text: "Covid- 19 infomation", iconName: <Coronavirus /> },
-            { text: "Friends", iconName: <People /> },
-            { text: "Groups", iconName: <Diversity2 /> },
-            { text: "Marketplace", iconName: <Storefront /> },
-            { text: "Watch", iconName: <LiveTv /> },
-            { text: "Covid- 19 infomation", iconName: <Coronavirus /> },
-            { text: "Friends", iconName: <People /> },
-            { text: "Groups", iconName: <Diversity2 /> },
-            { text: "Marketplace", iconName: <Storefront /> },
-            { text: "Watch", iconName: <LiveTv /> },
+            { middle: "Covid- 19 infomation", left: <Coronavirus /> },
+            { middle: "Friends", left: <People /> },
+            { middle: "Groups", left: <Diversity2 /> },
+            { middle: "Marketplace", left: <Storefront /> },
+            { middle: "Watch", left: <LiveTv /> },
+            { middle: "Covid- 19 infomation", left: <Coronavirus /> },
+            { middle: "Friends", left: <People /> },
+            { middle: "Groups", left: <Diversity2 /> },
+            { middle: "Marketplace", left: <Storefront /> },
+            { middle: "Watch", left: <LiveTv /> },
+            { middle: "Covid- 19 infomation", left: <Coronavirus /> },
+            { middle: "Friends", left: <People /> },
+            { middle: "Groups", left: <Diversity2 /> },
+            { middle: "Marketplace", left: <Storefront /> },
+            { middle: "Watch", left: <LiveTv /> },
           ]}
         />
         <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
