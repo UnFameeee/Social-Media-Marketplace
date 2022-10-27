@@ -1,8 +1,8 @@
-export default function MiddleHr(props) {
+export default function MiddleHr({ width = '95%' }) {
   return (
     <hr
       style={{
-        width: '95%',
+        width: width,
         position: 'absolute',
         left: '50%',
         transform: 'translate(-50%, -50%)',

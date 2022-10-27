@@ -1,0 +1,8 @@
+.left-bar-button .MuiAvatar-root {
+    width: 60px;
+    height: 60px;
+}
+.left-bar-list.friend-list {
+    overflow-y: scroll;
+    height: calc(100vh - var(--navbar-height)*2);
+}

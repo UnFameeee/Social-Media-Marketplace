@@ -11,14 +11,14 @@ import {
 import MUI from '../../../components/MUI';
 import './index.css';
 
-export default function FriendRequests() {
+export default function FriendSuggestions() {
   return (
     <TwoColumns
       leftBarConfig={{
         classNameConfig: {
           listClassname: 'friend-list'
         },
-        before: <LeftbarTitle title="Friend Requests" />,
+        before: <LeftbarTitle title="Friend Suggestions" />,
         leftBarList: [
           {
             left: {
