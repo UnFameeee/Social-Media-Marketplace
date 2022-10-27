@@ -8,6 +8,8 @@ import {
   Avatar,
   Typography,
   ClickAwayListener,
+  ToggleButton,
+  ToggleButtonGroup,
 } from '@mui/material';
 import { IoLogOut } from 'react-icons/io5';
 import MUI from '../../MUI';
@@ -29,6 +31,7 @@ export default function NavBar() {
 
   const [avatarMenu, setAvatarMenu] = useState(false);
   const [value, setValue] = useState('');
+  const [rightGroup, setRightGroup] = useState('');
 
   const handleLogout = () => {
     // logOut(dispatch)
@@ -164,7 +167,6 @@ export default function NavBar() {
           {middleNavIcons.map((item, index) => (
             <MUI.ButtonWithIcon
               sx={{
-                width: '14rem',
                 padding: '1rem 0.8rem',
               }}
               key={index}
@@ -179,7 +181,8 @@ export default function NavBar() {
                       borderBottomLeftRadius: 0,
                       borderBottomRightRadius: 0,
                       color: 'var(--primary-color)',
-                      borderBottom: '0.4rem solid var(--primary-color)',
+                      borderBottom:
+                        '0.4rem solid var(--primary-color)',
                     }
                   : null
               }
@@ -207,7 +210,7 @@ export default function NavBar() {
           xs
           sx={{ display: 'flex', justifyContent: 'flex-end' }}
         >
-          {rightNavIcons.map((item, index) => (
+          {/* {rightNavIcons.map((item, index) => (
             <div key={index} style={{ position: 'relative' }}>
               {item.icon ? (
                 <MUI.BetterIconButton
@@ -249,7 +252,67 @@ export default function NavBar() {
                 />
               )}
             </div>
-          ))}
+          ))} */}
+
+          <ToggleButtonGroup
+            value={rightGroup}
+            exclusive
+            onChange={(e, x) => {
+              setRightGroup(x);
+            }}
+            aria-label="right-button"
+          >
+            {rightNavIcons.map((item, index) => (
+              <ToggleButton
+                key={index}
+                style={{
+                  position: 'relative',
+                  border: 0,
+                  padding: '4px',
+                }}
+                value={item.tooltip}
+              >
+                {item.icon ? (
+                  <MUI.BetterIconButton
+                    hasBackground
+                    tooltip={item.tooltip}
+                  >
+                    {item.icon}
+                  </MUI.BetterIconButton>
+                ) : (
+                  <div>
+                    <Avatar
+                      src="https://source.unsplash.com/random/300×300"
+                      onClick={() => setAvatarMenu(!avatarMenu)}
+                    />
+
+                    {avatarMenu && (
+                      <MUI.Menu
+                        sx={{ right: '2px', minWidth: '20rem' }}
+                        list={[
+                          {
+                            onClick: handleLogout,
+                            left: {
+                              icon: (
+                                <IoLogOut
+                                  style={{
+                                    fontSize: '2.4rem',
+                                    color: 'black',
+                                  }}
+                                />
+                              ),
+                              hasBackground: true,
+                            },
+                            middle: 'Log Out',
+                          },
+                        ]}
+                      />
+                    )}
+                  </div>
+                )}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
         </Grid>
       </Grid>
     </Paper>

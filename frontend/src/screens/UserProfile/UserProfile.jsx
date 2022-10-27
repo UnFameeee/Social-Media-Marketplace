@@ -202,7 +202,7 @@ function UserProfile() {
               ]}
             />
           </div>
-          <CardPost
+          {/* <CardPost
             userName="duy duong"
             postTime="1 hour"
             url="https://source.unsplash.com/random/330×333"
@@ -243,7 +243,7 @@ function UserProfile() {
             url="https://source.unsplash.com/random/120×140"
             content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
             imgUrl="https://source.unsplash.com/random/175×165"
-          />
+          /> */}
         </div>
       </div>
     </>

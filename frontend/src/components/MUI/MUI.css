@@ -51,6 +51,7 @@
 
 /*#region IconButton*/
 .MuiButton-root.button-with-icon {
+  width: 100%;
   text-transform: none;
   color: #65676b;
 }
@@ -60,12 +61,12 @@
 .MuiAvatar-root.icon-button-with-background {
   cursor: pointer;
   color: #050505;
-  background-color: #e4e6eb;
+  background-color: #dadada;
 }
 .MuiAvatar-root.icon-button-with-background:hover {
   background-color: #bdbdbd;
 }
-svg {
+button svg {
   font-size: 3.2rem;
 }
 .MuiTooltip-tooltip {
