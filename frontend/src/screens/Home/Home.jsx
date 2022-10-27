@@ -74,8 +74,11 @@ function Home() {
         <LeftBar
           leftBarList={[
             {
-              left: <Coronavirus />,
-              middle: "Thạch Dương Duy",
+              left: (
+                <AvatarWithText url={userData.profile?.picture ?? ""} size="5rem" />
+              ),
+              middle: userData.profile.profile_name,
+              navigate: "userprofile"
             },
             {
               left: {
@@ -95,18 +98,18 @@ function Home() {
             },
           ]}
         />
-        <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen"> 
+        <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
           <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
-                <AvatarWithText
-                  url="https://source.unsplash.com/random/180×180"
-                  size={35}
-                  haveInput={true}
-                  alignCenter={true}
-                  inputValue="What's on your mind?"
-                  onClick={handleOpenPostModel}
-                />
-                <FullWidthHr className="mt-[1rem]" />
-               {
+            <AvatarWithText
+              url="https://source.unsplash.com/random/180×180"
+              size={35}
+              haveInput={true}
+              alignCenter={true}
+              inputValue="What's on your mind?"
+              onClick={handleOpenPostModel}
+            />
+            <FullWidthHr className="mt-[1rem]" />
+            {
               //   <HoverButton
               //   flex1={true}
               //   listButton={[
@@ -115,8 +118,8 @@ function Home() {
               //     { text: "Home", icon: <Home /> },
               //   ]}
               // />
-               } 
-              </div>
+            }
+          </div>
           {posts &&
             posts.map((post) => (
               <CardPost
