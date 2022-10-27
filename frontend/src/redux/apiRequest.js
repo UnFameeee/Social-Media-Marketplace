@@ -9,6 +9,9 @@ import {
   getPostFailed,
   getPostStart,
   getPostSuccess,
+  likePostFailed,
+  likePostStart,
+  likePostSuccess,
   updatePostFailed,
   updatePostStart,
   updatePostSuccess,
@@ -24,14 +27,45 @@ import {
   registerFailed,
   registerStart,
   registerSuccess,
+  userDataAssign,
 } from "./authSlice";
+import { toast } from "react-toastify";
+import jwt_decode from "jwt-decode";
+import {
+  uploadImagePostFailed,
+  uploadImagePostStart,
+  uploadImagePostSuccess,
+} from "./uploadImageSlice";
+
+const notify = (message, type) => {
+  if (type === "info") {
+    toast.info(message, {
+      autoClose: 1000,
+      hideProgressBar: true,
+      position: toast.POSITION.BOTTOM_RIGHT,
+      pauseOnHover: false,
+      theme: "dark",
+    });
+  } else if (type === "error") {
+    toast.error(message, {
+      autoClose: 1000,
+      hideProgressBar: true,
+      position: toast.POSITION.BOTTOM_RIGHT,
+      pauseOnHover: false,
+      theme: "dark",
+    });
+  }
+};
 export const register = async (model, dispatch, navigate) => {
   dispatch(registerStart());
   try {
     const res = await axios.post(`${apiUrl}/auth/register`, model);
-    if (res.data) {
+    if (res) {
       dispatch(registerSuccess(res.data));
+
       navigate("/login");
+    } else {
+      dispatch(registerFailed());
     }
   } catch (error) {
     dispatch(registerFailed());
@@ -41,9 +75,14 @@ export const login = async (model, dispatch, navigate, from) => {
   dispatch(loginStart());
   try {
     const res = await axios.post(`${apiUrl}/auth/login`, model);
-    if (res.data) {
+    if (res) {
+      var token = res.data.access;
+      var decoded = jwt_decode(token);
       dispatch(loginSuccess(res.data));
+      dispatch(userDataAssign(decoded));
       navigate(from, { replace: true });
+    } else {
+      dispatch(loginFailed());
     }
   } catch (error) {
     dispatch(loginFailed());
@@ -67,7 +106,13 @@ export const createPost = async (accessToken, post, dispatch) => {
       },
     };
     const res = await axios.post(`${apiUrl}/post/newPost`, post, config);
-    dispatch(createPostSuccess(res.data));
+    if (!res.data.message) {
+      dispatch(createPostSuccess(res.data));
+      notify("Post Created", "info");
+    } else {
+      dispatch(createPostFailed());
+      notify(res.data.message, "error");
+    }
   } catch (error) {
     dispatch(createPostFailed());
   }
@@ -86,8 +131,12 @@ export const updatePost = async (accessToken, updatePost, dispatch) => {
       updatePost,
       config
     );
-    if (res) {
+    if (!res.data.message) {
       dispatch(updatePostSuccess());
+      notify("Post Updated", "info");
+    } else {
+      dispatch(updatePostFailed());
+      notify(res.data.message, "error");
     }
   } catch (error) {
     dispatch(updatePostFailed());
@@ -103,11 +152,35 @@ export const deletePost = async (accessToken, postId, dispatch) => {
       },
     };
     const res = await axios.delete(`${apiUrl}/post/delete/${postId}`, config);
-    if (res.result) {
+    if (!res.data.message) {
       dispatch(deletePostSuccess());
+      notify("Post Deleted", "info");
+    } else {
+      dispatch(deletePostFailed());
+      notify(res.data.message, "error");
     }
   } catch (error) {
     dispatch(deletePostFailed());
+  }
+};
+export const likePost = async (accessToken, postId, dispatch) => {
+  dispatch(likePostStart());
+  try {
+    const config = {
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios.post(`${apiUrl}/post/like/${postId}`, {}, config);
+    if (!res.data.message) {
+      dispatch(likePostSuccess());
+    } else {
+      dispatch(likePostFailed());
+      notify(res.data.message, "error");
+    }
+  } catch (error) {
+    dispatch(likePostFailed());
   }
 };
 export const getAllPost = async (accessToken, dispatch) => {
@@ -124,8 +197,41 @@ export const getAllPost = async (accessToken, dispatch) => {
       pageSize: 5,
     };
     const res = await axios.post(`${apiUrl}/post/all`, paging, config);
-    dispatch(getPostSuccess(res.data));
+    if (!res.data.message) {
+      dispatch(getPostSuccess(res.data));
+    } else {
+      dispatch(getPostFailed());
+    }
   } catch (error) {
     dispatch(getPostFailed());
+  }
+};
+
+export const uploadImages = async (accessToken, uploadImages, dispatch) => {
+  dispatch(uploadImagePostStart());
+  try {
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data;",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    let formData = new FormData();
+    uploadImages.forEach((file) => {
+      formData.append("files", file.files);
+    });
+    const res = await axios.post(
+      `${apiUrl}/image/post/upload`,
+      formData,
+      config
+    );
+    if (res.data.message) {
+      notify(res.data.message, "error");
+    } else {
+      dispatch(uploadImagePostSuccess(res.data.results));
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(uploadImagePostFailed());
   }
 };
