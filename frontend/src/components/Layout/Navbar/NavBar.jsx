@@ -263,7 +263,15 @@ export default function NavBar() {
             aria-label="right-button"
           >
             {rightNavIcons.map((item, index) => (
-              <ToggleButton key={index} style={{ position: 'relative', border: 0, padding: '4px' }} value={item.tooltip}>
+              <ToggleButton
+                key={index}
+                style={{
+                  position: 'relative',
+                  border: 0,
+                  padding: '4px',
+                }}
+                value={item.tooltip}
+              >
                 {item.icon ? (
                   <MUI.BetterIconButton
                     hasBackground
@@ -272,10 +280,35 @@ export default function NavBar() {
                     {item.icon}
                   </MUI.BetterIconButton>
                 ) : (
-                  <Avatar
-                    src="https://source.unsplash.com/random/300×300"
-                    onClick={() => setAvatarMenu(!avatarMenu)}
-                  />
+                  <div>
+                    <Avatar
+                      src="https://source.unsplash.com/random/300×300"
+                      onClick={() => setAvatarMenu(!avatarMenu)}
+                    />
+
+                    {avatarMenu && (
+                      <MUI.Menu
+                        sx={{ right: '2px', minWidth: '20rem' }}
+                        list={[
+                          {
+                            onClick: handleLogout,
+                            left: {
+                              icon: (
+                                <IoLogOut
+                                  style={{
+                                    fontSize: '2.4rem',
+                                    color: 'black',
+                                  }}
+                                />
+                              ),
+                              hasBackground: true,
+                            },
+                            middle: 'Log Out',
+                          },
+                        ]}
+                      />
+                    )}
+                  </div>
                 )}
               </ToggleButton>
             ))}

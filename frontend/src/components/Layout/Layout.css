@@ -109,11 +109,11 @@
   padding-right: var(--padding-layout);
 }
 .two-column {
-  padding-left: calc(var(--sidebar-width) + var(--padding-layout) + 8px);
+  padding-left: calc(var(--sidebar-width) + var(--padding-layout));
   padding-right: var(--padding-layout);
 }
 .three-column {
-  padding-left: calc(var(--sidebar-width) + var(--padding-layout) + 8px);
+  padding-left: calc(var(--sidebar-width) + var(--padding-layout));
   padding-right: calc(var(--sidebar-width) + var(--padding-layout));
 }
 /* #endregion */

@@ -1,8 +1,23 @@
+/* #region layout */
+.landing-layout {
+  padding-top: 0;
+}
+.two-column {
+    padding-left: var(--sidebar-width);
+    padding-right: 0;
+}
+/* #endregion */
+
+/* #region leftbar */
 .left-bar-button .MuiAvatar-root {
-    width: 60px;
-    height: 60px;
+  width: 6rem;
+  height: 6rem;
 }
 .left-bar-list.friend-list {
-    overflow-y: scroll;
-    height: calc(100vh - var(--navbar-height)*2);
+  overflow-y: scroll;
+  height: calc(100vh - var(--navbar-height) * 2);
 }
+.friend-left-bar-title-wrapper {
+  box-shadow: 0 1px 0 0 var(--shadow-1);
+}
+/* #endregion */
