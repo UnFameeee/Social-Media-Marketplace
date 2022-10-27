@@ -1,4 +1,4 @@
-import FriendHome from './Home/FriendHome';
-import Birthday from './Birthday/Birthday';
+import FriendHome from './Home';
+import Birthday from './Birthday';
 
 export { FriendHome, Birthday };

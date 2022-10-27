@@ -54,7 +54,7 @@ export function StaticLeftbarLayout() {
             },
             middle: 'All Friends',
             right: <KeyboardArrowRight />,
-            navigate: 'list',
+            navigate: 'all',
           },
           {
             left: {
