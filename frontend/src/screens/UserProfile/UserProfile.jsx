@@ -1,4 +1,4 @@
-import React, { useRef, useLayoutEffect, useState } from "react";
+import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import {
   PhotoCamera,
@@ -18,7 +18,11 @@ import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import HoverButton from "./HoverButton";
 import CardPost from "../../components/Card/CardPost";
 import GridSideInfo from "./GridSideInfo";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllPost } from "../../redux/apiRequest";
 function UserProfile() {
+  const dispatch = useDispatch();
+  const [reRender, setReRender] = useState(false);
   const SideBarList = [
     { text: "Went to Truong THCS Long Duc", icon: <School /> },
     { text: "Lives in Tra Vinh", icon: <Home /> },
@@ -26,7 +30,28 @@ function UserProfile() {
     { text: "Joined on October 2014", icon: <AccessTimeFilled /> },
     { text: "Followed by 52 people", icon: <RssFeed /> },
   ];
-
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const posts = useSelector((state) => state.post.get.posts?.results?.data);
+  const [openCreatePost, setOpenCreatePost] = useState(false);
+  const [postUpdateData, setPostUpdateData] = useState();
+  const handleOpenPostModel = () => {
+    setOpenCreatePost((prev) => !prev);
+  };
+  const handleGetPostUpdateData = (data) => {
+    setPostUpdateData(data);
+  };
+  const userData = useSelector((state) => state.auth.user.userData);
+  useEffect(() => {
+    let onDestroy = false;
+    if (!onDestroy) {
+      getAllPost(accessToken, dispatch);
+    }
+    return () => {
+      onDestroy = true;
+    };
+  }, [reRender]);
   return (
     <>
       <div className="flex justify-center pt-[2%] bg-white shadow-md">
@@ -202,48 +227,17 @@ function UserProfile() {
               ]}
             />
           </div>
-          <CardPost
-            userName="duy duong"
-            postTime="1 hour"
-            url="https://source.unsplash.com/random/330×333"
-            content="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iste reprehenderit laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/310×312"
-          />
-          <CardPost
-            userName="lmao duke"
-            postTime="5 hour"
-            url="https://source.unsplash.com/random/230×235"
-            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/110×118"
-          />
-          <CardPost
-            userName="Dejavu"
-            postTime="8 hour"
-            url="https://source.unsplash.com/random/120×124"
-            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/175×177"
-          />
-          <CardPost
-            userName="Dejavu"
-            postTime="8 hour"
-            url="https://source.unsplash.com/random/120×126"
-            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/175×275"
-          />
-          <CardPost
-            userName="Dejavu"
-            postTime="8 hour"
-            url="https://source.unsplash.com/random/120×120"
-            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/175×132"
-          />
-          <CardPost
-            userName="Dejavu"
-            postTime="8 hour"
-            url="https://source.unsplash.com/random/120×140"
-            content="Lorem ipsum dolor lmao you r dead laboriosam laudantium modi eum, nulla delectus fugiat distinctio magni quasi minus a iusto numquam saepe quis quia adipisci esse temporibus repellendus necessitatibus iure et animi. Magni eveniet doloribus quam ut esse vitae eum omnis vero nulla, harum rerum laborum, voluptatibus possimus? Cum, ea. Non et quisquam excepturi quod asperiores rem iusto"
-            imgUrl="https://source.unsplash.com/random/175×165"
-          />
+          {posts &&
+            posts.map((post) => (
+              <CardPost
+                postData={post}
+                key={post.post_id}
+                profile={userData.profile}
+                setReRender={setReRender}
+                handleOpenPostModel={handleOpenPostModel}
+                handleGetPostUpdateData={handleGetPostUpdateData}
+              />
+            ))}
         </div>
       </div>
     </>

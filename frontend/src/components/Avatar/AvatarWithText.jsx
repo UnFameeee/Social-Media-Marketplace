@@ -13,7 +13,7 @@ function AvatarWithText(props) {
   var secondaryBg = props.secondaryBg ?? "bg-greyf1";
 
   return (
-    <div className={`flex gap-2 rounded-xl p-1 ${primaryBg} ${alignCenter} `}>
+    <div onClick={props.onClick} className={`flex gap-2 rounded-xl p-1 ${primaryBg} ${alignCenter} `}>
       {props.url && (
         <img
           src={props.url}

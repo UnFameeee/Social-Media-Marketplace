@@ -232,7 +232,7 @@ function PostModal(props) {
               )}
               <button
                 onClick={props.postUpdateData ? handleUpdatePost : handlePost}
-                className="w-full bg-blue8f3 text-white rounded-[0.5rem] py-[0.75rem] "
+                className="w-full bg-blue8f3 text-white rounded-[0.5rem] py-[0.75rem] mt-[2rem] "
                 disabled={!postData.written_text}
               >
                 {props.postUpdateData ? "Update" : "Post"}

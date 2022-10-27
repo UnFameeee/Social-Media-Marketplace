@@ -1,11 +1,9 @@
 import React from "react";
 import {
   Coronavirus,
-  People,
-  Diversity2,
-  Storefront,
-  LiveTv,
   SearchOutlined,
+  PhotoCamera,
+  School,
 } from "@mui/icons-material";
 import CardPost from "../../components/Card/CardPost";
 import LeftBar from "../../components/Layout/SideBar/LeftBar";
@@ -20,6 +18,9 @@ import {
   Modal,
   Button,
 } from "@mui/material";
+import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
+import HoverButton from "../UserProfile/HoverButton";
+import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import jwt_decode from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
 import PostModal from "./PostModal";
@@ -72,59 +73,50 @@ function Home() {
       <div className="pt-[6rem] flex w-full">
         <LeftBar
           leftBarList={[
-            { middle: "Covid- 19 infomation", left: <Coronavirus /> },
-            { middle: "Friends", left: <People /> },
-            { middle: "Groups", left: <Diversity2 /> },
-            { middle: "Marketplace", left: <Storefront /> },
-            { middle: "Watch", left: <LiveTv /> },
-            { middle: "Covid- 19 infomation", left: <Coronavirus /> },
-            { middle: "Friends", left: <People /> },
-            { middle: "Groups", left: <Diversity2 /> },
-            { middle: "Marketplace", left: <Storefront /> },
-            { middle: "Watch", left: <LiveTv /> },
-            { middle: "Covid- 19 infomation", left: <Coronavirus /> },
-            { middle: "Friends", left: <People /> },
-            { middle: "Groups", left: <Diversity2 /> },
-            { middle: "Marketplace", left: <Storefront /> },
-            { middle: "Watch", left: <LiveTv /> },
+            {
+              left: <Coronavirus />,
+              middle: "Thạch Dương Duy",
+            },
+            {
+              left: {
+                iconButton: true,
+                icon: <Coronavirus />,
+              },
+              middle: <h1>adawdaw</h1>,
+              navigate: "concac",
+            },
+            {
+              left: {
+                iconButton: true,
+                icon: <Coronavirus />,
+              },
+              middle: "CUM lõ",
+              navigate: "concac",
+            },
           ]}
         />
-        <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
-          <Paper sx={{ height: "15rem", marginBottom: "1.5rem" }}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Avatar />
-              <TextField
-                onClick={handleOpenPostModel}
-                placeholder="Search Facebook"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <IconButton>
-                        <SearchOutlined sx={{ fontSize: "2.2rem" }} />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  marginLeft: "1.2rem",
-                  "& .MuiOutlinedInput-root": {
-                    "& > fieldset": { border: "none" },
-                  },
-                  "& .MuiInputBase-root": {
-                    background: "#F0F2F5",
-                    height: "4.4rem",
-                    borderRadius: "5rem",
-                  },
-                }}
-              />
-            </Box>
-          </Paper>
+        <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen"> 
+          <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
+                <AvatarWithText
+                  url="https://source.unsplash.com/random/180×180"
+                  size={35}
+                  haveInput={true}
+                  alignCenter={true}
+                  inputValue="What's on your mind?"
+                  onClick={handleOpenPostModel}
+                />
+                <FullWidthHr className="mt-[1rem]" />
+               {
+              //   <HoverButton
+              //   flex1={true}
+              //   listButton={[
+              //     { text: "photo", icon: <PhotoCamera /> },
+              //     { text: "School", icon: <School /> },
+              //     { text: "Home", icon: <Home /> },
+              //   ]}
+              // />
+               } 
+              </div>
           {posts &&
             posts.map((post) => (
               <CardPost
