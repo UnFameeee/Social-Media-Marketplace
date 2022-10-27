@@ -22,19 +22,19 @@ export class FriendshipRepository {
             var result = new PagingData<Friendship[]>();
             var queryData = await this.friendshipRepository.findAndCountAll({
                 where: { status: FRIENDSHIP_STATUS.PENDING },
-                attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_name"], [Sequelize.col("profile_target_id.picture"), "picture"]],
+                attributes: ["id", "status", "createdAt", "profile_request", "profile_target", [Sequelize.col("profile_request_id.profile_name"), "profile_name"], [Sequelize.col("profile_request_id.picture"), "picture"]],
                 include: [
                     {
                         model: Profile,
-                        as: "profile_request_id",
+                        as: "profile_target_id",
                         where: { profile_id: profile_id },
                         attributes: []
                     },
                     {
                         model: Profile,
-                        as: "profile_target_id",
+                        as: "profile_request_id",
                         attributes: []
-                    }
+                    },
                 ],
                 order: [
                     ['createdAt', 'DESC']
@@ -47,8 +47,9 @@ export class FriendshipRepository {
                 var mutualFriend = await this.getMutualFriend(profile_id, element["profile_target"]);
                 // element.setDataValue("mutualFriend", mutualFriend);
                 element["mutualFriend"] = mutualFriend;
-                element["profile_id"] = element["profile_target"];
+                element["profile_id"] = element["profile_request"];
                 delete element["profile_target"];
+                delete element["profile_request"];
             }
 
             result.data = queryData.rows;
