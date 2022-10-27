@@ -68,7 +68,7 @@ function UserProfile() {
           <div className="">
             <div className="bigRoundAvt absolute  left-[3.5rem] top-[26rem]">
               <AvatarWithText
-                url="https://source.unsplash.com/random/190×190"
+                url={userData.profile?.picture ?? ""} 
                 size="18rem"
                 border={true}
                 className="relative"
@@ -83,7 +83,7 @@ function UserProfile() {
             <div className="flex pl-[24rem] pr-[4rem] items-center justify-center py-[3.5rem] ">
               <div className="flex-1  flex flex-col gap-[0.3rem] ">
                 <span className=" font-semibold text-[3rem]">
-                  Lorem, ipsum dolor.
+                  {userData.profile.profile_name}
                 </span>
                 <span className="text-[1.8rem] font-bold text-gray-600">
                   45 friends
