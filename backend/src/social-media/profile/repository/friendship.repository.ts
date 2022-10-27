@@ -22,7 +22,7 @@ export class FriendshipRepository {
             var result = new PagingData<Friendship[]>();
             var queryData = await this.friendshipRepository.findAndCountAll({
                 where: { status: FRIENDSHIP_STATUS.PENDING },
-                attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"]],
+                attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_name"], [Sequelize.col("profile_target_id.picture"), "picture"]],
                 include: [
                     {
                         model: Profile,
@@ -39,13 +39,16 @@ export class FriendshipRepository {
                 order: [
                     ['createdAt', 'DESC']
                 ],
-                raw: false,
+                raw: true,
                 ...paginate({ page })
             })
 
             for (const element of queryData.rows) {
                 var mutualFriend = await this.getMutualFriend(profile_id, element["profile_target"]);
-                element.setDataValue("mutualFriend", mutualFriend);
+                // element.setDataValue("mutualFriend", mutualFriend);
+                element["mutualFriend"] = mutualFriend;
+                element["profile_id"] = element["profile_target"];
+                delete element["profile_target"];
             }
 
             result.data = queryData.rows;
@@ -62,31 +65,66 @@ export class FriendshipRepository {
         try {
             var result = new PagingData<Friendship[]>();
             var queryData = await this.friendshipRepository.findAndCountAll({
-                where: { status: FRIENDSHIP_STATUS.ACCEPTED },
-                attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"]],
+                where: {
+                    status: FRIENDSHIP_STATUS.ACCEPTED,
+                    [Op.or]: [{ "$profile_request_id.profile_id$": profile_id }, { "$profile_target_id.profile_id$": profile_id }],
+                },
+                attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"],
+                    "profile_request",
+                    [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"], [Sequelize.col("profile_request_id.picture"), "profile_request_picture"]],
                 include: [
                     {
                         model: Profile,
                         as: "profile_request_id",
                         where: { profile_id: profile_id },
-                        attributes: []
+                        required: false,
+                        attributes: [],
+                        // through: {attributes: []},
+                        // attributes: {exclude: ["profile_name", "picture", "profile_id"]},
                     },
                     {
                         model: Profile,
                         as: "profile_target_id",
-                        attributes: []
+                        where: { profile_id: profile_id },
+                        required: false,
+                        attributes: [],
+                        // through: {attributes: []},
+                        // attributes: {exclude: ["profile_name", "picture", "profile_id"]},
                     }
                 ],
                 order: [
                     ['createdAt', 'DESC']
                 ],
-                raw: false,
+                raw: true,
                 ...paginate({ page })
             })
 
+            console.log(queryData.rows);
+
             for (const element of queryData.rows) {
-                var mutualFriend = await this.getMutualFriend(profile_id, element["profile_target"]);
-                element.setDataValue("mutualFriend", mutualFriend);
+                if (element["profile_target"] == profile_id) {
+                    var mutualFriend = await this.getMutualFriend(profile_id, element["profile_request"]);
+                    // element.setDataValue("mutualFriend", mutualFriend);
+                    element["mutualFriend"] = mutualFriend;
+                    element["profile_id"] = element["profile_target"];
+                    element["profile_name"] = element["profile_target_name"];
+                    element["picture"] = element["profile_target_picture"];
+                } else {
+                    var mutualFriend = await this.getMutualFriend(profile_id, element["profile_target"]);
+                    // element.setDataValue("mutualFriend", mutualFriend);
+                    element["mutualFriend"] = mutualFriend;
+
+                    element["profile_id"] = element["profile_request"];
+                    element["profile_name"] = element["profile_request_name"];
+                    element["picture"] = element["profile_request_picture"];
+                }
+
+                delete element["profile_target"];
+                delete element["profile_target_name"];
+                delete element["profile_target_picture"];
+                delete element["profile_request"];
+                delete element["profile_request_name"];
+                delete element["profile_request_picture"];
             }
 
             result.data = queryData.rows;
