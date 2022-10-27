@@ -11,12 +11,9 @@ export function BetterIconButton(props) {
 
   return (
     <Tooltip title={tooltip ?? ''}>
-      <div>
+      <div className={className}>
         {hasBackground === true ? (
-          <Avatar
-            className={`icon-button-with-background ${className}`}
-            {...other}
-          >
+          <Avatar className="icon-button-with-background" {...other}>
             {children}
           </Avatar>
         ) : (
@@ -32,11 +29,8 @@ export function ButtonWithIcon(props) {
 
   return (
     <Tooltip title={tooltip ?? ''}>
-      <div>
-        <Button
-          className={`button-with-icon ${className}`}
-          {...other}
-        >
+      <div style={{ width: '14rem' }} className={className}>
+        <Button className="button-with-icon" {...other}>
           {children}
         </Button>
       </div>

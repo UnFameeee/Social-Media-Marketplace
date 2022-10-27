@@ -15,9 +15,10 @@ const FriendHome = () => {
     <>
       <h2
         style={{
-          fontSize: '20px',
+          fontSize: '2rem',
+          lineHeight: '2rem',
           fontWeight: '500',
-          padding: '4px 0 0 24px',
+          padding: '2.4rem 0 0 2.4rem',
         }}
       >
         Friend Requests
@@ -29,9 +30,9 @@ const FriendHome = () => {
             item
             xs
             style={{
-              maxWidth: '250px',
-              minWidth: '200px',
-              padding: '6px',
+              maxWidth: '25rem',
+              minWidth: '20rem',
+              padding: '0.6rem',
               borderRadius: '8px',
             }}
           >

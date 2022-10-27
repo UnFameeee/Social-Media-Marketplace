@@ -33,10 +33,16 @@ const useStyles = makeStyles()(() => ({
 export default function LeftBar(props) {
   const { classes, cx } = useStyles();
 
-  const { leftBarList, classNameConfig = {}, leftBarColor } = props;
+  const {
+    leftBarList,
+    before,
+    after,
+    classNameConfig = {},
+    leftBarColor,
+  } = props;
 
   const { listWrapper, listClassname } = classNameConfig;
-
+  
   return (
     // #region oldCode
     // <>
@@ -63,12 +69,10 @@ export default function LeftBar(props) {
     // #endregion
 
     <Box
-      className={cx(
-        classes.scroll,
-        `left-bar ${
-          leftBarColor ? 'drop-shadow-md' : ''
-        } ${listWrapper}`
-      )}
+      className={`left-bar ${
+        leftBarColor ? 'drop-shadow-md' : ''
+      } ${listWrapper}`}
+      
       style={
         leftBarColor
           ? {
@@ -78,7 +82,14 @@ export default function LeftBar(props) {
           : null
       }
     >
-      <List className={listClassname}>
+      {before}
+
+      <List
+        className={cx(
+          classes.scroll,
+          `left-bar-list ${listClassname}`
+        )}
+      >
         {Helper.isArrayList(leftBarList)
           ? leftBarList.map((list, index) => {
               return (
@@ -92,6 +103,8 @@ export default function LeftBar(props) {
               <LeftBarList leftBarList={leftBarList} />
             )}
       </List>
+
+      {after}
     </Box>
   );
 }
@@ -111,13 +124,30 @@ function LeftBarList({ leftBarList, multiList }) {
                 {item.title}
               </div>
             )}
-            <ListItem className="list">
-              {item.navigate ? (
-                <Link
-                  to={`${item.navigate}`}
-                  style={{ width: '100%' }}
-                  disabled={item.disabled}
-                >
+
+            {Helper.checkPropsInObject(
+              item,
+              ['left', 'middle', 'right'],
+              false
+            ) && (
+              <ListItem className="list">
+                {item.navigate ? (
+                  <Link
+                    to={`${item.navigate}`}
+                    style={{ width: '100%' }}
+                    disabled={item.disabled}
+                  >
+                    <LeftBarListItem
+                      item={item}
+                      classNameConfig={`${
+                        index === leftBarList.length - 1 &&
+                        multiList >= 0
+                          ? 'multi'
+                          : ''
+                      }`}
+                    />
+                  </Link>
+                ) : (
                   <LeftBarListItem
                     item={item}
                     classNameConfig={`${
@@ -127,19 +157,9 @@ function LeftBarList({ leftBarList, multiList }) {
                         : ''
                     }`}
                   />
-                </Link>
-              ) : (
-                <LeftBarListItem
-                  item={item}
-                  classNameConfig={`${
-                    index === leftBarList.length - 1 && multiList >= 0
-                      ? 'multi'
-                      : ''
-                  }`}
-                />
-              )}
-            </ListItem>
-            {item.after}
+                )}
+              </ListItem>
+            )}
           </div>
         );
       })}
@@ -158,22 +178,29 @@ function LeftBarListItem({ item, classNameConfig }) {
         <ListItemIcon
           className={`left ${item.selected ? 'selected' : ''}`}
         >
-          {typeof item.left == 'object' && item.left.iconButton ? (
+          {Helper.checkPropsInObject(
+            item.left,
+            ['iconButton'],
+            false
+          ) ? (
             <Avatar className="rounded">{item.left.icon}</Avatar>
+          ) : Helper.checkPropsInObject(
+              item.left,
+              ['url', 'name'],
+              false
+            ) ? (
+            <Avatar alt={item.left.name} src={item.left.url}>
+              {item.left.name?.at(0)}
+            </Avatar>
           ) : (
             item.left
           )}
         </ListItemIcon>
       )}
 
-      {React.isValidElement(item.middle) ? (
-        item.middle
-      ) : (
-        <ListItemText
-          primary={item.middle}
-          className="left-bar-text"
-        />
-      )}
+      <ListItemText className="left-bar-text">
+        {item.middle}
+      </ListItemText>
 
       {item.right && (
         <ListItemIcon className="right">{item.right}</ListItemIcon>
