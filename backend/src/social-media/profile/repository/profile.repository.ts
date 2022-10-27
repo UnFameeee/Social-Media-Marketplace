@@ -5,15 +5,31 @@ import { Profile } from "../model/profile.model";
 import { CreateProfileDto } from "../../../common/models/dtos/create-profile.dto";
 import { UpdateProfileDto } from "src/common/models/dtos/update-profile.dto";
 import { SCOPE } from "src/common/constants/sequelize-scope.constant";
+import { PagingData } from "src/common/models/view-model/paging.model";
+import { Page } from "src/common/models/view-model/page-model";
+import { paginate } from "src/common/utils/paginate.utils";
 @Injectable()
 export class ProfileRepository {
     constructor(
         @Inject(PROVIDER.Profile) private profileRepository: typeof Profile
     ) { }
 
-    async getAllProfile(): Promise<Profile[]> {
+    async getAllProfile(page: Page): Promise<PagingData<Profile[]>> {
         try {
-            return this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findAll();
+            var result = new PagingData<Profile[]>();
+
+            var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findAndCountAll({
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                raw: false,
+                ...paginate({ page })
+            });
+
+            result.data = queryData.rows;
+            page.totalElement = queryData.count;
+            result.page = page;
+            return result;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
@@ -27,25 +43,25 @@ export class ProfileRepository {
         }
     }
 
-    async findProfileByEmail(email: string): Promise<Profile> {
+    async findProfileByEmail(email: string, scope?: string): Promise<Profile> {
         try {
-            return this.profileRepository.findOne({ where: { email: email } })
+            return this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { email: email } })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
     }
 
-    async findProfileByProfileName(profile_name: string): Promise<Profile> {
+    async findProfileByProfileName(profile_name: string, scope?: string): Promise<Profile> {
         try {
-            return this.profileRepository.findOne({ where: { profile_name: profile_name } })
+            return this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { profile_name: profile_name } })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
     }
 
-    async findProfileByProfileNameExcludeId(profile_id: number, profile_name: string): Promise<Profile> {
+    async findProfileByProfileNameExcludeId(profile_id: number, profile_name: string, scope?: string): Promise<Profile> {
         try {
-            return this.profileRepository.findOne({
+            return this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
                 where:
                 {
                     profile_id: { [Op.ne]: profile_id },
@@ -57,9 +73,9 @@ export class ProfileRepository {
         }
     }
 
-    async findProfileByEmailExcludeId(profile_id: number, email: string): Promise<Profile> {
+    async findProfileByEmailExcludeId(profile_id: number, email: string, scope?: string): Promise<Profile> {
         try {
-            return this.profileRepository.findOne({
+            return this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
                 where:
                 {
                     profile_id: { [Op.ne]: profile_id },
@@ -81,36 +97,52 @@ export class ProfileRepository {
         }
     }
 
-    //Unfinished
-    async updateProfileWithId(profile_id: number, updateUserDto: UpdateProfileDto): Promise<Profile> {
+    async updateProfileWithId(profile_id: number, updateUserDto: UpdateProfileDto): Promise<boolean> {
         try {
-            const user = { ...updateUserDto };
-            const newUser = await this.profileRepository.update(user, { where: { profile_id: profile_id } });
-            return null;
+            var queryData = await this.profileRepository.findOne({
+                where: {
+                    profile_id: profile_id
+                }
+            });
+            queryData.setDataValue("profile_name", updateUserDto.profile_name);
+            queryData.setDataValue("password", updateUserDto.new_password);
+            queryData.setDataValue("email", updateUserDto.email);
+            queryData.setDataValue("birth", updateUserDto.birth);
+
+            const res = await queryData.save();
+            return res ? true : false;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
     }
-    
-    async deActivateProfileById(profile_id: number) {
+
+    async deActivateProfileById(profile_id: number): Promise<boolean> {
         try {
             await this.profileRepository.destroy({
                 where: {
                     profile_id: profile_id
                 }
             });
+            const checkData = await this.profileRepository.findOne({
+                where: { profile_id: profile_id }
+            });
+            return checkData ? false : true;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
     }
 
-    async activateProfileById(profile_id: number) {
+    async activateProfileById(profile_id: number): Promise<boolean> {
         try {
             await this.profileRepository.restore({
                 where: {
                     profile_id: profile_id
                 }
             });
+            const checkData = await this.profileRepository.findOne({
+                where: { profile_id: profile_id }
+            });
+            return checkData ? true : false;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
