@@ -1,15 +1,23 @@
 import { Grid } from '@mui/material';
 import { useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllFriendRequests } from '../../../../redux/apiRequest';
 import FriendCard from './FriendCard';
 
 const FriendHome = () => {
-  // #region re-render the layout
+  const dispatch = useDispatch();
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  
+  const friendRequests = useSelector((state) => state.friends.getFriendRequests?.data?.data);
+  console.log(friendRequests)
   const reRenderLayout = useOutletContext();
   useEffect(() => {
-    reRenderLayout();
+    reRenderLayout(); //re-render the parent layout
+    getAllFriendRequests(accessToken, dispatch);
   }, []);
-  // #endregion
 
   return (
     <>

@@ -12,6 +12,7 @@ import {
 import storage from "redux-persist/lib/storage";
 import postReducer from "./postSlice";
 import authReducer from "./authSlice";
+import friendReducer from "./friendSlice";
 import uploadImageReducer from "./uploadImageSlice"
 const persistConfig = {
   key: "root",
@@ -21,6 +22,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   post: postReducer,
+  friends: friendReducer,
   uploadImage: uploadImageReducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
