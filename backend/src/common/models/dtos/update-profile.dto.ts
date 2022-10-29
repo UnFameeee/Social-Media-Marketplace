@@ -3,17 +3,11 @@ import { IsEmail, IsNotEmpty, IsString, Matches, Min, Max, MaxLength, MinLength,
 export class UpdateProfileDto {
     @IsNotEmpty()
     @IsString()
-    name: string;
-
+    profile_name: string;
+    
     @IsNotEmpty()
     @IsString()
-    @MinLength(5)
-    @MaxLength(30)
-    username: string;
-
-    @IsNotEmpty()
-    @IsString()
-    old_hash_password: string;
+    old_password: string;
 
     @IsNotEmpty()
     @IsString()
@@ -26,7 +20,7 @@ export class UpdateProfileDto {
     @IsNumber()
     @Min(10)
     @Max(110)
-    age: number; 
+    birth: string; 
     
     @IsNotEmpty()
     @IsString()

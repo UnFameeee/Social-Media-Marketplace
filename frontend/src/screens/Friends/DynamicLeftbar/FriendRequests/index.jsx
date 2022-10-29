@@ -1,334 +1,46 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllFriendRequests } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
-import LeftbarMiddleItem from '../LeftbarMiddleItem'
-import '../index.css';
+import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
+import '../index.css';
 
 export default function FriendRequests() {
+  const dispatch = useDispatch();
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const friendRequests = useSelector(
+    (state) => state.friends.getFriendRequests?.data
+  );
+
+  useEffect(() => {
+    getAllFriendRequests(accessToken, dispatch);
+  }, []);
+
   return (
     <TwoColumns
       leftBarConfig={{
         classNameConfig: {
-          listClassname: 'friend-list'
+          listClassname: 'friend-list',
         },
-        before: <LeftbarTitle title="Friend Requests" subTitle={`${131} Friend Requests`} />,
-        leftBarList: [
-          {
+        before: (
+          <LeftbarTitle
+            title="Friend Requests"
+            subTitle={`${friendRequests.page.totalElement} Friend Requests`}
+          />
+        ),
+        leftBarList: friendRequests.data.map((x) => {
+          return {
             left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
+              url: x.picture,
+              name: x.profile_name,
             },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Duy',
-            },
-            middle: <LeftbarMiddleItem name="Thạch Dương Duy" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Vũ',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Hoàng Vũ" />,
-          },
-          {
-            left: {
-              url: 'https://source.unsplash.com/random/300×300',
-              name: 'Thắng',
-            },
-            middle: <LeftbarMiddleItem name="Nguyễn Phạm Quốc Thắng" />,
-          },
-        ],
+            middle: <LeftbarMiddleItem name={x.profile_name} />,
+          };
+        }),
         leftBarColor: 'white',
       }}
     >

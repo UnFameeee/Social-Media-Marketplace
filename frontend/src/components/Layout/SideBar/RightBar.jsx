@@ -8,6 +8,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  MenuItem,
   Typography,
 } from '@mui/material';
 import {
@@ -203,7 +204,7 @@ export default function RightBar() {
           <Typography>See all</Typography>
         </Box>
 
-        <Button
+        <MenuItem
           sx={{
             padding: '8px',
           }}
@@ -250,7 +251,7 @@ export default function RightBar() {
               Decline
             </Button>
           </Box>
-        </Button>
+        </MenuItem>
       </Box>
 
       <Box

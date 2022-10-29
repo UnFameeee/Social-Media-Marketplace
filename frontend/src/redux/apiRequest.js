@@ -1,4 +1,8 @@
-import axios from "axios";
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import jwt_decode from 'jwt-decode';
+import { apiUrl } from '../common/environment/environment';
+import api from '../common/environment/environment';
 import {
   createPostFailed,
   createPostStart,
@@ -15,8 +19,7 @@ import {
   updatePostFailed,
   updatePostStart,
   updatePostSuccess,
-} from "./postSlice";
-import { apiUrl } from "../common/environment/environment";
+} from './postSlice';
 import {
   loginFailed,
   loginStart,
@@ -28,31 +31,46 @@ import {
   registerStart,
   registerSuccess,
   userDataAssign,
-} from "./authSlice";
-import { toast } from "react-toastify";
-import jwt_decode from "jwt-decode";
+} from './authSlice';
 import {
   uploadImagePostFailed,
   uploadImagePostStart,
   uploadImagePostSuccess,
-} from "./uploadImageSlice";
+} from './uploadImageSlice';
+import {
+  acceptFriendRequestFailed,
+  acceptFriendRequestStart,
+  acceptFriendRequestSuccess,
+  addFriendFailed,
+  addFriendStart,
+  addFriendSuccess,
+  getAllFriendFailed,
+  getAllFriendStart,
+  getAllFriendSuccess,
+  getFriendRequestFailed,
+  getFriendRequestStart,
+  getFriendRequestSuccess,
+  getMutualFriendFailed,
+  getMutualFriendStart,
+  getMutualFriendSuccess,
+} from './friendSlice';
 
 const notify = (message, type) => {
-  if (type === "info") {
+  if (type === 'info') {
     toast.info(message, {
       autoClose: 1000,
       hideProgressBar: true,
       position: toast.POSITION.BOTTOM_RIGHT,
       pauseOnHover: false,
-      theme: "dark",
+      theme: 'dark',
     });
-  } else if (type === "error") {
+  } else if (type === 'error') {
     toast.error(message, {
       autoClose: 1000,
       hideProgressBar: true,
       position: toast.POSITION.BOTTOM_RIGHT,
       pauseOnHover: false,
-      theme: "dark",
+      theme: 'dark',
     });
   }
 };
@@ -63,7 +81,7 @@ export const register = async (model, dispatch, navigate) => {
     if (res) {
       dispatch(registerSuccess(res.data));
 
-      navigate("/login");
+      navigate('/login');
     } else {
       dispatch(registerFailed());
     }
@@ -101,28 +119,36 @@ export const createPost = async (accessToken, post, dispatch) => {
   try {
     const config = {
       headers: {
-        "content-type": "application/json; charset=utf-8",
+        'content-type': 'application/json; charset=utf-8',
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    const res = await axios.post(`${apiUrl}/post/newPost`, post, config);
+    const res = await axios.post(
+      `${apiUrl}/post/newPost`,
+      post,
+      config
+    );
     if (!res.data.message) {
       dispatch(createPostSuccess(res.data));
-      notify("Post Created", "info");
+      notify('Post Created', 'info');
     } else {
       dispatch(createPostFailed());
-      notify(res.data.message, "error");
+      notify(res.data.message, 'error');
     }
   } catch (error) {
     dispatch(createPostFailed());
   }
 };
-export const updatePost = async (accessToken, updatePost, dispatch) => {
+export const updatePost = async (
+  accessToken,
+  updatePost,
+  dispatch
+) => {
   dispatch(updatePostStart());
   try {
     const config = {
       headers: {
-        "content-type": "application/json; charset=utf-8",
+        'content-type': 'application/json; charset=utf-8',
         Authorization: `Bearer ${accessToken}`,
       },
     };
@@ -133,10 +159,10 @@ export const updatePost = async (accessToken, updatePost, dispatch) => {
     );
     if (!res.data.message) {
       dispatch(updatePostSuccess());
-      notify("Post Updated", "info");
+      notify('Post Updated', 'info');
     } else {
       dispatch(updatePostFailed());
-      notify(res.data.message, "error");
+      notify(res.data.message, 'error');
     }
   } catch (error) {
     dispatch(updatePostFailed());
@@ -147,17 +173,20 @@ export const deletePost = async (accessToken, postId, dispatch) => {
   try {
     const config = {
       headers: {
-        "content-type": "application/json; charset=utf-8",
+        'content-type': 'application/json; charset=utf-8',
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    const res = await axios.delete(`${apiUrl}/post/delete/${postId}`, config);
+    const res = await axios.delete(
+      `${apiUrl}/post/delete/${postId}`,
+      config
+    );
     if (!res.data.message) {
       dispatch(deletePostSuccess());
-      notify("Post Deleted", "info");
+      notify('Post Deleted', 'info');
     } else {
       dispatch(deletePostFailed());
-      notify(res.data.message, "error");
+      notify(res.data.message, 'error');
     }
   } catch (error) {
     dispatch(deletePostFailed());
@@ -168,16 +197,20 @@ export const likePost = async (accessToken, postId, dispatch) => {
   try {
     const config = {
       headers: {
-        "content-type": "application/json; charset=utf-8",
+        'content-type': 'application/json; charset=utf-8',
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    const res = await axios.post(`${apiUrl}/post/like/${postId}`, {}, config);
+    const res = await axios.post(
+      `${apiUrl}/post/like/${postId}`,
+      {},
+      config
+    );
     if (!res.data.message) {
       dispatch(likePostSuccess());
     } else {
       dispatch(likePostFailed());
-      notify(res.data.message, "error");
+      notify(res.data.message, 'error');
     }
   } catch (error) {
     dispatch(likePostFailed());
@@ -188,7 +221,7 @@ export const getAllPost = async (accessToken, dispatch) => {
   try {
     const config = {
       headers: {
-        "content-type": "application/json; charset=utf-8",
+        'content-type': 'application/json; charset=utf-8',
         Authorization: `Bearer ${accessToken}`,
       },
     };
@@ -196,7 +229,11 @@ export const getAllPost = async (accessToken, dispatch) => {
       page: 0,
       pageSize: 5,
     };
-    const res = await axios.post(`${apiUrl}/post/all`, paging, config);
+    const res = await axios.post(
+      `${apiUrl}/post/all`,
+      paging,
+      config
+    );
     if (!res.data.message) {
       dispatch(getPostSuccess(res.data));
     } else {
@@ -207,18 +244,22 @@ export const getAllPost = async (accessToken, dispatch) => {
   }
 };
 
-export const uploadImages = async (accessToken, uploadImages, dispatch) => {
+export const uploadImages = async (
+  accessToken,
+  uploadImages,
+  dispatch
+) => {
   dispatch(uploadImagePostStart());
   try {
     const config = {
       headers: {
-        "content-type": "multipart/form-data;",
+        'content-type': 'multipart/form-data;',
         Authorization: `Bearer ${accessToken}`,
       },
     };
     let formData = new FormData();
     uploadImages.forEach((file) => {
-      formData.append("files", file.files);
+      formData.append('files', file.files);
     });
     const res = await axios.post(
       `${apiUrl}/image/post/upload`,
@@ -226,7 +267,7 @@ export const uploadImages = async (accessToken, uploadImages, dispatch) => {
       config
     );
     if (res.data.message) {
-      notify(res.data.message, "error");
+      notify(res.data.message, 'error');
     } else {
       dispatch(uploadImagePostSuccess(res.data.results));
     }
@@ -235,3 +276,156 @@ export const uploadImages = async (accessToken, uploadImages, dispatch) => {
     dispatch(uploadImagePostFailed());
   }
 };
+
+// #region Friend API
+export const getAllFriendRequests = async (accessToken, dispatch) => {
+  dispatch(getFriendRequestStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const paging = {
+      page: 0,
+      pageSize: 5,
+    };
+    const res = await axios.post(
+      `${api.friend}/request/all`,
+      paging,
+      config
+    );
+    if (!res.data.message) {
+      dispatch(getFriendRequestSuccess(res.data.results));
+    } else {
+      dispatch(getFriendRequestFailed());
+    }
+  } catch (error) {
+    dispatch(getFriendRequestFailed());
+  }
+};
+export const getAllFriends = async (accessToken, dispatch) => {
+  dispatch(getAllFriendStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const paging = {
+      page: 0,
+      pageSize: 5,
+    };
+    const res = await axios.post(`${api.friend}/all`, paging, config);
+    if (!res.data.message) {
+      dispatch(getAllFriendSuccess(res.data.results));
+    } else {
+      dispatch(getAllFriendFailed());
+    }
+  } catch (error) {
+    dispatch(getAllFriendFailed());
+  }
+};
+export const getMutualFriends = async (accessToken, id, dispatch) => {
+  dispatch(getMutualFriendStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const res = await axios.post(
+      `${api.friend}/getMutualFriend/${id}`,
+      {},
+      config
+    );
+    if (!res.data.message) {
+      dispatch(getMutualFriendSuccess(res.data.results));
+    } else {
+      dispatch(getMutualFriendFailed());
+    }
+  } catch (error) {
+    dispatch(getMutualFriendFailed());
+  }
+};
+export const addFriend = async (accessToken, id, dispatch) => {
+  dispatch(addFriendStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const res = await axios.post(
+      `${api.friend}/addFriend/${id}`,
+      {},
+      config
+    );
+    if (!res.data.message) {
+      dispatch(addFriendSuccess(res.data.results));
+    } else {
+      dispatch(addFriendFailed());
+    }
+  } catch (error) {
+    dispatch(addFriendFailed());
+  }
+};
+export const acceptFriendRequest = async (
+  accessToken,
+  id,
+  dispatch
+) => {
+  dispatch(acceptFriendRequestStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const res = await axios.post(
+      `${api.friend}/acceptFriendRequest/${id}`,
+      {},
+      config
+    );
+    if (!res.data.message) {
+      dispatch(acceptFriendRequestSuccess(res.data.results));
+    } else {
+      dispatch(acceptFriendRequestFailed());
+    }
+  } catch (error) {
+    dispatch(acceptFriendRequestFailed());
+  }
+};
+export const isFriend = async (accessToken, id, dispatch) => {
+  dispatch(acceptFriendRequestStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const res = await axios.post(
+      `${api.friend}/isFriend/${id}`,
+      {},
+      config
+    );
+    if (!res.data.message) {
+      dispatch(acceptFriendRequestSuccess(res.data.results));
+    } else {
+      dispatch(acceptFriendRequestFailed());
+    }
+  } catch (error) {
+    dispatch(acceptFriendRequestFailed());
+  }
+};
+// #endregion

@@ -17,7 +17,7 @@ export class AuthService {
     ) { }
 
     async validateProfile(email: string, password: string): Promise<any> {
-        const profile = await this.profileRepository.findProfileByEmail(email);
+        const profile = await this.profileRepository.findProfileByEmail(email, SCOPE.WITH_PASSWORD);
         if (profile && compare(password, profile.password)) {
             return profile;
         }
