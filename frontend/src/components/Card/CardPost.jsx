@@ -7,6 +7,9 @@ import {
   ArrowDropDown,
   MoreHoriz,
 } from "@mui/icons-material";
+import {
+  Avatar,
+} from "@mui/material";
 import MUI from "../MUI";
 import dayjs from "dayjs";
 import "react-toastify/dist/ReactToastify.css";
@@ -36,7 +39,6 @@ function CardPost(props) {
     }
   };
   calcDatePostOverTime(props.postData.createdAt);
-
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState();
   const [likeToggle, setLikeToggle] = useState(false);
@@ -55,7 +57,7 @@ function CardPost(props) {
       written_text: props.postData.written_text,
       media_type: props.postData.media_type,
       media_location: props.postData.media_location,
-      avtUrl: props.postData.picture,
+      picture: props.postData.picture,
     };
     props.handleGetPostUpdateData(tempPostData);
     props.handleOpenPostModel();
@@ -77,11 +79,9 @@ function CardPost(props) {
       <div className="w-full bg">
         <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
           <div className="flex flex-1 gap-[1rem]">
-            <img
-              src={props.postData.picture}
-              className="w-[4.5rem] h-[4.5rem] rounded-[50%] border-2 border-blue-300"
-              alt=""
-            />
+            <Avatar style={{ fontSize:'2rem'}} alt={props.postData.profile_name} src={props.postData?.picture ? JSON.parse(props.postData?.picture) : null}> 
+                {props.postData.profile_name?.at(0)}
+              </Avatar>
             <div>
               <p>{props.postData.profile_name}</p>
               <span className=" font-light text-[1.4rem]">

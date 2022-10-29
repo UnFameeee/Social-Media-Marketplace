@@ -11,6 +11,9 @@ import {
   AccessTimeFilled,
   RssFeed,
 } from "@mui/icons-material";
+import {
+  Avatar,
+} from '@mui/material';
 import SideBarButton from "./SideBarButton";
 import { style } from "@mui/system";
 import SideBarLi from "./SideBarLi";
@@ -67,12 +70,9 @@ function UserProfile() {
           </div>
           <div className="">
             <div className="bigRoundAvt absolute  left-[3.5rem] top-[26rem]">
-              <AvatarWithText
-                url={userData.profile?.picture ?? ""} 
-                size="18rem"
-                border={true}
-                className="relative"
-              />
+              <Avatar style={{width:'18rem', height:'18rem', fontSize:'10rem'}} alt={userData.profile.profile_name} src={userData.profile?.picture ? JSON.parse(userData.profile?.picture) : null}> 
+                {userData.profile.profile_name?.at(0)}
+              </Avatar>
               <div className="bg-white absolute right-0 top-[12rem] z-1 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer">
                 <PhotoCamera
                   className=" bg-white  right-0 top-[12rem] z-1"

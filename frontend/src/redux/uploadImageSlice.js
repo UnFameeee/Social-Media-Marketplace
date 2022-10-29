@@ -33,8 +33,12 @@ export const uploadImageSlice = createSlice({
       state.uploadImagePost.isFetching = false;
       state.uploadImagePost.error = true;
     },
-    
-  },
+    removeSingleUploadImagePost: (state, action) => {
+      let preState = state.uploadImagePost.data
+      preState = preState.filter(item => item != action.payload)
+      state.uploadImagePost.data = [...preState]
+    }
+  }
 });
 
 export const {
@@ -42,5 +46,6 @@ export const {
   uploadImagePostStart,
   uploadImagePostSuccess,
   resetUploadImagePostState,
+  removeSingleUploadImagePost
 } = uploadImageSlice.actions;
 export default uploadImageSlice.reducer;

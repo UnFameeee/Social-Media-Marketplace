@@ -4,10 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import { createPost, updatePost, uploadImages } from "../../redux/apiRequest";
-import styled from "styled-components";
+import { Avatar } from "@mui/material";
 import { PhotoLibrary, HighlightOff, Close } from "@mui/icons-material";
-import { resetUploadImagePostState } from "../../redux/uploadImageSlice";
-import {Link} from "react-router-dom";
+import {
+  removeSingleUploadImagePost,
+  resetUploadImagePostState,
+} from "../../redux/uploadImageSlice";
+import { Link } from "react-router-dom";
 function PostModal(props) {
   //Declare variables
   const dispatch = useDispatch();
@@ -37,7 +40,7 @@ function PostModal(props) {
     (state) => state.auth.login.currentUser.access
   );
   const isPosting = useSelector((state) => state.post.create.isFetching);
-
+  console.log("props.postUpdateData", props.postUpdateData);
   //Function
   const closeModal = () => {
     props.setShowModal(false);
@@ -87,9 +90,10 @@ function PostModal(props) {
       ...postData,
       media_location: [...filterMedia_Location],
     });
+    dispatch(removeSingleUploadImagePost(imageKey));
   };
-  const addToUploadImgArray = (height,width, url) => {
-    setImgArray([...imgArray, { height: height,width:width, url: url }]);
+  const addToUploadImgArray = (height, width, url) => {
+    setImgArray([...imgArray, { height: height, width: width, url: url }]);
   };
   useEffect(() => {
     let onDestroy = false;
@@ -140,16 +144,22 @@ function PostModal(props) {
               </span>
             </div>
             <FullWidthHr />
-            <div className="px-[2rem]">
+            <div className="px-[2rem] py-[1rem]">
               <div className="flex items-center gap-[1rem] mb-[1rem]">
-                <AvatarWithText
-                  url={
-                    props.postUpdateData
-                      ? props.postUpdateData.avtUrl
-                      : props.profile.picture
+                <Avatar
+                  style={{
+                    fontSize: "2rem",
+                  
+                  }}
+                  alt={props.profile.profile_name}
+                  src={
+                    props.profile?.picture
+                      ? JSON.parse(props.profile?.picture)
+                      : null
                   }
-                  size="5rem"
-                />
+                >
+                  {props.profile.profile_name?.at(0)}
+                </Avatar>
                 <span className="font-bold">{props.profile.profile_name}</span>
               </div>
               <textarea

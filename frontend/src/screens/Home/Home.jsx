@@ -1,22 +1,12 @@
 import React from "react";
 import {
   Coronavirus,
-  SearchOutlined,
-  PhotoCamera,
-  School,
 } from "@mui/icons-material";
 import CardPost from "../../components/Card/CardPost";
 import LeftBar from "../../components/Layout/SideBar/LeftBar";
 import RightBar from "../../components/Layout/SideBar/RightBar";
 import {
-  Box,
   Avatar,
-  Paper,
-  TextField,
-  IconButton,
-  InputAdornment,
-  Modal,
-  Button,
 } from "@mui/material";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import HoverButton from "../UserProfile/HoverButton";
@@ -75,7 +65,9 @@ function Home() {
           leftBarList={[
             {
               left: (
-                <AvatarWithText url={userData.profile?.picture ?? ""} size="5rem" />
+                <Avatar style={{width:'5rem', height:'5rem', fontSize:'2rem'}} alt={userData.profile.profile_name} src={userData.profile?.picture ? JSON.parse(userData.profile?.picture) : null}> 
+                {userData.profile.profile_name?.at(0)}
+              </Avatar>
               ),
               middle: userData.profile.profile_name,
               navigate: "userprofile"

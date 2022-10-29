@@ -1,20 +1,18 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllFriends } from '../../../../redux/apiRequest';
-import TwoColumns from '../../../../components/Layout/TwoColumns';
-import LeftbarTitle from '../LeftbarTitle';
-import UserProfile from '../../../UserProfile/UserProfile';
-import '../index.css';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllFriends } from "../../../../redux/apiRequest";
+import TwoColumns from "../../../../components/Layout/TwoColumns";
+import LeftbarTitle from "../LeftbarTitle";
+import UserProfile from "../../../UserProfile/UserProfile";
+import "../index.css";
 
 export default function AllFriends() {
   const dispatch = useDispatch();
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
-  const allFriends = useSelector(
-    (state) => state.friends.getAll?.data
-  );
-  
+  const allFriends = useSelector((state) => state.friends.getAll?.data);
+
   useEffect(() => {
     getAllFriends(accessToken, dispatch);
   }, []);
@@ -23,19 +21,19 @@ export default function AllFriends() {
     <TwoColumns
       leftBarConfig={{
         classNameConfig: {
-          listClassname: 'friend-list',
+          listClassname: "friend-list",
         },
         before: (
           <LeftbarTitle
             title="All Friends"
             subTitle={
-              allFriends.page.totalElement
-                ? `${allFriends.page.totalElement} Friends`
+              allFriends?.page?.totalElement
+                ? `${allFriends?.page?.totalElement} Friends`
                 : `You have no friends`
             }
           />
         ),
-        leftBarList: allFriends.data.map((x) => {
+        leftBarList: allFriends?.data?.map((x) => {
           return {
             left: {
               url: x.picture,
@@ -44,7 +42,7 @@ export default function AllFriends() {
             middle: x.profile_name,
           };
         }),
-        leftBarColor: 'white',
+        leftBarColor: "white",
       }}
     >
       <UserProfile />

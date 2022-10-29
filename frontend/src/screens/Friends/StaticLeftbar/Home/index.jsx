@@ -33,7 +33,7 @@ const FriendHome = () => {
         Friend Requests
       </h2>
       <Grid container sx={{ padding: '2rem' }}>
-        {friendRequests.map((item, index) => (
+        { friendRequests && friendRequests.map((item, index) => (
           <Grid
             key={index}
             item
