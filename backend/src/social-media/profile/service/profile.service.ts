@@ -1,5 +1,8 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UpdateProfileDto } from 'src/common/models/dtos/update-profile.dto';
+import { Page } from 'src/common/models/view-model/page-model';
+import { PagingData } from 'src/common/models/view-model/paging.model';
+import { ResponseData } from 'src/common/models/view-model/success-message.model';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 
 import { Profile } from '../model/profile.model';
@@ -10,19 +13,21 @@ export class ProfileService {
 
     constructor(private readonly profileRepository: ProfileRepository) { }
 
-    async getAllProfile(): Promise<Profile[]> {
+    async getAllProfile(page: Page): Promise<ResponseData<PagingData<Profile[]>>> {
         try {
-            return await this.profileRepository.getAllProfile();
+            var response = new ResponseData<PagingData<Profile[]>>();
+            response.results = await this.profileRepository.getAllProfile(page);
+            return response;
         } catch (err) {
             ExceptionResponse(err);
         }
     }
 
-    async getProfileById(id: number): Promise<Profile> {
+    async getProfileById(id: number): Promise<ResponseData<Profile>> {
         try {
-            // const { role } = { ...userRoleDto };
-            const user = await this.profileRepository.findProfileById(id);
-            return user;
+            var response = new ResponseData<Profile>();
+            response.results = await this.profileRepository.findProfileById(id);
+            return response;
         } catch (err) {
             ExceptionResponse(err)
         }
@@ -42,31 +47,37 @@ export class ProfileService {
     //     }
     // }
 
-    async updateProfile(id: number, updateProfileDto: UpdateProfileDto): Promise<Profile> {
+    async updateProfile(id: number, updateProfileDto: UpdateProfileDto): Promise<ResponseData<boolean>> {
         try {
-            if(await this.profileRepository.findProfileByEmailExcludeId(id, updateProfileDto.email)){
+            var response = new ResponseData<boolean>();
+            if (await this.profileRepository.findProfileByEmailExcludeId(id, updateProfileDto.email)) {
                 throw new ConflictException("Email existed!!!");
-            } else if(await this.profileRepository.findProfileByProfileNameExcludeId(id, updateProfileDto.username)){
-                throw new ConflictException("Username existed!!!");
             }
-            await this.profileRepository.updateProfileWithId(id, updateProfileDto);
-            return await this.profileRepository.findProfileById(id);
+            const res = await this.profileRepository.updateProfileWithId(id, updateProfileDto);
+            response.results = res ? true : false;
+            return response;
         } catch (err) {
             ExceptionResponse(err)
         }
     }
 
-    async deActivateProfile(profile_id: number): Promise<void> {
+    async deActivateProfile(profile_id: number): Promise<ResponseData<boolean>> {
         try {
-            await this.profileRepository.deActivateProfileById(profile_id);
+            var response = new ResponseData<boolean>();
+            const res = await this.profileRepository.deActivateProfileById(profile_id);
+            response.results = res;
+            return response;
         } catch (err) {
             ExceptionResponse(err)
         }
     }
 
-    async activateProfile(profile_id: number): Promise<void> {
+    async activateProfile(profile_id: number): Promise<ResponseData<boolean>> {
         try {
-            await this.profileRepository.activateProfileById(profile_id);
+            var response = new ResponseData<boolean>();
+            const res = await this.profileRepository.activateProfileById(profile_id);
+            response.results = res;
+            return response;
         } catch (err) {
             ExceptionResponse(err)
         }
