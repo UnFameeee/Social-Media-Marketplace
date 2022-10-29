@@ -1,8 +1,8 @@
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
-import '../index.css';
 import UserProfile from '../../../UserProfile/UserProfile';
+import '../index.css';
 
 export default function FriendSuggestions() {
   return (

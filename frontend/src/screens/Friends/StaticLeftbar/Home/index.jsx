@@ -10,9 +10,10 @@ const FriendHome = () => {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
-  
-  const friendRequests = useSelector((state) => state.friends.getFriendRequests?.data?.data);
-  console.log(friendRequests)
+  const friendRequests = useSelector(
+    (state) => state.friends.getFriendRequests?.data?.data
+  );
+  console.log(friendRequests);
   const reRenderLayout = useOutletContext();
   useEffect(() => {
     reRenderLayout(); //re-render the parent layout
@@ -32,7 +33,7 @@ const FriendHome = () => {
         Friend Requests
       </h2>
       <Grid container sx={{ padding: '2rem' }}>
-        {[...Array(14)].map((item, index) => (
+        {friendRequests.map((item, index) => (
           <Grid
             key={index}
             item
@@ -45,8 +46,8 @@ const FriendHome = () => {
             }}
           >
             <FriendCard
-              imageURL="https://cf.shopee.vn/file/8c178f3e0f1f947afa378dd7f15068a5"
-              name="Dibu"
+              imageURL={item.picture}
+              name={item.profile_name}
             />
           </Grid>
         ))}
