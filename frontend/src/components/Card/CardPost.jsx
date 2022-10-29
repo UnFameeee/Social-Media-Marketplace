@@ -7,9 +7,7 @@ import {
   ArrowDropDown,
   MoreHoriz,
 } from "@mui/icons-material";
-import {
-  Avatar,
-} from "@mui/material";
+import { Avatar } from "@mui/material";
 import MUI from "../MUI";
 import dayjs from "dayjs";
 import "react-toastify/dist/ReactToastify.css";
@@ -45,7 +43,7 @@ function CardPost(props) {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
-   const arrayImgs = JSON.parse(props.postData.media_location);
+  const arrayImgs = JSON.parse(props.postData.media_location);
   // Function
   const handleOnClickShowAction = () => {
     setShowAction(!showAction);
@@ -79,9 +77,17 @@ function CardPost(props) {
       <div className="w-full bg">
         <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
           <div className="flex flex-1 gap-[1rem]">
-            <Avatar style={{ fontSize:'2rem'}} alt={props.postData.profile_name} src={props.postData?.picture ? JSON.parse(props.postData?.picture) : null}> 
-                {props.postData.profile_name?.at(0)}
-              </Avatar>
+            <Avatar
+              style={{ fontSize: "2rem" }}
+              alt={props.postData.profile_name}
+              src={
+                props.postData?.picture
+                  ? JSON.parse(props.postData?.picture)
+                  : null
+              }
+            >
+              {props.postData.profile_name?.at(0)}
+            </Avatar>
             <div>
               <p>{props.postData.profile_name}</p>
               <span className=" font-light text-[1.4rem]">
@@ -112,20 +118,21 @@ function CardPost(props) {
           )}
         </div>
         <div className="written_text ">
-          <div className="paragraph px-[2rem] mb-[1rem]">
+          <div className="paragraph px-[2rem] mb-[1rem] ">
             <span className="text-grey1f">{props.postData.written_text}</span>
           </div>
-          <div className="px-[-1rem] mb-[0.5rem]">
-            { props.postData.media_location &&
-              arrayImgs&& arrayImgs.map((item) => (
+          {props.postData.media_location && arrayImgs.length>0 && (
+            <div className="px-[-1rem] mb-[0.5rem] border-y-[0.1rem] border-gray-200">
+              {arrayImgs.map((item) => (
                 <img
                   src={item}
                   key={item}
                   alt=""
                   className="w-full min-w-[20rem] h-[45rem] object-cover"
                 />
-              ))  }
-          </div>
+              ))}
+            </div>
+          )}
           <div className="mb-[0.5rem] px-[2rem] flex gap-[0.5rem]">
             <ThumbUpOutlined
               className="Icon text-blue8f3"

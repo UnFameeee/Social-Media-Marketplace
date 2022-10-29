@@ -21,6 +21,8 @@ import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import HoverButton from "./HoverButton";
 import CardPost from "../../components/Card/CardPost";
 import GridSideInfo from "./GridSideInfo";
+import PostModal from "../Home/PostModal";
+import { ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPost } from "../../redux/apiRequest";
 function UserProfile() {
@@ -57,6 +59,18 @@ function UserProfile() {
   }, [reRender]);
   return (
     <>
+    {openCreatePost && (
+      <PostModal
+        showModal={openCreatePost}
+        postUpdateData={postUpdateData}
+        setPostUpdateData={setPostUpdateData}
+        setShowModal={setOpenCreatePost}
+        setReRender={setReRender}
+        profile={userData.profile}
+        avtUrl="https://source.unsplash.com/random/330×320"
+      />
+    )}
+    <ToastContainer />
       <div className="flex justify-center pt-[2%] bg-white shadow-md">
         <div className="relative">
           <img
@@ -216,6 +230,7 @@ function UserProfile() {
               haveInput={true}
               alignCenter={true}
               inputValue="What's on your mind?"
+              onClick={handleOpenPostModel}
             />
             <FullWidthHr className="mt-[1rem]" />
             <HoverButton

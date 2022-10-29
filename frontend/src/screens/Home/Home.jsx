@@ -56,7 +56,6 @@ function Home() {
           setShowModal={setOpenCreatePost}
           setReRender={setReRender}
           profile={userData.profile}
-          avtUrl="https://source.unsplash.com/random/330×320"
         />
       )}
       <ToastContainer />
