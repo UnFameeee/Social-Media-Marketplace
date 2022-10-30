@@ -1,4 +1,4 @@
-import { AllowNull, AutoIncrement, Column, Default, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { AllowNull, AutoIncrement, Column, DataType, Default, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
 import { Role } from "src/common/constants/role.constant";
 @Table({
     tableName: "Profiles",
@@ -56,4 +56,13 @@ export class Profile extends Model<Profile> {
     @AllowNull
     @Column
     permission: string;
+
+    @Column(DataType.VIRTUAL(DataType.BOOLEAN))
+    get isFriend(): boolean {
+        return this.getDataValue("isFriend");
+    }
+
+    set isFriend(value: boolean){
+        this.setDataValue("isFriend", value);
+    }
 }
