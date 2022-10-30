@@ -28,6 +28,7 @@
     "redux": "^4.2.0",
     "redux-persist": "^6.0.0",
     "styled-components": "^5.3.6",
+    "timeago.js": "^4.0.2",
     "tss-react": "^4.0.0",
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.4",

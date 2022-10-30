@@ -14,29 +14,9 @@ import "react-toastify/dist/ReactToastify.css";
 import AvatarWithText from "../Avatar/AvatarWithText";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, likePost } from "../../redux/apiRequest";
+import {format} from "timeago.js"
 function CardPost(props) {
   // Declare variables
-  let timeDifOverTime = {
-    value: 0,
-    type: "m",
-  };
-
-  const calcDatePostOverTime = (date) => {
-    const datePost = dayjs(date);
-    const dateNow = dayjs();
-    let dateDif = dateNow.diff(datePost, "second");
-    if (dateDif >= 86400) {
-      timeDifOverTime.value = Math.round(dateDif / 86400);
-      timeDifOverTime.type = "d";
-    } else if (dateDif >= 3600) {
-      timeDifOverTime.value = Math.round(dateDif / 3600);
-      timeDifOverTime.type = "h";
-    } else if (dateDif >= 60) {
-      timeDifOverTime.value = Math.round(dateDif / 60);
-      timeDifOverTime.type = "m";
-    }
-  };
-  calcDatePostOverTime(props.postData.createdAt);
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState();
   const [likeToggle, setLikeToggle] = useState(false);
@@ -91,7 +71,7 @@ function CardPost(props) {
             <div>
               <p>{props.postData.profile_name}</p>
               <span className=" font-light text-[1.4rem]">
-                {`${timeDifOverTime.value}${timeDifOverTime.type}`}
+                {format(props.postData.createdAt)}
               </span>
             </div>
           </div>
