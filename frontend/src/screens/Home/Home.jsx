@@ -9,9 +9,7 @@ import {
   Avatar,
 } from "@mui/material";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
-import HoverButton from "../UserProfile/HoverButton";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
-import jwt_decode from "jwt-decode";
 import { ToastContainer, toast } from "react-toastify";
 import PostModal from "./PostModal";
 import { useState } from "react";
