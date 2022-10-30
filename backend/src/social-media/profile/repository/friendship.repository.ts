@@ -107,17 +107,18 @@ export class FriendshipRepository {
                     var mutualFriend = await this.getMutualFriend(profile_id, element["profile_request"]);
                     // element.setDataValue("mutualFriend", mutualFriend);
                     element["mutualFriend"] = mutualFriend;
-                    element["profile_id"] = element["profile_target"];
-                    element["profile_name"] = element["profile_target_name"];
-                    element["picture"] = element["profile_target_picture"];
+                    
+                    element["profile_id"] = element["profile_request"];
+                    element["profile_name"] = element["profile_request_name"];
+                    element["picture"] = element["profile_request_picture"];
                 } else {
                     var mutualFriend = await this.getMutualFriend(profile_id, element["profile_target"]);
                     // element.setDataValue("mutualFriend", mutualFriend);
                     element["mutualFriend"] = mutualFriend;
-
-                    element["profile_id"] = element["profile_request"];
-                    element["profile_name"] = element["profile_request_name"];
-                    element["picture"] = element["profile_request_picture"];
+                    
+                    element["profile_id"] = element["profile_target"];
+                    element["profile_name"] = element["profile_target_name"];
+                    element["picture"] = element["profile_target_picture"];
                 }
 
                 delete element["profile_target"];
