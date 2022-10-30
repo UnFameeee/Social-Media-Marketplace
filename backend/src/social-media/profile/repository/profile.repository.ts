@@ -12,6 +12,7 @@ import { FriendshipRepository } from "./friendship.repository";
 import { Friendship } from "../model/friendship.model";
 import { FRIENDSHIP_LIMIT } from "src/common/constants/friendship.constant";
 import { Sequelize } from 'sequelize-typescript';
+import { encode } from "src/common/utils/bcrypt-singleton.utils";
 @Injectable()
 export class ProfileRepository {
     constructor(
@@ -43,7 +44,7 @@ export class ProfileRepository {
 
     async findProfileById(profile_id: number, scope?: string): Promise<Profile> {
         try {
-            return this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { profile_id: profile_id } })
+            return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { profile_id: profile_id } })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
@@ -51,7 +52,7 @@ export class ProfileRepository {
 
     async findProfileByEmail(email: string, scope?: string): Promise<Profile> {
         try {
-            return this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { email: email } })
+            return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { email: email } })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
@@ -59,7 +60,7 @@ export class ProfileRepository {
 
     async findProfileByProfileName(profile_name: string, scope?: string): Promise<Profile> {
         try {
-            return this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { profile_name: profile_name } })
+            return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { profile_name: profile_name } })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
@@ -67,7 +68,7 @@ export class ProfileRepository {
 
     async findProfileByProfileNameExcludeId(profile_id: number, profile_name: string, scope?: string): Promise<Profile> {
         try {
-            return this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
+            return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
                 where:
                 {
                     profile_id: { [Op.ne]: profile_id },
@@ -81,7 +82,7 @@ export class ProfileRepository {
 
     async findProfileByEmailExcludeId(profile_id: number, email: string, scope?: string): Promise<Profile> {
         try {
-            return this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
+            return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
                 where:
                 {
                     profile_id: { [Op.ne]: profile_id },
@@ -110,10 +111,10 @@ export class ProfileRepository {
                     profile_id: profile_id
                 }
             });
-            queryData.setDataValue("profile_name", updateUserDto.profile_name);
-            queryData.setDataValue("password", updateUserDto.new_password);
-            queryData.setDataValue("email", updateUserDto.email);
-            queryData.setDataValue("birth", updateUserDto.birth);
+            queryData.setDataValue("profile_name", updateUserDto.profile_name ? updateUserDto.profile_name : queryData["profile_name"]);
+            queryData.setDataValue("password", updateUserDto.new_password ? await encode(updateUserDto.new_password) : queryData["password"]);
+            queryData.setDataValue("email", updateUserDto.email ? updateUserDto.email : queryData["email"]);
+            queryData.setDataValue("birth", updateUserDto.birth ? updateUserDto.birth : queryData["birth"]);
 
             const res = await queryData.save();
             return res ? true : false;
@@ -184,6 +185,34 @@ export class ProfileRepository {
             result.page = page;
             return result;
 
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async getProfileDetailById(profile_id: number, profile_target_id: number): Promise<Profile> {
+        try {
+            var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findOne({ where: { profile_id: profile_target_id }, raw: false })
+            if (queryData && profile_id != profile_target_id) {
+                const isFriend = await this.friendshipRepository.isFriend(profile_id, profile_target_id);
+                queryData.setDataValue("isFriend", isFriend);
+                return queryData;
+            } else if (queryData) {
+                return queryData;
+            }
+            return null;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async getPassword(profile_id: number): Promise<string> {
+        try {
+            var queryData = await this.profileRepository.scope(SCOPE.WITH_PASSWORD).findOne({
+                attributes: ["password"],
+                where: {profile_id: profile_id},
+            })
+            return queryData.password;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
