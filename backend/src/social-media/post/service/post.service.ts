@@ -22,10 +22,10 @@ export class PostService {
         }
     }
 
-    async getPostByProfileId(profile: Profile, data: Page): Promise<ResponseData<PagingData<Post[]>>> {
+    async getPostByProfileId(profile_id: number, data: Page): Promise<ResponseData<PagingData<Post[]>>> {
         try{
             var response = new ResponseData<PagingData<Post[]>>();
-            response.results = await this.postRepository.getPostByProfileId(profile.profile_id, data);
+            response.results = await this.postRepository.getPostByProfileId(profile_id, data);
             return response;
         }catch(err){
             ExceptionResponse(err);
