@@ -77,8 +77,6 @@ export class FriendshipRepository {
                     {
                         model: Profile,
                         as: "profile_request_id",
-                        where: { profile_id: profile_id },
-                        required: false,
                         attributes: [],
                         // through: {attributes: []},
                         // attributes: {exclude: ["profile_name", "picture", "profile_id"]},
@@ -86,13 +84,12 @@ export class FriendshipRepository {
                     {
                         model: Profile,
                         as: "profile_target_id",
-                        where: { profile_id: profile_id },
-                        required: false,
                         attributes: [],
                         // through: {attributes: []},
                         // attributes: {exclude: ["profile_name", "picture", "profile_id"]},
                     }
                 ],
+
                 order: [
                     ['createdAt', 'DESC']
                 ],
@@ -107,7 +104,7 @@ export class FriendshipRepository {
                     var mutualFriend = await this.getMutualFriend(profile_id, element["profile_request"]);
                     // element.setDataValue("mutualFriend", mutualFriend);
                     element["mutualFriend"] = mutualFriend;
-                    
+
                     element["profile_id"] = element["profile_request"];
                     element["profile_name"] = element["profile_request_name"];
                     element["picture"] = element["profile_request_picture"];
@@ -115,7 +112,7 @@ export class FriendshipRepository {
                     var mutualFriend = await this.getMutualFriend(profile_id, element["profile_target"]);
                     // element.setDataValue("mutualFriend", mutualFriend);
                     element["mutualFriend"] = mutualFriend;
-                    
+
                     element["profile_id"] = element["profile_target"];
                     element["profile_name"] = element["profile_target_name"];
                     element["picture"] = element["profile_target_picture"];
