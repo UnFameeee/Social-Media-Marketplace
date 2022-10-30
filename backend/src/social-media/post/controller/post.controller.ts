@@ -57,10 +57,15 @@ export class PostController {
             }
         }
     })
-    @Post('/profile')
-    async getPostByProfileId(@Request() request: any, @Body() page: Page) {
+    @Post('/getOwnPost')
+    async getOwnPost(@Request() request: any, @Body() page: Page) {
         const profile = <Profile>request.user;
-        return await this.postService.getPostByProfileId(profile, page);
+        return await this.postService.getPostByProfileId(profile.profile_id, page);
+    }
+
+    @Post('/getPost/:profile_id')
+    async getPostByProfileId(@Param("profile_id") profile_id, @Body() page: Page) {
+        return await this.postService.getPostByProfileId(profile_id, page);
     }
 
     @Get('/:post_id')

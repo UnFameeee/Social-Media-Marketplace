@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, Request } from '@nestjs/common';
 import { Delete, Patch, Put } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -56,11 +56,14 @@ export class ProfileController {
             }
         }
     })
-    @Put("/:profile_id")
-    updateProfile(@Param("profile_id") profile_id: number, @Body() updateProfileDto: UpdateProfileDto): Promise<ResponseData<boolean>> {
-        return this.profileService.updateProfile(profile_id, updateProfileDto);
+    //Update self profile
+    @Put("")
+    updateProfile(@Request() request: any, @Body() updateProfileDto: UpdateProfileDto): Promise<ResponseData<string>> {
+        const profile = <Profile>request.user;
+        return this.profileService.updateProfile(profile, updateProfileDto);
     }
 
+    
     @ApiOperation({ description: 'Deactivate User' })
     @Delete("/:profile_id")
     deActivateProfile(@Param("profile_id") profile_id: number): Promise<ResponseData<boolean>> {
@@ -71,5 +74,17 @@ export class ProfileController {
     @Patch("/:profile_id")
     activateUser(@Param("profile_id") profile_id: number): Promise<ResponseData<boolean>> {
         return this.profileService.activateProfile(profile_id);
+    }
+
+    @Post("/friendSuggestion")
+    async friendSuggestion(@Request() request: any, @Body() page: Page) {
+        const profile = <Profile>request.user;
+        return await this.profileService.friendSuggestion(profile, page);
+    }
+
+    @Get("/getProfileDetailById/:profile_target_id")
+    async getProfileDetailById(@Request() request: any, @Param("profile_target_id") profile_target_id) {
+        const profile = <Profile>request.user;
+        return await this.profileService.getProfileDetailById(profile, profile_target_id);
     }
 }

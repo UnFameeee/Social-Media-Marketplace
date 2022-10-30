@@ -3,3 +3,13 @@ export enum FRIENDSHIP_STATUS {
     ACCEPTED = "ACCEPTED",
     REMOVED = "REMOVED"
 }
+
+export enum FRIENDREQUEST_STATUS {
+    NONE = "NONE",
+    TARGET = "TARGET",
+    REQUEST = "REQUEST"
+}
+
+export enum FRIENDSHIP_LIMIT {
+    MAX = 1000,
+}
