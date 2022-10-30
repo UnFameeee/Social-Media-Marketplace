@@ -117,7 +117,7 @@ export const friendSlice = createSlice({
       state.addFriend.error = true;
     },
 
-    acceptFiendRequestStart: (state) => {
+    acceptFriendRequestStart: (state) => {
       state.acceptFriendRequest.isFetching = true;
     },
     acceptFriendRequestSuccess: (state, action) => {

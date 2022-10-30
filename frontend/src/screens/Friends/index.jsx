@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import {
   People,
@@ -10,7 +11,6 @@ import {
 import TwoColumns from '../../components/Layout/TwoColumns';
 import { Helper } from '../../utils/Helper';
 import './index.css';
-import { useState } from 'react';
 
 export function StaticLeftbarLayout() {
   const [reRender, setReRender] = useState(true);

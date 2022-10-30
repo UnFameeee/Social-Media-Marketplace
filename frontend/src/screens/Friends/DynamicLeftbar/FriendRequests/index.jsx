@@ -18,7 +18,13 @@ export default function FriendRequests() {
 
   useEffect(() => {
     getAllFriendRequests(accessToken, dispatch);
-  }, []);
+  }, []);  
+
+  var subTitle = friendRequests?.page?.totalElement
+    ? friendRequests?.page?.totalElement === 1
+      ? `1 Friend Request`
+      : `${friendRequests?.page?.totalElement} Friend Requests`
+    : `You Have No Friend Requests`;
 
   return (
     <TwoColumns
@@ -29,7 +35,7 @@ export default function FriendRequests() {
         before: (
           <LeftbarTitle
             title="Friend Requests"
-            subTitle={`${friendRequests.page.totalElement} Friend Requests`}
+            subTitle={subTitle}
           />
         ),
         leftBarList: friendRequests.data.map((x) => {

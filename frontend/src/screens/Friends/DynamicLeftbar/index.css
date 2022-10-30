@@ -9,9 +9,13 @@
 /* #endregion */
 
 /* #region leftbar */
+.all-friend .left-bar-button .left {
+  margin: 0 6px;
+}
 .left-bar-button .MuiAvatar-root {
   width: 6rem;
   height: 6rem;
+  font-size: 2.4rem;
 }
 .left-bar-list.friend-list {
   overflow-y: scroll;
