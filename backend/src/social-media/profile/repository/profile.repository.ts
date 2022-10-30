@@ -8,10 +8,16 @@ import { SCOPE } from "src/common/constants/sequelize-scope.constant";
 import { PagingData } from "src/common/models/view-model/paging.model";
 import { Page } from "src/common/models/view-model/page-model";
 import { paginate } from "src/common/utils/paginate.utils";
+import { FriendshipRepository } from "./friendship.repository";
+import { Friendship } from "../model/friendship.model";
+import { FRIENDSHIP_LIMIT } from "src/common/constants/friendship.constant";
+import { Sequelize } from 'sequelize-typescript';
 @Injectable()
 export class ProfileRepository {
     constructor(
-        @Inject(PROVIDER.Profile) private profileRepository: typeof Profile
+        @Inject(PROVIDER.Profile) private profileRepository: typeof Profile,
+        @Inject(PROVIDER.Friendship) private friendshipModelRepository: typeof Friendship,
+        @Inject(FriendshipRepository) private friendshipRepository: FriendshipRepository
     ) { }
 
     async getAllProfile(page: Page): Promise<PagingData<Profile[]>> {
@@ -143,6 +149,41 @@ export class ProfileRepository {
                 where: { profile_id: profile_id }
             });
             return checkData ? true : false;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async friendSuggestion(profile_id: number, page: Page): Promise<PagingData<Profile[]>> {
+        try {
+            const fullPage: Page = {
+                page: 0,
+                pageSize: FRIENDSHIP_LIMIT.MAX
+            }
+            const friendList = await this.friendshipRepository.getAllFriend(profile_id, fullPage);
+
+            var tempArr: number[] = [];
+            for (const element of friendList.data) {
+                tempArr.push(element["profile_id"]);
+            }
+
+            var result = new PagingData<Profile[]>();
+
+            var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findAndCountAll({
+                where: { profile_id: { [Op.notIn]: tempArr } },
+                order: [
+                    Sequelize.literal('rand()'),
+                    // ['createdAt', 'DESC']
+                ],
+                raw: true,
+                ...paginate({ page })
+            });
+
+            result.data = queryData.rows;
+            page.totalElement = queryData.count;
+            result.page = page;
+            return result;
+
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }

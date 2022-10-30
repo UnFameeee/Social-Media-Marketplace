@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards, Request } from '@nestjs/common';
 import { Delete, Patch, Put } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -71,5 +71,11 @@ export class ProfileController {
     @Patch("/:profile_id")
     activateUser(@Param("profile_id") profile_id: number): Promise<ResponseData<boolean>> {
         return this.profileService.activateProfile(profile_id);
+    }
+
+    @Post("/friendSuggestion")
+    async friendSuggestion(@Request() request: any, @Body() page: Page) {
+        const profile = <Profile>request.user;
+        return await this.profileService.friendSuggestion(profile, page);
     }
 }

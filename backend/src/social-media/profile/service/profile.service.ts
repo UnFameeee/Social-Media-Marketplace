@@ -82,4 +82,11 @@ export class ProfileService {
             ExceptionResponse(err)
         }
     }
+
+    async friendSuggestion(profile: Profile, page: Page): Promise<ResponseData<PagingData<Profile[]>>> {
+        var response = new ResponseData<PagingData<Profile[]>>();
+        const res = await this.profileRepository.friendSuggestion(profile.profile_id, page);
+        response.results = res;
+        return response;
+    }
 }
