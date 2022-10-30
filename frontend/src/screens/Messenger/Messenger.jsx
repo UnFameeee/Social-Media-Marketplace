@@ -26,7 +26,7 @@ function Messenger() {
                   </Avatar>
                 ),
                 middle: userData.profile.profile_name,
-                navigate: "userprofile",
+                navigate: "/userprofile",
               },
               {
                 left: (
