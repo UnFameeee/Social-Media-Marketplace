@@ -1,13 +1,10 @@
 import React from "react";
-import {
-  Coronavirus,
-} from "@mui/icons-material";
+import { Coronavirus } from "@mui/icons-material";
+import { IoChatbubbleEllipses } from "react-icons/io5";
 import CardPost from "../../components/Card/CardPost";
 import LeftBar from "../../components/Layout/SideBar/LeftBar";
 import RightBar from "../../components/Layout/SideBar/RightBar";
-import {
-  Avatar,
-} from "@mui/material";
+import { Avatar } from "@mui/material";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import { ToastContainer, toast } from "react-toastify";
@@ -62,20 +59,28 @@ function Home() {
           leftBarList={[
             {
               left: (
-                <Avatar style={{width:'5rem', height:'5rem', fontSize:'2rem'}} alt={userData.profile.profile_name} src={userData.profile?.picture ? JSON.parse(userData.profile?.picture) : null}> 
-                {userData.profile.profile_name?.at(0)}
-              </Avatar>
+                <Avatar
+                  style={{ width: "5rem", height: "5rem", fontSize: "2rem" }}
+                  alt={userData.profile.profile_name}
+                  src={
+                    userData.profile?.picture
+                      ? JSON.parse(userData.profile?.picture)
+                      : null
+                  }
+                >
+                  {userData.profile.profile_name?.at(0)}
+                </Avatar>
               ),
               middle: userData.profile.profile_name,
-              navigate: "userprofile"
+              navigate: "userprofile",
             },
             {
               left: {
                 iconButton: true,
-                icon: <Coronavirus />,
+                icon: <IoChatbubbleEllipses />,
               },
-              middle: <h1>adawdaw</h1>,
-              navigate: "concac",
+              middle: <h1>Messenger</h1>,
+              navigate: "messenger",
             },
             {
               left: {
