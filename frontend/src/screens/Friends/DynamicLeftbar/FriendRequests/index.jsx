@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllFriendRequests } from '../../../../redux/apiRequest';
+import { getAllFriendRequests, acceptFriendRequest } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
@@ -16,9 +16,16 @@ export default function FriendRequests() {
     (state) => state.friends.getFriendRequests?.data
   );
 
-  useEffect(() => {
-    getAllFriendRequests(accessToken, dispatch);
-  }, []);  
+  const [reRender, setReRender] = useState(false);
+  useLayoutEffect(() => {
+    let onDestroy = false;
+    if (!onDestroy) {
+      getAllFriendRequests(accessToken, dispatch);
+    }
+    return () => {
+      onDestroy = true;
+    };
+  }, [reRender]);
 
   var subTitle = friendRequests?.page?.totalElement
     ? friendRequests?.page?.totalElement === 1
@@ -33,18 +40,27 @@ export default function FriendRequests() {
           listClassname: 'friend-list',
         },
         before: (
-          <LeftbarTitle
-            title="Friend Requests"
-            subTitle={subTitle}
-          />
+          <LeftbarTitle title="Friend Requests" subTitle={subTitle} />
         ),
-        leftBarList: friendRequests.data.map((x) => {
+        leftBarList: friendRequests?.data?.map((x) => {
           return {
             left: {
               url: x.picture,
               name: x.profile_name,
             },
-            middle: <LeftbarMiddleItem name={x.profile_name} />,
+            middle: (
+              <LeftbarMiddleItem
+                profileName={x.profile_name}
+                firstButtonConfig={{
+                  onClick: () => {
+                    acceptFriendRequest(accessToken, x.profile_id, dispatch);
+                    setTimeout(() => {
+                      setReRender(!reRender)
+                    }, 100);
+                  },
+                }}
+              />
+            ),
           };
         }),
         leftBarColor: 'white',

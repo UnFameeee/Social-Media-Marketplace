@@ -1,8 +1,11 @@
 import { Grid } from '@mui/material';
-import { useLayoutEffect, useState, } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllFriendRequests } from '../../../../redux/apiRequest';
+import {
+  getAllFriendRequests,
+  acceptFriendRequest,
+} from '../../../../redux/apiRequest';
 import FriendCard from './FriendCard';
 import '../index.css';
 
@@ -28,7 +31,7 @@ const FriendHome = () => {
       onDestroy = true;
     };
   }, [reRender]);
-  
+
   return (
     <>
       <h2 className="friend-home-title">Friend Requests</h2>
@@ -37,10 +40,19 @@ const FriendHome = () => {
           {friendRequests.map((item, index) => (
             <Grid key={index} item xs className="friend-home-grid">
               <FriendCard
-                id={item.profile_id}
-                imageURL={item.picture}
-                name={item.profile_name}
-                reRender={setReRender}
+                profileDetails={item}
+                firstButtonConfig={{
+                  onClick: () => {
+                    acceptFriendRequest(
+                      accessToken,
+                      item.profile_id,
+                      dispatch
+                    );
+                    setTimeout(() => {
+                      setReRender(!reRender);
+                    }, 100);
+                  },
+                }}
               />
             </Grid>
           ))}

@@ -10,7 +10,6 @@ import {
 } from '@mui/icons-material';
 import TwoColumns from '../../components/Layout/TwoColumns';
 import { Helper } from '../../utils/Helper';
-import './index.css';
 
 export function StaticLeftbarLayout() {
   const [reRender, setReRender] = useState(true);
@@ -27,6 +26,7 @@ export function StaticLeftbarLayout() {
             },
             middle: 'Home',
             selected: Helper.checkURL('friends', {}, true),
+            disabled: Helper.checkURL('friends', {}, true),
             navigate: '/friends',
           },
           {
@@ -63,6 +63,7 @@ export function StaticLeftbarLayout() {
             },
             middle: 'Birthdays',
             selected: Helper.checkURL('birthdays', {}, true),
+            disabled: Helper.checkURL('birthdays', {}, true),
             navigate: 'birthdays',
           },
         ],

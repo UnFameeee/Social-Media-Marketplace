@@ -3,8 +3,8 @@
   padding-top: 0;
 }
 .two-column {
-    padding-left: var(--sidebar-width);
-    padding-right: 0;
+  padding-left: var(--sidebar-width);
+  padding-right: 0;
 }
 /* #endregion */
 
@@ -23,5 +23,12 @@
 }
 .friend-left-bar-title-wrapper {
   box-shadow: 0 1px 0 0 var(--shadow-1);
+}
+.friend-left-bar-title {
+  display: flex;
+  padding: 1.2rem;
+  align-items: center;
+  height: var(--navbar-height);
+  max-height: var(--navbar-height);
 }
 /* #endregion */
