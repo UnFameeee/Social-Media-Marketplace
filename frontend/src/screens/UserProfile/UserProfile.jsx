@@ -1,3 +1,4 @@
+import { useDispatch, useSelector } from 'react-redux';
 import React, {
   useRef,
   useLayoutEffect,
@@ -19,15 +20,13 @@ import {
 } from '@mui/icons-material';
 import { Avatar } from '@mui/material';
 import SideBarButton from './SideBarButton';
-import { style } from '@mui/system';
 import SideBarLi from './SideBarLi';
 import FullWidthHr from '../../components/FullWidthHr/FullWidthHr';
 import HoverButton from './HoverButton';
 import CardPost from '../../components/Card/CardPost';
 import GridSideInfo from './GridSideInfo';
 import PostModal from '../Home/PostModal';
-import { useDispatch, useSelector } from 'react-redux';
-import { getAllPost } from '../../redux/apiRequest';
+import { getAllPost, getProfile } from '../../redux/apiRequest';
 function UserProfile() {
   const dispatch = useDispatch();
   const [reRender, setReRender] = useState(false);
@@ -52,10 +51,22 @@ function UserProfile() {
   const handleGetPostUpdateData = (data) => {
     setPostUpdateData(data);
   };
-  const userData = useSelector((state) => state.auth.user.userData);
-  useEffect(() => {
+  var userData = useSelector(
+    (state) => state.auth?.user?.userData?.profile
+  );
+  var profileDetails = useSelector(
+    (state) => state.profile?.profileDetails?.data
+  );
+  const [searchParams] = useSearchParams();
+  const queryParams = Object.fromEntries([...searchParams]);
+  if (window.location.pathname !== '/profile') {
+    userData = profileDetails;
+  }
+  
+  useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
+      getProfile(accessToken, queryParams.id, dispatch);
       getAllPost(accessToken, dispatch);
     }
     return () => {
@@ -63,14 +74,6 @@ function UserProfile() {
     };
   }, [reRender]);
 
-  
-  const [searchParams] = useSearchParams();
-  
-  for (const entry of searchParams.entries()) {
-    const [param, value] = entry;
-    console.log(param, value);
-  }
-  
   return (
     <>
       {openCreatePost && (
@@ -80,7 +83,7 @@ function UserProfile() {
           setPostUpdateData={setPostUpdateData}
           setShowModal={setOpenCreatePost}
           setReRender={setReRender}
-          profile={userData.profile}
+          profile={userData}
           avtUrl="https://source.unsplash.com/random/330×320"
         />
       )}
@@ -106,14 +109,14 @@ function UserProfile() {
                   height: '18rem',
                   fontSize: '10rem',
                 }}
-                alt={userData.profile.profile_name}
+                alt={userData?.profile_name}
                 src={
-                  userData.profile?.picture
-                    ? JSON.parse(userData.profile?.picture)
+                  userData?.picture
+                    ? JSON.parse(userData?.picture)
                     : null
                 }
               >
-                {userData.profile.profile_name?.at(0)}
+                {userData?.profile_name?.at(0)}
               </Avatar>
               <div className="bg-white absolute right-0 top-[12rem] z-1 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer">
                 <PhotoCamera
@@ -125,7 +128,7 @@ function UserProfile() {
             <div className="flex pl-[24rem] pr-[4rem] items-center justify-center py-[3.5rem] ">
               <div className="flex-1  flex flex-col gap-[0.3rem] ">
                 <span className=" font-semibold text-[3rem]">
-                  {userData.profile.profile_name}
+                  {userData?.profile_name}
                 </span>
                 <span className="text-[1.8rem] font-bold text-gray-600">
                   45 friends
@@ -282,7 +285,7 @@ function UserProfile() {
               <CardPost
                 postData={post}
                 key={post.post_id}
-                profile={userData.profile}
+                profile={userData}
                 setReRender={setReRender}
                 handleOpenPostModel={handleOpenPostModel}
                 handleGetPostUpdateData={handleGetPostUpdateData}

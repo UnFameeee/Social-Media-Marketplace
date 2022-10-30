@@ -54,6 +54,10 @@ import {
   getMutualFriendStart,
   getMutualFriendSuccess,
 } from './friendSlice';
+import {
+  getProfileDetailStart,
+  getProfileDetailSuccess,
+} from './profileSlice';
 
 const notify = (message, type) => {
   if (type === 'info') {
@@ -363,7 +367,7 @@ export const addFriend = async (accessToken, id, dispatch) => {
     };
 
     const res = await axios.post(
-      `${api.friend}/addFriend/${id}`,
+      `${api.friend}/sendFriendRequest/${id}`,
       {},
       config
     );
@@ -429,3 +433,24 @@ export const isFriend = async (accessToken, id, dispatch) => {
   }
 };
 // #endregion
+
+export const getProfile = async (accessToken, id, dispatch) => {
+  dispatch(getProfileDetailStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data;',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios.get(`${api.profile}/${id}`, config);
+    if (res.data.message) {
+      notify(res.data.message, 'error');
+    } else {
+      dispatch(getProfileDetailSuccess(res.data.results));
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(uploadImagePostFailed());
+  }
+};
