@@ -6,6 +6,7 @@ import WithNav from '../src/components/Layout/Navbar/WithNav';
 import WithoutNav from '../src/components/Layout/Navbar/WithoutNav';
 import UserProfile from './screens/UserProfile/UserProfile';
 import Settings from './screens/Setting/Settings';
+import Messenger from './screens/Messenger/Messenger';
 import RequireAuth from './screens/Auth/RequireAuth';
 import Error from './screens/Error/Error';
 import { DynamicLeftbarLayout, StaticLeftbarLayout } from './screens/Friends';
@@ -37,6 +38,7 @@ function App() {
               <Route path="suggestions" element={<FriendSuggestions />} />
               <Route path="all" element={<AllFriends />} />
             </Route>
+            <Route path='/messenger' element={<Messenger/>} />
           </Route>
         </Route>
 

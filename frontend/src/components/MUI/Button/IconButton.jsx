@@ -29,7 +29,7 @@ export function ButtonWithIcon(props) {
 
   return (
     <Tooltip title={tooltip ?? ''}>
-      <div style={{ width: '14rem' }} className={className}>
+      <div className={className}>
         <Button className="button-with-icon" {...other}>
           {children}
         </Button>

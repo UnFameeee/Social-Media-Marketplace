@@ -51,6 +51,7 @@ export class PostService {
             if(data){
                 response.results = "Create new post successfully"
             }
+            console.log("con cho dibu");
             return response;
         }catch(err){
             ExceptionResponse(err);
