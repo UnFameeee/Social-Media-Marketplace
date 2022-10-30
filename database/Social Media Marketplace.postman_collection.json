@@ -900,6 +900,37 @@
 					"response": []
 				},
 				{
+					"name": "Get Profile Detail By Id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MTQzNTE0LCJleHAiOjE2NjcxNDcxMTR9.6r4QA8ifZ-5botuBTK7gVFB-GD5PRXavpR9k5OOVZ60",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4321/api/profile/getProfileDetailById/9",
+							"host": [
+								"localhost"
+							],
+							"port": "4321",
+							"path": [
+								"api",
+								"profile",
+								"getProfileDetailById",
+								"9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get Profile By Id",
 					"request": {
 						"auth": {
@@ -907,7 +938,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjUsInByb2ZpbGVfbmFtZSI6InJlcHVkaWFuZGFlIiwiZW1haWwiOiJjb25yb3kucnVwZXJ0QGV4YW1wbGUubmV0IiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5Mi0wNi0xM1QxMToxMzo1Mi4wMDBaIiwidXBkYXRlZEF0IjoiMTk3NC0xMi0wM1QyMzozNToxNy4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MTIwNDc2LCJleHAiOjE2NjcxMjQwNzZ9.gDOhcb5NbzLKLzkKZDKayZK5o4CU6BBAjuWCvY1Ciuc",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjUsInByb2ZpbGVfbmFtZSI6InJlcHVkaWFuZGFlIiwiZW1haWwiOiJjb25yb3kucnVwZXJ0QGV4YW1wbGUubmV0IiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5Mi0wNi0xM1QxMToxMzo1Mi4wMDBaIiwidXBkYXRlZEF0IjoiMTk3NC0xMi0wM1QyMzozNToxNy4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MTQ0NDI1LCJleHAiOjE2NjcxNDgwMjV9.fBUapKEpdWz4H9BPCLcYhKjrS458of1IMCuyKmLS6J0",
 									"type": "string"
 								}
 							]
@@ -937,7 +968,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjEwMDA2LCJwcm9maWxlX25hbWUiOiJ0ZXN0MSIsImVtYWlsIjoidGVzdDFAZ21haWwuY29tIiwiYmlydGgiOiJ0ZXN0IGJpcnRoIiwicGljdHVyZSI6bnVsbCwiaXNBY3RpdmF0ZSI6dHJ1ZSwicm9sZSI6IlVzZXIiLCJwZXJtaXNzaW9uIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIyLTEwLTI3VDE4OjE5OjI0LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIyLTEwLTI3VDE4OjE5OjI0LjAwMFoiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE2NjY4OTYzMDcsImV4cCI6MTY2Njg5OTkwN30.PAvphfzyK0OpZ3nBUtxofJa9POOI2pvDoXlWWVk3FuE",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjUsInByb2ZpbGVfbmFtZSI6IlRFU1QgdXBkYXRlIFFUIiwiZW1haWwiOiJjb25yb3kucnVwZXJ0QGV4YW1wbGUubmV0IiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5Mi0wNi0xM1QxMToxMzo1Mi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMFQxNjowMDowNy4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MTQ4ODQ1LCJleHAiOjE2NjcxNTI0NDV9.xYVDrK1y4orfh2pdB3PEF_gEfjnJpiNdkmYpCaUaURI",
 									"type": "string"
 								}
 							]
@@ -946,7 +977,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"profile_name\": \"TEST update QT\",\r\n    \"email\": \"testupdate@gmail.com\",\r\n    \"password\": \"Lmao123!\",\r\n    \"birth\": null,\r\n    \"picture\": null\r\n}",
+							"raw": "{\r\n    \"profile_name\": \"TEST update QT\",\r\n    \"email\": null,\r\n    \"old_password\": \"Lmao123!\",\r\n    \"new_password\": \"Lmao123!!!\",\r\n    \"picture\": null\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -954,15 +985,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:4321/api/profile/20",
+							"raw": "localhost:4321/api/profile",
 							"host": [
 								"localhost"
 							],
 							"port": "4321",
 							"path": [
 								"api",
-								"profile",
-								"20"
+								"profile"
 							]
 						}
 					},
