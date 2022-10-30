@@ -40,7 +40,6 @@ function PostModal(props) {
     (state) => state.auth.login.currentUser.access
   );
   const isPosting = useSelector((state) => state.post.create.isFetching);
-  console.log("props.postUpdateData", props.postUpdateData);
   //Function
   const closeModal = () => {
     props.setShowModal(false);
