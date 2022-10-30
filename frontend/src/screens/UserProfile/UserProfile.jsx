@@ -1,5 +1,11 @@
-import React, { useRef, useLayoutEffect, useState, useEffect } from "react";
-import AvatarWithText from "../../components/Avatar/AvatarWithText";
+import React, {
+  useRef,
+  useLayoutEffect,
+  useState,
+  useEffect,
+} from 'react';
+import { useSearchParams } from 'react-router-dom';
+import AvatarWithText from '../../components/Avatar/AvatarWithText';
 import {
   PhotoCamera,
   Edit,
@@ -10,35 +16,34 @@ import {
   Favorite,
   AccessTimeFilled,
   RssFeed,
-} from "@mui/icons-material";
-import {
-  Avatar,
-} from '@mui/material';
-import SideBarButton from "./SideBarButton";
-import { style } from "@mui/system";
-import SideBarLi from "./SideBarLi";
-import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
-import HoverButton from "./HoverButton";
-import CardPost from "../../components/Card/CardPost";
-import GridSideInfo from "./GridSideInfo";
-import PostModal from "../Home/PostModal";
-import { ToastContainer } from "react-toastify";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllPost } from "../../redux/apiRequest";
+} from '@mui/icons-material';
+import { Avatar } from '@mui/material';
+import SideBarButton from './SideBarButton';
+import { style } from '@mui/system';
+import SideBarLi from './SideBarLi';
+import FullWidthHr from '../../components/FullWidthHr/FullWidthHr';
+import HoverButton from './HoverButton';
+import CardPost from '../../components/Card/CardPost';
+import GridSideInfo from './GridSideInfo';
+import PostModal from '../Home/PostModal';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllPost } from '../../redux/apiRequest';
 function UserProfile() {
   const dispatch = useDispatch();
   const [reRender, setReRender] = useState(false);
   const SideBarList = [
-    { text: "Went to Truong THCS Long Duc", icon: <School /> },
-    { text: "Lives in Tra Vinh", icon: <Home /> },
-    { text: "Single", icon: <Favorite /> },
-    { text: "Joined on October 2014", icon: <AccessTimeFilled /> },
-    { text: "Followed by 52 people", icon: <RssFeed /> },
+    { text: 'Went to Truong THCS Long Duc', icon: <School /> },
+    { text: 'Lives in Tra Vinh', icon: <Home /> },
+    { text: 'Single', icon: <Favorite /> },
+    { text: 'Joined on October 2014', icon: <AccessTimeFilled /> },
+    { text: 'Followed by 52 people', icon: <RssFeed /> },
   ];
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
-  const posts = useSelector((state) => state.post.get.posts?.results?.data);
+  const posts = useSelector(
+    (state) => state.post.get.posts?.results?.data
+  );
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [postUpdateData, setPostUpdateData] = useState();
   const handleOpenPostModel = () => {
@@ -57,20 +62,28 @@ function UserProfile() {
       onDestroy = true;
     };
   }, [reRender]);
+
+  
+  const [searchParams] = useSearchParams();
+  
+  for (const entry of searchParams.entries()) {
+    const [param, value] = entry;
+    console.log(param, value);
+  }
+  
   return (
     <>
-    {openCreatePost && (
-      <PostModal
-        showModal={openCreatePost}
-        postUpdateData={postUpdateData}
-        setPostUpdateData={setPostUpdateData}
-        setShowModal={setOpenCreatePost}
-        setReRender={setReRender}
-        profile={userData.profile}
-        avtUrl="https://source.unsplash.com/random/330×320"
-      />
-    )}
-    <ToastContainer />
+      {openCreatePost && (
+        <PostModal
+          showModal={openCreatePost}
+          postUpdateData={postUpdateData}
+          setPostUpdateData={setPostUpdateData}
+          setShowModal={setOpenCreatePost}
+          setReRender={setReRender}
+          profile={userData.profile}
+          avtUrl="https://source.unsplash.com/random/330×320"
+        />
+      )}
       <div className="flex justify-center pt-[2%] bg-white shadow-md">
         <div className="relative">
           <img
@@ -79,18 +92,33 @@ function UserProfile() {
             alt=""
           />
           <div className="hover:cursor-pointer flex items-center absolute right-[1rem] top-[25rem] bg-white p-[0.65rem] rounded-lg gap-[0.75rem]">
-            <PhotoCamera className="" style={{ fontSize: "2.5rem" }} />
+            <PhotoCamera
+              className=""
+              style={{ fontSize: '2.5rem' }}
+            />
             <span className="text-[1.8rem]">Edit Cover Photo</span>
           </div>
           <div className="">
             <div className="bigRoundAvt absolute  left-[3.5rem] top-[26rem]">
-              <Avatar style={{width:'18rem', height:'18rem', fontSize:'10rem'}} alt={userData.profile.profile_name} src={userData.profile?.picture ? JSON.parse(userData.profile?.picture) : null}> 
+              <Avatar
+                style={{
+                  width: '18rem',
+                  height: '18rem',
+                  fontSize: '10rem',
+                }}
+                alt={userData.profile.profile_name}
+                src={
+                  userData.profile?.picture
+                    ? JSON.parse(userData.profile?.picture)
+                    : null
+                }
+              >
                 {userData.profile.profile_name?.at(0)}
               </Avatar>
               <div className="bg-white absolute right-0 top-[12rem] z-1 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer">
                 <PhotoCamera
                   className=" bg-white  right-0 top-[12rem] z-1"
-                  style={{ fontSize: "2.5rem" }}
+                  style={{ fontSize: '2.5rem' }}
                 />
               </div>
             </div>
@@ -105,13 +133,13 @@ function UserProfile() {
               </div>
               <div className="flex items-end gap-[1rem] [&>*]:hover:cursor-pointer">
                 <div className=" bg-blue8f3 [&>*]:text-white p-[0.75rem] rounded-[0.75rem] flex items-center gap-[0.3rem]">
-                  <AddCircle style={{ fontSize: "2.2rem" }} />
+                  <AddCircle style={{ fontSize: '2.2rem' }} />
                   <span className=" text-[1.6rem] font-semibold">
                     Add to story
                   </span>
                 </div>
                 <div className=" bg-slate-300 [&>*]:text-black p-[0.75rem] rounded-[0.75rem] flex items-center gap-[0.3rem]">
-                  <Edit style={{ fontSize: "2.2rem" }} />
+                  <Edit style={{ fontSize: '2.2rem' }} />
                   <span className=" text-[1.6rem] font-semibold">
                     Edit profile
                   </span>
@@ -123,15 +151,18 @@ function UserProfile() {
               <HoverButton
                 ulGap="1.5rem"
                 listButton={[
-                  { text: "Post" },
-                  { text: "About" },
-                  { text: "Friends" },
-                  { text: "Photos" },
-                  { text: "Videos" },
-                  { text: "Check-ins" },
+                  { text: 'Post' },
+                  { text: 'About' },
+                  { text: 'Friends' },
+                  { text: 'Photos' },
+                  { text: 'Videos' },
+                  { text: 'Check-ins' },
                 ]}
               />
-              <MoreHoriz className="Icon" style={{ fontSize: "2.2rem" }} />
+              <MoreHoriz
+                className="Icon"
+                style={{ fontSize: '2.2rem' }}
+              />
             </div>
           </div>
         </div>
@@ -143,16 +174,20 @@ function UserProfile() {
               <div className="flex flex-col">
                 <span className="font-bold text-[2.3rem]">Intro</span>
                 <span className=" text-center mt-[2rem]">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Delectus, sunt? Lorem ipsum dolor sit amet consectetur
-                  adipisicing
+                  Lorem ipsum dolor sit, amet consectetur adipisicing
+                  elit. Delectus, sunt? Lorem ipsum dolor sit amet
+                  consectetur adipisicing
                 </span>
                 <SideBarButton label="Edit bio" />
                 <ul className="mt-[2rem] flex flex-col gap-[2rem] [&>li]:flex [&>li]:items-center [&>li]:gap-[1rem]">
                   {SideBarList &&
                     SideBarList.map((li, index) => {
                       return (
-                        <SideBarLi key={index} text={li.text} icon={li.icon} />
+                        <SideBarLi
+                          key={index}
+                          text={li.text}
+                          icon={li.icon}
+                        />
                       );
                     })}
                 </ul>
@@ -166,15 +201,15 @@ function UserProfile() {
               leftLabel="Photo"
               rightLabel="See all Photos"
               listImg={[
-                { url: "https://source.unsplash.com/random/211×212" },
-                { url: "https://source.unsplash.com/random/211×211" },
-                { url: "https://source.unsplash.com/random/211×213" },
-                { url: "https://source.unsplash.com/random/211×214" },
-                { url: "https://source.unsplash.com/random/211×215" },
-                { url: "https://source.unsplash.com/random/211×216" },
-                { url: "https://source.unsplash.com/random/211×218" },
-                { url: "https://source.unsplash.com/random/211×217" },
-                { url: "https://source.unsplash.com/random/211×219" },
+                { url: 'https://source.unsplash.com/random/211×212' },
+                { url: 'https://source.unsplash.com/random/211×211' },
+                { url: 'https://source.unsplash.com/random/211×213' },
+                { url: 'https://source.unsplash.com/random/211×214' },
+                { url: 'https://source.unsplash.com/random/211×215' },
+                { url: 'https://source.unsplash.com/random/211×216' },
+                { url: 'https://source.unsplash.com/random/211×218' },
+                { url: 'https://source.unsplash.com/random/211×217' },
+                { url: 'https://source.unsplash.com/random/211×219' },
               ]}
             />
             <GridSideInfo
@@ -183,40 +218,40 @@ function UserProfile() {
               rightLabel="See all Friends"
               listImg={[
                 {
-                  url: "https://source.unsplash.com/random/211×202",
-                  name: "madara",
+                  url: 'https://source.unsplash.com/random/211×202',
+                  name: 'madara',
                 },
                 {
-                  url: "https://source.unsplash.com/random/211×201",
-                  name: "naruto",
+                  url: 'https://source.unsplash.com/random/211×201',
+                  name: 'naruto',
                 },
                 {
-                  url: "https://source.unsplash.com/random/211×203",
-                  name: "pain",
+                  url: 'https://source.unsplash.com/random/211×203',
+                  name: 'pain',
                 },
                 {
-                  url: "https://source.unsplash.com/random/211×204",
-                  name: "sasuke",
+                  url: 'https://source.unsplash.com/random/211×204',
+                  name: 'sasuke',
                 },
                 {
-                  url: "https://source.unsplash.com/random/211×205",
-                  name: "obito",
+                  url: 'https://source.unsplash.com/random/211×205',
+                  name: 'obito',
                 },
                 {
-                  url: "https://source.unsplash.com/random/211×206",
-                  name: "kakashi",
+                  url: 'https://source.unsplash.com/random/211×206',
+                  name: 'kakashi',
                 },
                 {
-                  url: "https://source.unsplash.com/random/211×208",
-                  name: "minato",
+                  url: 'https://source.unsplash.com/random/211×208',
+                  name: 'minato',
                 },
                 {
-                  url: "https://source.unsplash.com/random/211×207",
-                  name: "itatchi",
+                  url: 'https://source.unsplash.com/random/211×207',
+                  name: 'itatchi',
                 },
                 {
-                  url: "https://source.unsplash.com/random/211×209",
-                  name: "sisui",
+                  url: 'https://source.unsplash.com/random/211×209',
+                  name: 'sisui',
                 },
               ]}
             />
@@ -236,9 +271,9 @@ function UserProfile() {
             <HoverButton
               flex1={true}
               listButton={[
-                { text: "photo", icon: <PhotoCamera /> },
-                { text: "School", icon: <School /> },
-                { text: "Home", icon: <Home /> },
+                { text: 'photo', icon: <PhotoCamera /> },
+                { text: 'School', icon: <School /> },
+                { text: 'Home', icon: <Home /> },
               ]}
             />
           </div>
