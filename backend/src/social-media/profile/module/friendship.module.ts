@@ -6,7 +6,7 @@ import { FriendshipService } from '../service/friendship.service';
 import { ProfileModule } from './profile.module';
 
 @Module({
-  imports: [ProfileModule],
+  imports: [],
   controllers: [FriendshipController],
   providers: [FriendshipService, FriendshipRepository, ...friendshipProviders],
   exports: [FriendshipRepository],

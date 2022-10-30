@@ -31,10 +31,20 @@ export class FriendshipService {
         }
     }
 
-    async addFriend(profile: Profile, profile_target_id: number): Promise<ResponseData<boolean>> {
+    async sendFriendRequest(profile: Profile, profile_target_id: number): Promise<ResponseData<boolean>> {
         try{
             var response = new ResponseData<boolean>();
-            response.results = await this.friendshipRepository.addFriend(profile.profile_id, profile_target_id);
+            response.results = await this.friendshipRepository.sendFriendRequest(profile.profile_id, profile_target_id);
+            return response;
+        }catch(err){
+            ExceptionResponse(err);
+        }
+    }
+
+    async isSentFriendRequest(profile: Profile, profile_target_id: number): Promise<ResponseData<string>> {
+        try{
+            var response = new ResponseData<string>();
+            response.results = await this.friendshipRepository.isSentFriendRequest(profile.profile_id, profile_target_id);
             return response;
         }catch(err){
             ExceptionResponse(err);
@@ -45,6 +55,16 @@ export class FriendshipService {
         try{
             var response = new ResponseData<boolean>();
             response.results = await this.friendshipRepository.acceptFriendRequest(profile.profile_id, profile_request_id);
+            return response;
+        }catch(err){
+            ExceptionResponse(err);
+        }
+    }
+
+    async denyFriendRequest(profile: Profile, profile_request_id: number): Promise<ResponseData<boolean>> {
+        try{
+            var response = new ResponseData<boolean>();
+            response.results = await this.friendshipRepository.denyFriendRequest(profile.profile_id, profile_request_id);
             return response;
         }catch(err){
             ExceptionResponse(err);
