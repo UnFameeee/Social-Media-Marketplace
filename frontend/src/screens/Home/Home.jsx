@@ -69,22 +69,6 @@ function Home() {
               middle: userData.profile.profile_name,
               navigate: "userprofile"
             },
-            {
-              left: {
-                iconButton: true,
-                icon: <Coronavirus />,
-              },
-              middle: <h1>adawdaw</h1>,
-              navigate: "concac",
-            },
-            {
-              left: {
-                iconButton: true,
-                icon: <Coronavirus />,
-              },
-              middle: "CUM lõ",
-              navigate: "concac",
-            },
           ]}
         />
         <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
