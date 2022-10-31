@@ -15,7 +15,7 @@ export class Post extends Model<Post> {
     @Column
     post_id: number;
     
-    @Column
+    @Column(DataType.TEXT)
     written_text: string;
 
     @Column
