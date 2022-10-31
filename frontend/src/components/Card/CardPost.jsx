@@ -99,7 +99,7 @@ function CardPost(props) {
         </div>
         <div className="written_text ">
           <div className="paragraph px-[2rem] mb-[1rem] ">
-            <span className="text-grey1f">{props.postData.written_text}</span>
+            <span style={{overflowWrap:'anywhere'}} className="text-grey1f">{props.postData.written_text}</span>
           </div>
           {props.postData.media_location && arrayImgs.length>0 && (
             <div className="px-[-1rem] mb-[0.5rem] border-y-[0.1rem] border-gray-200">
