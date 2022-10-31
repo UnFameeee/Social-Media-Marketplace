@@ -21,10 +21,10 @@ export class FriendshipService {
         }
     }
 
-    async getAllFriend(profile: Profile, page: Page): Promise<ResponseData<PagingData<Friendship[]>>> {
+    async getAllFriend(profile_id: number, page: Page): Promise<ResponseData<PagingData<Friendship[]>>> {
         try{
             var response = new ResponseData<PagingData<Friendship[]>>();
-            response.results = await this.friendshipRepository.getAllFriend(profile.profile_id, page);
+            response.results = await this.friendshipRepository.getAllFriend(profile_id, page);
             return response;
         }catch(err){
             ExceptionResponse(err);
