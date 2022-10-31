@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import { createPost, updatePost, uploadImages } from "../../redux/apiRequest";
-import { Avatar } from "@mui/material";
+import { Avatar, TextareaAutosize } from "@mui/material";
 import { PhotoLibrary, HighlightOff, Close } from "@mui/icons-material";
 import {
   removeSingleUploadImagePost,
@@ -149,7 +149,6 @@ function PostModal(props) {
                 <Avatar
                   style={{
                     fontSize: "2rem",
-                  
                   }}
                   alt={props.profile.profile_name}
                   src={
@@ -162,10 +161,10 @@ function PostModal(props) {
                 </Avatar>
                 <span className="font-bold">{props.profile.profile_name}</span>
               </div>
-              <textarea
+              <TextareaAutosize
                 onChange={handleOnChangePostData}
                 name="written_text"
-                rows="5"
+                maxRows={5}
                 className=" resize-none w-full outline-none text-[1.8rem] max-h-[25rem] overflow-y-scroll mb-[2rem]"
                 placeholder={
                   props.postUpdateData
@@ -173,7 +172,7 @@ function PostModal(props) {
                     : `What's on your mind, ${props.profile.profile_name}?`
                 }
                 value={written_text}
-              ></textarea>
+              ></TextareaAutosize>
               {!media_location.length > 0 && (
                 <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer">
                   <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">

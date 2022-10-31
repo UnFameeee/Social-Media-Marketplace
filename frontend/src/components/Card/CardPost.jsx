@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AvatarWithText from "../Avatar/AvatarWithText";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, likePost } from "../../redux/apiRequest";
+import ShowMoreText from "react-show-more-text";
 import { Helper } from '../../utils/Helper';
 import {format} from "timeago.js"
 
@@ -108,10 +109,18 @@ function CardPost(props) {
               )}
             </div>
             <div className="written_text ">
-              <div className="paragraph px-[2rem] mb-[1rem] ">
-                <span className="text-grey1f">
-                  {props.postData.written_text}
-                </span>
+              <div className="paragraph px-[2rem] mb-[1rem] "  style={{ overflowWrap: "anywhere" }}>
+              <ShowMoreText
+              lines={3}
+              more="Show more"
+              less="Show less"
+              anchorClass="show-more-less-clickable"
+              expanded={false}
+              width={0}
+              truncatedEndingComponent={"... "}
+            >
+              {props.postData.written_text}
+            </ShowMoreText>
               </div>
               {props.postData.media_location && arrayImgs.length > 0 && (
                 <div className="px-[-1rem] mb-[0.5rem] border-y-[0.1rem] border-gray-200">

@@ -20,10 +20,9 @@ export class FriendshipController {
     }
 
     //Get all friend
-    @Post("/all")
-    async getAllFriend(@Request() request: any, @Body() page: Page) {
-        const profile = <Profile>request.user;
-        return await this.friendshipService.getAllFriend(profile, page);
+    @Post("/all/:profile_id")
+    async getAllFriend(@Param("profile_id") profile_id: number, @Body() page: Page) {
+        return await this.friendshipService.getAllFriend(profile_id, page);
     }
 
 
@@ -32,6 +31,12 @@ export class FriendshipController {
     async sendFriendRequest(@Request() request: any, @Param("profile_target_id") profile_target_id: number) {
         const profile = <Profile>request.user;
         return await this.friendshipService.sendFriendRequest(profile, profile_target_id);
+    }
+
+    @Post("/unfriend/:profile_target_id")
+    async unfriend(@Request() request: any, @Param("profile_target_id") profile_target_id: number) {
+        const profile = <Profile>request.user;
+        return await this.friendshipService.unfriend(profile, profile_target_id);
     }
 
     //Check status if user send friend request or not
