@@ -11,5 +11,6 @@ export enum FRIENDREQUEST_STATUS {
 }
 
 export enum FRIENDSHIP_LIMIT {
-    MAX = 1000,
+    MAX_FRIEND = 1000,
+    MAX_FRIEND_REQUEST = 1500,
 }

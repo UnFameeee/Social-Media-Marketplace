@@ -159,7 +159,7 @@ export class ProfileRepository {
         try {
             const fullPage: Page = {
                 page: 0,
-                pageSize: FRIENDSHIP_LIMIT.MAX
+                pageSize: FRIENDSHIP_LIMIT.MAX_FRIEND
             }
             const friendList = await this.friendshipRepository.getAllFriend(profile_id, fullPage);
 
@@ -167,6 +167,16 @@ export class ProfileRepository {
             for (const element of friendList.data) {
                 tempArr.push(element["profile_id"]);
             }
+
+            fullPage.pageSize = FRIENDSHIP_LIMIT.MAX_FRIEND_REQUEST;
+
+            const friendRequestList = await this.friendshipRepository.getAllFriendRequest(profile_id, fullPage);
+
+            for (const element of friendRequestList.data) {
+                tempArr.push(element["profile_id"]);
+            }
+
+            tempArr.push(profile_id);
 
             var result = new PagingData<Profile[]>();
 
@@ -210,9 +220,36 @@ export class ProfileRepository {
         try {
             var queryData = await this.profileRepository.scope(SCOPE.WITH_PASSWORD).findOne({
                 attributes: ["password"],
-                where: {profile_id: profile_id},
+                where: { profile_id: profile_id },
             })
             return queryData.password;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async updateRefreshToken(profile_id: number, hashedRefreshToken: string): Promise<any> {
+        try {
+            var queryData = await this.profileRepository.scope(SCOPE.WITH_PASSWORD).findOne({
+                attributes: ["profile_id", "password", "refreshToken"],
+                where: { profile_id: profile_id },
+            })
+            queryData.refreshToken = hashedRefreshToken;
+            await queryData.save();
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async deleteRefreshToken(profile_id: number): Promise<boolean> {
+        try {
+            var queryData = await this.profileRepository.scope(SCOPE.WITH_PASSWORD).findOne({
+                attributes: ["profile_id", "password", "refreshToken"],
+                where: { profile_id: profile_id },
+            })
+            queryData.refreshToken = null;
+            const profile = await queryData.save();
+            return profile.refreshToken ? false : true;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
