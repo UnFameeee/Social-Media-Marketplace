@@ -136,7 +136,7 @@ export class FriendshipRepository {
             model.profile_target = profile_target_id;
             var recentModified: Friendship;
 
-            if (!await this.isFriend(profile_id, profile_target_id)) {
+            if (profile_id != profile_target_id && !await this.isFriend(profile_id, profile_target_id)) {
                 var queryData = await this.friendshipRepository.findOne({
                     where: {
                         status: FRIENDSHIP_STATUS.PENDING,
