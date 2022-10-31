@@ -33,6 +33,12 @@ export class FriendshipController {
         return await this.friendshipService.sendFriendRequest(profile, profile_target_id);
     }
 
+    @Post("/unfriend/:profile_target_id")
+    async unfriend(@Request() request: any, @Param("profile_target_id") profile_target_id: number) {
+        const profile = <Profile>request.user;
+        return await this.friendshipService.unfriend(profile, profile_target_id);
+    }
+
     //Check status if user send friend request or not
     @Post("/isSentFriendRequest/:profile_target_id")
     async isSentFriendRequest(@Request() request: any, @Param("profile_target_id") profile_target_id: number) {
