@@ -133,7 +133,7 @@ function LeftBarList({ leftBarList, multiList }) {
               <ListItem className="list">
                 {item.navigate ? (
                   <Link
-                    to={`${item.navigate}`}
+                    to={item.navigate}
                     style={{ width: '100%' }}
                     disabled={item.disabled}
                   >

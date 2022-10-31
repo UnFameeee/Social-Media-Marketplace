@@ -73,6 +73,9 @@
 .left-bar-button .right svg {
   color: black
 }
+a[disabled] {
+  pointer-events: none;
+}
 /* #endregion */
 
 /* #region nav bar */

@@ -44,6 +44,9 @@ import {
   addFriendFailed,
   addFriendStart,
   addFriendSuccess,
+  denyFriendRequestFailed,
+  denyFriendRequestStart,
+  denyFriendRequestSuccess,
   getAllFriendFailed,
   getAllFriendStart,
   getAllFriendSuccess,
@@ -54,6 +57,14 @@ import {
   getMutualFriendStart,
   getMutualFriendSuccess,
 } from './friendSlice';
+import {
+  getProfileDetailStart,
+  getProfileDetailSuccess,
+  getProfileDetailFailed,
+  getFriendSuggestionFailed,
+  getFriendSuggestionStart,
+  getFriendSuggestionSuccess,
+} from './profileSlice';
 
 const notify = (message, type) => {
   if (type === 'info') {
@@ -363,7 +374,7 @@ export const addFriend = async (accessToken, id, dispatch) => {
     };
 
     const res = await axios.post(
-      `${api.friend}/addFriend/${id}`,
+      `${api.friend}/sendFriendRequest/${id}`,
       {},
       config
     );
@@ -404,6 +415,34 @@ export const acceptFriendRequest = async (
     dispatch(acceptFriendRequestFailed());
   }
 };
+export const denyFriendRequest = async (
+  accessToken,
+  id,
+  dispatch
+) => {
+  dispatch(denyFriendRequestStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const res = await axios.post(
+      `${api.friend}/denyFriendRequest/${id}`,
+      {},
+      config
+    );
+    if (!res.data.message) {
+      dispatch(denyFriendRequestSuccess(res.data.results));
+    } else {
+      dispatch(denyFriendRequestFailed());
+    }
+  } catch (error) {
+    dispatch(denyFriendRequestFailed());
+  }
+};
 export const isFriend = async (accessToken, id, dispatch) => {
   dispatch(acceptFriendRequestStart());
   try {
@@ -429,3 +468,47 @@ export const isFriend = async (accessToken, id, dispatch) => {
   }
 };
 // #endregion
+
+export const getProfile = async (accessToken, id, dispatch) => {
+  dispatch(getProfileDetailStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const res = await axios.get(`${api.profile}/getProfileDetailById/${id}`, config);
+    if (res.data.message) {
+      notify(res.data.message, 'error');
+    } else {
+      dispatch(getProfileDetailSuccess(res.data.results));
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(getProfileDetailFailed());
+  }
+};
+export const getFriendSuggestion = async (accessToken, dispatch) => {
+  dispatch(getFriendSuggestionStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const paging = {
+      page: 0,
+      pageSize: 5,
+    };
+    const res = await axios.post(`${api.profile}/friendSuggestion`, paging, config);
+    if (!res.data.message) {
+      dispatch(getFriendSuggestionSuccess(res.data.results));
+    } else {
+      dispatch(getFriendSuggestionFailed());
+    }
+  } catch (error) {
+    dispatch(getFriendSuggestionFailed());
+  }
+};

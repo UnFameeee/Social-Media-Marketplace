@@ -26,6 +26,11 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  denyFriendRequest: {
+      data: false,
+      isFetching: false,
+      error: false,
+    },
   isFriend: {
     data: false,
     isFetching: false,
@@ -56,6 +61,11 @@ export const friendSlice = createSlice({
       error: false,
     },
     acceptFriendRequest: {
+      data: false,
+      isFetching: false,
+      error: false,
+    },
+    denyFriendRequest: {
       data: false,
       isFetching: false,
       error: false,
@@ -105,19 +115,19 @@ export const friendSlice = createSlice({
       state.getMutualFriends.error = true;
     },
 
-    addFiendStart: (state) => {
+    addFriendStart: (state) => {
       state.addFriend.isFetching = true;
     },
-    addFiendSuccess: (state, action) => {
+    addFriendSuccess: (state, action) => {
       state.addFriend.isFetching = false;
       state.addFriend.data = action.payload;
     },
-    addFiendFailed: (state) => {
+    addFriendFailed: (state) => {
       state.addFriend.isFetching = false;
       state.addFriend.error = true;
     },
 
-    acceptFiendRequestStart: (state) => {
+    acceptFriendRequestStart: (state) => {
       state.acceptFriendRequest.isFetching = true;
     },
     acceptFriendRequestSuccess: (state, action) => {
@@ -127,6 +137,18 @@ export const friendSlice = createSlice({
     acceptFriendRequestFailed: (state) => {
       state.acceptFriendRequest.isFetching = false;
       state.acceptFriendRequest.error = true;
+    },
+
+    denyFriendRequestStart: (state) => {
+      state.denyFriendRequest.isFetching = true;
+    },
+    denyFriendRequestSuccess: (state, action) => {
+      state.denyFriendRequest.isFetching = false;
+      state.denyFriendRequest.data = action.payload;
+    },
+    denyFriendRequestFailed: (state) => {
+      state.denyFriendRequest.isFetching = false;
+      state.denyFriendRequest.error = true;
     },
 
     isFriendStart: (state) => {
@@ -163,6 +185,10 @@ export const {
     acceptFriendRequestStart,
     acceptFriendRequestSuccess,
     acceptFriendRequestFailed,
+
+    denyFriendRequestStart,
+    denyFriendRequestSuccess,
+    denyFriendRequestFailed,
 
     isFriendStart,
     isFriendSuccess,

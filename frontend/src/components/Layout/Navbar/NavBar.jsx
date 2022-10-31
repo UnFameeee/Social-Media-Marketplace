@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FacebookOutlined, Close } from "@mui/icons-material";
 import {
   Paper,
@@ -15,25 +15,19 @@ import { IoLogOut } from "react-icons/io5";
 import MUI from "../../MUI";
 import { middleNavIcons, rightNavIcons } from "../../../common/layout/navbar";
 import { useDispatch, useSelector } from "react-redux";
-import { logOut } from "../../../redux/apiRequest";
 import { revertAll } from "../../../redux/resetStore";
-import "../Layout.css";
 import { Helper } from "../../../utils/Helper";
+import "../Layout.css";
 
 export default function NavBar() {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
-  const path = location.pathname;
 
   const [avatarMenu, setAvatarMenu] = useState(false);
   const [value, setValue] = useState("");
   const [rightGroup, setRightGroup] = useState("");
   const userData = useSelector((state) => state.auth.user.userData);
-  const handleLogout = () => {
-    // logOut(dispatch)
-    dispatch(revertAll());
-  };
+  
   function handleSearch() {}
 
   return (
@@ -160,6 +154,7 @@ export default function NavBar() {
         >
           {middleNavIcons.map((item, index) => (
             <MUI.ButtonWithIcon
+            className="w-[14rem]"
               sx={{
                 padding: "1rem 0.8rem",
               }}
@@ -199,50 +194,6 @@ export default function NavBar() {
         </Grid>
 
         <Grid item xs sx={{ display: "flex", justifyContent: "flex-end" }}>
-          {/* {rightNavIcons.map((item, index) => (
-            <div key={index} style={{ position: 'relative' }}>
-              {item.icon ? (
-                <MUI.BetterIconButton
-                  hasBackground
-                  tooltip={item.tooltip}
-                  sx={{
-                    marginRight: '0.8rem',
-                  }}
-                >
-                  {item.icon}
-                </MUI.BetterIconButton>
-              ) : (
-                <Avatar
-                  src="https://source.unsplash.com/random/300×300"
-                  onClick={() => setAvatarMenu(!avatarMenu)}
-                />
-              )}
-
-              {avatarMenu && item.avatar && (
-                <MUI.Menu
-                  sx={{ right: '2px', minWidth: '20rem' }}
-                  list={[
-                    {
-                      onClick: handleLogout,
-                      left: {
-                        icon: (
-                          <IoLogOut
-                            style={{
-                              fontSize: '2.4rem',
-                              color: 'black',
-                            }}
-                          />
-                        ),
-                        hasBackground: true,
-                      },
-                      middle: 'Log Out',
-                    },
-                  ]}
-                />
-              )}
-            </div>
-          ))} */}
-
           <ToggleButtonGroup
             value={rightGroup}
             exclusive
@@ -260,6 +211,7 @@ export default function NavBar() {
                   padding: "4px",
                 }}
                 value={item.tooltip}
+                sx={{textTransform: 'none'}}
               >
                 {item.icon ? (
                   <MUI.BetterIconButton hasBackground tooltip={item.tooltip}>
@@ -288,7 +240,7 @@ export default function NavBar() {
                         sx={{ right: "2px", minWidth: "20rem" }}
                         list={[
                           {
-                            onClick: handleLogout,
+                            onClick: () => dispatch(revertAll()),
                             left: {
                               icon: (
                                 <IoLogOut
