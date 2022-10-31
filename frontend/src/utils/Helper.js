@@ -143,6 +143,16 @@ function checkURL(value, defaultConfig = {}, lastOnly = false) {
   }
 }
 
+function isMultiple(string, amount, defaultString) {
+  if (amount <= 0) {
+    return defaultString;
+  } else {
+    if (amount > 1) {
+      return string + 's';
+    } else return string;
+  }
+}
+
 export const Helper = {
   generateId,
   checkPropsInObject,
@@ -159,4 +169,5 @@ export const Helper = {
   isArrayList,
   isObjectList,
   checkURL,
+  isMultiple
 };

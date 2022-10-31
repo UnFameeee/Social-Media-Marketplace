@@ -2,11 +2,13 @@ import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllFriends,
+  getPostByProfile,
   getProfile,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import UserProfile from '../../../UserProfile/UserProfile';
+import { Helper } from '../../../../utils/Helper';
 import '../index.css';
 
 export default function AllFriends() {
@@ -32,11 +34,6 @@ export default function AllFriends() {
   }, []);
 
   var [profileClicked, setProfileClicked] = useState(false);
-  var subTitle = allFriends?.page?.totalElement
-    ? allFriends?.page?.totalElement === 1
-      ? `1 Friend`
-      : `${allFriends?.page?.totalElement} Friends`
-    : `You are CUMLOX`;
 
   return (
     <TwoColumns
@@ -45,7 +42,14 @@ export default function AllFriends() {
           listClassname: 'friend-list all-friend',
         },
         before: (
-          <LeftbarTitle title="All Friends" subTitle={subTitle} />
+          <LeftbarTitle
+            title="All Friends"
+            subTitle={Helper.isMultiple(
+              'Friend',
+              allFriends?.page?.totalElement,
+              'You are CUMLOX'
+            )}
+          />
         ),
         leftBarList: allFriends?.data?.map((x) => {
           return {
@@ -56,9 +60,13 @@ export default function AllFriends() {
             middle: x.profile_name,
             onClick: () => {
               getProfile(accessToken, x.profile_id, dispatch);
+              getPostByProfile(accessToken, x.profile_id, dispatch);
               setProfileClicked(true);
             },
-            selected: profileClicked && x.profile_id === userData.profile_id,
+            selected:
+              profileClicked && x.profile_id === userData.profile_id,
+            disabled:
+              profileClicked && x.profile_id === userData.profile_id,
           };
         }),
         leftBarColor: 'white',

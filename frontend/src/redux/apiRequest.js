@@ -10,6 +10,9 @@ import {
   deletePostFailed,
   deletePostStart,
   deletePostSuccess,
+  getPostByProfileFailed,
+  getPostByProfileStart,
+  getPostByProfileSuccess,
   getPostFailed,
   getPostStart,
   getPostSuccess,
@@ -252,6 +255,33 @@ export const getAllPost = async (accessToken, dispatch) => {
     }
   } catch (error) {
     dispatch(getPostFailed());
+  }
+};
+export const getPostByProfile = async (accessToken, profileId, dispatch) => {
+  dispatch(getPostByProfileStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const paging = {
+      page: 0,
+      pageSize: 5,
+    };
+    const res = await axios.post(
+      `${api.post}/getPost/${profileId}`,
+      paging,
+      config
+    );
+    if (!res.data.message) {
+      dispatch(getPostByProfileSuccess(res.data));
+    } else {
+      dispatch(getPostByProfileFailed());
+    }
+  } catch (error) {
+    dispatch(getPostByProfileFailed());
   }
 };
 

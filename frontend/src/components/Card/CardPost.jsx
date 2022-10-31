@@ -57,7 +57,7 @@ function CardPost(props) {
   
   return (
     <>
-      {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && (
+      {/* {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && ( */}
         <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
           <div className="w-full bg">
             <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
@@ -199,7 +199,7 @@ function CardPost(props) {
             </div>
           </div>
         </div>
-      )}
+      {/* )} */}
     </>
   );
 }

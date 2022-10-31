@@ -5,12 +5,14 @@ import {
   acceptFriendRequest,
   getProfile,
   denyFriendRequest,
+  getPostByProfile,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import '../index.css';
+import { Helper } from '../../../../utils/Helper';
 
 export default function FriendRequests() {
   const dispatch = useDispatch();
@@ -36,12 +38,6 @@ export default function FriendRequests() {
     };
   }, [reRender]);
 
-  var subTitle = friendRequests?.page?.totalElement
-    ? friendRequests?.page?.totalElement === 1
-      ? `1 Friend Request`
-      : `${friendRequests?.page?.totalElement} Friend Requests`
-    : `You Have No Friend Requests`;
-
   return (
     <TwoColumns
       leftBarConfig={{
@@ -49,7 +45,14 @@ export default function FriendRequests() {
           listClassname: 'friend-list',
         },
         before: (
-          <LeftbarTitle title="Friend Requests" subTitle={subTitle} />
+          <LeftbarTitle
+            title="Friend Requests"
+            subTitle={Helper.isMultiple(
+              'Friend Request',
+              friendRequests?.page?.totalElement,
+              'You Have No Friend Requests'
+            )}
+          />
         ),
         leftBarList: friendRequests?.data?.map((x) => {
           return {
@@ -61,7 +64,8 @@ export default function FriendRequests() {
               <LeftbarMiddleItem
                 profileName={x.profile_name}
                 firstButtonConfig={{
-                  onClick: () => {
+                  onClick: (e) => {
+                    e.stopPropagation();
                     acceptFriendRequest(
                       accessToken,
                       x.profile_id,
@@ -72,9 +76,10 @@ export default function FriendRequests() {
                       setReRender(!reRender);
                     }, 100);
                   },
-                }}                
+                }}
                 secondButtonConfig={{
-                  onClick: () => {
+                  onClick: (e) => {
+                    e.stopPropagation();
                     denyFriendRequest(
                       accessToken,
                       x.profile_id,
@@ -90,9 +95,15 @@ export default function FriendRequests() {
             ),
             onClick: () => {
               getProfile(accessToken, x.profile_id, dispatch);
-              setProfileClicked(true);
+              getPostByProfile(accessToken, x.profile_id, dispatch);
+              setTimeout(() => {
+                setProfileClicked(true);
+              }, 100);
             },
-            selected: profileClicked && x.profile_id === userData.profile_id 
+            selected:
+              profileClicked && x.profile_id === userData.profile_id,
+            disabled:
+              profileClicked && x.profile_id === userData.profile_id,
           };
         }),
         leftBarColor: 'white',

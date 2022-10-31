@@ -6,6 +6,11 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  getByProfile: {
+    posts: null,
+    isFetching: false,
+    error: false,
+  },
   create: {
     post: null,
     isFetching: false,
@@ -31,6 +36,11 @@ export const postSlice = createSlice({
   name: "post",
   initialState: {
     get: {
+      posts: null,
+      isFetching: false,
+      error: false,
+    },
+    getByProfile: {
       posts: null,
       isFetching: false,
       error: false,
@@ -82,6 +92,18 @@ export const postSlice = createSlice({
       state.get.error = true;
     },
 
+    getPostByProfileStart: (state) => {
+      state.getByProfile.isFetching = true;
+    },
+    getPostByProfileSuccess: (state, action) => {
+      state.getByProfile.isFetching = false;
+      state.getByProfile.posts = action.payload;
+    },
+    getPostByProfileFailed: (state) => {
+      state.getByProfile.isFetching = false;
+      state.getByProfile.error = true;
+    },
+
     deletePostStart: (state) => {
       state.delete.isFetching = true;
     },
@@ -130,6 +152,9 @@ export const {
   getPostStart,
   getPostSuccess,
   getPostFailed,
+  getPostByProfileStart,
+  getPostByProfileSuccess,
+  getPostByProfileFailed,
   deletePostStart,
   deletePostSuccess,
   deletePostFailed,

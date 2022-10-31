@@ -14,7 +14,7 @@ function GridSideInfo(props) {
               </span>
             </div>
             {props.type === "friendPhoto" && (
-              <span className="text-[1.8rem] font-light">690 friends</span>
+              <span className="text-[1.8rem] font-light">{props.total} friends</span>
             )}
           </div>
           <ul className="grid grid-cols-3 gap-[0.5rem] ml-0 ">
