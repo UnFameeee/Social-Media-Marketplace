@@ -7,22 +7,17 @@ export default function LeftbarMiddleItem({
 }) {
   return (
     <>
-      <span style={{ marginLeft: '1.4rem' }}>{profileName}</span>
-      <div
-        style={{ display: 'flex', justifyContent: 'space-evenly' }}
-      >
-        <MUI.Button
-          style={{ width: '12rem', maxHeight: '4rem' }}
-          {...firstButtonConfig}
-        >
+      <span style={{ marginLeft: '1.2rem' }}>{profileName}</span>
+      <div className="action">
+        <MUI.Button className="action-btn" {...firstButtonConfig}>
           Confirm
         </MUI.Button>
-        <MUI.Button
-          style={{ width: '12rem', maxHeight: '4rem' }}
-          {...secondButtonConfig}
-        >
-          Deny
-        </MUI.Button>
+
+        {secondButtonConfig && (
+          <MUI.Button className="action-btn" {...secondButtonConfig}>
+            Deny
+          </MUI.Button>
+        )}
       </div>
     </>
   );

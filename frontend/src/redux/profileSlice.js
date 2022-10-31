@@ -6,11 +6,21 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  getFriendSuggestion: {
+    data: null,
+    isFetching: false,
+    error: false,
+  },
 };
 export const profileSlice = createSlice({
   name: 'profile',
   initialState: {
     profileDetails: {
+      data: null,
+      isFetching: false,
+      error: false,
+    },
+    getFriendSuggestion: {
       data: null,
       isFetching: false,
       error: false,
@@ -29,6 +39,18 @@ export const profileSlice = createSlice({
     getProfileDetailFailed: (state) => {
       state.profileDetails.isFetching = false;
       state.profileDetails.error = true;
+    },    
+
+    getFriendSuggestionStart: (state) => {
+      state.getFriendSuggestion.isFetching = true;
+    },
+    getFriendSuggestionSuccess: (state, action) => {
+      state.getFriendSuggestion.isFetching = false;
+      state.getFriendSuggestion.data = action.payload;
+    },
+    getFriendSuggestionFailed: (state) => {
+      state.getFriendSuggestion.isFetching = false;
+      state.getFriendSuggestion.error = true;
     },
   },
 });
@@ -37,6 +59,10 @@ export const {
     getProfileDetailStart,
     getProfileDetailSuccess,
     getProfileDetailFailed,
+
+    getFriendSuggestionStart,
+    getFriendSuggestionSuccess,
+    getFriendSuggestionFailed,
 
 } = profileSlice.actions;
 export default profileSlice.reducer;

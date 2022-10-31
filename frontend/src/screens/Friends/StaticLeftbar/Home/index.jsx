@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllFriendRequests,
   acceptFriendRequest,
+  denyFriendRequest,
 } from '../../../../redux/apiRequest';
 import FriendCard from './FriendCard';
 import '../index.css';
@@ -44,6 +45,18 @@ const FriendHome = () => {
                 firstButtonConfig={{
                   onClick: () => {
                     acceptFriendRequest(
+                      accessToken,
+                      item.profile_id,
+                      dispatch
+                    );
+                    setTimeout(() => {
+                      setReRender(!reRender);
+                    }, 100);
+                  },
+                }}               
+                secondButtonConfig={{
+                  onClick: () => {
+                    denyFriendRequest(
                       accessToken,
                       item.profile_id,
                       dispatch

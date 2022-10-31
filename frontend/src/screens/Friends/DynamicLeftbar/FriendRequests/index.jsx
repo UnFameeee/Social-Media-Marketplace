@@ -1,6 +1,11 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllFriendRequests, acceptFriendRequest } from '../../../../redux/apiRequest';
+import {
+  getAllFriendRequests,
+  acceptFriendRequest,
+  getProfile,
+  denyFriendRequest,
+} from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
@@ -15,7 +20,11 @@ export default function FriendRequests() {
   const friendRequests = useSelector(
     (state) => state.friends.getFriendRequests?.data
   );
+  const userData = useSelector(
+    (state) => state.profile?.profileDetails?.data
+  );
 
+  const [profileClicked, setProfileClicked] = useState(false);
   const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -53,20 +62,43 @@ export default function FriendRequests() {
                 profileName={x.profile_name}
                 firstButtonConfig={{
                   onClick: () => {
-                    acceptFriendRequest(accessToken, x.profile_id, dispatch);
+                    acceptFriendRequest(
+                      accessToken,
+                      x.profile_id,
+                      dispatch
+                    );
                     setTimeout(() => {
-                      setReRender(!reRender)
+                      setProfileClicked(false);
+                      setReRender(!reRender);
+                    }, 100);
+                  },
+                }}                
+                secondButtonConfig={{
+                  onClick: () => {
+                    denyFriendRequest(
+                      accessToken,
+                      x.profile_id,
+                      dispatch
+                    );
+                    setTimeout(() => {
+                      setProfileClicked(false);
+                      setReRender(!reRender);
                     }, 100);
                   },
                 }}
               />
             ),
+            onClick: () => {
+              getProfile(accessToken, x.profile_id, dispatch);
+              setProfileClicked(true);
+            },
+            selected: profileClicked && x.profile_id === userData.profile_id 
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      <UserProfile />
+      {profileClicked && <UserProfile />}
     </TwoColumns>
   );
 }

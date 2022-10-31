@@ -12,6 +12,13 @@
 .all-friend .left-bar-button .left {
   margin: 0 6px;
 }
+.suggestions .action {
+  display: block;
+  text-align: center;
+}
+.suggestions .action button {
+  width: 90%;
+}
 .left-bar-button .MuiAvatar-root {
   width: 6rem;
   height: 6rem;
@@ -30,5 +37,13 @@
   align-items: center;
   height: var(--navbar-height);
   max-height: var(--navbar-height);
+}
+.action {
+  display: flex;
+  justify-content: space-evenly;
+}
+.action .action-btn {
+  width: 11rem;
+  max-height: 4rem;
 }
 /* #endregion */

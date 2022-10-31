@@ -1,7 +1,9 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { getAllFriends, getProfile } from '../../../../redux/apiRequest';
+import {
+  getAllFriends,
+  getProfile,
+} from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import UserProfile from '../../../UserProfile/UserProfile';
@@ -9,19 +11,27 @@ import '../index.css';
 
 export default function AllFriends() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
   const allFriends = useSelector(
     (state) => state.friends.getAll?.data
   );
+  const userData = useSelector(
+    (state) => state.profile?.profileDetails?.data
+  );
 
   useLayoutEffect(() => {
-    getAllFriends(accessToken, dispatch);
+    let onDestroy = false;
+    if (!onDestroy) {
+      getAllFriends(accessToken, dispatch);
+    }
+    return () => {
+      onDestroy = true;
+    };
   }, []);
-  
-  const [profileClicked, setProfileClicked] = useState(false);
+
+  var [profileClicked, setProfileClicked] = useState(false);
   var subTitle = allFriends?.page?.totalElement
     ? allFriends?.page?.totalElement === 1
       ? `1 Friend`
@@ -45,16 +55,16 @@ export default function AllFriends() {
             },
             middle: x.profile_name,
             onClick: () => {
-              navigate(`?id=${x.profile_id}`);
               getProfile(accessToken, x.profile_id, dispatch);
               setProfileClicked(true);
-            }
+            },
+            selected: profileClicked && x.profile_id === userData.profile_id,
           };
         }),
         leftBarColor: 'white',
       }}
     >
-       {profileClicked && <UserProfile />}
+      {profileClicked && <UserProfile />}
     </TwoColumns>
   );
 }
