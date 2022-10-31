@@ -14,29 +14,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import AvatarWithText from '../Avatar/AvatarWithText';
 import { useDispatch, useSelector } from 'react-redux';
 import { deletePost, likePost } from '../../redux/apiRequest';
+import { Helper } from '../../utils/Helper';
+
 function CardPost(props) {
   // Declare variables
   let timeDifOverTime = {
     value: 0,
     type: 'm',
-  };
-
-  const calcDatePostOverTime = (date) => {
-    const datePost = dayjs(date);
-    const dateNow = dayjs();
-    let dateDif = dateNow.diff(datePost, 'second');
-    if (dateDif >= 86400) {
-      timeDifOverTime.value = Math.round(dateDif / 86400);
-      timeDifOverTime.type = 'd';
-    } else if (dateDif >= 3600) {
-      timeDifOverTime.value = Math.round(dateDif / 3600);
-      timeDifOverTime.type = 'h';
-    } else if (dateDif >= 60) {
-      timeDifOverTime.value = Math.round(dateDif / 60);
-      timeDifOverTime.type = 'm';
-    }
-  };
-  calcDatePostOverTime(props.postData.createdAt);
+  };  
+  Helper.dateCount(props.postData.createdAt, timeDifOverTime)
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState();
   const [likeToggle, setLikeToggle] = useState(false);
@@ -72,9 +58,10 @@ function CardPost(props) {
     props.setReRender((prev) => !prev);
   };
   // UseEffect
+  
   return (
     <>
-      {props.profile?.profile_id === props.postData.profile_id && (
+      {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && (
         <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
           <div className="w-full bg">
             <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">

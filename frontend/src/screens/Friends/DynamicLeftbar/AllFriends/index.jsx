@@ -17,11 +17,11 @@ export default function AllFriends() {
     (state) => state.friends.getAll?.data
   );
 
-  const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     getAllFriends(accessToken, dispatch);
-  }, [reRender]);
-
+  }, []);
+  
+  const [profileClicked, setProfileClicked] = useState(false);
   var subTitle = allFriends?.page?.totalElement
     ? allFriends?.page?.totalElement === 1
       ? `1 Friend`
@@ -47,14 +47,14 @@ export default function AllFriends() {
             onClick: () => {
               navigate(`?id=${x.profile_id}`);
               getProfile(accessToken, x.profile_id, dispatch);
-              setReRender(!reRender);
+              setProfileClicked(true);
             }
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      <UserProfile />
+       {profileClicked && <UserProfile />}
     </TwoColumns>
   );
 }

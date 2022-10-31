@@ -27,7 +27,7 @@ import CardPost from '../../components/Card/CardPost';
 import GridSideInfo from './GridSideInfo';
 import PostModal from '../Home/PostModal';
 import { getAllPost, getProfile } from '../../redux/apiRequest';
-function UserProfile() {
+function UserProfile(props) {
   const dispatch = useDispatch();
   const [reRender, setReRender] = useState(false);
   const SideBarList = [
@@ -51,17 +51,14 @@ function UserProfile() {
   const handleGetPostUpdateData = (data) => {
     setPostUpdateData(data);
   };
+  // var userData = useSelector(
+  //   (state) => state.auth?.user?.userData?.profile
+  // );
   var userData = useSelector(
-    (state) => state.auth?.user?.userData?.profile
-  );
-  var profileDetails = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
   const [searchParams] = useSearchParams();
   const queryParams = Object.fromEntries([...searchParams]);
-  if (window.location.pathname !== '/profile') {
-    userData = profileDetails;
-  }
   
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -75,7 +72,7 @@ function UserProfile() {
   }, [reRender]);
 
   return (
-    <>
+    <div {...props}>
       {openCreatePost && (
         <PostModal
           showModal={openCreatePost}
@@ -293,7 +290,7 @@ function UserProfile() {
             ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

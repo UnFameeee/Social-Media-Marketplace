@@ -143,6 +143,22 @@ function checkURL(value, defaultConfig = {}, lastOnly = false) {
   }
 }
 
+function dateCount(date, timeDifOverTime) {
+  const datePost = dayjs(date);
+  const dateNow = dayjs();
+  let dateDif = dateNow.diff(datePost, 'second');
+  if (dateDif >= 86400) {
+    timeDifOverTime.value = Math.round(dateDif / 86400);
+    timeDifOverTime.type = 'd';
+  } else if (dateDif >= 3600) {
+    timeDifOverTime.value = Math.round(dateDif / 3600);
+    timeDifOverTime.type = 'h';
+  } else if (dateDif >= 60) {
+    timeDifOverTime.value = Math.round(dateDif / 60);
+    timeDifOverTime.type = 'm';
+  }
+}
+
 export const Helper = {
   generateId,
   checkPropsInObject,
@@ -159,4 +175,5 @@ export const Helper = {
   isArrayList,
   isObjectList,
   checkURL,
+  dateCount,
 };
