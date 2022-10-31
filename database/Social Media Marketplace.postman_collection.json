@@ -68,6 +68,66 @@
 					"response": []
 				},
 				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMVQwODowNDoxOS4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MjAzNTcxLCJleHAiOjE2NjcyMDcxNzF9.TUCnG5sZW3OPOpkcJNVoN8pXkglTxTpLlZKTXAV_eto",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:4321/api/auth/logout",
+							"host": [
+								"localhost"
+							],
+							"port": "4321",
+							"path": [
+								"api",
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMVQwNzo0OTozNi4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MjAyNzM3LCJleHAiOjE2NjcyMDk5Mzd9.gj94Sa1BJ9bOE1rm7cvQDUmKCAmVXXhqabfg3lwu0UI",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:4321/api/auth/refresh",
+							"host": [
+								"localhost"
+							],
+							"port": "4321",
+							"path": [
+								"api",
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Login - Profile 2",
 					"request": {
 						"method": "POST",
@@ -214,7 +274,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY2MDEwMjY1LCJleHAiOjE2NjYwMTM4NjV9.FUtLsxPciikDdIWHLQt5RS9AUll1v43n8lpe_XyXkiY",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMVQwNzo1Mzo0My4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MjAzMDA2LCJleHAiOjE2NjcyMDY2MDZ9.I2xJR9pmpgJCA6_Z6PBmNGR63Zkn93AU50aivrMqJ9Y",
 									"type": "string"
 								}
 							]
@@ -246,14 +306,14 @@
 					"response": []
 				},
 				{
-					"name": "Get Post By Profile ID",
+					"name": "Get Own Post",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY2MDEwMjY1LCJleHAiOjE2NjYwMTM4NjV9.FUtLsxPciikDdIWHLQt5RS9AUll1v43n8lpe_XyXkiY",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MTUxNzg4LCJleHAiOjE2NjcxNTUzODh9.LD_dyuUBgrPfyNLh6RIN6r5SwscUAEJIQuxWHgqmohw",
 									"type": "string"
 								}
 							]
@@ -270,7 +330,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:4321/api/post/profile",
+							"raw": "localhost:4321/api/post/getOwnPost",
 							"host": [
 								"localhost"
 							],
@@ -278,7 +338,47 @@
 							"path": [
 								"api",
 								"post",
-								"profile"
+								"getOwnPost"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Post By Profile ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MTUxNzg4LCJleHAiOjE2NjcxNTUzODh9.LD_dyuUBgrPfyNLh6RIN6r5SwscUAEJIQuxWHgqmohw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"page\": 0,\r\n    \"pageSize\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4321/api/post/getPost/5",
+							"host": [
+								"localhost"
+							],
+							"port": "4321",
+							"path": [
+								"api",
+								"post",
+								"getPost",
+								"5"
 							]
 						}
 					},
@@ -868,7 +968,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MTMwMzcwLCJleHAiOjE2NjcxMzM5NzB9.6a46IXugxDus9OkzflR8svQtFV3yT9hu5u5mMeZ1V0I",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMVQwODowNDoxOS4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MjAzNTcxLCJleHAiOjE2NjcyMDcxNzF9.TUCnG5sZW3OPOpkcJNVoN8pXkglTxTpLlZKTXAV_eto",
 									"type": "string"
 								}
 							]
@@ -877,7 +977,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"page\": 0,\r\n    \"pageSize\": 10\r\n}",
+							"raw": "{\r\n    \"page\": 0,\r\n    \"pageSize\": 10000\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

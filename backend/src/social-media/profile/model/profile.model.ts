@@ -11,11 +11,11 @@ import { Role } from "src/common/constants/role.constant";
 
     scopes: {
         WITH_PASSWORD: {
-            attributes: { include: ['password'] }
+            attributes: { include: ['password', 'refreshToken'] }
         },
         
         WITHOUT_PASSWORD: {
-            attributes: { exclude: ['password'] }
+            attributes: { exclude: ['password', 'refreshToken'] }
         }
     },
 
@@ -56,6 +56,10 @@ export class Profile extends Model<Profile> {
     @AllowNull
     @Column
     permission: string;
+
+    @AllowNull
+    @Column
+    refreshToken: string;
 
     @Column(DataType.VIRTUAL(DataType.BOOLEAN))
     get isFriend(): boolean {

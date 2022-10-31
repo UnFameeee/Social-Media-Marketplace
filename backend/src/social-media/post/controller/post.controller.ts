@@ -64,7 +64,7 @@ export class PostController {
     }
 
     @Post('/getPost/:profile_id')
-    async getPostByProfileId(@Param("profile_id") profile_id, @Body() page: Page) {
+    async getPostByProfileId(@Param("profile_id") profile_id: number, @Body() page: Page) {
         return await this.postService.getPostByProfileId(profile_id, page);
     }
 
