@@ -1,28 +1,28 @@
-import { IsEmail, IsNotEmpty, IsString, Matches, Min, Max, MaxLength, MinLength, IsNumber } from "class-validator";
+import { IsEmail, IsEmpty, IsString, Matches, Min, Max, MaxLength, MinLength, IsNumber, IsOptional } from "class-validator";
 
 export class UpdateProfileDto {
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     profile_name: string;
     
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     old_password: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     @MinLength(8)
     @MaxLength(50)
     @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, { message: 'password is to weak'})
     new_password: string;
 
-    @IsNotEmpty()
+    @IsOptional()
     @IsNumber()
     @Min(10)
     @Max(110)
     birth: string; 
     
-    @IsNotEmpty()
+    @IsOptional()
     @IsString()
     @IsEmail()
     email: string;

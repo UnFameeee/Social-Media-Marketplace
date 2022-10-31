@@ -6,23 +6,17 @@ import {
   ChatBubbleOutline,
   ArrowDropDown,
   MoreHoriz,
-} from '@mui/icons-material';
-import { Avatar } from '@mui/material';
-import MUI from '../MUI';
-import dayjs from 'dayjs';
-import 'react-toastify/dist/ReactToastify.css';
-import AvatarWithText from '../Avatar/AvatarWithText';
-import { useDispatch, useSelector } from 'react-redux';
-import { deletePost, likePost } from '../../redux/apiRequest';
-import { Helper } from '../../utils/Helper';
-
+} from "@mui/icons-material";
+import { Avatar } from "@mui/material";
+import MUI from "../MUI";
+import dayjs from "dayjs";
+import "react-toastify/dist/ReactToastify.css";
+import AvatarWithText from "../Avatar/AvatarWithText";
+import { useDispatch, useSelector } from "react-redux";
+import { deletePost, likePost } from "../../redux/apiRequest";
+import {format} from "timeago.js"
 function CardPost(props) {
   // Declare variables
-  let timeDifOverTime = {
-    value: 0,
-    type: 'm',
-  };  
-  Helper.dateCount(props.postData.createdAt, timeDifOverTime)
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState();
   const [likeToggle, setLikeToggle] = useState(false);
@@ -80,7 +74,7 @@ function CardPost(props) {
                 <div>
                   <p>{props.postData.profile_name}</p>
                   <span className=" font-light text-[1.4rem]">
-                    {`${timeDifOverTime.value}${timeDifOverTime.type}`}
+                    {format(props.postData.createdAt)}
                   </span>
                 </div>
               </div>
