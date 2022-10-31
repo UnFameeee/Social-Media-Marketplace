@@ -19,7 +19,9 @@ function Home() {
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [postUpdateData, setPostUpdateData] = useState();
   const [reRender, setReRender] = useState(false);
-  const posts = useSelector((state) => state.post.get.posts?.results?.data);
+  const posts = useSelector(
+    (state) => state.post.get.posts?.results?.data
+  );
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -53,7 +55,6 @@ function Home() {
           profile={userData.profile}
         />
       )}
-      <ToastContainer />
       <div className="pt-[6rem] flex w-full">
         <LeftBar
           leftBarList={[
@@ -72,8 +73,8 @@ function Home() {
                 </Avatar>
               ),
               middle: userData.profile.profile_name,
-              navigate: "userprofile",
-            },
+              navigate: `profile?id=${userData.profile.profile_id}`,
+            },            
           ]}
         />
         <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">

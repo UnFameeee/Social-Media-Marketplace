@@ -1,6 +1,11 @@
-import { useEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllFriendRequests } from '../../../../redux/apiRequest';
+import {
+  getAllFriendRequests,
+  acceptFriendRequest,
+  getProfile,
+  denyFriendRequest,
+} from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
@@ -15,10 +20,27 @@ export default function FriendRequests() {
   const friendRequests = useSelector(
     (state) => state.friends.getFriendRequests?.data
   );
+  const userData = useSelector(
+    (state) => state.profile?.profileDetails?.data
+  );
 
-  useEffect(() => {
-    getAllFriendRequests(accessToken, dispatch);
-  }, []);
+  const [profileClicked, setProfileClicked] = useState(false);
+  const [reRender, setReRender] = useState(false);
+  useLayoutEffect(() => {
+    let onDestroy = false;
+    if (!onDestroy) {
+      getAllFriendRequests(accessToken, dispatch);
+    }
+    return () => {
+      onDestroy = true;
+    };
+  }, [reRender]);
+
+  var subTitle = friendRequests?.page?.totalElement
+    ? friendRequests?.page?.totalElement === 1
+      ? `1 Friend Request`
+      : `${friendRequests?.page?.totalElement} Friend Requests`
+    : `You Have No Friend Requests`;
 
   return (
     <TwoColumns
@@ -27,24 +49,56 @@ export default function FriendRequests() {
           listClassname: 'friend-list',
         },
         before: (
-          <LeftbarTitle
-            title="Friend Requests"
-            subTitle={`${friendRequests.page.totalElement} Friend Requests`}
-          />
+          <LeftbarTitle title="Friend Requests" subTitle={subTitle} />
         ),
-        leftBarList: friendRequests.data.map((x) => {
+        leftBarList: friendRequests?.data?.map((x) => {
           return {
             left: {
               url: x.picture,
               name: x.profile_name,
             },
-            middle: <LeftbarMiddleItem name={x.profile_name} />,
+            middle: (
+              <LeftbarMiddleItem
+                profileName={x.profile_name}
+                firstButtonConfig={{
+                  onClick: () => {
+                    acceptFriendRequest(
+                      accessToken,
+                      x.profile_id,
+                      dispatch
+                    );
+                    setTimeout(() => {
+                      setProfileClicked(false);
+                      setReRender(!reRender);
+                    }, 100);
+                  },
+                }}                
+                secondButtonConfig={{
+                  onClick: () => {
+                    denyFriendRequest(
+                      accessToken,
+                      x.profile_id,
+                      dispatch
+                    );
+                    setTimeout(() => {
+                      setProfileClicked(false);
+                      setReRender(!reRender);
+                    }, 100);
+                  },
+                }}
+              />
+            ),
+            onClick: () => {
+              getProfile(accessToken, x.profile_id, dispatch);
+              setProfileClicked(true);
+            },
+            selected: profileClicked && x.profile_id === userData.profile_id 
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      <UserProfile />
+      {profileClicked && <UserProfile />}
     </TwoColumns>
   );
 }

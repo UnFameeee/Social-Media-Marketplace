@@ -4,10 +4,15 @@
   border-radius: 8px;
   box-shadow: 0 0 1px 1px var(--shadow-2);
 }
-.friend-card img {
+.friend-card .image {
   box-shadow: 0 0 0 1px var(--shadow-2);
+  border-radius: 0;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
+  min-width: 23.8rem;
+  min-height: 23.8rem;
+  /* background: var(--primary-color); */
+  font-size: 14rem;
 }
 .friend-card .bottom {
   padding: 12px;
@@ -23,6 +28,17 @@
 }
 /* #endregion */
 
-a[disabled] {
-  pointer-events: none;
+/* #region home */
+.friend-home-title {
+  font-size: 2rem;
+  line-height: 2rem;
+  font-weight: 500;
+  padding: 2.4rem 0 0 2.4rem;
 }
+.MuiGrid-container .friend-home-grid {
+  max-width: 25rem;
+  min-width: 20rem;
+  padding: 0.6rem;
+  border-radius: 8px;
+}
+/* #endregion */

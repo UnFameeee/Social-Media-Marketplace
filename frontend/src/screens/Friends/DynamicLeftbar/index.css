@@ -3,15 +3,26 @@
   padding-top: 0;
 }
 .two-column {
-    padding-left: var(--sidebar-width);
-    padding-right: 0;
+  padding-left: var(--sidebar-width);
+  padding-right: 0;
 }
 /* #endregion */
 
 /* #region leftbar */
+.all-friend .left-bar-button .left {
+  margin: 0 6px;
+}
+.suggestions .action {
+  display: block;
+  text-align: center;
+}
+.suggestions .action button {
+  width: 90%;
+}
 .left-bar-button .MuiAvatar-root {
   width: 6rem;
   height: 6rem;
+  font-size: 2.4rem;
 }
 .left-bar-list.friend-list {
   overflow-y: scroll;
@@ -19,5 +30,20 @@
 }
 .friend-left-bar-title-wrapper {
   box-shadow: 0 1px 0 0 var(--shadow-1);
+}
+.friend-left-bar-title {
+  display: flex;
+  padding: 1.2rem;
+  align-items: center;
+  height: var(--navbar-height);
+  max-height: var(--navbar-height);
+}
+.action {
+  display: flex;
+  justify-content: space-evenly;
+}
+.action .action-btn {
+  width: 11rem;
+  max-height: 4rem;
 }
 /* #endregion */
