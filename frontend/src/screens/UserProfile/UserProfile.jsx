@@ -27,6 +27,7 @@ import CardPost from '../../components/Card/CardPost';
 import GridSideInfo from './GridSideInfo';
 import PostModal from '../Home/PostModal';
 import { getAllPost, getProfile } from '../../redux/apiRequest';
+import { axiosInStanceJWT } from '../../redux/axiosJWT';
 function UserProfile() {
   const dispatch = useDispatch();
   const [reRender, setReRender] = useState(false);
@@ -59,14 +60,14 @@ function UserProfile() {
   );
   const [searchParams] = useSearchParams();
   const queryParams = Object.fromEntries([...searchParams]);
-
+ 
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
       if (window.location.pathname === '/profile') {
         getProfile(accessToken, queryParams.id, dispatch);
       }
-      getAllPost(accessToken, dispatch);
+      getAllPost(accessToken, dispatch,axiosInStanceJWT);
     }
     return () => {
       onDestroy = true;

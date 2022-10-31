@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   ThumbUpOutlined,
   ThumbUpAlt,
@@ -14,9 +14,9 @@ import "react-toastify/dist/ReactToastify.css";
 import AvatarWithText from "../Avatar/AvatarWithText";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePost, likePost } from "../../redux/apiRequest";
+import { format } from "timeago.js";
 import ShowMoreText from "react-show-more-text";
-import { Helper } from '../../utils/Helper';
-import {format} from "timeago.js"
+import { Helper } from "../../utils/Helper";
 
 function CardPost(props) {
   // Declare variables
@@ -44,10 +44,14 @@ function CardPost(props) {
     props.handleOpenPostModel();
     handleOnClickShowAction();
   };
-  const handleDeletePost = () => {
-    deletePost(accessToken, props.postData.post_id, dispatch);
-    props.setReRender((prev) => !prev);
-    handleOnClickShowAction();
+  const handleDeletePost = async () => {
+    try {
+      await deletePost(accessToken, props.postData.post_id, dispatch);
+      props.setReRender((prev) => !prev);
+      handleOnClickShowAction();
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleLikePost = () => {
     likePost(accessToken, props.postData.post_id, dispatch);
@@ -55,16 +59,17 @@ function CardPost(props) {
     props.setReRender((prev) => !prev);
   };
   // UseEffect
-  
+
   return (
     <>
-      {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && (
+      {(!Helper.checkURL("") ||
+        props.profile?.profile_id === props.postData.profile_id) && (
         <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
           <div className="w-full bg">
             <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
               <div className="flex flex-1 gap-[1rem]">
                 <Avatar
-                  style={{ fontSize: '2rem' }}
+                  style={{ fontSize: "2rem" }}
                   alt={props.postData.profile_name}
                   src={
                     props.postData?.picture
@@ -81,26 +86,21 @@ function CardPost(props) {
                   </span>
                 </div>
               </div>
-              {props.profile?.profile_id ===
-                props.postData.profile_id && (
+              {props.profile?.profile_id === props.postData.profile_id && (
                 <div className="relative">
                   <MoreHoriz
                     className=" right-[2rem] Icon"
-                    style={{ fontSize: '2.5rem' }}
+                    style={{ fontSize: "2.5rem" }}
                     onClick={handleOnClickShowAction}
                   />
                   {showAction && (
                     <div className="bg-white floatingAction absolute  right-0  p-[1rem] drop-shadow-sm rounded-xl border-[0.1rem] ">
                       <ul className="flex gap-[1rem] flex-col ">
                         <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem] cursor-pointer">
-                          <button onClick={handleShowModal}>
-                            Update
-                          </button>
+                          <button onClick={handleShowModal}>Update</button>
                         </li>
                         <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem] cursor-pointer">
-                          <button onClick={handleDeletePost}>
-                            Delete
-                          </button>
+                          <button onClick={handleDeletePost}>Delete</button>
                         </li>
                       </ul>
                     </div>
@@ -109,18 +109,21 @@ function CardPost(props) {
               )}
             </div>
             <div className="written_text ">
-              <div className="paragraph px-[2rem] mb-[1rem] "  style={{ overflowWrap: "anywhere" }}>
-              <ShowMoreText
-              lines={3}
-              more="Show more"
-              less="Show less"
-              anchorClass="show-more-less-clickable"
-              expanded={false}
-              width={0}
-              truncatedEndingComponent={"... "}
-            >
-              {props.postData.written_text}
-            </ShowMoreText>
+              <div
+                className="paragraph px-[2rem] mb-[1rem] "
+                style={{ overflowWrap: "anywhere" }}
+              >
+                <ShowMoreText
+                  lines={3}
+                  more="Show more"
+                  less="Show less"
+                  anchorClass="show-more-less-clickable"
+                  expanded={false}
+                  width={0}
+                  truncatedEndingComponent={"... "}
+                >
+                  {props.postData.written_text}
+                </ShowMoreText>
               </div>
               {props.postData.media_location && arrayImgs.length > 0 && (
                 <div className="px-[-1rem] mb-[0.5rem] border-y-[0.1rem] border-gray-200">
@@ -137,11 +140,9 @@ function CardPost(props) {
               <div className="mb-[0.5rem] px-[2rem] flex gap-[0.5rem]">
                 <ThumbUpOutlined
                   className="Icon text-blue8f3"
-                  style={{ fontSize: '2rem' }}
+                  style={{ fontSize: "2rem" }}
                 />
-                <span className="text-grey1f">
-                  {props.postData.totalLike}
-                </span>
+                <span className="text-grey1f">{props.postData.totalLike}</span>
               </div>
               <hr className="mb-[1rem]" />
               <div className="reactButton px-[1rem] flex mb-[1rem]">
@@ -152,29 +153,29 @@ function CardPost(props) {
                   {likeToggle ? (
                     <ThumbUpOutlined
                       className=" "
-                      style={{ fontSize: '2.5rem' }}
+                      style={{ fontSize: "2.5rem" }}
                     />
                   ) : (
-                    <ThumbUpAlt style={{ fontSize: '2.5rem' }} />
+                    <ThumbUpAlt style={{ fontSize: "2.5rem" }} />
                   )}
                   <span className=" leading-[1.3rem]">Like</span>
                 </MUI.ButtonWithIcon>
                 <MUI.ButtonWithIcon className="button-with-icon flex gap-[0.5rem] w-full">
                   <ChatBubbleOutline
                     className=" outline-none"
-                    style={{ fontSize: '2.5rem' }}
+                    style={{ fontSize: "2.5rem" }}
                   />
                   <span className=" leading-[1.3rem]">Comment</span>
                 </MUI.ButtonWithIcon>
                 <MUI.ButtonWithIcon className="button-with-icon flex gap-[0.5rem] w-full">
-                  <Send className="" style={{ fontSize: '2.5rem' }} />
+                  <Send className="" style={{ fontSize: "2.5rem" }} />
                   <span className=" leading-[1.3rem]">Send</span>
                 </MUI.ButtonWithIcon>
               </div>
               <hr className="mb-[0.5rem] " />
               <div className="flex justify-end mb-[0.5rem] items-center px-[2rem]">
                 <span>Most relate comment</span>
-                <ArrowDropDown style={{ fontSize: '2.5rem' }} />
+                <ArrowDropDown style={{ fontSize: "2.5rem" }} />
               </div>
               <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem]">
                 <AvatarWithText

@@ -53,8 +53,12 @@ function PostModal(props) {
   const handlePost = (e) => {
     e.preventDefault();
     postData.media_location = JSON.stringify(uploadImageLinkLst);
-    createPost(accessToken, postData, dispatch);
-    closeModal();
+    try {
+      createPost(accessToken, postData, dispatch)
+      closeModal();
+    } catch (error) {
+      console.log(error);
+    }
   };
   const handleUpdatePost = (e) => {
     var tempUpdatePost = {

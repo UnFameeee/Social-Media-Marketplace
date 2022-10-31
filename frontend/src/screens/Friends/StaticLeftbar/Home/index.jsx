@@ -21,7 +21,7 @@ const FriendHome = () => {
 
   const reRenderLayout = useOutletContext();
   const [reRender, setReRender] = useState(false);
-
+   
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {

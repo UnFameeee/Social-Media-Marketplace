@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { refreshToken } from "./apiRequest";
 import { revertAll } from "./resetStore";
 const initialState = {
     login: {
@@ -17,7 +18,7 @@ const initialState = {
     },
     user:{
       userData:null,
-    }
+    },
 }
 export const authSlice = createSlice({
   name: "auth",
@@ -81,6 +82,9 @@ export const authSlice = createSlice({
     },
     userDataAssign:(state, action) =>{
       state.user.userData = action.payload;
+    },
+    refreshTokenSuccess:(state, action) =>{
+      state.login.currentUser = action.payload
     }
   },
 });
@@ -94,7 +98,8 @@ export const {
     logOutFailed,
     logOutStart,
     logOutSuccess,
-    userDataAssign
+    userDataAssign,
+    refreshTokenSuccess,
 } = authSlice.actions
 
 export default authSlice.reducer
