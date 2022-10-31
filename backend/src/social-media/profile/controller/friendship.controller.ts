@@ -20,10 +20,9 @@ export class FriendshipController {
     }
 
     //Get all friend
-    @Post("/all")
-    async getAllFriend(@Request() request: any, @Body() page: Page) {
-        const profile = <Profile>request.user;
-        return await this.friendshipService.getAllFriend(profile, page);
+    @Post("/all/:profile_id")
+    async getAllFriend(@Param("profile_id") profile_id: number, @Body() page: Page) {
+        return await this.friendshipService.getAllFriend(profile_id, page);
     }
 
 
