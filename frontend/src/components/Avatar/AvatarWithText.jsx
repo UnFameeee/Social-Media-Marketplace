@@ -5,7 +5,7 @@ function AvatarWithText(props) {
   if (props.border) {
     classBorder = "border-2 border-blue-300";
   }
-  var alignCenter =''
+  var alignCenter = "";
   if (props.alignCenter) {
     alignCenter = "items-center";
   }
@@ -13,7 +13,7 @@ function AvatarWithText(props) {
   var secondaryBg = props.secondaryBg ?? "bg-greyf1";
 
   return (
-    <div onClick={props.onClick} className={`flex gap-2 rounded-xl p-1 ${primaryBg} ${alignCenter} `}>
+    <div className={`flex gap-2 rounded-xl p-1 ${primaryBg} ${alignCenter} `}>
       {props.url && (
         <img
           src={props.url}
@@ -43,6 +43,7 @@ function AvatarWithText(props) {
       {props.haveInput && (
         <div className="w-full">
           <input
+            onClick={props.onClick}
             type="text"
             placeholder={props.inputValue}
             className="bg-greyf1 outline-none py-[0.65rem] px-[1.5rem] rounded-[5rem] w-full"

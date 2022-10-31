@@ -1,16 +1,13 @@
 import React from "react";
-import {
-  Coronavirus,
-} from "@mui/icons-material";
+import { Coronavirus } from "@mui/icons-material";
 import CardPost from "../../components/Card/CardPost";
 import LeftBar from "../../components/Layout/SideBar/LeftBar";
 import RightBar from "../../components/Layout/SideBar/RightBar";
-import {
-  Avatar,
-} from "@mui/material";
+import { Avatar } from "@mui/material";
+import PostStatus from "../../components/PostStatus/PostStatus";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import PostModal from "./PostModal";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -62,12 +59,20 @@ function Home() {
           leftBarList={[
             {
               left: (
-                <Avatar style={{width:'5rem', height:'5rem', fontSize:'2rem'}} alt={userData.profile.profile_name} src={userData.profile?.picture ? JSON.parse(userData.profile?.picture) : null}> 
-                {userData.profile.profile_name?.at(0)}
-              </Avatar>
+                <Avatar
+                  style={{ width: "5rem", height: "5rem", fontSize: "2rem" }}
+                  alt={userData.profile.profile_name}
+                  src={
+                    userData.profile?.picture
+                      ? JSON.parse(userData.profile?.picture)
+                      : null
+                  }
+                >
+                  {userData.profile.profile_name?.at(0)}
+                </Avatar>
               ),
               middle: userData.profile.profile_name,
-              navigate: "userprofile"
+              navigate: "userprofile",
             },
             {
               left: {
@@ -89,25 +94,7 @@ function Home() {
         />
         <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
           <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
-            <AvatarWithText
-              url="https://source.unsplash.com/random/180×180"
-              size={35}
-              haveInput={true}
-              alignCenter={true}
-              inputValue="What's on your mind?"
-              onClick={handleOpenPostModel}
-            />
-            <FullWidthHr className="mt-[1rem]" />
-            {
-              //   <HoverButton
-              //   flex1={true}
-              //   listButton={[
-              //     { text: "photo", icon: <PhotoCamera /> },
-              //     { text: "School", icon: <School /> },
-              //     { text: "Home", icon: <Home /> },
-              //   ]}
-              // />
-            }
+            <PostStatus profile={userData.profile}  onClick={handleOpenPostModel}  />
           </div>
           {posts &&
             posts.map((post) => (
