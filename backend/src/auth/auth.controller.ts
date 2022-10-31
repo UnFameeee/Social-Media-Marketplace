@@ -5,6 +5,7 @@ import { Profile } from 'src/social-media/profile/model/profile.model';
 import { AuthService } from './auth.service';
 import { RegisterProfileDto } from '../common/models/dtos/register-profile.dto';
 import RequestWithProfile from './interface/requestWithProfile.interface';
+import { RefreshTokenGuard } from './guards/refreshToken.guard';
 
 @ApiTags('Auth')
 @Controller('/api/auth')
@@ -63,10 +64,25 @@ export class AuthController {
             }
         }
     })
+    
     @UseGuards(AuthGuard('local'))
     @HttpCode(200)
     @Post("/login")
     async logIn(@Request() request: RequestWithProfile) {
         return this.authService.login(request.user);
+    }
+
+    @UseGuards(RefreshTokenGuard)
+    @Get('/refresh')
+    async refreshToken(@Request() request: RequestWithProfile) {
+        const profile = request.user["profile"];
+        return this.authService.refreshTokens(profile["profile_id"], request.user["refreshToken"]);
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @HttpCode(200)
+    @Post("/logout")
+    async logOut(@Request() request: RequestWithProfile) {
+        return this.authService.logout(request.user);
     }
 }
