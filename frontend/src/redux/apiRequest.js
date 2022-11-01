@@ -51,6 +51,9 @@ import {
   denyFriendRequestStart,
   denyFriendRequestSuccess,
   getAllFriendFailed,
+  getAllFriendForMainUserFailed,
+  getAllFriendForMainUserStart,
+  getAllFriendForMainUserSuccess,
   getAllFriendStart,
   getAllFriendSuccess,
   getFriendRequestFailed,
@@ -367,6 +370,29 @@ export const getAllFriends = async (accessToken, profileId, dispatch) => {
     }
   } catch (error) {
     dispatch(getAllFriendFailed());
+  }
+};
+export const getAllFriendsForMainUser = async (accessToken, profileId, dispatch) => {
+  dispatch(getAllFriendForMainUserStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const paging = {
+      page: 0,
+      pageSize: 5,
+    };
+    const res = await axios.post(`${api.friend}/all/${profileId}`, paging, config);
+    if (!res.data.message) {
+      dispatch(getAllFriendForMainUserSuccess(res.data.results));
+    } else {
+      dispatch(getAllFriendForMainUserFailed());
+    }
+  } catch (error) {
+    dispatch(getAllFriendForMainUserFailed());
   }
 };
 export const getMutualFriends = async (accessToken, id, dispatch) => {

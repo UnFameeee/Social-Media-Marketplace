@@ -52,7 +52,13 @@ function UserProfile(props) {
   );
   const allFriends = useSelector(
     (state) => state.friends.getAll?.data
+  ); 
+  const userData = useSelector(
+    (state) => state.profile?.profileDetails?.data
   );
+console.log(userData)
+  const [searchParams] = useSearchParams();
+  const queryParams = Object.fromEntries([...searchParams]);
 
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [postUpdateData, setPostUpdateData] = useState();
@@ -61,15 +67,7 @@ function UserProfile(props) {
   };
   const handleGetPostUpdateData = (data) => {
     setPostUpdateData(data);
-  };
-  // var userData = useSelector(
-  //   (state) => state.auth?.user?.userData?.profile
-  // );
-  var userData = useSelector(
-    (state) => state.profile?.profileDetails?.data
-  );
-  const [searchParams] = useSearchParams();
-  const queryParams = Object.fromEntries([...searchParams]);
+  }; 
 
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -78,12 +76,12 @@ function UserProfile(props) {
         getProfile(accessToken, queryParams.id, dispatch);
         getPostByProfile(
           accessToken,
-          queryParams.id || userData.profile_id,
+          queryParams.id || userData?.profile_id,
           dispatch
         );
         getAllFriends(
           accessToken,
-          queryParams.id || userData.profile_id,
+          queryParams.id || userData?.profile_id,
           dispatch
         );
       }

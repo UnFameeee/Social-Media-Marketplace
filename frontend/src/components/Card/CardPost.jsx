@@ -26,6 +26,9 @@ function CardPost(props) {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const userData = useSelector(
+    (state) => state.auth?.user?.userData.profile
+  );
   const arrayImgs = JSON.parse(props.postData.media_location);
   // Function
   const handleOnClickShowAction = () => {
@@ -81,7 +84,7 @@ function CardPost(props) {
                   </span>
                 </div>
               </div>
-              {props.profile?.profile_id ===
+              {userData?.profile_id ===
                 props.postData.profile_id && (
                 <div className="relative">
                   <MoreHoriz

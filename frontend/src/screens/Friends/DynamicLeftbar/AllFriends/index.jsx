@@ -1,6 +1,7 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+  getAllFriendsForMainUser,
   getAllFriends,
   getPostByProfile,
   getProfile,
@@ -17,23 +18,25 @@ export default function AllFriends() {
     (state) => state.auth.login.currentUser.access
   );
   const allFriends = useSelector(
-    (state) => state.friends.getAll?.data
+    (state) => state.friends.getAllForMainUser?.data
   );
   const userData = useSelector(
+    (state) => state.auth?.user?.userData?.profile
+  );
+  const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
 
+  const [profileClicked, setProfileClicked] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriends(accessToken, dispatch);
+      getAllFriendsForMainUser(accessToken, userData?.profile_id, dispatch);
     }
     return () => {
       onDestroy = true;
     };
   }, []);
-
-  var [profileClicked, setProfileClicked] = useState(false);
 
   return (
     <TwoColumns
@@ -61,12 +64,13 @@ export default function AllFriends() {
             onClick: () => {
               getProfile(accessToken, x.profile_id, dispatch);
               getPostByProfile(accessToken, x.profile_id, dispatch);
+              getAllFriends(accessToken, x.profile_id, dispatch);
               setProfileClicked(true);
             },
             selected:
-              profileClicked && x.profile_id === userData.profile_id,
+              profileClicked && x.profile_id === profileData?.profile_id,
             disabled:
-              profileClicked && x.profile_id === userData.profile_id,
+              profileClicked && x.profile_id === profileData?.profile_id,
           };
         }),
         leftBarColor: 'white',

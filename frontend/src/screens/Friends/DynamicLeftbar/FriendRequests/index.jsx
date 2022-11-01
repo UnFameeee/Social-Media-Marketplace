@@ -6,6 +6,7 @@ import {
   getProfile,
   denyFriendRequest,
   getPostByProfile,
+  getAllFriends,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -64,31 +65,27 @@ export default function FriendRequests() {
               <LeftbarMiddleItem
                 profileName={x.profile_name}
                 firstButtonConfig={{
-                  onClick: (e) => {
+                  onClick: async (e) => {
                     e.stopPropagation();
-                    acceptFriendRequest(
+                    await acceptFriendRequest(
                       accessToken,
                       x.profile_id,
                       dispatch
                     );
-                    setTimeout(() => {
-                      setProfileClicked(false);
-                      setReRender(!reRender);
-                    }, 100);
+                    setProfileClicked(false);
+                    setReRender(!reRender);
                   },
                 }}
                 secondButtonConfig={{
-                  onClick: (e) => {
+                  onClick: async (e) => {
                     e.stopPropagation();
-                    denyFriendRequest(
+                    await denyFriendRequest(
                       accessToken,
                       x.profile_id,
                       dispatch
                     );
-                    setTimeout(() => {
-                      setProfileClicked(false);
-                      setReRender(!reRender);
-                    }, 100);
+                    setProfileClicked(false);
+                    setReRender(!reRender);
                   },
                 }}
               />
@@ -96,14 +93,17 @@ export default function FriendRequests() {
             onClick: () => {
               getProfile(accessToken, x.profile_id, dispatch);
               getPostByProfile(accessToken, x.profile_id, dispatch);
-              setTimeout(() => {
-                setProfileClicked(true);
-              }, 100);
+              getAllFriends(
+                accessToken,
+                x.profile_id,
+                dispatch
+              );
+              setProfileClicked(true);
             },
             selected:
-              profileClicked && x.profile_id === userData.profile_id,
+              profileClicked && x.profile_id === userData?.profile_id,
             disabled:
-              profileClicked && x.profile_id === userData.profile_id,
+              profileClicked && x.profile_id === userData?.profile_id,
           };
         }),
         leftBarColor: 'white',

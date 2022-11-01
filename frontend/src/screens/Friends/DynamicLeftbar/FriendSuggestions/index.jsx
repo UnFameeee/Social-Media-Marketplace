@@ -2,6 +2,7 @@ import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addFriend,
+  getAllFriends,
   getFriendSuggestion,
   getPostByProfile,
   getProfile,
@@ -59,12 +60,10 @@ export default function FriendSuggestions() {
                 profileName={x.profile_name}
                 firstButtonConfig={{
                   name: 'Add Friend',
-                  onClick: (e) => {
+                  onClick: async (e) => {
                     e.stopPropagation();
-                    addFriend(accessToken, x.profile_id, dispatch);
-                    setTimeout(() => {
-                      setReRender(!reRender);
-                    }, 100);
+                    await addFriend(accessToken, x.profile_id, dispatch);
+                    setReRender(!reRender);
                   },
                 }}
               />
@@ -72,10 +71,11 @@ export default function FriendSuggestions() {
             onClick: () => {
               getProfile(accessToken, x.profile_id, dispatch);
               getPostByProfile(accessToken, x.profile_id, dispatch);
+              getAllFriends(accessToken, x.profile_id, dispatch);
               setProfileClicked(true);
             },
-            selected: profileClicked && x.profile_id === userData.profile_id,
-            disabled: profileClicked && x.profile_id === userData.profile_id,
+            selected: profileClicked && x.profile_id === userData?.profile_id,
+            disabled: profileClicked && x.profile_id === userData?.profile_id,
           };
         }),
         leftBarColor: 'white',

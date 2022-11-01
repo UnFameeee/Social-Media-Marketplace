@@ -148,8 +148,8 @@ function isMultiple(string, amount, defaultString) {
     return defaultString;
   } else {
     if (amount > 1) {
-      return string + 's';
-    } else return string;
+      return amount + ' ' + string + 's';
+    } else return amount + ' ' + string;
   }
 }
 
@@ -169,5 +169,5 @@ export const Helper = {
   isArrayList,
   isObjectList,
   checkURL,
-  isMultiple
+  isMultiple,
 };
