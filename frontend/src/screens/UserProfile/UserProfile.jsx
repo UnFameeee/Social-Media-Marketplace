@@ -26,8 +26,15 @@ import HoverButton from './HoverButton';
 import CardPost from '../../components/Card/CardPost';
 import GridSideInfo from './GridSideInfo';
 import PostModal from '../Home/PostModal';
-import { getAllPost, getProfile } from '../../redux/apiRequest';
-function UserProfile() {
+import {
+  getAllFriends,
+  getAllPost,
+  getPostByProfile,
+  getProfile,
+} from '../../redux/apiRequest';
+import { Helper } from '../../utils/Helper';
+
+function UserProfile(props) {
   const dispatch = useDispatch();
   const [reRender, setReRender] = useState(false);
   const SideBarList = [
@@ -41,8 +48,18 @@ function UserProfile() {
     (state) => state.auth.login.currentUser.access
   );
   const posts = useSelector(
-    (state) => state.post.get.posts?.results?.data
+    (state) => state.post.getByProfile?.posts?.results?.data
   );
+  const allFriends = useSelector(
+    (state) => state.friends.getAll?.data
+  ); 
+  const userData = useSelector(
+    (state) => state.profile?.profileDetails?.data
+  );
+console.log(userData)
+  const [searchParams] = useSearchParams();
+  const queryParams = Object.fromEntries([...searchParams]);
+
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [postUpdateData, setPostUpdateData] = useState();
   const handleOpenPostModel = () => {
@@ -50,23 +67,24 @@ function UserProfile() {
   };
   const handleGetPostUpdateData = (data) => {
     setPostUpdateData(data);
-  };
-  // var userData = useSelector(
-  //   (state) => state.auth?.user?.userData?.profile
-  // );
-  var userData = useSelector(
-    (state) => state.profile?.profileDetails?.data
-  );
-  const [searchParams] = useSearchParams();
-  const queryParams = Object.fromEntries([...searchParams]);
+  }; 
 
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      if (window.location.pathname === '/profile') {
+      if (Helper.checkURL('profile', {}, true)) {
         getProfile(accessToken, queryParams.id, dispatch);
+        getPostByProfile(
+          accessToken,
+          queryParams.id || userData?.profile_id,
+          dispatch
+        );
+        getAllFriends(
+          accessToken,
+          queryParams.id || userData?.profile_id,
+          dispatch
+        );
       }
-      getAllPost(accessToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -93,13 +111,15 @@ function UserProfile() {
             className="w-[120rem] h-[30rem] object-cover rounded-bl-xl rounded-br-xl shadow-lg"
             alt=""
           />
-          <div className="hover:cursor-pointer flex items-center absolute right-[1rem] top-[25rem] bg-white p-[0.65rem] rounded-lg gap-[0.75rem]">
-            <PhotoCamera
-              className=""
-              style={{ fontSize: '2.5rem' }}
-            />
-            <span className="text-[1.8rem]">Edit Cover Photo</span>
-          </div>
+          {Helper.checkURL('profile', {}, true) && (
+            <div className="hover:cursor-pointer flex items-center absolute right-[1rem] top-[25rem] bg-white p-[0.65rem] rounded-lg gap-[0.75rem]">
+              <PhotoCamera
+                className=""
+                style={{ fontSize: '2.5rem' }}
+              />
+              <span className="text-[1.8rem]">Edit Cover Photo</span>
+            </div>
+          )}
           <div className="">
             <div className="bigRoundAvt absolute  left-[3.5rem] top-[26rem]">
               <Avatar
@@ -130,22 +150,26 @@ function UserProfile() {
                   {userData?.profile_name}
                 </span>
                 <span className="text-[1.8rem] font-bold text-gray-600">
-                  45 friends
+                  {allFriends?.page?.totalElement > 0 && `${allFriends?.page?.totalElement} friends`} 
                 </span>
               </div>
               <div className="flex items-end gap-[1rem] [&>*]:hover:cursor-pointer">
-                <div className=" bg-blue8f3 [&>*]:text-white p-[0.75rem] rounded-[0.75rem] flex items-center gap-[0.3rem]">
-                  <AddCircle style={{ fontSize: '2.2rem' }} />
-                  <span className=" text-[1.6rem] font-semibold">
-                    Add to story
-                  </span>
-                </div>
-                <div className=" bg-slate-300 [&>*]:text-black p-[0.75rem] rounded-[0.75rem] flex items-center gap-[0.3rem]">
-                  <Edit style={{ fontSize: '2.2rem' }} />
-                  <span className=" text-[1.6rem] font-semibold">
-                    Edit profile
-                  </span>
-                </div>
+                {props.action ?? (
+                  <>
+                    <div className=" bg-blue8f3 [&>*]:text-white p-[0.75rem] rounded-[0.75rem] flex items-center gap-[0.3rem]">
+                      <AddCircle style={{ fontSize: '2.2rem' }} />
+                      <span className=" text-[1.6rem] font-semibold">
+                        Add to story
+                      </span>
+                    </div>
+                    <div className=" bg-slate-300 [&>*]:text-black p-[0.75rem] rounded-[0.75rem] flex items-center gap-[0.3rem]">
+                      <Edit style={{ fontSize: '2.2rem' }} />
+                      <span className=" text-[1.6rem] font-semibold">
+                        Edit profile
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <hr className="mt-[1.5rem] h-[0.15rem] border-0 bg-slate-300 rounded-sm  w-full " />
@@ -214,71 +238,44 @@ function UserProfile() {
                 { url: 'https://source.unsplash.com/random/211×219' },
               ]}
             />
-            <GridSideInfo
-              type="friendPhoto"
-              leftLabel="Friends"
-              rightLabel="See all Friends"
-              listImg={[
-                {
-                  url: 'https://source.unsplash.com/random/211×202',
-                  name: 'madara',
-                },
-                {
-                  url: 'https://source.unsplash.com/random/211×201',
-                  name: 'naruto',
-                },
-                {
-                  url: 'https://source.unsplash.com/random/211×203',
-                  name: 'pain',
-                },
-                {
-                  url: 'https://source.unsplash.com/random/211×204',
-                  name: 'sasuke',
-                },
-                {
-                  url: 'https://source.unsplash.com/random/211×205',
-                  name: 'obito',
-                },
-                {
-                  url: 'https://source.unsplash.com/random/211×206',
-                  name: 'kakashi',
-                },
-                {
-                  url: 'https://source.unsplash.com/random/211×208',
-                  name: 'minato',
-                },
-                {
-                  url: 'https://source.unsplash.com/random/211×207',
-                  name: 'itatchi',
-                },
-                {
-                  url: 'https://source.unsplash.com/random/211×209',
-                  name: 'sisui',
-                },
-              ]}
-            />
+            {allFriends?.page?.totalElement > 0 && (
+              <GridSideInfo
+                type="friendPhoto"
+                leftLabel="Friends"
+                rightLabel="See all Friends"
+                listImg={allFriends?.data?.map((x) => {
+                  return {
+                    url: x.picture,
+                    name: x.profile_name,
+                  };
+                })}
+                total={allFriends?.page?.totalElement}
+              />
+            )}
           </div>
         </div>
         <div className="rightSidePosts w-[55%]">
-          <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
-            <AvatarWithText
-              url="https://source.unsplash.com/random/180×180"
-              size={35}
-              haveInput={true}
-              alignCenter={true}
-              inputValue="What's on your mind?"
-              onClick={handleOpenPostModel}
-            />
-            <FullWidthHr className="mt-[1rem]" />
-            <HoverButton
-              flex1={true}
-              listButton={[
-                { text: 'photo', icon: <PhotoCamera /> },
-                { text: 'School', icon: <School /> },
-                { text: 'Home', icon: <Home /> },
-              ]}
-            />
-          </div>
+          {Helper.checkURL('profile', {}, true) && (
+            <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
+              <AvatarWithText
+                url="https://source.unsplash.com/random/180×180"
+                size={35}
+                haveInput={true}
+                alignCenter={true}
+                inputValue="What's on your mind?"
+                onClick={handleOpenPostModel}
+              />
+              <FullWidthHr className="mt-[1rem]" />
+              <HoverButton
+                flex1={true}
+                listButton={[
+                  { text: 'photo', icon: <PhotoCamera /> },
+                  { text: 'School', icon: <School /> },
+                  { text: 'Home', icon: <Home /> },
+                ]}
+              />
+            </div>
+          )}
           {posts &&
             posts.map((post) => (
               <CardPost
