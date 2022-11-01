@@ -346,7 +346,7 @@ export const getAllFriendRequests = async (accessToken, dispatch) => {
     dispatch(getFriendRequestFailed());
   }
 };
-export const getAllFriends = async (accessToken, dispatch) => {
+export const getAllFriends = async (accessToken, profileId, dispatch) => {
   dispatch(getAllFriendStart());
   try {
     const config = {
@@ -359,7 +359,7 @@ export const getAllFriends = async (accessToken, dispatch) => {
       page: 0,
       pageSize: 5,
     };
-    const res = await axios.post(`${api.friend}/all`, paging, config);
+    const res = await axios.post(`${api.friend}/all/${profileId}`, paging, config);
     if (!res.data.message) {
       dispatch(getAllFriendSuccess(res.data.results));
     } else {

@@ -81,7 +81,11 @@ function UserProfile(props) {
           queryParams.id || userData.profile_id,
           dispatch
         );
-        getAllFriends(accessToken, dispatch);
+        getAllFriends(
+          accessToken,
+          queryParams.id || userData.profile_id,
+          dispatch
+        );
       }
     }
     return () => {
@@ -148,7 +152,7 @@ function UserProfile(props) {
                   {userData?.profile_name}
                 </span>
                 <span className="text-[1.8rem] font-bold text-gray-600">
-                  {allFriends?.page?.totalElement} friend
+                  {allFriends?.page?.totalElement > 0 && `${allFriends?.page?.totalElement} friends`} 
                 </span>
               </div>
               <div className="flex items-end gap-[1rem] [&>*]:hover:cursor-pointer">
@@ -236,18 +240,20 @@ function UserProfile(props) {
                 { url: 'https://source.unsplash.com/random/211×219' },
               ]}
             />
-            <GridSideInfo
-              type="friendPhoto"
-              leftLabel="Friends"
-              rightLabel="See all Friends"
-              listImg={allFriends?.data?.map(x => {
-                return {
-                  url: x.picture,
-                  name: x.profile_name,
-                }
-              })}
-              total={allFriends?.page?.totalElement}
-            />
+            {allFriends?.page?.totalElement > 0 && (
+              <GridSideInfo
+                type="friendPhoto"
+                leftLabel="Friends"
+                rightLabel="See all Friends"
+                listImg={allFriends?.data?.map((x) => {
+                  return {
+                    url: x.picture,
+                    name: x.profile_name,
+                  };
+                })}
+                total={allFriends?.page?.totalElement}
+              />
+            )}
           </div>
         </div>
         <div className="rightSidePosts w-[55%]">
