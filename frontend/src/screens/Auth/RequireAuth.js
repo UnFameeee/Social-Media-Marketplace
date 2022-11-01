@@ -7,16 +7,15 @@ const RequireAuth = () => {
   const dispatch = useDispatch();
   var accessToken = auth.currentUser?.access ?? "";
   var refreshToken = auth.currentUser?.refresh ?? "";
-  if (accessToken !== "" && jwt_decode(accessToken).exp < Date.now() / 1000) {
-     console.log("accessToken expire");
-    // if (refreshToken !== "") {
-    //   getRefreshToken(dispatch, refreshToken);
-    // }
+  var reFreshIsExpired = false;
+  if (refreshToken !== "" && jwt_decode(refreshToken).exp < Date.now() / 1000) {
+    console.log("reFreshToken is expired");
+    reFreshIsExpired = true;
   } else {
-    console.log("accessToken still valid");
+    console.log("reFreshToken still valid");
   }
   const location = useLocation();
-  return auth?.currentUser ? (
+  return auth?.currentUser && !reFreshIsExpired ? (
     <Outlet />
   ) : (
     <Navigate to="/login" state={{ from: location }} replace />
