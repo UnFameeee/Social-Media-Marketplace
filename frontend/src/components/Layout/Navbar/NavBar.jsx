@@ -33,7 +33,7 @@ export default function NavBar() {
   function handleSearch() {}
   const handleLogOut =()=>{
     logOut(dispatch,auth.currentUser.access)
-    dispatch(revertAll)
+    dispatch(revertAll())
   }
   return (
     // #region oldCode

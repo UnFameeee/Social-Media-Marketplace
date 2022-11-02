@@ -120,6 +120,7 @@ export const login = async (model, dispatch, navigate, from) => {
   }
 };
 export const logOut = async (dispatch, accessToken) => {
+  debugger
   dispatch(logOutStart());
   try {
     const config = {
@@ -136,6 +137,7 @@ export const logOut = async (dispatch, accessToken) => {
       notify(res.data.message, "error");
     }
   } catch (err) {
+    console.log(err);
     dispatch(logOutFailed());
   }
 };

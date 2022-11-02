@@ -4,8 +4,13 @@ import { store } from "../redux/store";
 import { takeRefreshToken } from "./apiRequest";
 import { refreshTokenSuccess, userDataAssign } from "./authSlice";
 export let axiosInStanceJWT = axios.create();
+store.subscribe(() => {
+  // When state will be updated(in this case, when items will be fetched), this is how we can get updated state.
+  let items = store.getState().items;
+});
 axiosInStanceJWT.interceptors.request.use(
   async (config) => {
+    debugger;
     const auth = store.getState().auth?.login;
     var accessToken = auth?.currentUser?.access;
     var refreshToken = auth?.currentUser?.refresh;

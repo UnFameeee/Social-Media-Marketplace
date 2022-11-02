@@ -69,7 +69,8 @@ export const postSlice = createSlice({
       state.create.isFetching = false;
       state.create.error = true;
     },
-
+    createPostSaga() {},
+    createPostSagaSuccess(){},
     getPostStart: (state) => {
       state.get.isFetching = true;
     },
@@ -139,5 +140,7 @@ export const {
   likePostStart,
   likePostSuccess,
   likePostFailed,
+  createPostSaga,
+  createPostSagaSuccess
 } = postSlice.actions;
 export default postSlice.reducer;

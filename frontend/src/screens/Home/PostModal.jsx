@@ -11,6 +11,7 @@ import {
   resetUploadImagePostState,
 } from "../../redux/uploadImageSlice";
 import { Link } from "react-router-dom";
+import { createPostSaga } from "../../redux/postSlice";
 function PostModal(props) {
   //Declare variables
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ function PostModal(props) {
     (state) => state.auth.login.currentUser.access
   );
   const isPosting = useSelector((state) => state.post.create.isFetching);
-  console.log("props.postUpdateData", props.postUpdateData);
+  console.log(media_location);
   //Function
   const closeModal = () => {
     props.setShowModal(false);
@@ -53,12 +54,9 @@ function PostModal(props) {
   const handlePost = (e) => {
     e.preventDefault();
     postData.media_location = JSON.stringify(uploadImageLinkLst);
-    try {
-      createPost(accessToken, postData, dispatch)
-      closeModal();
-    } catch (error) {
-      console.log(error);
-    }
+    // createPost(accessToken, postData, dispatch)
+    dispatch(createPostSaga({ accessToken, postData, dispatch }));
+    closeModal();
   };
   const handleUpdatePost = (e) => {
     var tempUpdatePost = {
@@ -120,7 +118,7 @@ function PostModal(props) {
     };
   }, [uploadFlag]);
   useEffect(() => {
-    console.log("imgArray", imgArray);
+    // console.log("imgArray", imgArray);
   }, [imgArray]);
 
   // useEffect(() => {
@@ -198,10 +196,10 @@ function PostModal(props) {
                   </div>
                 </div>
               )}
-              {media_location && media_location.length > 0 && (
+              {uploadImageLinkLst && uploadImageLinkLst.length > 0 && (
                 <div className="relative bg-slate-100 rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll  ">
                   <ul className="flex flex-wrap gap-[1rem]  ">
-                    {media_location.map((item) => (
+                    {uploadImageLinkLst.map((item) => (
                       <li key={item} className=" w-full relative ">
                         <a href={item}>
                           <img

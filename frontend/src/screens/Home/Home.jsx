@@ -34,12 +34,12 @@ function Home() {
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllPost(accessToken, dispatch);
+       getAllPost(accessToken, dispatch);
     }
     return () => {
       onDestroy = true;
     };
-  }, [reRender]);
+  }, []);
   return (
     <>
       {openCreatePost && (

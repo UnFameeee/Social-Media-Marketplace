@@ -2,6 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import { getRefreshToken } from "../../redux/apiRequest";
+import { revertAll } from "../../redux/resetStore";
 const RequireAuth = () => {
   const auth = useSelector((state) => state.auth.login);
   const dispatch = useDispatch();
@@ -11,6 +12,7 @@ const RequireAuth = () => {
   if (refreshToken !== "" && jwt_decode(refreshToken).exp < Date.now() / 1000) {
     console.log("reFreshToken is expired");
     reFreshIsExpired = true;
+    dispatch(revertAll())
   } else {
     console.log("reFreshToken still valid");
   }
