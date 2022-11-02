@@ -16,6 +16,9 @@ export default function FriendSuggestions() {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const allFriendSuggestions = useSelector(
     (state) => state.profile.getFriendSuggestion?.data
   );
@@ -32,7 +35,7 @@ export default function FriendSuggestions() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getFriendSuggestion(accessToken, dispatch);
+      getFriendSuggestion(accessToken,refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -63,7 +66,7 @@ export default function FriendSuggestions() {
                 firstButtonConfig={{
                   name: 'Add Friend',
                   onClick: () => {
-                    addFriend(accessToken, x.profile_id, dispatch);
+                    addFriend(accessToken,refreshToken, x.profile_id, dispatch);
                     setTimeout(() => {
                       setReRender(!reRender);
                     }, 100);

@@ -40,6 +40,9 @@ function PostModal(props) {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const isPosting = useSelector((state) => state.post.create.isFetching);
   console.log(media_location);
   //Function
@@ -54,8 +57,8 @@ function PostModal(props) {
   const handlePost = (e) => {
     e.preventDefault();
     postData.media_location = JSON.stringify(uploadImageLinkLst);
-    // createPost(accessToken, postData, dispatch)
-    dispatch(createPostSaga({ accessToken, postData, dispatch }));
+    createPost(accessToken,refreshToken, postData, dispatch)
+    // dispatch(createPostSaga({ accessToken, postData, dispatch }));
     closeModal();
   };
   const handleUpdatePost = (e) => {
@@ -66,7 +69,7 @@ function PostModal(props) {
       media_type: postData.media_type,
       media_location: JSON.stringify(postData.media_location),
     };
-    updatePost(accessToken, tempUpdatePost, dispatch);
+    updatePost(accessToken,refreshToken, tempUpdatePost, dispatch);
     closeModal();
   };
   const handleOnChangePostData = (event) => {
@@ -82,7 +85,7 @@ function PostModal(props) {
     for (let i = 0; i < files.length; i++) {
       temp.push({ files: files[i] });
     }
-    await uploadImages(accessToken, temp, dispatch);
+    await uploadImages(accessToken,refreshToken, temp, dispatch);
     setUpLoadFlag((prev) => !prev);
     e.target.value = null;
   };

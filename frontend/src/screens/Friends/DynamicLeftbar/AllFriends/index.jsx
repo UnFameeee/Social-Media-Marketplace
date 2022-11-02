@@ -14,6 +14,9 @@ export default function AllFriends() {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const allFriends = useSelector(
     (state) => state.friends.getAll?.data
   );
@@ -24,7 +27,7 @@ export default function AllFriends() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriends(accessToken, dispatch);
+      getAllFriends(accessToken,refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;

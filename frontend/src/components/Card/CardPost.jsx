@@ -26,6 +26,9 @@ function CardPost(props) {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const arrayImgs = JSON.parse(props.postData.media_location);
   // Function
   const handleOnClickShowAction = () => {
@@ -46,7 +49,7 @@ function CardPost(props) {
   };
   const handleDeletePost = async () => {
     try {
-      await deletePost(accessToken, props.postData.post_id, dispatch);
+      await deletePost(accessToken,refreshToken, props.postData.post_id, dispatch);
       props.setReRender((prev) => !prev);
       handleOnClickShowAction();
     } catch (error) {
@@ -54,7 +57,7 @@ function CardPost(props) {
     }
   };
   const handleLikePost = () => {
-    likePost(accessToken, props.postData.post_id, dispatch);
+    likePost(accessToken,refreshToken, props.postData.post_id, dispatch);
     setLikeToggle((prev) => !prev);
     props.setReRender((prev) => !prev);
   };

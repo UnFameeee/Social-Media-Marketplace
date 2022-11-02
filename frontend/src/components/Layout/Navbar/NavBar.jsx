@@ -32,7 +32,7 @@ export default function NavBar() {
   
   function handleSearch() {}
   const handleLogOut =()=>{
-    logOut(dispatch,auth.currentUser.access)
+    logOut(dispatch,auth.currentUser.access,auth.currentUser.refresh)
     dispatch(revertAll())
   }
   return (

@@ -22,6 +22,9 @@ function Home() {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const userData = useSelector((state) => state.auth.user.userData);
 
   const handleOpenPostModel = () => {
@@ -34,7 +37,7 @@ function Home() {
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-       getAllPost(accessToken, dispatch);
+       getAllPost(accessToken,refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;

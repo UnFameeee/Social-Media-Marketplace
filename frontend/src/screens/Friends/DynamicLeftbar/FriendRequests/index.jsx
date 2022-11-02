@@ -17,6 +17,9 @@ export default function FriendRequests() {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const friendRequests = useSelector(
     (state) => state.friends.getFriendRequests?.data
   );
@@ -29,7 +32,7 @@ export default function FriendRequests() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriendRequests(accessToken, dispatch);
+      getAllFriendRequests(accessToken,refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -63,7 +66,7 @@ export default function FriendRequests() {
                 firstButtonConfig={{
                   onClick: () => {
                     acceptFriendRequest(
-                      accessToken,
+                      accessToken,refreshToken,
                       x.profile_id,
                       dispatch
                     );
@@ -76,7 +79,7 @@ export default function FriendRequests() {
                 secondButtonConfig={{
                   onClick: () => {
                     denyFriendRequest(
-                      accessToken,
+                      accessToken,refreshToken,
                       x.profile_id,
                       dispatch
                     );

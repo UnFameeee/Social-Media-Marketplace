@@ -41,6 +41,9 @@ function UserProfile() {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const posts = useSelector(
     (state) => state.post.get.posts?.results?.data
   );
@@ -65,9 +68,9 @@ function UserProfile() {
     let onDestroy = false;
     if (!onDestroy) {
       if (window.location.pathname === '/profile') {
-        getProfile(accessToken, queryParams.id, dispatch);
+        getProfile(accessToken,refreshToken, queryParams.id, dispatch);
       }
-      getAllPost(accessToken, dispatch,axiosInStanceJWT);
+      getAllPost(accessToken,refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
