@@ -17,6 +17,7 @@ import { deletePost, likePost } from "../../redux/apiRequest";
 import { format } from "timeago.js";
 import ShowMoreText from "react-show-more-text";
 import { Helper } from "../../utils/Helper";
+import { deletePostSaga } from "../../redux/postSlice";
 
 function CardPost(props) {
   // Declare variables
@@ -47,9 +48,11 @@ function CardPost(props) {
     props.handleOpenPostModel();
     handleOnClickShowAction();
   };
-  const handleDeletePost = async () => {
+  const handleDeletePost =  () => {
     try {
-      await deletePost(accessToken,refreshToken, props.postData.post_id, dispatch);
+      var postId = props.postData.post_id
+      // await deletePost(accessToken,refreshToken, props.postData.post_id, dispatch);
+      dispatch(deletePostSaga({accessToken,refreshToken,postId,dispatch}));
       props.setReRender((prev) => !prev);
       handleOnClickShowAction();
     } catch (error) {

@@ -95,7 +95,8 @@ export const postSlice = createSlice({
       state.delete.success = false;
       state.delete.error = true;
     },
-
+    deletePostSaga(){},
+    deletePostSagaSuccess(){},
     updatePostStart: (state) => {
       state.update.isFetching = true;
     },
@@ -141,6 +142,8 @@ export const {
   likePostSuccess,
   likePostFailed,
   createPostSaga,
-  createPostSagaSuccess
+  createPostSagaSuccess,
+  deletePostSaga,
+  deletePostSagaSuccess,
 } = postSlice.actions;
 export default postSlice.reducer;

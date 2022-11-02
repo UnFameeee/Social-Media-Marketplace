@@ -57,8 +57,8 @@ function PostModal(props) {
   const handlePost = (e) => {
     e.preventDefault();
     postData.media_location = JSON.stringify(uploadImageLinkLst);
-    createPost(accessToken,refreshToken, postData, dispatch)
-    // dispatch(createPostSaga({ accessToken, postData, dispatch }));
+    // createPost(accessToken,refreshToken, postData, dispatch)
+    dispatch(createPostSaga({ accessToken,refreshToken, postData, dispatch }));
     closeModal();
   };
   const handleUpdatePost = (e) => {
