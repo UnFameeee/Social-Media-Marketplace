@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { revertAll } from "./resetStore";
+import { revertAll } from "../resetStore";
 const initialState = {
   get: {
     posts: null,
@@ -71,6 +71,7 @@ export const postSlice = createSlice({
     },
     createPostSaga() {},
     createPostSagaSuccess(){},
+
     getPostStart: (state) => {
       state.get.isFetching = true;
     },
@@ -97,6 +98,7 @@ export const postSlice = createSlice({
     },
     deletePostSaga(){},
     deletePostSagaSuccess(){},
+    
     updatePostStart: (state) => {
       state.update.isFetching = true;
     },

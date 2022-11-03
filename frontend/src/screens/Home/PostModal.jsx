@@ -9,9 +9,9 @@ import { PhotoLibrary, HighlightOff, Close } from "@mui/icons-material";
 import {
   removeSingleUploadImagePost,
   resetUploadImagePostState,
-} from "../../redux/uploadImageSlice";
+} from "../../redux/uploadImage/uploadImageSlice";
 import { Link } from "react-router-dom";
-import { createPostSaga, updatePostSaga } from "../../redux/postSlice";
+import { createPostSaga, updatePostSaga } from "../../redux/post/postSlice";
 function PostModal(props) {
   //Declare variables
   const dispatch = useDispatch();

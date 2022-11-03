@@ -19,7 +19,7 @@ import {
   updatePostFailed,
   updatePostStart,
   updatePostSuccess,
-} from "./postSlice";
+} from "./post/postSlice";
 import {
   loginFailed,
   loginStart,
@@ -31,12 +31,12 @@ import {
   registerStart,
   registerSuccess,
   userDataAssign,
-} from "./authSlice";
+} from "./auth/authSlice";
 import {
   uploadImagePostFailed,
   uploadImagePostStart,
   uploadImagePostSuccess,
-} from "./uploadImageSlice";
+} from "./uploadImage/uploadImageSlice";
 import {
   acceptFriendRequestFailed,
   acceptFriendRequestStart,
@@ -56,7 +56,7 @@ import {
   getMutualFriendFailed,
   getMutualFriendStart,
   getMutualFriendSuccess,
-} from "./friendSlice";
+} from "./friend/friendSlice";
 import {
   getProfileDetailStart,
   getProfileDetailSuccess,
@@ -64,7 +64,7 @@ import {
   getFriendSuggestionFailed,
   getFriendSuggestionStart,
   getFriendSuggestionSuccess,
-} from "./profileSlice";
+} from "./profile/profileSlice";
 import { axiosInStanceJWT } from "./axiosJWT";
 
 const notify = (message, type) => {

@@ -1,6 +1,6 @@
 import { all, fork } from "redux-saga/effects";
-import { createNew, deleteOne, likePost, reFresh, updateOne } from "./postSaga";
+import { createNewPost, deleteOnePost, likeOnePost, reFreshPosts, updateOnePost } from "./post/postSaga";
 
 export default function* rootSaga(){
-    yield all([fork(reFresh),fork(createNew),fork(deleteOne),fork(updateOne),fork(likePost)])
+    yield all([fork(reFreshPosts),fork(createNewPost),fork(deleteOnePost),fork(updateOnePost),fork(likeOnePost)])
 }

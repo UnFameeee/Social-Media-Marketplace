@@ -1,23 +1,33 @@
 import { put, takeLatest, call, fork } from "redux-saga/effects";
-import { apiUrl } from "../common/environment/environment";
-import { axiosInStanceJWT } from "./axiosJWT";
+import { apiUrl } from "../../common/environment/environment";
+import { axiosInStanceJWT } from "../axiosJWT";
 import {
+  createPostFailed,
   createPostSaga,
   createPostSagaSuccess,
+  createPostStart,
   createPostSuccess,
+  deletePostFailed,
   deletePostSaga,
   deletePostSagaSuccess,
+  deletePostStart,
   deletePostSuccess,
+  getPostFailed,
+  getPostStart,
   getPostSuccess,
+  likePostFailed,
   likePostSaga,
   likePostSagaSuccess,
+  likePostStart,
   likePostSuccess,
+  updatePostFailed,
   updatePostSaga,
   updatePostSagaSuccess,
+  updatePostStart,
   updatePostSuccess,
 } from "./postSlice";
 
-export function* reFresh() {
+export function* reFreshPosts() {
   yield takeLatest([createPostSagaSuccess.type,deletePostSagaSuccess.type,updatePostSagaSuccess.type,likePostSagaSuccess.type], handleReFreshPostSaga);
 }
 function* handleReFreshPostSaga(data) {
@@ -48,14 +58,15 @@ const getAllPostSagaRequest = async (data) => {
       // dispatch(getPostSuccess(res.data));
       return res;
     } else {
-      // dispatch(getPostFailed());
+      //  dispatch(getPostFailed());
     }
   } catch (error) {
-    //   dispatch(getPostFailed());
+    console.log(error);
+      // dispatch(getPostFailed());
   }
 };
 
-export function* createNew() {
+export function* createNewPost() {
   yield takeLatest(createPostSaga.type, handleCreatePost);
 }
 function* handleCreatePost(data) {
@@ -68,7 +79,7 @@ function* handleCreatePost(data) {
 }
 const createPostSagaRequest = async (data) => {
   const { accessToken, refreshToken, postData, dispatch } = data.payload;
-  // dispatch(createPostStart());
+    dispatch(createPostStart()); 
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -88,15 +99,15 @@ const createPostSagaRequest = async (data) => {
       return res;
       // notify("Post Created", "info");
     } else {
-      // dispatch(createPostFailed());
+        dispatch(createPostFailed());
       // notify(res.data.message, "error");
     }
   } catch (error) {
-    //   dispatch(createPostFailed());
+        dispatch(createPostFailed());
   }
 };
 
-export function* deleteOne() {
+export function* deleteOnePost() {
   yield takeLatest(deletePostSaga.type, handleDeletePost);
 }
 function* handleDeletePost(data) {
@@ -111,7 +122,7 @@ export const deletePostSagaRequest = async (
   data
 ) => {
   const { accessToken, refreshToken, postId, dispatch } = data.payload;
-  // dispatch(deletePostStart());
+   dispatch(deletePostStart());
   try {
     const config = {
         Authorization: `Bearer ${accessToken}`,
@@ -126,16 +137,16 @@ export const deletePostSagaRequest = async (
       // dispatch(deletePostSuccess());
       // notify("Post Deleted", "info");
     } else {
-      // dispatch(deletePostFailed());
+       dispatch(deletePostFailed());
       // notify(res.data.message, "error");
     }
   } catch (error) {
     console.log(error);
-    // dispatch(deletePostFailed());
+     dispatch(deletePostFailed());
   }
 };
 
-export function* updateOne(){
+export function* updateOnePost(){
   yield takeLatest(updatePostSaga.type,handleUpdatePost)
 }
 function* handleUpdatePost(data){
@@ -150,7 +161,7 @@ const updatePostSagaRequest = async (
   data
 ) => {
   const { accessToken, refreshToken, updatePost, dispatch } = data.payload;
-  // dispatch(updatePostStart());
+   dispatch(updatePostStart());
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -170,16 +181,16 @@ const updatePostSagaRequest = async (
       // dispatch(updatePostSuccess());
       // notify("Post Updated", "info");
     } else {
-      // dispatch(updatePostFailed());
+       dispatch(updatePostFailed());
       // notify(res.data.message, "error");
     }
   } catch (error) {
     console.log(error);
-    // dispatch(updatePostFailed());
+   dispatch(updatePostFailed());
   }
 };
 
-export function* likePost(){
+export function* likeOnePost(){
   yield takeLatest(likePostSaga.type,handleLikePost)
 }
 function* handleLikePost(data){
@@ -192,7 +203,7 @@ function* handleLikePost(data){
 }
 const likePostSagaRequest = async (data) => {
   const { accessToken, refreshToken, postId, dispatch } = data.payload;
-  // dispatch(likePostStart());
+   dispatch(likePostStart());
   try {
     const config = {
         Authorization: `Bearer ${accessToken}`,
@@ -207,11 +218,11 @@ const likePostSagaRequest = async (data) => {
       dispatch(likePostSagaSuccess({accessToken,refreshToken}))
       return res
     } else {
-      // dispatch(likePostFailed());
+       dispatch(likePostFailed());
       // notify(res.data.message, "error");
     }
   } catch (error) {
     console.log(error);
-    // dispatch(likePostFailed());
+     dispatch(likePostFailed());
   }
 };

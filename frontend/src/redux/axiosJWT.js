@@ -2,7 +2,7 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { store } from "../redux/store";
 import { takeRefreshToken } from "./apiRequest";
-import { refreshTokenSuccess, userDataAssign } from "./authSlice";
+import { refreshTokenSuccess, userDataAssign } from "./auth/authSlice";
 export let axiosInStanceJWT = axios.create();
 axiosInStanceJWT.interceptors.request.use(
   async (config) => {

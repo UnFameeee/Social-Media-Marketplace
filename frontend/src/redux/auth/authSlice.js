@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { refreshToken } from "./apiRequest";
-import { revertAll } from "./resetStore";
+import { refreshToken } from "../apiRequest";
+import { revertAll } from "../resetStore";
 const initialState = {
     login: {
       currentUser: null,
