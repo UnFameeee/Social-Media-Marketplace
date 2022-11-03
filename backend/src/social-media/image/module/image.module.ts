@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ImageController } from './image.controller';
+import { ImageController } from '../controller/image.controller';
 
 @Module({
     imports:[],

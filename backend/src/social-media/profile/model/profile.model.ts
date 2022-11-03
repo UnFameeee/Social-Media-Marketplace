@@ -54,9 +54,9 @@ export class Profile extends Model<Profile> {
     @Column
     role: Role;
 
-    @AllowNull
-    @Column
-    permission: string;
+    // @AllowNull
+    // @Column
+    // permission: string;
 
     @AllowNull
     @Column
