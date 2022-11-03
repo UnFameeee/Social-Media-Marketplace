@@ -20,6 +20,9 @@ export default function FriendRequests() {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const friendRequests = useSelector(
     (state) => state.friends.getFriendRequests?.data
   );
@@ -32,7 +35,7 @@ export default function FriendRequests() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriendRequests(accessToken, dispatch);
+      getAllFriendRequests(accessToken,refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -65,10 +68,9 @@ export default function FriendRequests() {
               <LeftbarMiddleItem
                 profileName={x.profile_name}
                 firstButtonConfig={{
-                  onClick: async (e) => {
-                    e.stopPropagation();
-                    await acceptFriendRequest(
-                      accessToken,
+                  onClick: () => {
+                    acceptFriendRequest(
+                      accessToken,refreshToken,
                       x.profile_id,
                       dispatch
                     );
@@ -77,10 +79,9 @@ export default function FriendRequests() {
                   },
                 }}
                 secondButtonConfig={{
-                  onClick: async (e) => {
-                    e.stopPropagation();
-                    await denyFriendRequest(
-                      accessToken,
+                  onClick: () => {
+                    denyFriendRequest(
+                      accessToken,refreshToken,
                       x.profile_id,
                       dispatch
                     );
@@ -91,10 +92,10 @@ export default function FriendRequests() {
               />
             ),
             onClick: () => {
-              getProfile(accessToken, x.profile_id, dispatch);
-              getPostByProfile(accessToken, x.profile_id, dispatch);
+              getProfile(accessToken,refreshToken, x.profile_id, dispatch);
+              getPostByProfile(accessToken,refreshToken, x.profile_id, dispatch);
               getAllFriends(
-                accessToken,
+                accessToken,refreshToken,
                 x.profile_id,
                 dispatch
               );

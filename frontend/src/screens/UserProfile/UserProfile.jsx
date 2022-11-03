@@ -33,7 +33,6 @@ import {
   getProfile,
 } from '../../redux/apiRequest';
 import { Helper } from '../../utils/Helper';
-
 function UserProfile(props) {
   const dispatch = useDispatch();
   const [reRender, setReRender] = useState(false);
@@ -46,6 +45,9 @@ function UserProfile(props) {
   ];
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
   );
   const posts = useSelector(
     (state) => state.post.getByProfile?.posts?.results?.data
@@ -73,14 +75,14 @@ console.log(userData)
     let onDestroy = false;
     if (!onDestroy) {
       if (Helper.checkURL('profile', {}, true)) {
-        getProfile(accessToken, queryParams.id, dispatch);
+        getProfile(accessToken,refreshToken, queryParams.id, dispatch);
         getPostByProfile(
-          accessToken,
+          accessToken,refreshToken,
           queryParams.id || userData?.profile_id,
           dispatch
         );
         getAllFriends(
-          accessToken,
+          accessToken,refreshToken,
           queryParams.id || userData?.profile_id,
           dispatch
         );

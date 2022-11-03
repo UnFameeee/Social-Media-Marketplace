@@ -1,7 +1,6 @@
 import React from "react";
 import { Avatar } from "@mui/material";
 function PostStatus(props) {
-    console.log("PostStatus",props.profile);
   return (
     <div className="flex items-center gap-[0.5rem]">
       <Avatar

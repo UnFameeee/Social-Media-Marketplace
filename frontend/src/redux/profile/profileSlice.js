@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { revertAll } from './resetStore';
+import { revertAll } from '../resetStore';
 const initialState = {
   profileDetails: {
     data: null,
