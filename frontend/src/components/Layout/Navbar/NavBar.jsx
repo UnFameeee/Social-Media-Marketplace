@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import { IoLogOut } from "react-icons/io5";
 import MUI from "../../MUI";
-import { middleNavIcons, rightNavIcons } from "../../../common/layout/navbar";
 import { useDispatch, useSelector } from "react-redux";
+import { middleNavIcons, rightNavIcons } from "../../../common/layout/navbar";
 import { revertAll } from "../../../redux/resetStore";
 import { Helper } from "../../../utils/Helper";
 import "../Layout.css";
@@ -154,7 +154,7 @@ export default function NavBar() {
         >
           {middleNavIcons.map((item, index) => (
             <MUI.ButtonWithIcon
-            className="w-[14rem]"
+            className="w-[13rem]"
               sx={{
                 padding: "1rem 0.8rem",
               }}

@@ -5,6 +5,7 @@ import {
   getAllFriends,
   getPostByProfile,
   getProfile,
+  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -28,6 +29,7 @@ export default function AllFriends() {
   );
 
   const [profileClicked, setProfileClicked] = useState(false);
+  const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -65,6 +67,7 @@ export default function AllFriends() {
               getProfile(accessToken, x.profile_id, dispatch);
               getPostByProfile(accessToken, x.profile_id, dispatch);
               getAllFriends(accessToken, x.profile_id, dispatch);
+              isSentFriendReq(accessToken, x.profile_id, dispatch);
               setProfileClicked(true);
             },
             selected:
@@ -76,7 +79,7 @@ export default function AllFriends() {
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && <UserProfile />}
+      {profileClicked && <UserProfile setReRender={[setReRender, setProfileClicked]}/>}
     </TwoColumns>
   );
 }

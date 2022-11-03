@@ -62,6 +62,12 @@ import {
   getMutualFriendFailed,
   getMutualFriendStart,
   getMutualFriendSuccess,
+  isFriendFailed,
+  isFriendStart,
+  isFriendSuccess,
+  isSentFriendRequestFailed,
+  isSentFriendRequestStart,
+  isSentFriendRequestSuccess,
 } from './friendSlice';
 import {
   getProfileDetailStart,
@@ -500,7 +506,7 @@ export const denyFriendRequest = async (
   }
 };
 export const isFriend = async (accessToken, id, dispatch) => {
-  dispatch(acceptFriendRequestStart());
+  dispatch(isFriendStart());
   try {
     const config = {
       headers: {
@@ -515,12 +521,36 @@ export const isFriend = async (accessToken, id, dispatch) => {
       config
     );
     if (!res.data.message) {
-      dispatch(acceptFriendRequestSuccess(res.data.results));
+      dispatch(isFriendSuccess(res.data.results));
     } else {
-      dispatch(acceptFriendRequestFailed());
+      dispatch(isFriendFailed());
     }
   } catch (error) {
-    dispatch(acceptFriendRequestFailed());
+    dispatch(isFriendFailed());
+  }
+};
+export const isSentFriendReq = async (accessToken, id, dispatch) => {
+  dispatch(isSentFriendRequestStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+
+    const res = await axios.post(
+      `${api.friend}/isSentFriendRequest/${id}`,
+      {},
+      config
+    );
+    if (!res.data.message) {
+      dispatch(isSentFriendRequestSuccess(res.data.results));
+    } else {
+      dispatch(isSentFriendRequestFailed());
+    }
+  } catch (error) {
+    dispatch(isSentFriendRequestFailed());
   }
 };
 // #endregion

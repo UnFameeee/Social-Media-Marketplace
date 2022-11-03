@@ -6,6 +6,7 @@ import {
   getFriendSuggestion,
   getPostByProfile,
   getProfile,
+  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -72,6 +73,7 @@ export default function FriendSuggestions() {
               getProfile(accessToken, x.profile_id, dispatch);
               getPostByProfile(accessToken, x.profile_id, dispatch);
               getAllFriends(accessToken, x.profile_id, dispatch);
+              isSentFriendReq(accessToken, x.profile_id, dispatch);
               setProfileClicked(true);
             },
             selected: profileClicked && x.profile_id === userData?.profile_id,
@@ -81,7 +83,7 @@ export default function FriendSuggestions() {
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && <UserProfile />}
+      {profileClicked && <UserProfile setReRender={[setReRender, setProfileClicked]}/>}
     </TwoColumns>
   );
 }
