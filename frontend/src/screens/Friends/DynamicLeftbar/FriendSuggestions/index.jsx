@@ -2,7 +2,9 @@ import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addFriend,
+  getAllFriends,
   getFriendSuggestion,
+  getPostByProfile,
   getProfile,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
@@ -20,15 +22,11 @@ export default function FriendSuggestions() {
     (state) => state.auth.login.currentUser.refresh
   );
   const allFriendSuggestions = useSelector(
-    (state) => state.profile.getFriendSuggestion?.data
-  );
-  const addFriendStatus = useSelector(
-    (state) => state.friends.addFriend?.data
+    (state) => state.profile?.getFriendSuggestion?.data
   );
   const userData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
-  console.log(addFriendStatus)
 
   const [profileClicked, setProfileClicked] = useState(false);
   const [reRender, setReRender] = useState(false);
@@ -65,20 +63,22 @@ export default function FriendSuggestions() {
                 profileName={x.profile_name}
                 firstButtonConfig={{
                   name: 'Add Friend',
-                  onClick: () => {
-                    addFriend(accessToken,refreshToken, x.profile_id, dispatch);
-                    setTimeout(() => {
-                      setReRender(!reRender);
-                    }, 100);
+                  onClick: async (e) => {
+                    e.stopPropagation();
+                    await addFriend(accessToken,refreshToken, x.profile_id, dispatch);
+                    setReRender(!reRender);
                   },
                 }}
               />
             ),
             onClick: () => {
               getProfile(accessToken, x.profile_id, dispatch);
+              getPostByProfile(accessToken, x.profile_id, dispatch);
+              getAllFriends(accessToken, x.profile_id, dispatch);
               setProfileClicked(true);
             },
-            selected: profileClicked && x.profile_id === userData.profile_id,
+            selected: profileClicked && x.profile_id === userData?.profile_id,
+            disabled: profileClicked && x.profile_id === userData?.profile_id,
           };
         }),
         leftBarColor: 'white',

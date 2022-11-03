@@ -6,6 +6,11 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  getAllForMainUser: {
+    data: null,
+    isFetching: false,
+    error: false,
+  },
   getAll: {
     data: null,
     isFetching: false,
@@ -41,6 +46,11 @@ export const friendSlice = createSlice({
   name: 'friends',
   initialState: {
     getFriendRequests: {
+      data: null,
+      isFetching: false,
+      error: false,
+    },
+    getAllForMainUser: {
       data: null,
       isFetching: false,
       error: false,
@@ -101,6 +111,18 @@ export const friendSlice = createSlice({
     getAllFriendFailed: (state) => {
       state.getAll.isFetching = false;
       state.getAll.error = true;
+    },
+
+    getAllFriendForMainUserStart: (state) => {
+      state.getAllForMainUser.isFetching = true;
+    },
+    getAllFriendForMainUserSuccess: (state, action) => {
+      state.getAllForMainUser.isFetching = false;
+      state.getAllForMainUser.data = action.payload;
+    },
+    getAllFriendForMainUserFailed: (state) => {
+      state.getAllForMainUser.isFetching = false;
+      state.getAllForMainUser.error = true;
     },
 
     getMutualFriendStart: (state) => {
@@ -173,6 +195,10 @@ export const {
     getAllFriendStart,
     getAllFriendSuccess,
     getAllFriendFailed,
+
+    getAllFriendForMainUserStart,
+    getAllFriendForMainUserSuccess,
+    getAllFriendForMainUserFailed,
 
     getMutualFriendStart,
     getMutualFriendSuccess,

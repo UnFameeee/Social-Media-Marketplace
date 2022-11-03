@@ -26,7 +26,9 @@ function CardPost(props) {
     (state) => state.auth.login.currentUser.access
   );
   const refreshToken = useSelector(
-    (state) => state.auth.login.currentUser.refresh
+    (state) => state.auth.login.currentUser.refresh);
+  const userData = useSelector(
+    (state) => state.auth?.user?.userData.profile
   );
   const arrayImgs = JSON.parse(props.postData.media_location);
   const { postData } = props;
@@ -77,26 +79,89 @@ function CardPost(props) {
   };
   return (
     <>
-      profile?.profile_id === postData.profile_id) && (
-      <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
-        <div className="w-full bg">
-          <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
-            <div className="flex flex-1 gap-[1rem]">
-              <Avatar
-                style={{ fontSize: "2rem" }}
-                alt={props.postData.profile_name}
-                src={
-                  props.postData?.picture
-                    ? JSON.parse(props.postData?.picture)
-                    : null
-                }
-              >
-                {props.postData.profile_name?.at(0)}
-              </Avatar>
-              <div>
-                <p>{props.postData.profile_name}</p>
-                <span className=" font-light text-[1.4rem]">
-                  {format(props.postData.createdAt)}
+      {/* {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && ( */}
+        <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
+          <div className="w-full bg">
+            <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
+              <div className="flex flex-1 gap-[1rem]">
+                <Avatar
+                  style={{ fontSize: '2rem' }}
+                  alt={props.postData.profile_name}
+                  src={
+                    props.postData?.picture
+                      ? JSON.parse(props.postData?.picture)
+                      : null
+                  }
+                >
+                  {props.postData.profile_name?.at(0)}
+                </Avatar>
+                <div>
+                  <p>{props.postData.profile_name}</p>
+                  <span className=" font-light text-[1.4rem]">
+                    {format(props.postData.createdAt)}
+                  </span>
+                </div>
+              </div>
+              {userData?.profile_id ===
+                props.postData.profile_id && (
+                <div className="relative">
+                  <MoreHoriz
+                    className=" right-[2rem] Icon"
+                    style={{ fontSize: '2.5rem' }}
+                    onClick={handleOnClickShowAction}
+                  />
+                  {showAction && (
+                    <div className="bg-white floatingAction absolute  right-0  p-[1rem] drop-shadow-sm rounded-xl border-[0.1rem] ">
+                      <ul className="flex gap-[1rem] flex-col ">
+                        <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem] cursor-pointer">
+                          <button onClick={handleShowModal}>
+                            Update
+                          </button>
+                        </li>
+                        <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem] cursor-pointer">
+                          <button onClick={handleDeletePost}>
+                            Delete
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+            <div className="written_text ">
+              <div className="paragraph px-[2rem] mb-[1rem] "  style={{ overflowWrap: "anywhere" }}>
+              <ShowMoreText
+              lines={3}
+              more="Show more"
+              less="Show less"
+              anchorClass="show-more-less-clickable"
+              expanded={false}
+              width={0}
+              truncatedEndingComponent={"... "}
+            >
+              {props.postData.written_text}
+            </ShowMoreText>
+              </div>
+              {props.postData.media_location && arrayImgs.length > 0 && (
+                <div className="px-[-1rem] mb-[0.5rem] border-y-[0.1rem] border-gray-200">
+                  {arrayImgs.map((item) => (
+                    <img
+                      src={item}
+                      key={item}
+                      alt=""
+                      className="w-full min-w-[20rem] h-[45rem] object-cover"
+                    />
+                  ))}
+                </div>
+              )}
+              <div className="mb-[0.5rem] px-[2rem] flex gap-[0.5rem]">
+                <ThumbUpOutlined
+                  className="Icon text-blue8f3"
+                  style={{ fontSize: '2rem' }}
+                />
+                <span className="text-grey1f">
+                  {props.postData.totalLike}
                 </span>
               </div>
             </div>
@@ -219,7 +284,7 @@ function CardPost(props) {
             </div>
           </div>
         </div>
-      </div>
+      {/* )} */}
     </>
   );
 }

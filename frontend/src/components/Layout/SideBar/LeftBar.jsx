@@ -172,6 +172,7 @@ function LeftBarListItem({ item, classNameConfig }) {
     <ListItemButton
       onClick={item.onClick}
       selected={item.selected}
+      disabled={item.disabled}
       className={`left-bar-button ${classNameConfig}`}
     >
       {item.left && (

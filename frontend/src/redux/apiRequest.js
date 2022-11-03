@@ -10,6 +10,9 @@ import {
   deletePostFailed,
   deletePostStart,
   deletePostSuccess,
+  getPostByProfileFailed,
+  getPostByProfileStart,
+  getPostByProfileSuccess,
   getPostFailed,
   getPostStart,
   getPostSuccess,
@@ -48,6 +51,9 @@ import {
   denyFriendRequestStart,
   denyFriendRequestSuccess,
   getAllFriendFailed,
+  getAllFriendForMainUserFailed,
+  getAllFriendForMainUserStart,
+  getAllFriendForMainUserSuccess,
   getAllFriendStart,
   getAllFriendSuccess,
   getFriendRequestFailed,
@@ -311,6 +317,33 @@ export const getAllPost = async (accessToken, refreshToken, dispatch) => {
     dispatch(getPostFailed());
   }
 };
+export const getPostByProfile = async (accessToken, profileId, dispatch) => {
+  dispatch(getPostByProfileStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const paging = {
+      page: 0,
+      pageSize: 5,
+    };
+    const res = await axios.post(
+      `${api.post}/getPost/${profileId}`,
+      paging,
+      config
+    );
+    if (!res.data.message) {
+      dispatch(getPostByProfileSuccess(res.data));
+    } else {
+      dispatch(getPostByProfileFailed());
+    }
+  } catch (error) {
+    dispatch(getPostByProfileFailed());
+  }
+};
 
 export const uploadImages = async (
   accessToken,
@@ -378,7 +411,7 @@ export const getAllFriendRequests = async (
     dispatch(getFriendRequestFailed());
   }
 };
-export const getAllFriends = async (accessToken, refreshToken, dispatch) => {
+export const getAllFriends = async (accessToken, refreshToken,profileId, dispatch) => {
   dispatch(getAllFriendStart());
   try {
     const config = {
@@ -388,7 +421,7 @@ export const getAllFriends = async (accessToken, refreshToken, dispatch) => {
       page: 0,
       pageSize: 5,
     };
-    const res = await axiosInStanceJWT.post(`${api.friend}/all`, paging, {
+    const res = await axiosInStanceJWT.post(`${api.friend}/all/${profileId}`, paging, {
       headers:config,
       ACCESS_PARAM: accessToken,
       REFRESH_PARAM: refreshToken,
@@ -403,12 +436,30 @@ export const getAllFriends = async (accessToken, refreshToken, dispatch) => {
     dispatch(getAllFriendFailed());
   }
 };
-export const getMutualFriends = async (
-  accessToken,
-  refreshToken,
-  id,
-  dispatch
-) => {
+export const getAllFriendsForMainUser = async (accessToken, profileId, dispatch) => {
+  dispatch(getAllFriendForMainUserStart());
+  try {
+    const config = {
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    };
+    const paging = {
+      page: 0,
+      pageSize: 5,
+    };
+    const res = await axios.post(`${api.friend}/all/${profileId}`, paging, config);
+    if (!res.data.message) {
+      dispatch(getAllFriendForMainUserSuccess(res.data.results));
+    } else {
+      dispatch(getAllFriendForMainUserFailed());
+    }
+  } catch (error) {
+    dispatch(getAllFriendForMainUserFailed());
+  }
+};
+export const getMutualFriends = async (accessToken, refreshToken, id, dispatch) => {
   dispatch(getMutualFriendStart());
   try {
     const config = {
