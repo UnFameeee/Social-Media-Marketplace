@@ -41,6 +41,11 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  isSentFriendRequest: {
+    data: false,
+    isFetching: false,
+    error: false,
+  },
 };
 export const friendSlice = createSlice({
   name: 'friends',
@@ -81,6 +86,11 @@ export const friendSlice = createSlice({
       error: false,
     },
     isFriend: {
+      data: false,
+      isFetching: false,
+      error: false,
+    },
+    isSentFriendRequest: {
       data: false,
       isFetching: false,
       error: false,
@@ -184,6 +194,18 @@ export const friendSlice = createSlice({
       state.isFriend.isFetching = false;
       state.isFriend.error = true;
     },
+
+    isSentFriendRequestStart: (state) => {
+      state.isSentFriendRequest.isFetching = true;
+    },
+    isSentFriendRequestSuccess: (state, action) => {
+      state.isSentFriendRequest.isFetching = false;
+      state.isSentFriendRequest.data = action.payload;
+    },
+    isSentFriendRequestFailed: (state) => {
+      state.isSentFriendRequest.isFetching = false;
+      state.isSentFriendRequest.error = true;
+    },
   },
 });
 
@@ -219,6 +241,11 @@ export const {
     isFriendStart,
     isFriendSuccess,
     isFriendFailed,
+
+    isSentFriendRequestStart,
+    isSentFriendRequestSuccess,
+    isSentFriendRequestFailed,
+    
 
 } = friendSlice.actions;
 export default friendSlice.reducer;

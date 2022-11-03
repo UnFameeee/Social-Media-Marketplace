@@ -6,6 +6,7 @@ import {
   getFriendSuggestion,
   getPostByProfile,
   getProfile,
+  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -33,7 +34,7 @@ export default function FriendSuggestions() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getFriendSuggestion(accessToken,refreshToken, dispatch);
+      getFriendSuggestion(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -65,26 +66,56 @@ export default function FriendSuggestions() {
                   name: 'Add Friend',
                   onClick: async (e) => {
                     e.stopPropagation();
-                    await addFriend(accessToken,refreshToken, x.profile_id, dispatch);
+                    await addFriend(
+                      accessToken,
+                      refreshToken,
+                      x.profile_id,
+                      dispatch
+                    );
                     setReRender(!reRender);
                   },
                 }}
               />
             ),
             onClick: () => {
-              getProfile(accessToken,refreshToken, x.profile_id, dispatch);
-              getPostByProfile(accessToken,refreshToken, x.profile_id, dispatch);
-              getAllFriends(accessToken,refreshToken, x.profile_id, dispatch);
+              getProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getPostByProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getAllFriends(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              isSentFriendReq(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
               setProfileClicked(true);
             },
-            selected: profileClicked && x.profile_id === userData?.profile_id,
-            disabled: profileClicked && x.profile_id === userData?.profile_id,
+            selected:
+              profileClicked && x.profile_id === userData?.profile_id,
+            disabled:
+              profileClicked && x.profile_id === userData?.profile_id,
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && <UserProfile />}
+      {profileClicked && (
+        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+      )}
     </TwoColumns>
   );
 }

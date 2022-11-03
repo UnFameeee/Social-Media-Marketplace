@@ -7,6 +7,7 @@ import {
   denyFriendRequest,
   getPostByProfile,
   getAllFriends,
+  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -35,7 +36,7 @@ export default function FriendRequests() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriendRequests(accessToken,refreshToken, dispatch);
+      getAllFriendRequests(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -70,7 +71,8 @@ export default function FriendRequests() {
                 firstButtonConfig={{
                   onClick: () => {
                     acceptFriendRequest(
-                      accessToken,refreshToken,
+                      accessToken,
+                      refreshToken,
                       x.profile_id,
                       dispatch
                     );
@@ -81,7 +83,8 @@ export default function FriendRequests() {
                 secondButtonConfig={{
                   onClick: () => {
                     denyFriendRequest(
-                      accessToken,refreshToken,
+                      accessToken,
+                      refreshToken,
                       x.profile_id,
                       dispatch
                     );
@@ -92,10 +95,27 @@ export default function FriendRequests() {
               />
             ),
             onClick: () => {
-              getProfile(accessToken,refreshToken, x.profile_id, dispatch);
-              getPostByProfile(accessToken,refreshToken, x.profile_id, dispatch);
+              getProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getPostByProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
               getAllFriends(
-                accessToken,refreshToken,
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              isSentFriendReq(
+                accessToken,
+                refreshToken,
                 x.profile_id,
                 dispatch
               );
@@ -110,7 +130,9 @@ export default function FriendRequests() {
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && <UserProfile />}
+      {profileClicked && (
+        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+      )}
     </TwoColumns>
   );
 }

@@ -3,7 +3,7 @@ import LeftBar from './SideBar/LeftBar';
 import './Layout.css'
 
 export default function ThreeColumns(props) {
-  const { leftBarConfig, rightBarConfig, children } = props;
+  const { leftBarConfig, rightBarConfig, children, className } = props;
   return (
     // #region oldCode
     // <div className="pt-[5.5rem] flex w-full">
@@ -21,7 +21,7 @@ export default function ThreeColumns(props) {
 
     <div className="layout-wrapper">
       <LeftBar {...leftBarConfig} />
-      <div className="landing-layout three-column">
+      <div className={`landing-layout three-column ${className}`}>
         {children}
       </div>
       <RightBar {...rightBarConfig} />

@@ -2,7 +2,7 @@ import LeftBar from './SideBar/LeftBar';
 import './Layout.css';
 
 export default function TwoColumns(props) {
-  const { leftBarConfig, children } = props;
+  const { leftBarConfig, children, className } = props;
 
   return (
     // #region oldCode
@@ -18,7 +18,9 @@ export default function TwoColumns(props) {
 
     <div className="layout-wrapper">
       <LeftBar {...leftBarConfig} />
-      <div className="landing-layout two-column">{children}</div>
+      <div className={`landing-layout two-column ${className}`}>
+        {children}
+      </div>
     </div>
   );
 }
