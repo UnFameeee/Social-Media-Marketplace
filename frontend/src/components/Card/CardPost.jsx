@@ -17,19 +17,19 @@ import { deletePost, likePost } from "../../redux/apiRequest";
 import { format } from "timeago.js";
 import ShowMoreText from "react-show-more-text";
 import { Helper } from "../../utils/Helper";
-import { deletePostSaga } from "../../redux/postSlice";
+import { deletePostSaga, likePostSaga } from "../../redux/postSlice";
 
 function CardPost(props) {
   // Declare variables
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState();
-  const [likeToggle, setLikeToggle] = useState(false);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
   const refreshToken = useSelector(
     (state) => state.auth.login.currentUser.refresh
   );
+  
   const arrayImgs = JSON.parse(props.postData.media_location);
   // Function
   const handleOnClickShowAction = () => {
@@ -60,12 +60,11 @@ function CardPost(props) {
     }
   };
   const handleLikePost = () => {
-    likePost(accessToken,refreshToken, props.postData.post_id, dispatch);
-    setLikeToggle((prev) => !prev);
+    // likePost(accessToken,refreshToken, props.postData.post_id, dispatch);
+    let postId= props.postData.post_id
+    dispatch(likePostSaga({accessToken,refreshToken,postId, dispatch}))
     props.setReRender((prev) => !prev);
   };
-  // UseEffect
-
   return (
     <>
       {(!Helper.checkURL("") ||
@@ -156,13 +155,13 @@ function CardPost(props) {
                   onClick={handleLikePost}
                   className="button-with-icon flex gap-[0.5rem] w-full "
                 >
-                  {likeToggle ? (
-                    <ThumbUpOutlined
+                  {props.postData.isLiked  ? (
+                    <ThumbUpAlt
                       className=" "
                       style={{ fontSize: "2.5rem" }}
                     />
                   ) : (
-                    <ThumbUpAlt style={{ fontSize: "2.5rem" }} />
+                    <ThumbUpOutlined style={{ fontSize: "2.5rem" }} />
                   )}
                   <span className=" leading-[1.3rem]">Like</span>
                 </MUI.ButtonWithIcon>

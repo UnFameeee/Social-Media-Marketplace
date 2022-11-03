@@ -120,7 +120,6 @@ export const login = async (model, dispatch, navigate, from) => {
   }
 };
 export const logOut = async (dispatch, accessToken, refreshToken) => {
-  debugger;
   dispatch(logOutStart());
   try {
     const config = {

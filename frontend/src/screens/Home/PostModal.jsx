@@ -11,7 +11,7 @@ import {
   resetUploadImagePostState,
 } from "../../redux/uploadImageSlice";
 import { Link } from "react-router-dom";
-import { createPostSaga } from "../../redux/postSlice";
+import { createPostSaga, updatePostSaga } from "../../redux/postSlice";
 function PostModal(props) {
   //Declare variables
   const dispatch = useDispatch();
@@ -62,14 +62,15 @@ function PostModal(props) {
     closeModal();
   };
   const handleUpdatePost = (e) => {
-    var tempUpdatePost = {
+    var updatePost = {
       post_id: props.postUpdateData.post_id,
       profile_id: props.postUpdateData.profile_id,
       written_text: postData.written_text,
       media_type: postData.media_type,
       media_location: JSON.stringify(postData.media_location),
     };
-    updatePost(accessToken,refreshToken, tempUpdatePost, dispatch);
+    // updatePost(accessToken,refreshToken, updatePost, dispatch);
+    dispatch(updatePostSaga({accessToken,refreshToken, updatePost, dispatch}))
     closeModal();
   };
   const handleOnChangePostData = (event) => {
@@ -199,10 +200,10 @@ function PostModal(props) {
                   </div>
                 </div>
               )}
-              {uploadImageLinkLst && uploadImageLinkLst.length > 0 && (
+              {media_location && media_location.length > 0 && (
                 <div className="relative bg-slate-100 rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll  ">
                   <ul className="flex flex-wrap gap-[1rem]  ">
-                    {uploadImageLinkLst.map((item) => (
+                    {media_location.map((item) => (
                       <li key={item} className=" w-full relative ">
                         <a href={item}>
                           <img
