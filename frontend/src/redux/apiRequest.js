@@ -317,14 +317,11 @@ export const getAllPost = async (accessToken, refreshToken, dispatch) => {
     dispatch(getPostFailed());
   }
 };
-export const getPostByProfile = async (accessToken, profileId, dispatch) => {
+export const getPostByProfile = async (accessToken,refreshToken, profileId, dispatch) => {
   dispatch(getPostByProfileStart());
   try {
     const config = {
-      headers: {
-        'content-type': 'application/json; charset=utf-8',
         Authorization: `Bearer ${accessToken}`,
-      },
     };
     const paging = {
       page: 0,
@@ -333,7 +330,11 @@ export const getPostByProfile = async (accessToken, profileId, dispatch) => {
     const res = await axios.post(
       `${api.post}/getPost/${profileId}`,
       paging,
-      config
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
     );
     if (!res.data.message) {
       dispatch(getPostByProfileSuccess(res.data));
@@ -436,20 +437,21 @@ export const getAllFriends = async (accessToken, refreshToken,profileId, dispatc
     dispatch(getAllFriendFailed());
   }
 };
-export const getAllFriendsForMainUser = async (accessToken, profileId, dispatch) => {
+export const getAllFriendsForMainUser = async (accessToken,refreshToken, profileId, dispatch) => {
   dispatch(getAllFriendForMainUserStart());
   try {
     const config = {
-      headers: {
-        'content-type': 'application/json; charset=utf-8',
         Authorization: `Bearer ${accessToken}`,
-      },
     };
     const paging = {
       page: 0,
       pageSize: 5,
     };
-    const res = await axios.post(`${api.friend}/all/${profileId}`, paging, config);
+    const res = await axiosInStanceJWT.post(`${api.friend}/all/${profileId}`, paging, {
+      headers:config,
+      ACCESS_PARAM: accessToken,
+      REFRESH_PARAM: refreshToken,
+    });
     if (!res.data.message) {
       dispatch(getAllFriendForMainUserSuccess(res.data.results));
     } else {

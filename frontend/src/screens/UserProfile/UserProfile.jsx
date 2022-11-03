@@ -26,7 +26,6 @@ import HoverButton from './HoverButton';
 import CardPost from '../../components/Card/CardPost';
 import GridSideInfo from './GridSideInfo';
 import PostModal from '../Home/PostModal';
-function UserProfile() {
 import {
   getAllFriends,
   getAllPost,
@@ -34,7 +33,6 @@ import {
   getProfile,
 } from '../../redux/apiRequest';
 import { Helper } from '../../utils/Helper';
-
 function UserProfile(props) {
   const dispatch = useDispatch();
   const [reRender, setReRender] = useState(false);

@@ -92,10 +92,10 @@ export default function FriendRequests() {
               />
             ),
             onClick: () => {
-              getProfile(accessToken, x.profile_id, dispatch);
-              getPostByProfile(accessToken, x.profile_id, dispatch);
+              getProfile(accessToken,refreshToken, x.profile_id, dispatch);
+              getPostByProfile(accessToken,refreshToken, x.profile_id, dispatch);
               getAllFriends(
-                accessToken,
+                accessToken,refreshToken,
                 x.profile_id,
                 dispatch
               );
