@@ -36,7 +36,7 @@ export default function FriendRequests() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriendRequests(accessToken,refreshToken, dispatch);
+      getAllFriendRequests(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -71,7 +71,8 @@ export default function FriendRequests() {
                 firstButtonConfig={{
                   onClick: () => {
                     acceptFriendRequest(
-                      accessToken,refreshToken,
+                      accessToken,
+                      refreshToken,
                       x.profile_id,
                       dispatch
                     );
@@ -82,7 +83,8 @@ export default function FriendRequests() {
                 secondButtonConfig={{
                   onClick: () => {
                     denyFriendRequest(
-                      accessToken,refreshToken,
+                      accessToken,
+                      refreshToken,
                       x.profile_id,
                       dispatch
                     );
@@ -93,14 +95,30 @@ export default function FriendRequests() {
               />
             ),
             onClick: () => {
-              getProfile(accessToken,refreshToken, x.profile_id, dispatch);
-              getPostByProfile(accessToken,refreshToken, x.profile_id, dispatch);
-              getAllFriends(
-                accessToken,refreshToken,
+              getProfile(
+                accessToken,
+                refreshToken,
                 x.profile_id,
                 dispatch
               );
-              isSentFriendReq(accessToken, x.profile_id, dispatch);
+              getPostByProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getAllFriends(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              isSentFriendReq(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
               setProfileClicked(true);
             },
             selected:
@@ -112,7 +130,9 @@ export default function FriendRequests() {
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && <UserProfile setReRender={[setReRender, setProfileClicked]}/>}
+      {profileClicked && (
+        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+      )}
     </TwoColumns>
   );
 }

@@ -94,14 +94,27 @@ function UserProfile(props) {
     let onDestroy = false;
     if (!onDestroy) {
       if (Helper.checkURL('profile', {}, true)) {
-        getProfile(accessToken,refreshToken, queryParams.id, dispatch);
+        getProfile(
+          accessToken,
+          refreshToken,
+          queryParams.id,
+          dispatch
+        );
         getPostByProfile(
-          accessToken,refreshToken,
+          accessToken,
+          refreshToken,
           queryParams.id || userData?.profile_id,
           dispatch
         );
         getAllFriends(
-          accessToken,refreshToken,
+          accessToken,
+          refreshToken,
+          queryParams.id || userData?.profile_id,
+          dispatch
+        );
+        isSentFriendReq(
+          accessToken,
+          refreshToken,
           queryParams.id || userData?.profile_id,
           dispatch
         );

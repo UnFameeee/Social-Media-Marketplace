@@ -90,7 +90,12 @@ export default function AllFriends() {
                 x.profile_id,
                 dispatch
               );
-              isSentFriendReq(accessToken, x.profile_id, dispatch);
+              isSentFriendReq(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
               setProfileClicked(true);
             },
             selected:

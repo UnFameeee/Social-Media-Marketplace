@@ -368,7 +368,7 @@ export const getPostByProfile = async (
       page: 0,
       pageSize: 5,
     };
-    const res = await axios.post(
+    const res = await axiosInStanceJWT.post(
       `${api.post}/getPost/${profileId}`,
       paging,
       {
@@ -678,20 +678,21 @@ export const isFriend = async (
     dispatch(isFriendFailed());
   }
 };
-export const isSentFriendReq = async (accessToken, id, dispatch) => {
+export const isSentFriendReq = async (accessToken, refreshToken, id, dispatch) => {
   dispatch(isSentFriendRequestStart());
   try {
     const config = {
-      headers: {
-        'content-type': 'application/json; charset=utf-8',
-        Authorization: `Bearer ${accessToken}`,
-      },
+      Authorization: `Bearer ${accessToken}`,
     };
 
-    const res = await axios.post(
+    const res = await axiosInStanceJWT.post(
       `${api.friend}/isSentFriendRequest/${id}`,
       {},
-      config
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
     );
     if (!res.data.message) {
       dispatch(isSentFriendRequestSuccess(res.data.results));
