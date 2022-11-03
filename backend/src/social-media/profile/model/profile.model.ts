@@ -1,4 +1,5 @@
 import { AllowNull, AutoIncrement, Column, DataType, Default, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { FRIENDREQUEST_STATUS } from "src/common/constants/friendship.constant";
 import { Role } from "src/common/constants/role.constant";
 @Table({
     tableName: "Profiles",
@@ -68,5 +69,14 @@ export class Profile extends Model<Profile> {
 
     set isFriend(value: boolean){
         this.setDataValue("isFriend", value);
+    }
+
+    @Column(DataType.VIRTUAL(DataType.STRING))
+    get isSentFriendRequest(): string {
+        return this.getDataValue("isSentFriendRequest");
+    }
+
+    set isSentFriendRequest(value: string){
+        this.setDataValue("isSentFriendRequest", value);
     }
 }

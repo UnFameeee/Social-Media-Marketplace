@@ -286,7 +286,6 @@ export class FriendshipRepository {
             ],
             raw: true,
         })
-
         if (queryData) {
             if (queryData["profile_request"] == profile_id) {
                 return FRIENDREQUEST_STATUS.REQUEST;
@@ -295,6 +294,41 @@ export class FriendshipRepository {
             }
         }
         else return FRIENDREQUEST_STATUS.NONE;
+    }
+
+    //Only get ID
+    async getAllProfileSentRequest(profile_id: number): Promise<number[]> {
+        var queryData = await this.friendshipRepository.findOne({
+            where: {
+                status: FRIENDSHIP_STATUS.PENDING,
+                [Op.or]: [{ "$profile_request_id.profile_id$": profile_id }, { "$profile_target_id.profile_id$": profile_id }],
+            },
+            attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"],
+                "profile_request",
+                [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"], [Sequelize.col("profile_request_id.picture"), "profile_request_picture"]],
+            include: [
+                {
+                    model: Profile,
+                    as: "profile_request_id",
+                    attributes: []
+                },
+                {
+                    model: Profile,
+                    as: "profile_target_id",
+                    attributes: []
+                }
+            ],
+            raw: true,
+        })
+        var resultArr: number[] = [];
+        if (queryData) {
+            if (queryData["profile_request"] == profile_id) {
+                resultArr.push(queryData["profile_target"])
+            } else {
+                resultArr.push(queryData["profile_request"])
+            }
+        }
+        return resultArr;
     }
 
     async acceptFriendRequest(profile_id: number, profile_request_id: number): Promise<boolean> {
