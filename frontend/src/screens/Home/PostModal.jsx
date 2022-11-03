@@ -9,8 +9,9 @@ import { PhotoLibrary, HighlightOff, Close } from "@mui/icons-material";
 import {
   removeSingleUploadImagePost,
   resetUploadImagePostState,
-} from "../../redux/uploadImageSlice";
+} from "../../redux/uploadImage/uploadImageSlice";
 import { Link } from "react-router-dom";
+import { createPostSaga, updatePostSaga } from "../../redux/post/postSlice";
 function PostModal(props) {
   //Declare variables
   const dispatch = useDispatch();
@@ -39,8 +40,11 @@ function PostModal(props) {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const isPosting = useSelector((state) => state.post.create.isFetching);
-  console.log("props.postUpdateData", props.postUpdateData);
+  console.log(media_location);
   //Function
   const closeModal = () => {
     props.setShowModal(false);
@@ -53,18 +57,20 @@ function PostModal(props) {
   const handlePost = (e) => {
     e.preventDefault();
     postData.media_location = JSON.stringify(uploadImageLinkLst);
-    createPost(accessToken, postData, dispatch);
+    // createPost(accessToken,refreshToken, postData, dispatch)
+    dispatch(createPostSaga({ accessToken,refreshToken, postData, dispatch }));
     closeModal();
   };
   const handleUpdatePost = (e) => {
-    var tempUpdatePost = {
+    var updatePost = {
       post_id: props.postUpdateData.post_id,
       profile_id: props.postUpdateData.profile_id,
       written_text: postData.written_text,
       media_type: postData.media_type,
       media_location: JSON.stringify(postData.media_location),
     };
-    updatePost(accessToken, tempUpdatePost, dispatch);
+    // updatePost(accessToken,refreshToken, updatePost, dispatch);
+    dispatch(updatePostSaga({accessToken,refreshToken, updatePost, dispatch}))
     closeModal();
   };
   const handleOnChangePostData = (event) => {
@@ -80,7 +86,7 @@ function PostModal(props) {
     for (let i = 0; i < files.length; i++) {
       temp.push({ files: files[i] });
     }
-    await uploadImages(accessToken, temp, dispatch);
+    await uploadImages(accessToken,refreshToken, temp, dispatch);
     setUpLoadFlag((prev) => !prev);
     e.target.value = null;
   };
@@ -116,7 +122,7 @@ function PostModal(props) {
     };
   }, [uploadFlag]);
   useEffect(() => {
-    console.log("imgArray", imgArray);
+    // console.log("imgArray", imgArray);
   }, [imgArray]);
 
   // useEffect(() => {

@@ -19,6 +19,9 @@ export default function FriendSuggestions() {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const allFriendSuggestions = useSelector(
     (state) => state.profile?.getFriendSuggestion?.data
   );
@@ -31,7 +34,7 @@ export default function FriendSuggestions() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getFriendSuggestion(accessToken, dispatch);
+      getFriendSuggestion(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -63,27 +66,51 @@ export default function FriendSuggestions() {
                   name: 'Add Friend',
                   onClick: async (e) => {
                     e.stopPropagation();
-                    await addFriend(accessToken, x.profile_id, dispatch);
+                    await addFriend(
+                      accessToken,
+                      refreshToken,
+                      x.profile_id,
+                      dispatch
+                    );
                     setReRender(!reRender);
                   },
                 }}
               />
             ),
             onClick: () => {
-              getProfile(accessToken, x.profile_id, dispatch);
-              getPostByProfile(accessToken, x.profile_id, dispatch);
-              getAllFriends(accessToken, x.profile_id, dispatch);
+              getProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getPostByProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getAllFriends(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
               isSentFriendReq(accessToken, x.profile_id, dispatch);
               setProfileClicked(true);
             },
-            selected: profileClicked && x.profile_id === userData?.profile_id,
-            disabled: profileClicked && x.profile_id === userData?.profile_id,
+            selected:
+              profileClicked && x.profile_id === userData?.profile_id,
+            disabled:
+              profileClicked && x.profile_id === userData?.profile_id,
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && <UserProfile setReRender={[setReRender, setProfileClicked]}/>}
+      {profileClicked && (
+        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+      )}
     </TwoColumns>
   );
 }

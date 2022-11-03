@@ -15,18 +15,21 @@ const FriendHome = () => {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const friendRequests = useSelector(
     (state) => state.friends.getFriendRequests?.data?.data
   );
 
   const reRenderLayout = useOutletContext();
   const [reRender, setReRender] = useState(false);
-
+   
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
       reRenderLayout(); //re-render the parent layout
-      getAllFriendRequests(accessToken, dispatch);
+      getAllFriendRequests(accessToken,refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -45,7 +48,7 @@ const FriendHome = () => {
                 firstButtonConfig={{
                   onClick: () => {
                     acceptFriendRequest(
-                      accessToken,
+                      accessToken,refreshToken,
                       item.profile_id,
                       dispatch
                     );
@@ -57,7 +60,7 @@ const FriendHome = () => {
                 secondButtonConfig={{
                   onClick: () => {
                     denyFriendRequest(
-                      accessToken,
+                      accessToken,refreshToken,
                       item.profile_id,
                       dispatch
                     );

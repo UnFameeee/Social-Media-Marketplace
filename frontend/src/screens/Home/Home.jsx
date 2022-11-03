@@ -13,17 +13,17 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPost } from "../../redux/apiRequest";
 import { useEffect } from "react";
-
 function Home() {
   const dispatch = useDispatch();
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [postUpdateData, setPostUpdateData] = useState();
   const [reRender, setReRender] = useState(false);
-  const posts = useSelector(
-    (state) => state.post.get.posts?.results?.data
-  );
+  const posts = useSelector((state) => state.post.get.posts?.results?.data);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
   );
   const userData = useSelector((state) => state.auth.user.userData);
 
@@ -37,12 +37,12 @@ function Home() {
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllPost(accessToken, dispatch);
+       getAllPost(accessToken,refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
     };
-  }, [reRender]);
+  }, []);
   return (
     <>
       {openCreatePost && (
@@ -74,12 +74,15 @@ function Home() {
               ),
               middle: userData.profile.profile_name,
               navigate: `profile?id=${userData.profile.profile_id}`,
-            },            
+            },
           ]}
         />
         <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
           <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
-            <PostStatus profile={userData.profile}  onClick={handleOpenPostModel}  />
+            <PostStatus
+              profile={userData.profile}
+              onClick={handleOpenPostModel}
+            />
           </div>
           {posts &&
             posts.map((post) => (

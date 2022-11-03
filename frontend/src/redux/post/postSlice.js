@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { revertAll } from "./resetStore";
+import { revertAll } from "../resetStore";
 const initialState = {
   get: {
     posts: null,
@@ -79,6 +79,8 @@ export const postSlice = createSlice({
       state.create.isFetching = false;
       state.create.error = true;
     },
+    createPostSaga() {},
+    createPostSagaSuccess(){},
 
     getPostStart: (state) => {
       state.get.isFetching = true;
@@ -116,7 +118,9 @@ export const postSlice = createSlice({
       state.delete.success = false;
       state.delete.error = true;
     },
-
+    deletePostSaga(){},
+    deletePostSagaSuccess(){},
+    
     updatePostStart: (state) => {
       state.update.isFetching = true;
     },
@@ -129,6 +133,8 @@ export const postSlice = createSlice({
       state.update.success = false;
       state.update.error = true;
     },
+    updatePostSaga(){},
+    updatePostSagaSuccess(){},
 
     likePostStart: (state) => {
       state.like.isFetching = true;
@@ -142,6 +148,8 @@ export const postSlice = createSlice({
       state.like.success = false;
       state.like.error = true;
     },
+    likePostSaga(){},
+    likePostSagaSuccess(){},
   },
 });
 
@@ -164,5 +172,14 @@ export const {
   likePostStart,
   likePostSuccess,
   likePostFailed,
+
+  createPostSaga,
+  createPostSagaSuccess,
+  deletePostSaga,
+  deletePostSagaSuccess,
+  updatePostSaga,
+  updatePostSagaSuccess,
+  likePostSaga,
+  likePostSagaSuccess,
 } = postSlice.actions;
 export default postSlice.reducer;

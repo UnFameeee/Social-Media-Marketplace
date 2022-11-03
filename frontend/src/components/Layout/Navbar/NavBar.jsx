@@ -18,6 +18,7 @@ import { middleNavIcons, rightNavIcons } from "../../../common/layout/navbar";
 import { revertAll } from "../../../redux/resetStore";
 import { Helper } from "../../../utils/Helper";
 import "../Layout.css";
+import { logOut } from "../../../redux/apiRequest";
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -27,9 +28,13 @@ export default function NavBar() {
   const [value, setValue] = useState("");
   const [rightGroup, setRightGroup] = useState("");
   const userData = useSelector((state) => state.auth.user.userData);
+  const auth = useSelector((state) => state.auth.login);
   
   function handleSearch() {}
-
+  const handleLogOut =()=>{
+    logOut(dispatch,auth.currentUser.access,auth.currentUser.refresh)
+    dispatch(revertAll())
+  }
   return (
     // #region oldCode
     // <div className="flex items-center px-5 py-1 bg-white fixed w-screen drop-shadow-md z-50">
@@ -240,7 +245,7 @@ export default function NavBar() {
                         sx={{ right: "2px", minWidth: "20rem" }}
                         list={[
                           {
-                            onClick: () => dispatch(revertAll()),
+                            onClick: handleLogOut,
                             left: {
                               icon: (
                                 <IoLogOut
