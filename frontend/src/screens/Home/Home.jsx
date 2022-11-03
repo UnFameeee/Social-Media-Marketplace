@@ -5,15 +5,15 @@ import CardPost from "../../components/Card/CardPost";
 import LeftBar from "../../components/Layout/SideBar/LeftBar";
 import RightBar from "../../components/Layout/SideBar/RightBar";
 import { Avatar } from "@mui/material";
+import PostStatus from "../../components/PostStatus/PostStatus";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import PostModal from "./PostModal";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPost } from "../../redux/apiRequest";
 import { useEffect } from "react";
-
 function Home() {
   const dispatch = useDispatch();
   const [openCreatePost, setOpenCreatePost] = useState(false);
@@ -22,6 +22,9 @@ function Home() {
   const posts = useSelector((state) => state.post.get.posts?.results?.data);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
   );
   const userData = useSelector((state) => state.auth.user.userData);
 
@@ -35,12 +38,12 @@ function Home() {
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllPost(accessToken, dispatch);
+       getAllPost(accessToken,refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
     };
-  }, [reRender]);
+  }, []);
   return (
     <>
       {openCreatePost && (
@@ -53,7 +56,6 @@ function Home() {
           profile={userData.profile}
         />
       )}
-      <ToastContainer />
       <div className="pt-[6rem] flex w-full">
         <LeftBar
           leftBarList={[
@@ -89,30 +91,16 @@ function Home() {
               },
               middle: "CUM lõ",
               navigate: "concac",
+              navigate: `profile?id=${userData.profile.profile_id}`,
             },
           ]}
         />
         <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
           <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
-            <AvatarWithText
-              url="https://source.unsplash.com/random/180×180"
-              size={35}
-              haveInput={true}
-              alignCenter={true}
-              inputValue="What's on your mind?"
+            <PostStatus
+              profile={userData.profile}
               onClick={handleOpenPostModel}
             />
-            <FullWidthHr className="mt-[1rem]" />
-            {
-              //   <HoverButton
-              //   flex1={true}
-              //   listButton={[
-              //     { text: "photo", icon: <PhotoCamera /> },
-              //     { text: "School", icon: <School /> },
-              //     { text: "Home", icon: <Home /> },
-              //   ]}
-              // />
-            }
           </div>
           {posts &&
             posts.map((post) => (

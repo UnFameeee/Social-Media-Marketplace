@@ -25,7 +25,7 @@ function App() {
         <Route element={<RequireAuth />}>
           <Route element={<WithNav />}>
             <Route path="/" element={<Home />} />
-            <Route path="/userprofile" element={<UserProfile />} />
+            <Route path="/profile" element={<UserProfile />} />
             <Route path="/settings" element={<Settings />} />
 
             <Route path="friends" element={<StaticLeftbarLayout />}>

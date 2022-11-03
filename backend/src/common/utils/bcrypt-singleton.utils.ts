@@ -3,7 +3,6 @@ require("dotenv").config();
 
 const salt = parseInt(process.env.BCRYPT_SALT);
 
-
 export async function encode(password: any): Promise<string>{
     return bcrypt.hash(password, salt);
 }

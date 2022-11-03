@@ -8,16 +8,7 @@ export default function LeftbarTitle({ title, subTitle }) {
 
   return (
     <div className="friend-left-bar-title-wrapper">
-      <div
-        style={{
-          display: 'flex',
-          padding: '1.2rem',
-          alignItems: 'center',
-          height: 'var(--navbar-height)',
-          maxHeight: 'var(--navbar-height)',
-        }}
-        className="friend-left-bar-title"
-      >
+      <div className="friend-left-bar-title">
         <IconButton
           sx={{ padding: '0.6rem', marginRight: '0.8rem' }}
           onClick={() => navigate('/friends')}

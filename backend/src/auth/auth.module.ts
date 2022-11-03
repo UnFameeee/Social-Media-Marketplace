@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/auth.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
 
 @Module({
     imports: [ProfileModule, PassportModule, ConfigModule,
@@ -17,7 +18,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
             expiresIn: jwtConstants.access_expires,
         }
     })],
-    providers: [AuthService, LocalStrategy, JwtStrategy],
+    providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy],
     controllers: [AuthController],
 })
 export class AuthModule {}

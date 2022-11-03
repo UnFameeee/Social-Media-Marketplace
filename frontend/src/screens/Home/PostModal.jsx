@@ -4,13 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import { createPost, updatePost, uploadImages } from "../../redux/apiRequest";
-import { Avatar } from "@mui/material";
+import { Avatar, TextareaAutosize } from "@mui/material";
 import { PhotoLibrary, HighlightOff, Close } from "@mui/icons-material";
 import {
   removeSingleUploadImagePost,
   resetUploadImagePostState,
-} from "../../redux/uploadImageSlice";
+} from "../../redux/uploadImage/uploadImageSlice";
 import { Link } from "react-router-dom";
+import { createPostSaga, updatePostSaga } from "../../redux/post/postSlice";
 function PostModal(props) {
   //Declare variables
   const dispatch = useDispatch();
@@ -39,6 +40,9 @@ function PostModal(props) {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const isPosting = useSelector((state) => state.post.create.isFetching);
   //Function
   const closeModal = () => {
@@ -52,18 +56,20 @@ function PostModal(props) {
   const handlePost = (e) => {
     e.preventDefault();
     postData.media_location = JSON.stringify(uploadImageLinkLst);
-    createPost(accessToken, postData, dispatch);
+    // createPost(accessToken,refreshToken, postData, dispatch)
+    dispatch(createPostSaga({ accessToken,refreshToken, postData, dispatch }));
     closeModal();
   };
   const handleUpdatePost = (e) => {
-    var tempUpdatePost = {
+    var updatePost = {
       post_id: props.postUpdateData.post_id,
       profile_id: props.postUpdateData.profile_id,
       written_text: postData.written_text,
       media_type: postData.media_type,
       media_location: JSON.stringify(postData.media_location),
     };
-    updatePost(accessToken, tempUpdatePost, dispatch);
+    // updatePost(accessToken,refreshToken, updatePost, dispatch);
+    dispatch(updatePostSaga({accessToken,refreshToken, updatePost, dispatch}))
     closeModal();
   };
   const handleOnChangePostData = (event) => {
@@ -79,7 +85,7 @@ function PostModal(props) {
     for (let i = 0; i < files.length; i++) {
       temp.push({ files: files[i] });
     }
-    await uploadImages(accessToken, temp, dispatch);
+    await uploadImages(accessToken,refreshToken, temp, dispatch);
     setUpLoadFlag((prev) => !prev);
     e.target.value = null;
   };
@@ -115,7 +121,7 @@ function PostModal(props) {
     };
   }, [uploadFlag]);
   useEffect(() => {
-    console.log("imgArray", imgArray);
+    // console.log("imgArray", imgArray);
   }, [imgArray]);
 
   // useEffect(() => {
@@ -148,7 +154,6 @@ function PostModal(props) {
                 <Avatar
                   style={{
                     fontSize: "2rem",
-                  
                   }}
                   alt={props.profile.profile_name}
                   src={
@@ -161,10 +166,10 @@ function PostModal(props) {
                 </Avatar>
                 <span className="font-bold">{props.profile.profile_name}</span>
               </div>
-              <textarea
+              <TextareaAutosize
                 onChange={handleOnChangePostData}
                 name="written_text"
-                rows="5"
+                maxRows={5}
                 className=" resize-none w-full outline-none text-[1.8rem] max-h-[25rem] overflow-y-scroll mb-[2rem]"
                 placeholder={
                   props.postUpdateData
@@ -172,7 +177,7 @@ function PostModal(props) {
                     : `What's on your mind, ${props.profile.profile_name}?`
                 }
                 value={written_text}
-              ></textarea>
+              ></TextareaAutosize>
               {!media_location.length > 0 && (
                 <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer">
                   <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
