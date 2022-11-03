@@ -2,8 +2,11 @@ import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   addFriend,
+  getAllFriends,
   getFriendSuggestion,
+  getPostByProfile,
   getProfile,
+  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -16,23 +19,22 @@ export default function FriendSuggestions() {
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
-  const allFriendSuggestions = useSelector(
-    (state) => state.profile.getFriendSuggestion?.data
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
   );
-  const addFriendStatus = useSelector(
-    (state) => state.friends.addFriend?.data
+  const allFriendSuggestions = useSelector(
+    (state) => state.profile?.getFriendSuggestion?.data
   );
   const userData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
-  console.log(addFriendStatus)
 
   const [profileClicked, setProfileClicked] = useState(false);
   const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getFriendSuggestion(accessToken, dispatch);
+      getFriendSuggestion(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -62,26 +64,58 @@ export default function FriendSuggestions() {
                 profileName={x.profile_name}
                 firstButtonConfig={{
                   name: 'Add Friend',
-                  onClick: () => {
-                    addFriend(accessToken, x.profile_id, dispatch);
-                    setTimeout(() => {
-                      setReRender(!reRender);
-                    }, 100);
+                  onClick: async (e) => {
+                    e.stopPropagation();
+                    await addFriend(
+                      accessToken,
+                      refreshToken,
+                      x.profile_id,
+                      dispatch
+                    );
+                    setReRender(!reRender);
                   },
                 }}
               />
             ),
             onClick: () => {
-              getProfile(accessToken, x.profile_id, dispatch);
+              getProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getPostByProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getAllFriends(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              isSentFriendReq(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
               setProfileClicked(true);
             },
-            selected: profileClicked && x.profile_id === userData.profile_id,
+            selected:
+              profileClicked && x.profile_id === userData?.profile_id,
+            disabled:
+              profileClicked && x.profile_id === userData?.profile_id,
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && <UserProfile />}
+      {profileClicked && (
+        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+      )}
     </TwoColumns>
   );
 }

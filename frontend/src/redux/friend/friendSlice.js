@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { revertAll } from './resetStore';
+import { revertAll } from '../resetStore';
 const initialState = {
   getFriendRequests: {
+    data: null,
+    isFetching: false,
+    error: false,
+  },
+  getAllForMainUser: {
     data: null,
     isFetching: false,
     error: false,
@@ -36,11 +41,21 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  isSentFriendRequest: {
+    data: false,
+    isFetching: false,
+    error: false,
+  },
 };
 export const friendSlice = createSlice({
   name: 'friends',
   initialState: {
     getFriendRequests: {
+      data: null,
+      isFetching: false,
+      error: false,
+    },
+    getAllForMainUser: {
       data: null,
       isFetching: false,
       error: false,
@@ -75,6 +90,11 @@ export const friendSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    isSentFriendRequest: {
+      data: false,
+      isFetching: false,
+      error: false,
+    },
   },
   extraReducers: (builder) =>
     builder.addCase(revertAll, () => initialState),
@@ -101,6 +121,18 @@ export const friendSlice = createSlice({
     getAllFriendFailed: (state) => {
       state.getAll.isFetching = false;
       state.getAll.error = true;
+    },
+
+    getAllFriendForMainUserStart: (state) => {
+      state.getAllForMainUser.isFetching = true;
+    },
+    getAllFriendForMainUserSuccess: (state, action) => {
+      state.getAllForMainUser.isFetching = false;
+      state.getAllForMainUser.data = action.payload;
+    },
+    getAllFriendForMainUserFailed: (state) => {
+      state.getAllForMainUser.isFetching = false;
+      state.getAllForMainUser.error = true;
     },
 
     getMutualFriendStart: (state) => {
@@ -162,6 +194,18 @@ export const friendSlice = createSlice({
       state.isFriend.isFetching = false;
       state.isFriend.error = true;
     },
+
+    isSentFriendRequestStart: (state) => {
+      state.isSentFriendRequest.isFetching = true;
+    },
+    isSentFriendRequestSuccess: (state, action) => {
+      state.isSentFriendRequest.isFetching = false;
+      state.isSentFriendRequest.data = action.payload;
+    },
+    isSentFriendRequestFailed: (state) => {
+      state.isSentFriendRequest.isFetching = false;
+      state.isSentFriendRequest.error = true;
+    },
   },
 });
 
@@ -173,6 +217,10 @@ export const {
     getAllFriendStart,
     getAllFriendSuccess,
     getAllFriendFailed,
+
+    getAllFriendForMainUserStart,
+    getAllFriendForMainUserSuccess,
+    getAllFriendForMainUserFailed,
 
     getMutualFriendStart,
     getMutualFriendSuccess,
@@ -193,6 +241,11 @@ export const {
     isFriendStart,
     isFriendSuccess,
     isFriendFailed,
+
+    isSentFriendRequestStart,
+    isSentFriendRequestSuccess,
+    isSentFriendRequestFailed,
+    
 
 } = friendSlice.actions;
 export default friendSlice.reducer;

@@ -9,12 +9,16 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
+import createSagaMiddleware from "redux-saga";
 import storage from "redux-persist/lib/storage";
-import postReducer from "./postSlice";
-import authReducer from "./authSlice";
-import friendReducer from "./friendSlice";
-import profileReducer from "./profileSlice"
-import uploadImageReducer from "./uploadImageSlice"
+import postReducer from "./post/postSlice";
+import authReducer from "./auth/authSlice";
+import friendReducer from "./friend/friendSlice";
+import profileReducer from "./profile/profileSlice";
+import uploadImageReducer from "./uploadImage/uploadImageSlice";
+import rootSaga from "./rootSaga";
+
+const sagaMiddleware = createSagaMiddleware();
 const persistConfig = {
   key: "root",
   version: 1,
@@ -32,9 +36,11 @@ export const store = configureStore({
   reducer: persistedReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
+      // serializableCheck: {
+      //   ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      // },
+      serializableCheck: false,
+    }).concat(sagaMiddleware),
 });
 export let persistor = persistStore(store);
+sagaMiddleware.run(rootSaga);

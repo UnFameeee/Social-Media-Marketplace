@@ -5,17 +5,24 @@ import {
   acceptFriendRequest,
   getProfile,
   denyFriendRequest,
+  getPostByProfile,
+  getAllFriends,
+  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import '../index.css';
+import { Helper } from '../../../../utils/Helper';
 
 export default function FriendRequests() {
   const dispatch = useDispatch();
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
   );
   const friendRequests = useSelector(
     (state) => state.friends.getFriendRequests?.data
@@ -29,18 +36,12 @@ export default function FriendRequests() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriendRequests(accessToken, dispatch);
+      getAllFriendRequests(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
     };
   }, [reRender]);
-
-  var subTitle = friendRequests?.page?.totalElement
-    ? friendRequests?.page?.totalElement === 1
-      ? `1 Friend Request`
-      : `${friendRequests?.page?.totalElement} Friend Requests`
-    : `You Have No Friend Requests`;
 
   return (
     <TwoColumns
@@ -49,7 +50,14 @@ export default function FriendRequests() {
           listClassname: 'friend-list',
         },
         before: (
-          <LeftbarTitle title="Friend Requests" subTitle={subTitle} />
+          <LeftbarTitle
+            title="Friend Requests"
+            subTitle={Helper.isMultiple(
+              'Friend Request',
+              friendRequests?.page?.totalElement,
+              'You Have No Friend Requests'
+            )}
+          />
         ),
         leftBarList: friendRequests?.data?.map((x) => {
           return {
@@ -64,41 +72,67 @@ export default function FriendRequests() {
                   onClick: () => {
                     acceptFriendRequest(
                       accessToken,
+                      refreshToken,
                       x.profile_id,
                       dispatch
                     );
-                    setTimeout(() => {
-                      setProfileClicked(false);
-                      setReRender(!reRender);
-                    }, 100);
+                    setProfileClicked(false);
+                    setReRender(!reRender);
                   },
-                }}                
+                }}
                 secondButtonConfig={{
                   onClick: () => {
                     denyFriendRequest(
                       accessToken,
+                      refreshToken,
                       x.profile_id,
                       dispatch
                     );
-                    setTimeout(() => {
-                      setProfileClicked(false);
-                      setReRender(!reRender);
-                    }, 100);
+                    setProfileClicked(false);
+                    setReRender(!reRender);
                   },
                 }}
               />
             ),
             onClick: () => {
-              getProfile(accessToken, x.profile_id, dispatch);
+              getProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getPostByProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getAllFriends(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              isSentFriendReq(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
               setProfileClicked(true);
             },
-            selected: profileClicked && x.profile_id === userData.profile_id 
+            selected:
+              profileClicked && x.profile_id === userData?.profile_id,
+            disabled:
+              profileClicked && x.profile_id === userData?.profile_id,
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && <UserProfile />}
+      {profileClicked && (
+        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+      )}
     </TwoColumns>
   );
 }

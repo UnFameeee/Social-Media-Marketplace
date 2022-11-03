@@ -45,5 +45,6 @@
 .action .action-btn {
   width: 11rem;
   max-height: 4rem;
+  pointer-events: auto;
 }
 /* #endregion */

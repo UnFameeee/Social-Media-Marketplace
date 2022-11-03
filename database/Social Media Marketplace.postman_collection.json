@@ -313,7 +313,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MTUxNzg4LCJleHAiOjE2NjcxNTUzODh9.LD_dyuUBgrPfyNLh6RIN6r5SwscUAEJIQuxWHgqmohw",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMVQwODowNjoxNi4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MjA2MzQ1LCJleHAiOjE2NjcyMDk5NDV9.FR0zaP2OGeFPMp0WgXbRalnXfiPvMT50FkTsD4VNAKM",
 									"type": "string"
 								}
 							]
@@ -352,7 +352,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wMi0xMlQxMDo0OToyNC4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MTUxNzg4LCJleHAiOjE2NjcxNTUzODh9.LD_dyuUBgrPfyNLh6RIN6r5SwscUAEJIQuxWHgqmohw",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMVQwODowNjoxNi4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MjA2MzQ1LCJleHAiOjE2NjcyMDk5NDV9.FR0zaP2OGeFPMp0WgXbRalnXfiPvMT50FkTsD4VNAKM",
 									"type": "string"
 								}
 							]
@@ -422,7 +422,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjEsInByb2ZpbGVfbmFtZSI6IlRlc3RQcm9maWxlMTIzIiwiZW1haWwiOiJ0ZXN0MTIzQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJEgwNVRhdDc4LkFXamJQb21UbUJ5Wi55Y0RRYkRRWDlhem1QcDZ5VUw2Tk40N3RLUjV6VGJhIiwiYmlydGgiOiJ0ZXN0IGJpcnRoIiwiY3VycmVudEhhc2hlZFJlZnJlc2hUb2tlbiI6bnVsbCwiaXNBY3RpdmF0ZSI6dHJ1ZSwicm9sZSI6IlVzZXIiLCJwZXJtaXNzaW9uIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIyLTA5LTA5VDE4OjEzOjA5LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIyLTA5LTA5VDE4OjEzOjA5LjAwMFoiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE2NjI4MDk1OTUsImV4cCI6MTY2MjgxMTM5NX0.G3TXc06UasgiaTLLWxuNb0BE5K4lTyjm13tozvjOu7k",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMVQwODowNjoxNi4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MjA2MzQ1LCJleHAiOjE2NjcyMDk5NDV9.FR0zaP2OGeFPMp0WgXbRalnXfiPvMT50FkTsD4VNAKM",
 									"type": "string"
 								}
 							]
@@ -461,7 +461,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjEsInByb2ZpbGVfbmFtZSI6IlRlc3RQcm9maWxlMTIzIiwiZW1haWwiOiJ0ZXN0MTIzQGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJEgwNVRhdDc4LkFXamJQb21UbUJ5Wi55Y0RRYkRRWDlhem1QcDZ5VUw2Tk40N3RLUjV6VGJhIiwiYmlydGgiOiJ0ZXN0IGJpcnRoIiwiY3VycmVudEhhc2hlZFJlZnJlc2hUb2tlbiI6bnVsbCwiaXNBY3RpdmF0ZSI6dHJ1ZSwicm9sZSI6IlVzZXIiLCJwZXJtaXNzaW9uIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIyLTA5LTA5VDE4OjEzOjA5LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIyLTA5LTA5VDE4OjEzOjA5LjAwMFoiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE2NjI4MDk1OTUsImV4cCI6MTY2MjgxMTM5NX0.G3TXc06UasgiaTLLWxuNb0BE5K4lTyjm13tozvjOu7k",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMVQwODowNjoxNi4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MjA2MzQ1LCJleHAiOjE2NjcyMDk5NDV9.FR0zaP2OGeFPMp0WgXbRalnXfiPvMT50FkTsD4VNAKM",
 									"type": "string"
 								}
 							]
@@ -470,7 +470,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"written_text\": \"TEST UPDATE POST\",\r\n    \"media_type\": \"TEST UPDATE POST\",\r\n    \"media_location\": \"TEST UPDATE POST\"\r\n}",
+							"raw": "{\r\n    \"post_id\": 20001,\r\n    \"written_text\": \"TEST UPDATE POST\",\r\n    \"media_type\": \"TEST UPDATE POST\",\r\n    \"media_location\": \"TEST UPDATE POST\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -478,7 +478,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:4321/api/post/newPost",
+							"raw": "localhost:4321/api/post/updatePost",
 							"host": [
 								"localhost"
 							],
@@ -486,7 +486,7 @@
 							"path": [
 								"api",
 								"post",
-								"newPost"
+								"updatePost"
 							]
 						}
 					},
@@ -693,14 +693,14 @@
 							"response": []
 						},
 						{
-							"name": "Get All Friend",
+							"name": "Get All Friend By Id",
 							"request": {
 								"auth": {
 									"type": "bearer",
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjUsInByb2ZpbGVfbmFtZSI6InJlcHVkaWFuZGFlIiwiZW1haWwiOiJjb25yb3kucnVwZXJ0QGV4YW1wbGUubmV0IiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5Mi0wNi0xM1QxMToxMzo1Mi4wMDBaIiwidXBkYXRlZEF0IjoiMTk3NC0xMi0wM1QyMzozNToxNy4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MTI2NTMyLCJleHAiOjE2NjcxMzAxMzJ9.MBNmXw6NEO80hIpdKdkZEOL6Vh5t93RVjpUPTCbT-PY",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMVQwODo1MjoyNS4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MjIwOTExLCJleHAiOjE2NjcyMjQ1MTF9.U8Ifx7fFdgi5sc5BKTmHSsgptsKs8_qaE8Or5vWpEKI",
 											"type": "string"
 										}
 									]
@@ -717,7 +717,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:4321/api/friendship/all",
+									"raw": "localhost:4321/api/friendship/all/9",
 									"host": [
 										"localhost"
 									],
@@ -725,7 +725,8 @@
 									"path": [
 										"api",
 										"friendship",
-										"all"
+										"all",
+										"9"
 									]
 								}
 							},
@@ -739,7 +740,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjExLCJwcm9maWxlX25hbWUiOiJub24iLCJlbWFpbCI6InRhdHVtOTVAZXhhbXBsZS5jb20iLCJiaXJ0aCI6bnVsbCwicGljdHVyZSI6bnVsbCwiaXNBY3RpdmF0ZSI6dHJ1ZSwicm9sZSI6IlVzZXIiLCJwZXJtaXNzaW9uIjpudWxsLCJjcmVhdGVkQXQiOiIxOTcyLTAzLTI4VDE4OjQyOjA4LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDA3LTA4LTAzVDE3OjU2OjQ1LjAwMFoiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE2NjcxMjYyNTUsImV4cCI6MTY2NzEyOTg1NX0.H67dWM6oaelrTuOgJc8Ug-3A4I5eK2B6u29WN-U8mto",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjExLCJwcm9maWxlX25hbWUiOiJub24iLCJlbWFpbCI6InRhdHVtOTVAZXhhbXBsZS5jb20iLCJiaXJ0aCI6bnVsbwicGljdHVyZSI6bnVsbCwiaXNBY3RpdmF0ZSI6dHJ1ZSwicm9sZSI6IlVzZXIiLCJwZXJtaXNzaW9uIjpudWxsLCJjcmVhdGVkQXQiOiIxOTcyLTAzLTI4VDE4OjQyOjA4LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDA3LTA4LTAzVDE3OjU2OjQ1LjAwMFoiLCJkZWxldGVkQXQiOm51bGx9LCJpYXQiOjE2NjcxMjYyNTUsImV4cCI6MTY2NzEyOTg1NX0.H67dWM6oaelrTuOgJc8Ug-3A4I5eK2B6u29WN-U8mto",
 											"type": "string"
 										}
 									]
@@ -756,6 +757,37 @@
 										"api",
 										"friendship",
 										"sendFriendRequest",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unfriend",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9maWxlIjp7InByb2ZpbGVfaWQiOjksInByb2ZpbGVfbmFtZSI6IlRFU1QgUVQiLCJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwiYmlydGgiOm51bGwsInBpY3R1cmUiOm51bGwsImlzQWN0aXZhdGUiOnRydWUsInJvbGUiOiJVc2VyIiwicGVybWlzc2lvbiI6bnVsbCwiY3JlYXRlZEF0IjoiMTk5NC0wNC0wMVQyMDoxOToxNi4wMDBaIiwidXBkYXRlZEF0IjoiMjAyMi0xMC0zMVQxMjo1NToxMS4wMDBaIiwiZGVsZXRlZEF0IjpudWxsfSwiaWF0IjoxNjY3MjIzMDEwLCJleHAiOjE2NjcyMjY2MTB9.wlq0Uhp-PmnE3Tk6d3Iy5rNZuE6o6yMmbh30mHjx97k",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "localhost:4321/api/friendship/unfriend/5",
+									"host": [
+										"localhost"
+									],
+									"port": "4321",
+									"path": [
+										"api",
+										"friendship",
+										"unfriend",
 										"5"
 									]
 								}
