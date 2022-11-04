@@ -461,9 +461,14 @@ export const getAllFriends = async (
   accessToken,
   refreshToken,
   profileId,
-  dispatch
+  dispatch,
+  forMainUser = true
 ) => {
-  dispatch(getAllFriendStart());
+  if (forMainUser) {
+    dispatch(getAllFriendForMainUserStart());
+  } else {
+    dispatch(getAllFriendStart());
+  }
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -482,46 +487,25 @@ export const getAllFriends = async (
       }
     );
     if (!res.data.message) {
-      dispatch(getAllFriendSuccess(res.data.results));
+      if (forMainUser) {
+        dispatch(getAllFriendForMainUserSuccess(res.data.results));
+      } else {
+        dispatch(getAllFriendSuccess(res.data.results));
+      }
     } else {
-      dispatch(getAllFriendFailed());
+      if (forMainUser) {
+        dispatch(getAllFriendForMainUserFailed());
+      } else {
+        dispatch(getAllFriendFailed());
+      }
     }
   } catch (error) {
     console.log(error);
-    dispatch(getAllFriendFailed());
-  }
-};
-export const getAllFriendsForMainUser = async (
-  accessToken,
-  refreshToken,
-  profileId,
-  dispatch
-) => {
-  dispatch(getAllFriendForMainUserStart());
-  try {
-    const config = {
-      Authorization: `Bearer ${accessToken}`,
-    };
-    const paging = {
-      page: 0,
-      pageSize: 5,
-    };
-    const res = await axiosInStanceJWT.post(
-      `${api.friend}/all/${profileId}`,
-      paging,
-      {
-        headers: config,
-        ACCESS_PARAM: accessToken,
-        REFRESH_PARAM: refreshToken,
-      }
-    );
-    if (!res.data.message) {
-      dispatch(getAllFriendForMainUserSuccess(res.data.results));
-    } else {
+    if (forMainUser) {
       dispatch(getAllFriendForMainUserFailed());
+    } else {
+      dispatch(getAllFriendFailed());
     }
-  } catch (error) {
-    dispatch(getAllFriendForMainUserFailed());
   }
 };
 export const getMutualFriends = async (
@@ -678,7 +662,12 @@ export const isFriend = async (
     dispatch(isFriendFailed());
   }
 };
-export const isSentFriendReq = async (accessToken, refreshToken, id, dispatch) => {
+export const isSentFriendReq = async (
+  accessToken,
+  refreshToken,
+  id,
+  dispatch
+) => {
   dispatch(isSentFriendRequestStart());
   try {
     const config = {

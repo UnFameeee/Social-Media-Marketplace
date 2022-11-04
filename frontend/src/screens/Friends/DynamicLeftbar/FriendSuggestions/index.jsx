@@ -96,12 +96,6 @@ export default function FriendSuggestions() {
                 x.profile_id,
                 dispatch
               );
-              isSentFriendReq(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch
-              );
               setProfileClicked(true);
             },
             selected:
