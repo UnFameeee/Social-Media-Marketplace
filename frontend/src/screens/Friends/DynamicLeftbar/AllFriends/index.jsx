@@ -1,10 +1,10 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  getAllFriendsForMainUser,
   getAllFriends,
   getPostByProfile,
   getProfile,
+  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -29,12 +29,19 @@ export default function AllFriends() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
+  console.log(allFriends)
 
   const [profileClicked, setProfileClicked] = useState(false);
+  const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriends(accessToken,refreshToken,userData?.profile_id, dispatch);
+      getAllFriends(
+        accessToken,
+        refreshToken,
+        userData?.profile_id,
+        dispatch
+      );
     }
     return () => {
       onDestroy = true;
@@ -53,7 +60,7 @@ export default function AllFriends() {
             subTitle={Helper.isMultiple(
               'Friend',
               allFriends?.page?.totalElement,
-              'You are CUMLOX'
+              'You need to get some friends!'
             )}
           />
         ),
@@ -65,21 +72,41 @@ export default function AllFriends() {
             },
             middle: x.profile_name,
             onClick: () => {
-              getProfile(accessToken,refreshToken, x.profile_id, dispatch);
-              getPostByProfile(accessToken,refreshToken, x.profile_id, dispatch);
-              getAllFriends(accessToken,refreshToken, x.profile_id, dispatch);
+              getProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getPostByProfile(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch
+              );
+              getAllFriends(
+                accessToken,
+                refreshToken,
+                x.profile_id,
+                dispatch,
+                false
+              );
               setProfileClicked(true);
             },
             selected:
-              profileClicked && x.profile_id === profileData?.profile_id,
+              profileClicked &&
+              x.profile_id === profileData?.profile_id,
             disabled:
-              profileClicked && x.profile_id === profileData?.profile_id,
+              profileClicked &&
+              x.profile_id === profileData?.profile_id,
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && <UserProfile />}
+      {profileClicked && (
+        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+      )}
     </TwoColumns>
   );
 }

@@ -170,11 +170,12 @@ export class ProfileRepository {
 
             fullPage.pageSize = FRIENDSHIP_LIMIT.MAX_FRIEND_REQUEST;
 
-            const friendRequestList = await this.friendshipRepository.getAllFriendRequest(profile_id, fullPage);
-
-            for (const element of friendRequestList.data) {
-                tempArr.push(element["profile_id"]);
-            }
+            const friendRequestList = await this.friendshipRepository.getAllProfileSentRequest(profile_id);
+            // tempArr.
+            tempArr = [...tempArr, ...friendRequestList];
+            // for (const element of friendRequestList) {
+            //     tempArr.push(element["profile_id"]);
+            // }
 
             tempArr.push(profile_id);
 
@@ -206,6 +207,8 @@ export class ProfileRepository {
             if (queryData && profile_id != profile_target_id) {
                 const isFriend = await this.friendshipRepository.isFriend(profile_id, profile_target_id);
                 queryData.setDataValue("isFriend", isFriend);
+                const isSentFriendRequest = await this.friendshipRepository.isSentFriendRequest(profile_id, profile_target_id);
+                queryData.setDataValue("isSentFriendRequest", isSentFriendRequest);
                 return queryData;
             } else if (queryData) {
                 return queryData;

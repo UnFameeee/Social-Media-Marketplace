@@ -14,12 +14,16 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllPost } from "../../redux/apiRequest";
 import { useEffect } from "react";
+import ThreeColumns from '../../components/Layout/ThreeColumns';
+import { homeLeftbar } from '../../common/layout/homeLeftbar';
 function Home() {
   const dispatch = useDispatch();
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [postUpdateData, setPostUpdateData] = useState();
   const [reRender, setReRender] = useState(false);
-  const posts = useSelector((state) => state.post.get.posts?.results?.data);
+  const posts = useSelector(
+    (state) => state.post.get.posts?.results?.data
+  );
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -38,7 +42,7 @@ function Home() {
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-       getAllPost(accessToken,refreshToken, dispatch);
+      getAllPost(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -56,7 +60,53 @@ function Home() {
           profile={userData.profile}
         />
       )}
-      <div className="pt-[6rem] flex w-full">
+      <ThreeColumns
+        className="px-[30%] pt-6"
+        leftBarConfig={{
+          leftBarList: [
+            {
+              left: (
+                <Avatar
+                  style={{
+                    width: '3.6rem',
+                    height: '3.6rem',
+                    fontSize: '2rem',
+                  }}
+                  alt={userData.profile.profile_name}
+                  src={
+                    userData.profile?.picture
+                      ? JSON.parse(userData.profile?.picture)
+                      : null
+                  }
+                >
+                  {userData.profile.profile_name?.at(0)}
+                </Avatar>
+              ),
+              middle: userData.profile.profile_name,
+              navigate: `profile?id=${userData.profile.profile_id}`,
+            },
+          ].concat(homeLeftbar),
+        }}
+      >
+        <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
+          <PostStatus
+            profile={userData.profile}
+            onClick={handleOpenPostModel}
+          />
+        </div>
+        {posts &&
+          posts.map((post) => (
+            <CardPost
+              postData={post}
+              key={post.post_id}
+              profile={userData.profile}
+              setReRender={setReRender}
+              handleOpenPostModel={handleOpenPostModel}
+              handleGetPostUpdateData={handleGetPostUpdateData}
+            />
+          ))}
+      </ThreeColumns>
+      {/* <div className="pt-[6rem] flex w-full">
         <LeftBar
           leftBarList={[
             {
@@ -115,7 +165,7 @@ function Home() {
             ))}
         </div>
         <RightBar />
-      </div>
+      </div> */}
     </>
   );
 }

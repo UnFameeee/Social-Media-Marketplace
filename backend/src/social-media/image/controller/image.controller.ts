@@ -3,7 +3,7 @@ import { FileInterceptor, FilesInterceptor, AnyFilesInterceptor } from '@nestjs/
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ResponseData } from 'src/common/models/view-model/success-message.model';
-import { storagePost, storageProfile } from './../../common/utils/storage.utils';
+import { storagePost, storageProfile } from '../config/storage.config';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
