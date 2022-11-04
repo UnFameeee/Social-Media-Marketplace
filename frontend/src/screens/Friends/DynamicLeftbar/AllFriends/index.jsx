@@ -60,7 +60,7 @@ export default function AllFriends() {
             subTitle={Helper.isMultiple(
               'Friend',
               allFriends?.page?.totalElement,
-              'You are CUMLOX'
+              'You need to get some friends!'
             )}
           />
         ),

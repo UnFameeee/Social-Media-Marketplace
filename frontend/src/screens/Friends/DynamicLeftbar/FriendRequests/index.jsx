@@ -111,7 +111,8 @@ export default function FriendRequests() {
                 accessToken,
                 refreshToken,
                 x.profile_id,
-                dispatch
+                dispatch,
+                false
               );
               setProfileClicked(true);
             },
