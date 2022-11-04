@@ -69,18 +69,9 @@ function UserProfile(props) {
   const userData = useSelector(
     (state) => state.auth?.user?.userData?.profile
   );
-  var allFriends;
-  const allProfileFriends = useSelector(
+  const allFriends = useSelector(
     (state) => state.friends.getAll?.data
   );
-  const allFriendsForMainUser = useSelector(
-    (state) => state.friends.getAllForMainUser?.data
-  );
-  if (userData?.profile_id == profileData?.profile_id) {
-    allFriends = allFriendsForMainUser;
-  } else {
-    allFriends = allProfileFriends;
-  }
 
   const [searchParams] = useSearchParams();
   const queryParams = Object.fromEntries([...searchParams]);
@@ -114,7 +105,8 @@ function UserProfile(props) {
           accessToken,
           refreshToken,
           queryParams.id || userData?.profile_id,
-          dispatch
+          dispatch,
+          false
         );
       }
     }

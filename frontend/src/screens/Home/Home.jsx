@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllPost } from '../../redux/apiRequest';
 import { useEffect } from 'react';
 import ThreeColumns from '../../components/Layout/ThreeColumns';
+import { homeLeftbar } from '../../common/layout/homeLeftbar';
 function Home() {
   const dispatch = useDispatch();
   const [openCreatePost, setOpenCreatePost] = useState(false);
@@ -59,15 +60,15 @@ function Home() {
         />
       )}
       <ThreeColumns
-        className="px-[30%]"
+        className="px-[30%] pt-6"
         leftBarConfig={{
           leftBarList: [
             {
               left: (
                 <Avatar
                   style={{
-                    width: '5rem',
-                    height: '5rem',
+                    width: '3.6rem',
+                    height: '3.6rem',
                     fontSize: '2rem',
                   }}
                   alt={userData.profile.profile_name}
@@ -83,7 +84,7 @@ function Home() {
               middle: userData.profile.profile_name,
               navigate: `profile?id=${userData.profile.profile_id}`,
             },
-          ],
+          ].concat(homeLeftbar),
         }}
       >
         <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
