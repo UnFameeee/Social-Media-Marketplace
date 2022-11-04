@@ -94,7 +94,8 @@ export default function FriendSuggestions() {
                 accessToken,
                 refreshToken,
                 x.profile_id,
-                dispatch
+                dispatch,
+                false
               );
               setProfileClicked(true);
             },
