@@ -22,6 +22,7 @@ import {
   FriendSuggestions,
 } from '../../screens/Friends/DynamicLeftbar';
 import Error from '../../screens/Error/Error';
+import Marketplace from '../../screens/Marketplace/Marketplace';
 
 export default function RootRoutes() {
   return (
@@ -51,6 +52,7 @@ export default function RootRoutes() {
               />
               <Route path="all" element={<AllFriends />} />
             </Route>
+            <Route path='marketplace' element={<Marketplace />} />
 
             <Route path="/messenger" element={<Messenger />} />
           </Route>
