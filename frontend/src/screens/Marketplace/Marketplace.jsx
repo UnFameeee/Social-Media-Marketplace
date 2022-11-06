@@ -1,8 +1,7 @@
 import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
-import TwoColumns from "../../components/Layout/TwoColumns";
 import { homeLeftbar } from "../../common/layout/homeLeftbar";
-import { Avatar, Typography, Box } from "@mui/material";
+import { Avatar, Pagination, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -31,11 +30,19 @@ function Marketplace() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    speed: 7000,
-    autoplaySpeed: 7000,
+    speed: 5000,
+    autoplaySpeed: 5000,
     fade: true,
     cssEase: "linear",
   };
+  const [page, setPage] = React.useState(1);
+  const handleChange = (event, value) => {
+    setPage(value);
+  };
+  function randomNumberInRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  let randomNum = randomNumberInRange(1400, 1050);
   return (
     <ThreeColumns
       className="px-[23%] pt-6 pl-[22%]"
@@ -64,60 +71,48 @@ function Marketplace() {
           },
         ].concat(homeLeftbar),
       }}
-      rightBarConfig= {{
-        marketplace:true
+      rightBarConfig={{
+        marketplace: true,
       }}
     >
-      <div className="mb-[2rem] rounded-xl shadow-md  h-full ">
+      <div className="main-market-place mb-[2rem] rounded-xl h-full p-[1.5rem] shadow-2xl ">
         <div className="slide-show">
           <Slider {...settings} className="">
-            <div>
-              <img
-                className="h-[300px] w-full object-cover rounded-xl"
-                src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1057&q=80"
-                alt=""
-              />
-            </div>
-            <div>
-              <img
-                className="h-[300px] w-full object-cover rounded-xl"
-                src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                alt=""
-              />
-            </div>
-            <div>
-              <img
-                className="h-[300px] w-full object-cover rounded-xl"
-                src="https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
-                alt=""
-              />
-            </div>
-            <div>
-              <img
-                className="h-[300px] w-full object-cover rounded-xl"
-                src="https://images.unsplash.com/photo-1590126698754-510069860d27?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1488&q=80"
-                alt=""
-              />
-            </div>
-            <div>
-              <img
-                className="h-[300px] w-full object-cover rounded-xl"
-                src="https://images.unsplash.com/photo-1598057076865-c67fefd248d3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1025&q=80"
-                alt=""
-              />
-            </div>
+            {[
+              ...Array.from({ length: 5 }, () =>
+                randomNumberInRange(1400, 1050)
+              ),
+            ].map((index) => (
+              <div key={index}>
+                <img
+                  className="h-[300px] w-full object-cover rounded-xl"
+                  src={`https://source.unsplash.com/random/1000x${
+                    randomNum * index
+                  }/?3D Renders`}
+                  alt=""
+                />
+              </div>
+            ))}
           </Slider>
         </div>
-        <div className="product-container">
+        <div className="product-container mb-[1rem]">
           <ResponSiveGrid>
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
-            <ProductCard />
+            {[...Array(15)].map((index) => (
+              <ProductCard key={index} />
+            ))}
           </ResponSiveGrid>
+        </div>
+        <div className="Pagination float-right">
+          <Typography>Page: {page}</Typography>
+          <Pagination
+            page={page}
+            onChange={handleChange}
+            count={11}
+            defaultPage={1}
+            siblingCount={0}
+            variant="outlined"
+            size="large"
+          />
         </div>
       </div>
     </ThreeColumns>

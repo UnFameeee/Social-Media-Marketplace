@@ -3,7 +3,7 @@
   width: var(--sidebar-width);
   height: calc(100vh - var(--navbar-height));
   position: fixed;
-  bottom: 0;
+  /* bottom: 0; */
 }
 .left-bar-list {  
   height: 100%;

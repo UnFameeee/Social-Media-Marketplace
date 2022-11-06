@@ -31,12 +31,12 @@ export default function RightBar(props) {
         className={cx(classes.scroll)}
         sx={{
           position: "fixed",
-          bottom: "-18px",
+          top: "76px",
           right: 0,
           width: "21%",
           height: "calc(100vh - var(--navbar-height))",
           overflowY: "scroll",
-          paddingBottom:"18px",
+          paddingBottom:"4.7rem",
         }}
       >
         <ProductSideBarDetails />

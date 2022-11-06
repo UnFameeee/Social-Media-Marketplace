@@ -18,23 +18,27 @@ const ResponSiveButtonWrapper = styled.div`
   justify-content: space-around;
   gap: 1rem;
   font-size: 1.5rem;
-  @media only screen and (max-width: 906px) {
+  @media only screen and (max-width: 1402px) {
     flex-direction: column;
   }
 `;
 function ProductCard() {
   const userData = useSelector((state) => state.auth.user.userData);
+  function randomNumberInRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+  let randomNum = randomNumberInRange(800,1050)
   return (
     <ResponSiveGrid>
-      <div className="card-Product card-product-normal  p-[1rem] ">
+      <div className="card-Product card-product-normal shadow-md  p-[1rem] ">
         <div className="card-image relative mb-[1rem]">
           <img
             className="w-full h-[25rem] rounded-lg"
-            src="https://source.unsplash.com/random/1000x900/?Laptop"
+            src={`https://source.unsplash.com/random/1000x${randomNum}/?macbook`}
             alt=""
           />
-          <div className=" absolute  top-[1rem] right-[1rem] p-[0.5rem] rounded-md bg-gray-400">
-            <AiFillHeart className=" text-white cursor-pointer text-[2.2rem] hover:text-red-600" />
+          <div className=" absolute  top-[1rem] right-[1rem] p-[0.5rem] rounded-md bg-[#9a6de1]">
+            <AiFillHeart className=" text-[#fffdfd] cursor-pointer text-[2.2rem] hover:text-[#fda9a9]" />
           </div>
         </div>
         <div className="card-info flex items-center gap-[0.5rem] mb-[1rem]">
@@ -64,10 +68,10 @@ function ProductCard() {
           </div>
         </div>
         <ResponSiveButtonWrapper>
-          <button className="btn-view-detail w-full p-[0.5rem] flex items-center">
+          <button className="btn-view-detail w-full h-full p-[0.5rem] flex items-center">
             <span className="w-full">View details</span>
           </button>
-          <button className="btn-add-to-cart w-full p-[0.5rem] flex items-center  ">
+          <button className="btn-add-to-cart w-full h-full p-[0.5rem] flex items-center  ">
             <span className="w-full">Add to cart</span>
           </button>
         </ResponSiveButtonWrapper>
