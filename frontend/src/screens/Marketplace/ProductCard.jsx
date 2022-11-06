@@ -3,6 +3,7 @@ import { Avatar, Button } from "@mui/material";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import "./ProductCard.scss";
 const ResponSiveGrid = styled.div`
   @media only screen and (max-width: 868px) {
   }
@@ -11,36 +12,32 @@ const ResponSiveGrid = styled.div`
   @media only screen and (max-width: 906px) {
   }
 `;
+const ResponSiveButtonWrapper = styled.div`
+  display: flex;
+  height: 3/5;
+  justify-content: space-around;
+  gap: 1rem;
+  font-size: 1.5rem;
+  @media only screen and (max-width: 906px) {
+    flex-direction: column;
+  }
+`;
 function ProductCard() {
   const userData = useSelector((state) => state.auth.user.userData);
   return (
     <ResponSiveGrid>
-      <div
-        style={{
-          background: "#161334",
-          borderRadius: "0px 15px 0px 15px",
-          MozBorderRadius: "0px 15px 0px 15px",
-          WebkitBorderRadius: "0px 15px 0px 15px",
-        }}
-        className="card-Product  p-[1rem] text-white"
-      >
-        <div className=" relative mb-[1rem]">
+      <div className="card-Product card-product-normal  p-[1rem] ">
+        <div className="card-image relative mb-[1rem]">
           <img
-            style={{
-              borderRadius: "0px 20px 0px 20px",
-              MozBorderRadius: "0px 20px 0px 20px",
-              WebkitBorderRadius: "0px 20px 0px 20px",
-              border: "0px solid #000000",
-            }}
-            className="w-full h-[20rem] rounded-lg"
-            src="https://source.unsplash.com/random/1423x1406/?Games"
+            className="w-full h-[25rem] rounded-lg"
+            src="https://source.unsplash.com/random/1000x900/?Laptop"
             alt=""
           />
           <div className=" absolute  top-[1rem] right-[1rem] p-[0.5rem] rounded-md bg-gray-400">
             <AiFillHeart className=" text-white cursor-pointer text-[2.2rem] hover:text-red-600" />
           </div>
         </div>
-        <div className="flex items-center gap-[1rem] mb-[1rem]">
+        <div className="card-info flex items-center gap-[0.5rem] mb-[1rem]">
           <Avatar
             style={{
               fontSize: "2rem",
@@ -55,42 +52,25 @@ function ProductCard() {
             {userData.profile.profile_name?.at(0)}
           </Avatar>
           <div className="flex flex-col">
-            <span>Product name</span>
-            <span className=" font-light">Nguyễn Hoàng Hai Dụ</span>
+            <span className="font-bold">Product name</span>
+            <span className=" font-light">@Nguyễn Hoàng Hai Dụ</span>
           </div>
         </div>
-        <span>Price</span>
-        <div className=" flex gap-[1rem] justify-between mb-[1rem]">
-          <span>20 Sold</span>
-          <span>365 USD</span>
+        <div className="card-price mb-[1rem]  text-[1.6rem]">
+          <span className="text-[#9a6de1]">Price</span>
+          <div className="flex gap-[1rem] font-bold justify-between">
+            <span>20 Sold</span>
+            <span>365 USD</span>
+          </div>
         </div>
-        <div className="flex h-[3rem] justify-around gap-0 text-[1.5rem]">
-          <button
-            className=" p-[0.5rem] text-[#daf70a] flex items-center"
-            style={{
-              color: "#daf70a",
-              background: "#161334",
-              border: "1px solid #daf70a ",
-              borderRadius: "0px 8px 0px 8px",
-              MozBorderRadius: "0px 8px 0px 8px",
-              WebkitBorderRadius: "0px 8px 0px 8px",
-            }}
-          >
-            <span>View details</span>
+        <ResponSiveButtonWrapper>
+          <button className="btn-view-detail w-full p-[0.5rem] flex items-center">
+            <span className="w-full">View details</span>
           </button>
-          <button
-            className=" p-[0.5rem] flex items-center"
-            style={{
-              color: "#161334 ",
-              background: "#daf70a",
-              borderRadius: "0px 8px 0px 8px",
-              MozBorderRadius: "0px 8px 0px 8px",
-              WebkitBorderRadius: "0px 8px 0px 8px",
-            }}
-          >
-            <span>Add to cart</span>
+          <button className="btn-add-to-cart w-full p-[0.5rem] flex items-center  ">
+            <span className="w-full">Add to cart</span>
           </button>
-        </div>
+        </ResponSiveButtonWrapper>
       </div>
     </ResponSiveGrid>
   );

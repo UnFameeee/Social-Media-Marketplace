@@ -1,5 +1,6 @@
 import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
+import TwoColumns from "../../components/Layout/TwoColumns";
 import { homeLeftbar } from "../../common/layout/homeLeftbar";
 import { Avatar, Typography, Box } from "@mui/material";
 import { useSelector } from "react-redux";
@@ -12,7 +13,7 @@ import styled from "styled-components";
 const ResponSiveGrid = styled.div`
   grid-template-columns: repeat(4, minmax(0, 1fr));
   display: grid;
-  gap:10px;
+  gap: 10px;
   @media only screen and (max-width: 1780px) {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -20,8 +21,8 @@ const ResponSiveGrid = styled.div`
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   @media only screen and (max-width: 906px) {
-     grid-template-columns: repeat(1, minmax(0, 0.7fr));
-     justify-content:center;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    justify-content: center;
   }
 `;
 function Marketplace() {
@@ -63,6 +64,9 @@ function Marketplace() {
           },
         ].concat(homeLeftbar),
       }}
+      rightBarConfig= {{
+        marketplace:true
+      }}
     >
       <div className="mb-[2rem] rounded-xl shadow-md  h-full ">
         <div className="slide-show">
@@ -70,42 +74,35 @@ function Marketplace() {
             <div>
               <img
                 className="h-[300px] w-full object-cover rounded-xl"
-                src="https://source.unsplash.com/random/1400x1400/?gaming"
+                src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1057&q=80"
                 alt=""
               />
             </div>
             <div>
               <img
                 className="h-[300px] w-full object-cover rounded-xl"
-                src="https://source.unsplash.com/random/1401x1400/?gaming"
+                src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
                 alt=""
               />
             </div>
             <div>
               <img
                 className="h-[300px] w-full object-cover rounded-xl"
-                src="https://source.unsplash.com/random/1400x1402/?gaming"
+                src="https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
                 alt=""
               />
             </div>
             <div>
               <img
                 className="h-[300px] w-full object-cover rounded-xl"
-                src="https://source.unsplash.com/random/1403x1400/?gaming"
+                src="https://images.unsplash.com/photo-1590126698754-510069860d27?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1488&q=80"
                 alt=""
               />
             </div>
             <div>
               <img
                 className="h-[300px] w-full object-cover rounded-xl"
-                src="https://source.unsplash.com/random/1450x1400/?gaming"
-                alt=""
-              />
-            </div>
-            <div>
-              <img
-                className="h-[300px] w-full object-cover rounded-xl"
-                src="https://source.unsplash.com/random/1400x1406/?gaming"
+                src="https://images.unsplash.com/photo-1598057076865-c67fefd248d3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1025&q=80"
                 alt=""
               />
             </div>
