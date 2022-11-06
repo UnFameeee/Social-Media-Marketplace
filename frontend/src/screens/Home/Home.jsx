@@ -1,19 +1,12 @@
-import React from "react";
-import { Coronavirus } from "@mui/icons-material";
-import { IoChatbubbleEllipses } from "react-icons/io5";
-import CardPost from "../../components/Card/CardPost";
-import LeftBar from "../../components/Layout/SideBar/LeftBar";
-import RightBar from "../../components/Layout/SideBar/RightBar";
-import { Avatar } from "@mui/material";
-import PostStatus from "../../components/PostStatus/PostStatus";
-import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
-import AvatarWithText from "../../components/Avatar/AvatarWithText";
-import { ToastContainer } from "react-toastify";
-import PostModal from "./PostModal";
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getAllPost } from "../../redux/apiRequest";
-import { useEffect } from "react";
+import React from 'react';
+import CardPost from '../../components/Card/CardPost';
+import { Avatar } from '@mui/material';
+import PostStatus from '../../components/PostStatus/PostStatus';
+import PostModal from './PostModal';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAllPost } from '../../redux/apiRequest';
+import { useEffect } from 'react';
 import ThreeColumns from '../../components/Layout/ThreeColumns';
 import { homeLeftbar } from '../../common/layout/homeLeftbar';
 function Home() {
