@@ -117,6 +117,23 @@ function Home() {
                 </Avatar>
               ),
               middle: userData.profile.profile_name,
+              navigate: "userprofile",
+            },
+            {
+              left: {
+                iconButton: true,
+                icon: <IoChatbubbleEllipses />,
+              },
+              middle: <h1>Messenger</h1>,
+              navigate: "messenger",
+            },
+            {
+              left: {
+                iconButton: true,
+                icon: <Coronavirus />,
+              },
+              middle: "CUM lõ",
+              navigate: "concac",
               navigate: `profile?id=${userData.profile.profile_id}`,
             },
           ]}

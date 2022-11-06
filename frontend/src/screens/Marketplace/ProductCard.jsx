@@ -2,8 +2,8 @@ import React from "react";
 import { Avatar, Button } from "@mui/material";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
-import styled from "styled-components";
 import "./ProductCard.scss";
+import styled from "styled-components";
 const ResponSiveGrid = styled.div`
   @media only screen and (max-width: 868px) {
   }

@@ -44,7 +44,6 @@ function PostModal(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const isPosting = useSelector((state) => state.post.create.isFetching);
-  console.log(media_location);
   //Function
   const closeModal = () => {
     props.setShowModal(false);
