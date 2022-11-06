@@ -1,13 +1,7 @@
 import React from 'react';
-import { Coronavirus } from '@mui/icons-material';
 import CardPost from '../../components/Card/CardPost';
-import LeftBar from '../../components/Layout/SideBar/LeftBar';
-import RightBar from '../../components/Layout/SideBar/RightBar';
 import { Avatar } from '@mui/material';
 import PostStatus from '../../components/PostStatus/PostStatus';
-import FullWidthHr from '../../components/FullWidthHr/FullWidthHr';
-import AvatarWithText from '../../components/Avatar/AvatarWithText';
-import { ToastContainer } from 'react-toastify';
 import PostModal from './PostModal';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
