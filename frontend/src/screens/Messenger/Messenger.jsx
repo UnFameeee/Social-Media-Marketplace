@@ -7,6 +7,7 @@ import Picker from "@emoji-mart/react";
 import { io } from "socket.io-client";
 import LeftBar from "../../components/Layout/SideBar/LeftBar";
 import Message from "../../components/Message/Message";
+
 function Messenger() {
   const userData = useSelector((state) => state.auth.user.userData);
   const sender = 1;
@@ -348,7 +349,7 @@ function Messenger() {
             <span className=" font-semibold">duy duong</span>
           </div>
         </div>
-        <div className=" px-[1.5rem] chatBoxMiddle pt-[1.5rem] overflow-y-scroll h-[100%] ">
+        <div className="chatBoxMiddle px-[1.5rem]  pt-[1.5rem] overflow-y-scroll h-[100%] ">
           {mockConversation &&
             mockConversation.map((item, index) => (
               <div ref={scrollRef}>
