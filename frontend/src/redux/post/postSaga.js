@@ -26,9 +26,18 @@ import {
   updatePostStart,
   updatePostSuccess,
 } from "./postSlice";
-
+import { notifyService } from "../../services/notifyService";
+//#region reFreshPosts
 export function* reFreshPosts() {
-  yield takeLatest([createPostSagaSuccess.type,deletePostSagaSuccess.type,updatePostSagaSuccess.type,likePostSagaSuccess.type], handleReFreshPostSaga);
+  yield takeLatest(
+    [
+      createPostSagaSuccess.type,
+      deletePostSagaSuccess.type,
+      updatePostSagaSuccess.type,
+      likePostSagaSuccess.type,
+    ],
+    handleReFreshPostSaga
+  );
 }
 function* handleReFreshPostSaga(data) {
   try {
@@ -62,10 +71,12 @@ const getAllPostSagaRequest = async (data) => {
     }
   } catch (error) {
     console.log(error);
-      // dispatch(getPostFailed());
+    dispatch(getPostFailed());
   }
 };
+//#endregion
 
+//#region createNewPost
 export function* createNewPost() {
   yield takeLatest(createPostSaga.type, handleCreatePost);
 }
@@ -79,7 +90,7 @@ function* handleCreatePost(data) {
 }
 const createPostSagaRequest = async (data) => {
   const { accessToken, refreshToken, postData, dispatch } = data.payload;
-    dispatch(createPostStart()); 
+  dispatch(createPostStart());
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -96,17 +107,21 @@ const createPostSagaRequest = async (data) => {
     );
     if (!res.data.message) {
       dispatch(createPostSagaSuccess({ accessToken, refreshToken }));
+      notifyService.showSuccess("Create Post Successfully");
       return res;
-      // notify("Post Created", "info");
     } else {
-        dispatch(createPostFailed());
-      // notify(res.data.message, "error");
+      dispatch(createPostFailed());
+      notifyService.showError("Create Post Failed");
     }
   } catch (error) {
-        dispatch(createPostFailed());
+    console.log(error);
+    notifyService.showError("Create Post Failed");
+    dispatch(createPostFailed());
   }
 };
+//#endregion
 
+//#region deleteOnePost
 export function* deleteOnePost() {
   yield takeLatest(deletePostSaga.type, handleDeletePost);
 }
@@ -118,38 +133,42 @@ function* handleDeletePost(data) {
     console.log(error);
   }
 }
-export const deletePostSagaRequest = async (
-  data
-) => {
+export const deletePostSagaRequest = async (data) => {
   const { accessToken, refreshToken, postId, dispatch } = data.payload;
-   dispatch(deletePostStart());
+  dispatch(deletePostStart());
   try {
     const config = {
-        Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     };
     const res = await axiosInStanceJWT.delete(
       `${apiUrl}/post/delete/${postId}`,
-      { headers:config, ACCESS_PARAM: accessToken, REFRESH_PARAM: refreshToken }
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
     );
     if (!res.data.message) {
       dispatch(deletePostSagaSuccess({ accessToken, refreshToken }));
+      notifyService.showSuccess("Delete Post Successfully");
       return res;
-      // dispatch(deletePostSuccess());
-      // notify("Post Deleted", "info");
     } else {
-       dispatch(deletePostFailed());
-      // notify(res.data.message, "error");
+      dispatch(deletePostFailed());
+      notifyService.showError("Delete Post Failed");
     }
   } catch (error) {
     console.log(error);
-     dispatch(deletePostFailed());
+    notifyService.showError("Delete Post Failed");
+    dispatch(deletePostFailed());
   }
 };
+//#endregion
 
-export function* updateOnePost(){
-  yield takeLatest(updatePostSaga.type,handleUpdatePost)
+//#region updateOnePost
+export function* updateOnePost() {
+  yield takeLatest(updatePostSaga.type, handleUpdatePost);
 }
-function* handleUpdatePost(data){
+function* handleUpdatePost(data) {
   try {
     const updateOne = yield call(updatePostSagaRequest, data);
     yield put(updatePostSuccess(updateOne.data));
@@ -157,11 +176,9 @@ function* handleUpdatePost(data){
     console.log(error);
   }
 }
-const updatePostSagaRequest = async (
-  data
-) => {
+const updatePostSagaRequest = async (data) => {
   const { accessToken, refreshToken, updatePost, dispatch } = data.payload;
-   dispatch(updatePostStart());
+  dispatch(updatePostStart());
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -176,53 +193,60 @@ const updatePostSagaRequest = async (
       }
     );
     if (!res.data.message) {
-      dispatch(updatePostSagaSuccess(({ accessToken, refreshToken })))
-      return res
-      // dispatch(updatePostSuccess());
-      // notify("Post Updated", "info");
+      dispatch(updatePostSagaSuccess({ accessToken, refreshToken }));
+      notifyService.showSuccess("Update Post Successfully");
+      return res;
     } else {
-       dispatch(updatePostFailed());
-      // notify(res.data.message, "error");
+      dispatch(updatePostFailed());
+      notifyService.showError("Update Post Failed");
     }
   } catch (error) {
     console.log(error);
-   dispatch(updatePostFailed());
+    notifyService.showError("Update Post Failed");
+    dispatch(updatePostFailed());
   }
 };
+//#endregion
 
-export function* likeOnePost(){
-  yield takeLatest(likePostSaga.type,handleLikePost)
+//#region likeOnePost
+export function* likeOnePost() {
+  yield takeLatest(likePostSaga.type, handleLikePost);
 }
-function* handleLikePost(data){
+function* handleLikePost(data) {
   try {
-    const likePost = yield call(likePostSagaRequest,data);
-    yield put(likePostSuccess(likePost.data))
+    const likePost = yield call(likePostSagaRequest, data);
+    yield put(likePostSuccess(likePost.data));
   } catch (error) {
     console.log(error);
   }
 }
 const likePostSagaRequest = async (data) => {
   const { accessToken, refreshToken, postId, dispatch } = data.payload;
-   dispatch(likePostStart());
+  dispatch(likePostStart());
   try {
     const config = {
-        Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     };
     const res = await axiosInStanceJWT.post(
       `${apiUrl}/post/like/${postId}`,
       {},
-      { headers:config, ACCESS_PARAM: accessToken, REFRESH_PARAM: refreshToken }
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
     );
     if (!res.data.message) {
       // dispatch(likePostSuccess());
-      dispatch(likePostSagaSuccess({accessToken,refreshToken}))
-      return res
+      dispatch(likePostSagaSuccess({ accessToken, refreshToken }));
+      return res;
     } else {
-       dispatch(likePostFailed());
+      dispatch(likePostFailed());
       // notify(res.data.message, "error");
     }
   } catch (error) {
     console.log(error);
-     dispatch(likePostFailed());
+    dispatch(likePostFailed());
   }
 };
+//#endregion

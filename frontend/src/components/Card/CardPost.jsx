@@ -19,7 +19,7 @@ import ShowMoreText from "react-show-more-text";
 import { Helper } from "../../utils/Helper";
 import { deletePostSaga, likePostSaga } from "../../redux/post/postSlice";
 function CardPost(props) {
-  // Declare variables
+  //#region Declare variables
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState();
   const accessToken = useSelector(
@@ -42,7 +42,9 @@ function CardPost(props) {
     totalLike,
   } = postData;
   const { profile } = props;
-  // Function
+  //#endregion 
+
+  //#region Function
   const handleOnClickShowAction = () => {
     setShowAction(!showAction);
   };
@@ -76,6 +78,7 @@ function CardPost(props) {
     dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
     props.setReRender((prev) => !prev);
   };
+  //#endregion 
   return (
     <>
       {/* {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && ( */}
