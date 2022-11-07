@@ -30,20 +30,20 @@ export const middleNavIcons = [
     icon: [<IoBagOutline />, <IoBag />],
     tooltip: 'Marketplace',
   },
-  {
-    icon: [
-      <IoPeopleCircleOutline />,
-      <IoPeopleCircle />,
-    ],
-    tooltip: 'Groups',
-  },
-  {
-    icon: [
-      <IoPlayCircleOutline />,
-      <IoPlayCircle />,
-    ],
-    tooltip: 'Watch',
-  },
+  // {
+  //   icon: [
+  //     <IoPeopleCircleOutline />,
+  //     <IoPeopleCircle />,
+  //   ],
+  //   tooltip: 'Groups',
+  // },
+  // {
+  //   icon: [
+  //     <IoPlayCircleOutline />,
+  //     <IoPlayCircle />,
+  //   ],
+  //   tooltip: 'Watch',
+  // },
 ];
 
 export const rightNavIcons = [
