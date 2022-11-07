@@ -9,6 +9,8 @@ import { Sequelize } from "sequelize-typescript";
 import { FRIENDREQUEST_STATUS, FRIENDSHIP_STATUS } from "src/common/constants/friendship.constant";
 import { FriendshipEntity } from "src/common/models/entity/friendship";
 import { Op } from "sequelize";
+import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_image.model";
+import { ProfileWallpaperImage } from "src/social-media/image/model/profile_wallpaper_image.mode";
 
 @Injectable()
 export class FriendshipRepository {
@@ -21,24 +23,42 @@ export class FriendshipRepository {
             var result = new PagingData<Friendship[]>();
             var queryData = await this.friendshipRepository.findAndCountAll({
                 where: { status: FRIENDSHIP_STATUS.PENDING },
-                attributes: ["id", "status", "createdAt", "profile_request", "profile_target", [Sequelize.col("profile_request_id.profile_name"), "profile_name"], [Sequelize.col("profile_request_id.picture"), "picture"]],
+                attributes: ["id", "status", "createdAt",
+                    "profile_request", "profile_target",
+                    [Sequelize.col("profile_request_id.profile_name"), "profile_name"],
+                    [Sequelize.col("profile_request_id.profile_avatar.link"), "avatar"],
+                    [Sequelize.col("profile_request_id.profile_wallpaper.link"), "wallpaper"]
+                ],
                 include: [
                     {
                         model: Profile,
                         as: "profile_target_id",
                         where: { profile_id: profile_id },
-                        attributes: []
+                        attributes: [],
                     },
                     {
                         model: Profile,
                         as: "profile_request_id",
-                        attributes: []
+                        attributes: ["profile_id"],
+                        include: [
+                            {
+                                model: ProfileAvatarImage,
+                                as: "profile_avatar",
+                                attributes: ["link"]
+                            },
+                            {
+                                model: ProfileWallpaperImage,
+                                as: "profile_wallpaper",
+                                attributes: ["link"]
+                            }
+                        ]
                     },
                 ],
                 order: [
                     ['createdAt', 'DESC']
                 ],
                 raw: true,
+                nest: true,
                 ...paginate({ page })
             })
 
@@ -49,6 +69,7 @@ export class FriendshipRepository {
                 element["profile_id"] = element["profile_request"];
                 delete element["profile_target"];
                 delete element["profile_request"];
+                delete element["profile_request_id"];
             }
 
             result.data = queryData.rows;
@@ -67,21 +88,61 @@ export class FriendshipRepository {
             var queryData = await this.friendshipRepository.findAndCountAll({
                 where: {
                     status: FRIENDSHIP_STATUS.ACCEPTED,
-                    [Op.or]: [{ "$profile_request_id.profile_id$": profile_id }, { "$profile_target_id.profile_id$": profile_id }],
+                    [Op.or]: [
+                        { "$profile_request_id.profile_id$": profile_id },
+                        { "$profile_target_id.profile_id$": profile_id }
+                    ],
                 },
-                attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"],
+                attributes: ["id", "status", "createdAt",
+                    "profile_target",
+                    [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"],
+                    [Sequelize.col("profile_target_id.profile_avatar.link"), "profile_target_avatar"],
+                    [Sequelize.col("profile_target_id.profile_wallpaper.link"), "profile_target_wallpaper"],
                     "profile_request",
-                    [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"], [Sequelize.col("profile_request_id.picture"), "profile_request_picture"]],
+                    [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"],
+                    [Sequelize.col("profile_request_id.profile_avatar.link"), "profile_request_avatar"],
+                    [Sequelize.col("profile_request_id.profile_wallpaper.link"), "profile_request_wallpaper"],
+                ],
                 include: [
                     {
                         model: Profile,
                         as: "profile_request_id",
-                        attributes: [],
+                        required: true,
+                        attributes: [
+                            "profile_id",
+                        ],
+                        include: [
+                            {
+                                model: ProfileAvatarImage,
+                                as: "profile_avatar",
+                                attributes: ["link"]
+                            },
+                            {
+                                model: ProfileWallpaperImage,
+                                as: "profile_wallpaper",
+                                attributes: ["link"]
+                            }
+                        ],
                     },
                     {
                         model: Profile,
                         as: "profile_target_id",
-                        attributes: [],
+                        required: true,
+                        attributes: [
+                            "profile_id",
+                        ],
+                        include: [
+                            {
+                                model: ProfileAvatarImage,
+                                as: "profile_avatar",
+                                attributes: ["link"]
+                            },
+                            {
+                                model: ProfileWallpaperImage,
+                                as: "profile_wallpaper",
+                                attributes: ["link"]
+                            }
+                        ],
                     }
                 ],
 
@@ -89,6 +150,7 @@ export class FriendshipRepository {
                     ['createdAt', 'DESC']
                 ],
                 raw: true,
+                nest: true,
                 ...paginate({ page })
             })
 
@@ -100,7 +162,8 @@ export class FriendshipRepository {
 
                     element["profile_id"] = element["profile_request"];
                     element["profile_name"] = element["profile_request_name"];
-                    element["picture"] = element["profile_request_picture"];
+                    element["avatar"] = element["profile_request_avatar"];
+                    element["wallpaper"] = element["profile_request_wallpaper"];
                 } else {
                     var mutualFriend = await this.getMutualFriend(profile_id, element["profile_target"]);
                     // element.setDataValue("mutualFriend", mutualFriend);
@@ -108,15 +171,20 @@ export class FriendshipRepository {
 
                     element["profile_id"] = element["profile_target"];
                     element["profile_name"] = element["profile_target_name"];
-                    element["picture"] = element["profile_target_picture"];
+                    element["avatar"] = element["profile_target_avatar"];
+                    element["wallpaper"] = element["profile_target_wallpaper"];
                 }
 
                 delete element["profile_target"];
                 delete element["profile_target_name"];
-                delete element["profile_target_picture"];
+                delete element["profile_target_avatar"];
+                delete element["profile_target_wallpaper"];
+                delete element["profile_target_id"];
                 delete element["profile_request"];
                 delete element["profile_request_name"];
-                delete element["profile_request_picture"];
+                delete element["profile_request_avatar"];
+                delete element["profile_request_wallpaper"];
+                delete element["profile_request_id"];
             }
 
             result.data = queryData.rows;
@@ -149,9 +217,13 @@ export class FriendshipRepository {
                             }
                         ]
                     },
-                    attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"],
+                    attributes: ["id", "status", "createdAt",
+                        "profile_target",
+                        [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"],
+                        [Sequelize.col("profile_target_id.picture"), "profile_target_picture"],
                         "profile_request",
-                        [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"], [Sequelize.col("profile_request_id.picture"), "profile_request_picture"]],
+                        [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"],
+                        [Sequelize.col("profile_request_id.picture"), "profile_request_picture"]],
                     include: [
                         {
                             model: Profile,

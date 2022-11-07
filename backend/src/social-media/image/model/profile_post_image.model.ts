@@ -13,7 +13,9 @@ export class ProfilePostImage extends Model<ProfilePostImage> {
     @Column
     profile_post_image_id: number;
 
-    //profile_id
+    //THis column does not map
+    @Column
+    profile_id: number;
 
     @Column(DataType.TEXT)
     link: string;
