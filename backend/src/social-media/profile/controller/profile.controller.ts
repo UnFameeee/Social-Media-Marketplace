@@ -21,11 +21,11 @@ export class ProfileController {
         return this.profileService.getAllProfile(page);
     }
 
-    @ApiOperation({ description: 'Get profile by Id' })
-    @Get("/:profile_id")
-    GetProfileById(@Param("profile_id") profile_id: number): Promise<ResponseData<Profile>> {
-        return this.profileService.getProfileById(profile_id);
-    }
+    // @ApiOperation({ description: 'Get profile by Id' })
+    // @Get("/:profile_id")
+    // GetProfileById(@Param("profile_id") profile_id: number): Promise<ResponseData<Profile>> {
+    //     return this.profileService.getProfileById(profile_id);
+    // }
 
     @ApiBody({
         type: Profile,

@@ -42,9 +42,9 @@ export class Profile extends Model<Profile> {
     @Column
     birth: string;
 
-    @AllowNull
-    @Column
-    picture: string;
+    // @AllowNull
+    // @Column
+    // picture: string;
     
     @Default(true)
     @Column
@@ -58,10 +58,10 @@ export class Profile extends Model<Profile> {
     // @Column
     // permission: string;
 
-    @AllowNull
+    @AllowNull  
     @Column
     refreshToken: string;
-
+ 
     @Column(DataType.VIRTUAL(DataType.BOOLEAN))
     get isFriend(): boolean {
         return this.getDataValue("isFriend");
@@ -79,4 +79,22 @@ export class Profile extends Model<Profile> {
     set isSentFriendRequest(value: string){
         this.setDataValue("isSentFriendRequest", value);
     }
+
+    // @Column(DataType.VIRTUAL(DataType.STRING))
+    // get avatar(): string {
+    //     return this.getDataValue("avatar");
+    // }
+
+    // set avatar(value: string){
+    //     this.setDataValue("avatar", value);
+    // }
+
+    // @Column(DataType.VIRTUAL(DataType.ARRAY))
+    // get wallpaper(): string {
+    //     return this.getDataValue("wallpaper");
+    // } 
+
+    // set wallpaper(value: string){
+    //     this.setDataValue("wallpaper", value);
+    // }
 }
