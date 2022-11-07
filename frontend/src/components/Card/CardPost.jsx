@@ -18,10 +18,14 @@ import { format } from "timeago.js";
 import ShowMoreText from "react-show-more-text";
 import { Helper } from "../../utils/Helper";
 import { deletePostSaga, likePostSaga } from "../../redux/post/postSlice";
+import notFoundImage from "../../assets/noimage_1.png";
+import MiddleHr from "../FullWidthHr/MiddleHr";
 function CardPost(props) {
-  // Declare variables
+  //#region Declare variables
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState();
+  const [showImage, setShowImage] = useState(true);
+  console.log("showImage", showImage);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -42,7 +46,9 @@ function CardPost(props) {
     totalLike,
   } = postData;
   const { profile } = props;
-  // Function
+  //#endregion
+
+  //#region Function
   const handleOnClickShowAction = () => {
     setShowAction(!showAction);
   };
@@ -76,12 +82,22 @@ function CardPost(props) {
     dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
     props.setReRender((prev) => !prev);
   };
+  const hideImg = () => {
+    debugger;
+    setShowImage(false);
+  };
+  const showImg = () => {
+    debugger;
+    setShowImage(true);
+  };
+  //#endregion
+
   return (
     <>
       {/* {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && ( */}
       <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-full">
         <div className="w-full bg">
-          <div className="header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
+          <div className="card-header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
             <div className="flex flex-1 gap-[1rem]">
               <Avatar
                 style={{ fontSize: "2rem" }}
@@ -124,9 +140,9 @@ function CardPost(props) {
             )}
           </div>
         </div>
-        <div className="written_text ">
+        <div className="">
           <div
-            className="paragraph px-[2rem] mb-[1rem] "
+            className="card-paragraph px-[2rem] mb-[1rem] "
             style={{ overflowWrap: "anywhere" }}
           >
             <ShowMoreText
@@ -142,18 +158,26 @@ function CardPost(props) {
             </ShowMoreText>
           </div>
           {media_location && arrayImgs.length > 0 && (
-            <div className="px-[-1rem] mb-[0.5rem] border-y-[0.1rem] border-gray-200">
-              {arrayImgs.map((item) => (
-                <img
-                  src={item}
-                  key={item}
-                  alt=""
-                  className="w-full min-w-[20rem] h-[45rem] object-cover"
-                />
-              ))}
+            <div className="card-images px-[-1rem] mb-[0.5rem] border-y-[0.1rem] border-gray-200">
+              {arrayImgs.map((item) => {
+                return (
+                  <>
+                    <img
+                      src={item}
+                      key={item}
+                      alt="not found"
+                      onError={({ currentTarget }) => {
+                        currentTarget.onerror = null; // prevents looping
+                        currentTarget.src = notFoundImage;
+                      }}
+                      className={`w-full min-w-[20rem]  h-[45rem] object-contain border-[1px] border-t-gray-200 `}
+                    />
+                  </>
+                );
+              })}
             </div>
           )}
-          <div className="mb-[0.5rem] px-[2rem] flex gap-[0.5rem]">
+          <div className="card-react-button mb-[0.5rem] px-[2rem] flex gap-[0.5rem]">
             <ThumbUpOutlined
               className="Icon text-blue8f3"
               style={{ fontSize: "2rem" }}
@@ -186,42 +210,43 @@ function CardPost(props) {
             </MUI.ButtonWithIcon>
           </div>
           <hr className="mb-[0.5rem] " />
-          <div className="flex justify-end mb-[0.5rem] items-center px-[2rem]">
-            <span>Most relate comment</span>
-            <ArrowDropDown style={{ fontSize: "2.5rem" }} />
-          </div>
-          <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem]">
-            <AvatarWithText
-              url="https://source.unsplash.com/random/180×180"
-              size={35}
-              haveInput={true}
-              inputValue="write your comment"
-              alignCenter={true}
-            />
-            <AvatarWithText
-              url="https://source.unsplash.com/random/100×100"
-              size={35}
-              border={false}
-              profile_name="madara"
-              comment="shinra tensie"
-            />
-            <AvatarWithText
-              url="https://source.unsplash.com/random/130×130"
-              size={35}
-              border={false}
-              profile_name="naruto"
-              comment="yamero"
-            />
-            <div className="flex">
-              <span className="flex-1 hover:cursor-pointer">
-                See more comments
-              </span>
-              <span>4/50</span>
+          <div className="card-comment-section">
+            <div className="flex justify-end mb-[0.5rem] items-center px-[2rem]">
+              <span>Most relate comment</span>
+              <ArrowDropDown style={{ fontSize: "2.5rem" }} />
+            </div>
+            <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem]">
+              <AvatarWithText
+                url="https://source.unsplash.com/random/180×180"
+                size={35}
+                haveInput={true}
+                inputValue="write your comment"
+                alignCenter={true}
+              />
+              <AvatarWithText
+                url="https://source.unsplash.com/random/100×100"
+                size={35}
+                border={false}
+                profile_name="madara"
+                comment="shinra tensie"
+              />
+              <AvatarWithText
+                url="https://source.unsplash.com/random/130×130"
+                size={35}
+                border={false}
+                profile_name="naruto"
+                comment="yamero"
+              />
+              <div className="flex">
+                <span className="flex-1 hover:cursor-pointer">
+                  See more comments
+                </span>
+                <span>4/50</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      {/* )} */}
     </>
   );
 }

@@ -159,7 +159,7 @@ export default function NavBar() {
         >
           {middleNavIcons.map((item, index) => (
             <MUI.ButtonWithIcon
-            className="w-[13rem]"
+            className="w-[22rem]"
               sx={{
                 padding: "1rem 0.8rem",
               }}

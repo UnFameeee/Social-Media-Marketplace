@@ -38,10 +38,8 @@ import {
   addFriend,
   denyFriendRequest,
   getAllFriends,
-  getAllPost,
   getPostByProfile,
   getProfile,
-  isSentFriendReq,
 } from '../../redux/apiRequest';
 import { Helper } from '../../utils/Helper';
 import MUI from '../../components/MUI';
@@ -65,17 +63,14 @@ function UserProfile(props) {
   const posts = useSelector(
     (state) => state.post.getByProfile?.posts?.results?.data
   );
-  const allFriends = useSelector(
-    (state) => state.friends.getAll?.data
-  );
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
   const userData = useSelector(
     (state) => state.auth?.user?.userData?.profile
   );
-  const isSentFriendRequest = useSelector(
-    (state) => state.friends.isSentFriendRequest?.data
+  const allFriends = useSelector(
+    (state) => state.friends.getAll?.data
   );
 
   const [searchParams] = useSearchParams();
@@ -110,13 +105,8 @@ function UserProfile(props) {
           accessToken,
           refreshToken,
           queryParams.id || userData?.profile_id,
-          dispatch
-        );
-        isSentFriendReq(
-          accessToken,
-          refreshToken,
-          queryParams.id || userData?.profile_id,
-          dispatch
+          dispatch,
+          false
         );
       }
     }
@@ -187,7 +177,11 @@ function UserProfile(props) {
                 </span>
                 <span className="text-[1.8rem] font-bold text-gray-600">
                   {allFriends?.page?.totalElement > 0 &&
-                    `${allFriends?.page?.totalElement} friends`}
+                    Helper.isMultiple(
+                      'friend',
+                      allFriends?.page?.totalElement,
+                      ''
+                    )}
                 </span>
               </div>
               <div className="flex items-end gap-[1rem]">
@@ -196,7 +190,7 @@ function UserProfile(props) {
                     profileData?.profile_id == userData?.profile_id
                   }
                   isFriend={profileData?.isFriend}
-                  isSentFriendReq={isSentFriendRequest}
+                  isSentFriendReq={profileData?.isSentFriendRequest}
                   actionProps={{
                     accessToken: accessToken,
                     id: profileData?.profile_id,
@@ -205,7 +199,7 @@ function UserProfile(props) {
                 />
               </div>
             </div>
-            {isSentFriendRequest == 'TARGET' && (
+            {profileData?.isSentFriendRequest == 'TARGET' && (
               <div className="text-[2rem] flex pl-[24rem] pr-[4rem] py-[2rem] mt-[3.5rem] items-center justify-end bg-[#f7f8fa] rounded-[0.75rem]">
                 <span className="flex-1 font-medium">
                   {profileData?.profile_name} sent you a friend

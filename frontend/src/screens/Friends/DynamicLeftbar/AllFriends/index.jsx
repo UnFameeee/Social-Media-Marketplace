@@ -1,7 +1,6 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  getAllFriendsForMainUser,
   getAllFriends,
   getPostByProfile,
   getProfile,
@@ -30,6 +29,7 @@ export default function AllFriends() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
+  console.log(allFriends)
 
   const [profileClicked, setProfileClicked] = useState(false);
   const [reRender, setReRender] = useState(false);
@@ -60,7 +60,7 @@ export default function AllFriends() {
             subTitle={Helper.isMultiple(
               'Friend',
               allFriends?.page?.totalElement,
-              'You are CUMLOX'
+              'You need to get some friends!'
             )}
           />
         ),
@@ -88,13 +88,8 @@ export default function AllFriends() {
                 accessToken,
                 refreshToken,
                 x.profile_id,
-                dispatch
-              );
-              isSentFriendReq(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch
+                dispatch,
+                false
               );
               setProfileClicked(true);
             },

@@ -1,19 +1,18 @@
 import React, { useState, useRef } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AvatarWithText from "../../components/Avatar/AvatarWithText";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
-import { createPost, updatePost, uploadImages } from "../../redux/apiRequest";
+import { uploadImages } from "../../redux/apiRequest";
 import { Avatar, TextareaAutosize } from "@mui/material";
-import { PhotoLibrary, HighlightOff, Close } from "@mui/icons-material";
+import { PhotoLibrary,} from "@mui/icons-material";
 import {
   removeSingleUploadImagePost,
   resetUploadImagePostState,
 } from "../../redux/uploadImage/uploadImageSlice";
-import { Link } from "react-router-dom";
 import { createPostSaga, updatePostSaga } from "../../redux/post/postSlice";
+import notFoundImage from '../../assets/noimage_1.png'
 function PostModal(props) {
-  //Declare variables
+  //#region Declare variables
   const dispatch = useDispatch();
   let flagAction = "post";
   const [postData, setPostData] = useState({
@@ -44,8 +43,9 @@ function PostModal(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const isPosting = useSelector((state) => state.post.create.isFetching);
-  console.log(media_location);
-  //Function
+  //#endregion
+
+  //#region Function
   const closeModal = () => {
     props.setShowModal(false);
     props.setPostUpdateData(null);
@@ -101,6 +101,9 @@ function PostModal(props) {
   const addToUploadImgArray = (height, width, url) => {
     setImgArray([...imgArray, { height: height, width: width, url: url }]);
   };
+  //#endregion
+  
+  //#region UseEffect
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy && uploadImageLinkLst.length > 0) {
@@ -130,6 +133,7 @@ function PostModal(props) {
   //     closeModal();
   //   }
   // });
+  //#endregion
   return (
     <>
       {props.showModal ? (
@@ -194,7 +198,7 @@ function PostModal(props) {
                       multiple
                       name="upload"
                       title=" "
-                      className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 cursor-pointer"
+                      className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 cursor-pointer border-[1px] border-t-gray-200 "
                       onChange={handlePreviewUploadImage}
                     />
                   </div>
@@ -208,7 +212,11 @@ function PostModal(props) {
                         <a href={item}>
                           <img
                             src={item}
-                            alt=""
+                            alt="not found"
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null; // prevents looping
+                              currentTarget.src = notFoundImage;
+                            }}
                             className=" w-[100%] object-fill rounded-xl "
                             style={{ cursor: "default" }}
                             ref={imgElement}

@@ -6,16 +6,13 @@ import { revertAll } from "../../redux/resetStore";
 const RequireAuth = () => {
   const auth = useSelector((state) => state.auth.login);
   const dispatch = useDispatch();
-  var accessToken = auth.currentUser?.access ?? "";
   var refreshToken = auth.currentUser?.refresh ?? "";
   var reFreshIsExpired = false;
   if (refreshToken !== "" && jwt_decode(refreshToken).exp < Date.now() / 1000) {
     console.log("reFreshToken is expired");
     reFreshIsExpired = true;
     dispatch(revertAll())
-  } else {
-    console.log("reFreshToken still valid");
-  }
+  } 
   const location = useLocation();
   return auth?.currentUser && !reFreshIsExpired ? (
     <Outlet />
