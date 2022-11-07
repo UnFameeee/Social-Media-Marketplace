@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/common/constants/jwt.constant';
 import { SCOPE } from 'src/common/constants/sequelize-scope.constant';
 import { ResponseData } from 'src/common/models/view-model/success-message.model';
+import { argon2_encode, argon2_verify } from 'src/common/utils/argon2-singleton.utils';
 import { compare, encode } from 'src/common/utils/bcrypt-singleton.utils';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 import { ProfileRepository } from 'src/social-media/profile/repository/profile.repository';
@@ -67,7 +68,7 @@ export class AuthService {
             const profile = await this.profileRepository.findProfileById(profile_id, SCOPE.WITHOUT_PASSWORD);
             const payload: TokenPayload = { profile };
 
-            const token = this.jwtService.sign(payload, {
+            const token = this.jwtService.sign({ profile_id }, {
                 secret: jwtConstants.refresh_secret,
                 expiresIn: jwtConstants.refresh_expires,
             });
@@ -121,7 +122,7 @@ export class AuthService {
     }
 
     async updateRefreshToken(profile_id: number, refreshToken: string) {
-        const hashedRefreshToken = await encode(refreshToken);
+        const hashedRefreshToken = await argon2_encode(refreshToken);
         await this.profileRepository.updateRefreshToken(profile_id, hashedRefreshToken)
     }
 
@@ -132,13 +133,21 @@ export class AuthService {
     }
 
     async refreshTokens(profile_id: number, refreshToken: string) {
-        const profile = await this.profileRepository.findProfileById(profile_id, SCOPE.WITH_PASSWORD);
-        if (!profile || !profile.refreshToken)
-            throw new ForbiddenException('Access Denied');
-        const refreshTokenMatches = await compare(refreshToken, profile.refreshToken);
-        if (!refreshTokenMatches) throw new ForbiddenException('Access Denied');
-        const token = await this.getTokens(profile_id);
-        await this.updateRefreshToken(profile_id, token.refresh);
-        return token;
+        try {
+            //If the token expired, it will catch by the guard.
+            const profile = await this.profileRepository.findProfileRefreshById(profile_id);
+            if (!profile || !profile.refreshToken)
+                throw new ForbiddenException('Access Denied');
+
+            const refreshTokenMatches = await argon2_verify(profile.refreshToken, refreshToken);
+
+            if (!refreshTokenMatches) throw new ForbiddenException('RefreshToken Invalid');
+
+            const token = await this.getTokens(profile_id);
+            await this.updateRefreshToken(profile_id, token.refresh);
+            return token;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
     }
 }
