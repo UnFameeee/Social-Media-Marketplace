@@ -1,39 +1,20 @@
 import { diskStorage } from "multer";
 import { extname } from 'path'
+import { IMAGE_LOCATION } from "./destination.config";
 
-export const storageProfile = {
-    storage: diskStorage({
-        destination: './uploads/images/profile',
-        filename: (req, file, cb) => {
-            const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-            cb(null, `${randomName}${extname(file.originalname)}`);
-        }
-    })
-}
-
-export const storagePost = {
-    storage: diskStorage({
-        destination: './uploads/images/post',
-        filename: (req, file, cb) => {
-            const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-            cb(null, `${randomName}${extname(file.originalname)}`);
-        }
-    })
-}
-
-export const storageChatroom = {
-    storage: diskStorage({
-        destination: './uploads/images/post',
-        filename: (req, file, cb) => {
-            const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-            cb(null, `${randomName}${extname(file.originalname)}`);
-        }
-    })
-}
+// export const storageProfile = {
+//     storage: diskStorage({
+//         destination: './uploads/images/profile',
+//         filename: (req, file, cb) => {
+//             const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+//             cb(null, `${randomName}${extname(file.originalname)}`);
+//         }
+//     })
+// }
 
 export const storageAvatar = {
     storage: diskStorage({
-        destination: './uploads/images/post',
+        destination: IMAGE_LOCATION.AVATAR,
         filename: (req, file, cb) => {
             const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
             cb(null, `${randomName}${extname(file.originalname)}`);
@@ -43,7 +24,7 @@ export const storageAvatar = {
 
 export const storageWallpaper = {
     storage: diskStorage({
-        destination: './uploads/images/post',
+        destination: IMAGE_LOCATION.WALLPAPER,
         filename: (req, file, cb) => {
             const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
             cb(null, `${randomName}${extname(file.originalname)}`);
@@ -51,3 +32,22 @@ export const storageWallpaper = {
     })
 }
 
+export const storagePost = {
+    storage: diskStorage({
+        destination: IMAGE_LOCATION.POST,
+        filename: (req, file, cb) => {
+            const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+            cb(null, `${randomName}${extname(file.originalname)}`);
+        }
+    })
+}
+
+export const storageChatroom = {
+    storage: diskStorage({
+        destination: IMAGE_LOCATION.CHATROOM,
+        filename: (req, file, cb) => {
+            const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+            cb(null, `${randomName}${extname(file.originalname)}`);
+        }
+    })
+}

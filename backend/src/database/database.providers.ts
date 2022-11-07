@@ -50,7 +50,7 @@ export const databaseProviders = [
             //associations
             Profile.hasMany(Friendship, { foreignKey: { name: "profile_request", field: "profile_request" } });
             Friendship.belongsTo(Profile, { foreignKey: { name: "profile_request", field: "profile_request" }, as: "profile_request_id" })
-            Profile.hasMany(Friendship, { foreignKey: { name: "profile_target", field: "profile_target" } });
+            Profile.hasMany(Friendship, { foreignKey: { name: "profile_target", field: "profile_target" }});
             Friendship.belongsTo(Profile, { foreignKey: { name: "profile_target", field: "profile_target" }, as: "profile_target_id" })
 
             Profile.hasMany(Post, { foreignKey: { name: "profile_id", field: "profile_id" } });
@@ -66,24 +66,24 @@ export const databaseProviders = [
             Post.hasMany(PostLike, { foreignKey: { name: "post_id", field: "post_id" } });
             PostLike.belongsTo(Post, { foreignKey: { name: "post_id", field: "post_id" } });
 
-            
-            Profile.hasMany(ProfileWallpaperImage, { foreignKey: { name: "profile_id", field: "profile_id" } });
+
+            Profile.hasOne(ProfileWallpaperImage, { foreignKey: { name: "profile_id", field: "profile_id" }, as: "profile_wallpaper" });
             ProfileWallpaperImage.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
 
-            Profile.hasMany(ProfileAvatarImage, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            Profile.hasOne(ProfileAvatarImage, { foreignKey: { name: "profile_id", field: "profile_id" } , as: "profile_avatar"});
             ProfileAvatarImage.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
 
-            Profile.hasMany(Description, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            Profile.hasOne(Description, { foreignKey: { name: "profile_id", field: "profile_id" }, as: "profile_description" });
             Description.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
 
 
-            Post.hasMany(ProfilePostImage, { foreignKey: { name: "post_id", field: "post_id" } });
+            Post.hasMany(ProfilePostImage, { foreignKey: { name: "post_id", field: "post_id" } , as: "post_image"});
             ProfilePostImage.belongsTo(Post, { foreignKey: { name: "post_id", field: "post_id" } });
 
             Profile.hasMany(ChatConnectedProfile, { foreignKey: { name: "profile_id", field: "profile_id" } });
             ChatConnectedProfile.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
 
-            
+
             ChatConnectedProfile.hasMany(ChatJoinedRoom, { foreignKey: { name: "connected_profile_id", field: "connected_profile_id" } });
             ChatJoinedRoom.belongsTo(ChatConnectedProfile, { foreignKey: { name: "connected_profile_id", field: "connected_profile_id" } });
 

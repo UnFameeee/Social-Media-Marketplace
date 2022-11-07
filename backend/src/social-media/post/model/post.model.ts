@@ -18,11 +18,11 @@ export class Post extends Model<Post> {
     @Column(DataType.TEXT)
     written_text: string;
 
-    @Column
-    media_type: string;
+    // @Column
+    // media_type: string;
 
-    @Column(DataType.TEXT)
-    media_location: string;
+    // @Column(DataType.TEXT)
+    // media_location: string;
 
     @Column(DataType.VIRTUAL(DataType.NUMBER))
     get totalLike(): number{
