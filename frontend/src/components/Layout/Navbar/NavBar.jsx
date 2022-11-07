@@ -14,7 +14,7 @@ import {
 import { IoLogOut } from "react-icons/io5";
 import MUI from "../../MUI";
 import { useDispatch, useSelector } from "react-redux";
-import { middleNavIcons, rightNavIcons } from "../../../common/layout/navbar";
+import { middleNavIcons, rightNavIcons } from "../../../common/layoutConfigs/navbar";
 import { revertAll } from "../../../redux/resetStore";
 import { Helper } from "../../../utils/Helper";
 import "../Layout.css";

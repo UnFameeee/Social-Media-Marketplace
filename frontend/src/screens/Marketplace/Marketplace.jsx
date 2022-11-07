@@ -1,6 +1,6 @@
 import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
-import { homeLeftbar } from "../../common/layout/homeLeftbar";
+import { homeLeftbar } from "../../common/layoutConfigs/homeLeftbar";
 import { Avatar, Pagination, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import Slider from "react-slick";

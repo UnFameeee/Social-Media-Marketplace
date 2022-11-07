@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAllPost } from '../../redux/apiRequest';
 import { useEffect } from 'react';
 import ThreeColumns from '../../components/Layout/ThreeColumns';
-import { homeLeftbar } from '../../common/layout/homeLeftbar';
+import { homeLeftbar } from '../../common/layoutConfigs/homeLeftbar';
 function Home() {
   //#region Declare variables
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import TwoColumns from '../../components/Layout/TwoColumns';
-import { staticLeftbar } from '../../common/layout/friendLeftbar';
+import { staticLeftbar } from '../../common/layoutConfigs/friendLeftbar';
 import { Helper } from '../../utils/Helper';
 
 export function StaticLeftbarLayout() {

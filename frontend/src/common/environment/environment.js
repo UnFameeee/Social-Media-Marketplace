@@ -7,9 +7,4 @@ const api = {
   post: apiUrl + '/post',
 };
 
-export const paging = {
-  page: 0,
-  pageSize: 5,
-};
-
 export default api;
