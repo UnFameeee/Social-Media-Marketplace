@@ -43,31 +43,24 @@ export class PostService {
     }
 
     //User create a post.
-    async createNewPost(profile: Profile, newPost: PostData): Promise<ResponseData<string>>{
+    async createNewPost(profile: Profile, newPost: PostData): Promise<ResponseData<Post>>{
         try{
-            const response = new ResponseData<string>();
+            const response = new ResponseData<Post>();
             newPost.profile_id = profile.profile_id;
-            const data = await this.postRepository.createNewPost(newPost);
-            if(data){
-                response.results = "Create new post successfully"
-            }
-            console.log("con cho dibu");
+            response.results = await this.postRepository.createNewPost(newPost);
             return response;
         }catch(err){
             ExceptionResponse(err);
         }
     }
 
-    async updatePost(profile: Profile, postData: PostData): Promise<ResponseData<string>>{
+    async updatePost(profile: Profile, postData: PostData): Promise<ResponseData<Post>>{
         try{
-            const response = new ResponseData<string>();
+            const response = new ResponseData<Post>();
             var tempPostDetail= await this.postRepository.getSinglePostDetailByPostId(postData.post_id);
             if(tempPostDetail){
                 if(tempPostDetail["profile_id"] == profile.profile_id){
-                    const data = await this.postRepository.updatePost(postData);
-                    if(data){
-                        response.results = "Update post successfully"
-                    }
+                    response.results = await this.postRepository.updatePost(postData);
                 }
                 else{
                     response.message = "You only can modify your post"
@@ -75,7 +68,6 @@ export class PostService {
             }else{
                 response.message = "Post isn't exist"
             }
-
             
             return response;
         }catch(err){
