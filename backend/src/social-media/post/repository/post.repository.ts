@@ -147,7 +147,7 @@ export class PostRepository {
                         as: "post_image",
                         attributes: ["link"]
                     }
-                ], 
+                ],
             });
 
             var totalLike = await this.postLikeRepository.allLikeOfPost(dataQuery["profile_id"], post_id);
@@ -163,16 +163,18 @@ export class PostRepository {
     async createNewPost(newPost: PostData): Promise<Post> {
         try {
             const res = await this.postRepository.create(newPost);
-            return this.postRepository.findOne({ where: { post_id: res.post_id } });
+            return await this.postRepository.findOne({ where: { post_id: res.post_id } });
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
     }
 
-    async updatePost(postData: PostData): Promise<Boolean> {
+    async updatePost(postData: PostData): Promise<Post> {
         try {
             const res = await this.postRepository.update(postData, { where: { post_id: postData.post_id } });
-            return res ? true : false;
+            return await this.postRepository.findOne({
+                where: { post_id: postData.post_id }
+            })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
