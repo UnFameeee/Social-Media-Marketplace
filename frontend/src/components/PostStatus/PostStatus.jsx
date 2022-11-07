@@ -1,27 +1,22 @@
 import React from "react";
 import { Avatar } from "@mui/material";
 function PostStatus(props) {
+  const { profile } = props;
   return (
-    <div className="flex items-center gap-[0.5rem]">
+    <div className="flex items-center gap-[0.5rem] w-full">
       <Avatar
-        style={{fontSize: "2rem" }}
-        alt={props.profile?.profile_name}
-        src={
-          props.profile?.picture
-            ? JSON.parse(props.profile?.picture)
-            : null
-        }
+        style={{ fontSize: "2rem" }}
+        alt={profile?.profile_name}
+        src={profile?.picture ? JSON.parse(profile?.picture) : null}
       >
-        {props.profile?.profile_name?.at(0)}
+        {profile?.profile_name?.at(0)}
       </Avatar>
-      <div className="w-full">
-          <input
-            onClick={props.onClick}
-            type="text"
-            placeholder="What's on your mind ?"
-            className="bg-greyf1 outline-none py-[0.65rem] px-[1.5rem] rounded-[5rem] w-full"
-          />
-        </div>
+      <div className="w-full ">
+        <div
+          onClick={props.onClick}
+          className=" hover:bg-gray-300 cursor-pointer text-gray-500 bg-slate-100 outline-none py-[0.65rem] px-[1.5rem] rounded-[5rem] w-full "
+        >What's on your mind ?</div>
+      </div>
     </div>
   );
 }
