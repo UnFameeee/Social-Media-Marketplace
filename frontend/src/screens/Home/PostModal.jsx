@@ -10,6 +10,7 @@ import {
   resetUploadImagePostState,
 } from "../../redux/uploadImage/uploadImageSlice";
 import { createPostSaga, updatePostSaga } from "../../redux/post/postSlice";
+import notFoundImage from '../../assets/noimage_1.png'
 function PostModal(props) {
   //#region Declare variables
   const dispatch = useDispatch();
@@ -197,7 +198,7 @@ function PostModal(props) {
                       multiple
                       name="upload"
                       title=" "
-                      className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 cursor-pointer"
+                      className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 cursor-pointer border-[1px] border-t-gray-200 "
                       onChange={handlePreviewUploadImage}
                     />
                   </div>
@@ -211,7 +212,11 @@ function PostModal(props) {
                         <a href={item}>
                           <img
                             src={item}
-                            alt=""
+                            alt="not found"
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null; // prevents looping
+                              currentTarget.src = notFoundImage;
+                            }}
                             className=" w-[100%] object-fill rounded-xl "
                             style={{ cursor: "default" }}
                             ref={imgElement}
