@@ -7,7 +7,14 @@ import {
   ArrowDropDown,
   MoreHoriz,
 } from "@mui/icons-material";
-import { Avatar, Button, ClickAwayListener, Modal, Typography, Box } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  ClickAwayListener,
+  Modal,
+  Typography,
+  Box,
+} from "@mui/material";
 import MUI from "../MUI";
 import "react-toastify/dist/ReactToastify.css";
 import AvatarWithText from "../Avatar/AvatarWithText";
@@ -28,7 +35,7 @@ function CardPost(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const userData = useSelector((state) => state.auth?.user?.userData.profile);
-  const arrayImgs = JSON.parse(props.postData.media_location);
+  const arrayImgs = props.postData.media_location;
   const { postData } = props;
   const {
     post_id,
@@ -61,18 +68,12 @@ function CardPost(props) {
     handleOnClickShowAction();
   };
   const handleDeletePost = () => {
-    try {
-      var postId = post_id;
-      // await deletePost(accessToken,refreshToken, props.postData.post_id, dispatch);
-      dispatch(deletePostSaga({ accessToken, refreshToken, postId, dispatch }));
-      props.setReRender((prev) => !prev);
-      handleOnClickShowAction();
-    } catch (error) {
-      console.log(error);
-    }
+    var postId = post_id;
+    dispatch(deletePostSaga({ accessToken, refreshToken, postId, dispatch }));
+    props.setReRender((prev) => !prev);
+    handleOnClickShowAction();
   };
   const handleLikePost = () => {
-    // likePost(accessToken,refreshToken, props.postData.post_id, dispatch);
     let postId = post_id;
     dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
     props.setReRender((prev) => !prev);
