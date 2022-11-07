@@ -43,7 +43,7 @@ function ProductSideBarDetails() {
               src={`https://source.unsplash.com/random/1000x902/?macbook`}
               alt=""
             />
-            <div className=" absolute  top-[1rem] right-[1rem] p-[0.5rem] rounded-md bg-[#9a6de1]">
+            <div className=" absolute  top-[1rem] right-[1rem] p-[0.5rem] rounded-md bg-primary-color">
               <AiFillHeart className=" text-[#fffdfd] cursor-pointer text-[2.2rem] hover:text-[#fda9a9]" />
             </div>
           </div>

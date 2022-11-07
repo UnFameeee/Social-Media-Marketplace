@@ -1,5 +1,5 @@
-import RootRoutes from './common/routes';
-import { ToastContainer } from 'react-toastify';
+import RootRoutes from "./common/routes";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (

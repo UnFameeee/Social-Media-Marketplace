@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import ThreeColumns from '../../components/Layout/ThreeColumns';
 import { homeLeftbar } from '../../common/layout/homeLeftbar';
 function Home() {
+  //#region Declare variables
   const dispatch = useDispatch();
   const [openCreatePost, setOpenCreatePost] = useState(false);
   const [postUpdateData, setPostUpdateData] = useState();
@@ -24,14 +25,18 @@ function Home() {
     (state) => state.auth.login.currentUser.refresh
   );
   const userData = useSelector((state) => state.auth.user.userData);
+   //#endregion
 
+  //#region Function
   const handleOpenPostModel = () => {
     setOpenCreatePost((prev) => !prev);
   };
   const handleGetPostUpdateData = (data) => {
     setPostUpdateData(data);
   };
+  //#endregion
 
+  //#region UseEffect
   useEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -41,6 +46,7 @@ function Home() {
       onDestroy = true;
     };
   }, []);
+  //#endregion
   return (
     <>
       {openCreatePost && (
@@ -99,66 +105,6 @@ function Home() {
             />
           ))}
       </ThreeColumns>
-      {/* <div className="pt-[6rem] flex w-full">
-        <LeftBar
-          leftBarList={[
-            {
-              left: (
-                <Avatar
-                  style={{ width: "5rem", height: "5rem", fontSize: "2rem" }}
-                  alt={userData.profile.profile_name}
-                  src={
-                    userData.profile?.picture
-                      ? JSON.parse(userData.profile?.picture)
-                      : null
-                  }
-                >
-                  {userData.profile.profile_name?.at(0)}
-                </Avatar>
-              ),
-              middle: userData.profile.profile_name,
-              navigate: "userprofile",
-            },
-            {
-              left: {
-                iconButton: true,
-                icon: <IoChatbubbleEllipses />,
-              },
-              middle: <h1>Messenger</h1>,
-              navigate: "messenger",
-            },
-            {
-              left: {
-                iconButton: true,
-                icon: <Coronavirus />,
-              },
-              middle: "CUM lõ",
-              navigate: "concac",
-              navigate: `profile?id=${userData.profile.profile_id}`,
-            },
-          ]}
-        />
-        <div className="middleMainContent px-[30%] pt-6 bg-greyf1 w-screen">
-          <div className="mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md  ">
-            <PostStatus
-              profile={userData.profile}
-              onClick={handleOpenPostModel}
-            />
-          </div>
-          {posts &&
-            posts.map((post) => (
-              <CardPost
-                postData={post}
-                key={post.post_id}
-                profile={userData.profile}
-                setReRender={setReRender}
-                handleOpenPostModel={handleOpenPostModel}
-                handleGetPostUpdateData={handleGetPostUpdateData}
-              />
-            ))}
-        </div>
-        <RightBar />
-      </div> */}
     </>
   );
 }

@@ -8,7 +8,11 @@ import { FriendshipModule } from './friendship.module';
 @Module({
   imports: [FriendshipModule],
   controllers: [ProfileController],
-  providers: [ProfileService, ProfileRepository, ...profileProviders, ...friendshipProviders],
+  providers: [
+    ProfileService,
+    ProfileRepository,
+    ...profileProviders,
+    ...friendshipProviders],
   exports: [ProfileRepository]
 })
-export class ProfileModule {}
+export class ProfileModule { }

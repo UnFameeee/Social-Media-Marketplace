@@ -9,15 +9,16 @@ import { PagingData } from "src/common/models/view-model/paging.model";
 import { Page } from "src/common/models/view-model/page-model";
 import { paginate } from "src/common/utils/paginate.utils";
 import { FriendshipRepository } from "./friendship.repository";
-import { Friendship } from "../model/friendship.model";
 import { FRIENDSHIP_LIMIT } from "src/common/constants/friendship.constant";
 import { Sequelize } from 'sequelize-typescript';
 import { encode } from "src/common/utils/bcrypt-singleton.utils";
+import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_image.model";
+import { ProfileWallpaperImage } from "src/social-media/image/model/profile_wallpaper_image.mode";
 @Injectable()
 export class ProfileRepository {
     constructor(
         @Inject(PROVIDER.Profile) private profileRepository: typeof Profile,
-        @Inject(PROVIDER.Friendship) private friendshipModelRepository: typeof Friendship,
+        // @Inject(PROVIDER.Friendship) private friendshipModelRepository: typeof Friendship,
         @Inject(FriendshipRepository) private friendshipRepository: FriendshipRepository
     ) { }
 
@@ -26,6 +27,19 @@ export class ProfileRepository {
             var result = new PagingData<Profile[]>();
 
             var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findAndCountAll({
+                attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                include: [
+                    {
+                        model: ProfileAvatarImage,
+                        as: "profile_avatar",
+                        attributes: []
+                    },
+                    {
+                        model: ProfileWallpaperImage,
+                        as: "profile_wallpaper",
+                        attributes: []
+                    }
+                ],
                 order: [
                     ['createdAt', 'DESC']
                 ],
@@ -44,7 +58,22 @@ export class ProfileRepository {
 
     async findProfileById(profile_id: number, scope?: string): Promise<Profile> {
         try {
-            return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { profile_id: profile_id } })
+            return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
+                attributes: ["profile_id", "profile_name", "password", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                include: [
+                    {
+                        model: ProfileAvatarImage,
+                        as: "profile_avatar",
+                        attributes: []
+                    },
+                    {
+                        model: ProfileWallpaperImage,
+                        as: "profile_wallpaper",
+                        attributes: []
+                    }
+                ],
+                where: { profile_id: profile_id }
+            })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
@@ -52,7 +81,22 @@ export class ProfileRepository {
 
     async findProfileByEmail(email: string, scope?: string): Promise<Profile> {
         try {
-            return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({ where: { email: email } })
+            return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
+                attributes: ["profile_id", "profile_name", "password", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                include: [
+                    {
+                        model: ProfileAvatarImage,
+                        as: "profile_avatar",
+                        attributes: []
+                    },
+                    {
+                        model: ProfileWallpaperImage,
+                        as: "profile_wallpaper",
+                        attributes: []
+                    }
+                ],
+                where: { email: email }
+            })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
@@ -182,6 +226,19 @@ export class ProfileRepository {
             var result = new PagingData<Profile[]>();
 
             var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findAndCountAll({
+                attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                include: [
+                    {
+                        model: ProfileAvatarImage,
+                        as: "profile_avatar",
+                        attributes: []
+                    },
+                    {
+                        model: ProfileWallpaperImage,
+                        as: "profile_wallpaper",
+                        attributes: []
+                    }
+                ],
                 where: { profile_id: { [Op.notIn]: tempArr } },
                 order: [
                     Sequelize.literal('rand()'),
@@ -203,7 +260,25 @@ export class ProfileRepository {
 
     async getProfileDetailById(profile_id: number, profile_target_id: number): Promise<Profile> {
         try {
-            var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findOne({ where: { profile_id: profile_target_id }, raw: false })
+            var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findOne({
+                attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                include: [
+                    {
+                        model: ProfileAvatarImage,
+                        as: "profile_avatar",
+                        attributes: []
+                    },
+                    {
+                        model: ProfileWallpaperImage,
+                        as: "profile_wallpaper",
+                        attributes: []
+                    }
+                ],
+                where: { profile_id: profile_target_id },
+                raw: false
+            })
+
+
             if (queryData && profile_id != profile_target_id) {
                 const isFriend = await this.friendshipRepository.isFriend(profile_id, profile_target_id);
                 queryData.setDataValue("isFriend", isFriend);

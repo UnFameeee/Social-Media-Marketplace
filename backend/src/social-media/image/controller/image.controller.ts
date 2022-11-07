@@ -3,7 +3,7 @@ import { FileInterceptor, FilesInterceptor, AnyFilesInterceptor } from '@nestjs/
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ResponseData } from 'src/common/models/view-model/success-message.model';
-import { storagePost, storageProfile } from '../config/storage.config';
+import { storagePost } from '../config/storage.config';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -12,7 +12,7 @@ import { storagePost, storageProfile } from '../config/storage.config';
 export class ImageController {
 
     @Post('/profile/upload')
-    @UseInterceptors(FileInterceptor('file', storageProfile))
+    @UseInterceptors(FileInterceptor('file', storagePost))
     uploadProfileImage(@UploadedFile() file: Express.Multer.File) {
         var response = new ResponseData<String>();
         const apiURL = process.env.API_URL || 'http://127.0.0.1';
