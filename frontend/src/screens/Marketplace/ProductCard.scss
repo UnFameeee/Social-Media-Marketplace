@@ -24,14 +24,14 @@
 .btn-view-detail {
   color: black;
   background: white;
-  border: 1px solid #9a6de1;
+  border: 1px solid var(--primary-color);
   border-radius: 0px 8px 0px 8px;
   -moz-border-radius: 0px 8px 0px 8px;
   -webkit-border-radius: 0px 8px 0px 8px;
 }
 .btn-add-to-cart {
   color: white;
-  background: #9a6de1;
+  background: var(--primary-color);
   border-radius: 0px 8px 0px 8px;
   -moz-border-radius: 0px 8px 0px 8px;
   -webkit-border-radius: 0px 8px 0px 8px;

@@ -21,12 +21,12 @@ const initialState = {
     isFetching: false,
     error: false,
   },
-  update:{
+  update: {
     success: false,
     isFetching: false,
     error: false,
   },
-  like:{
+  like: {
     success: false,
     isFetching: false,
     error: false,
@@ -55,12 +55,12 @@ export const postSlice = createSlice({
       isFetching: false,
       error: false,
     },
-    update:{
+    update: {
       success: false,
       isFetching: false,
       error: false,
     },
-    like:{
+    like: {
       success: false,
       isFetching: false,
       error: false,
@@ -80,7 +80,7 @@ export const postSlice = createSlice({
       state.create.error = true;
     },
     createPostSaga() {},
-    createPostSagaSuccess(){},
+    createPostSagaSuccess() {},
 
     getPostStart: (state) => {
       state.get.isFetching = true;
@@ -118,9 +118,9 @@ export const postSlice = createSlice({
       state.delete.success = false;
       state.delete.error = true;
     },
-    deletePostSaga(){},
-    deletePostSagaSuccess(){},
-    
+    deletePostSaga() {},
+    deletePostSagaSuccess() {},
+
     updatePostStart: (state) => {
       state.update.isFetching = true;
     },
@@ -133,8 +133,8 @@ export const postSlice = createSlice({
       state.update.success = false;
       state.update.error = true;
     },
-    updatePostSaga(){},
-    updatePostSagaSuccess(){},
+    updatePostSaga() {},
+    updatePostSagaSuccess() {},
 
     likePostStart: (state) => {
       state.like.isFetching = true;
@@ -148,11 +148,10 @@ export const postSlice = createSlice({
       state.like.success = false;
       state.like.error = true;
     },
-    likePostSaga(){},
-    likePostSagaSuccess(){},
+    likePostSaga() {},
+    likePostSagaSuccess() {},
   },
 });
-
 export const {
   createPostStart,
   createPostSuccess,
