@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
   ThumbUpOutlined,
   ThumbUpAlt,
@@ -7,25 +7,27 @@ import {
   ArrowDropDown,
   MoreHoriz,
 } from "@mui/icons-material";
-import { Avatar } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  ClickAwayListener,
+  Modal,
+  Typography,
+  Box,
+} from "@mui/material";
 import MUI from "../MUI";
-import dayjs from "dayjs";
 import "react-toastify/dist/ReactToastify.css";
 import AvatarWithText from "../Avatar/AvatarWithText";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, likePost } from "../../redux/apiRequest";
 import { format } from "timeago.js";
 import ShowMoreText from "react-show-more-text";
-import { Helper } from "../../utils/Helper";
 import { deletePostSaga, likePostSaga } from "../../redux/post/postSlice";
 import notFoundImage from "../../assets/noimage_1.png";
-import MiddleHr from "../FullWidthHr/MiddleHr";
+
 function CardPost(props) {
   //#region Declare variables
   const dispatch = useDispatch();
-  const [showAction, setShowAction] = useState();
-  const [showImage, setShowImage] = useState(true);
-  console.log("showImage", showImage);
+  const [showAction, setShowAction] = useState(false);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -33,7 +35,7 @@ function CardPost(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const userData = useSelector((state) => state.auth?.user?.userData.profile);
-  const arrayImgs = JSON.parse(props.postData.media_location);
+  const arrayImgs = props.postData.media_location;
   const { postData } = props;
   const {
     post_id,
@@ -66,29 +68,15 @@ function CardPost(props) {
     handleOnClickShowAction();
   };
   const handleDeletePost = () => {
-    try {
-      var postId = post_id;
-      // await deletePost(accessToken,refreshToken, props.postData.post_id, dispatch);
-      dispatch(deletePostSaga({ accessToken, refreshToken, postId, dispatch }));
-      props.setReRender((prev) => !prev);
-      handleOnClickShowAction();
-    } catch (error) {
-      console.log(error);
-    }
+    var postId = post_id;
+    dispatch(deletePostSaga({ accessToken, refreshToken, postId, dispatch }));
+    props.setReRender((prev) => !prev);
+    handleOnClickShowAction();
   };
   const handleLikePost = () => {
-    // likePost(accessToken,refreshToken, props.postData.post_id, dispatch);
     let postId = post_id;
     dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
     props.setReRender((prev) => !prev);
-  };
-  const hideImg = () => {
-    debugger;
-    setShowImage(false);
-  };
-  const showImg = () => {
-    debugger;
-    setShowImage(true);
   };
   //#endregion
 
@@ -125,16 +113,34 @@ function CardPost(props) {
                   onClick={handleOnClickShowAction}
                 />
                 {showAction && (
-                  <div className="bg-white floatingAction absolute  right-0  p-[1rem] drop-shadow-sm rounded-xl border-[0.1rem] ">
-                    <ul className="flex gap-[1rem] flex-col ">
-                      <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem] cursor-pointer">
-                        <button onClick={handleShowModal}>Update</button>
-                      </li>
-                      <li className="border-[0.1rem] border-red-100 rounded-md p-[0.5rem] cursor-pointer">
-                        <button onClick={handleDeletePost}>Delete</button>
-                      </li>
-                    </ul>
-                  </div>
+                  <ClickAwayListener onClickAway={(e) => setShowAction(false)}>
+                    <div className="bg-white floatingAction absolute z-10 right-0 shadow-md rounded-xl border-[0.1rem] ">
+                      <ul className="flex flex-col ">
+                        <li className="rounded-md p-[0.5rem] cursor-pointer">
+                          <Button
+                            style={{
+                              color: "var(--primary-color)",
+                              border: "1px solid var(--primary-color) ",
+                            }}
+                            onClick={handleShowModal}
+                          >
+                            Update
+                          </Button>
+                        </li>
+                        <li className=" rounded-md p-[0.5rem] cursor-pointer">
+                          <Button
+                            style={{
+                              color: "var(--primary-color)",
+                              border: "1px solid var(--primary-color) ",
+                            }}
+                            onClick={handleDeletePost}
+                          >
+                            Delete
+                          </Button>
+                        </li>
+                      </ul>
+                    </div>
+                  </ClickAwayListener>
                 )}
               </div>
             )}
@@ -161,51 +167,60 @@ function CardPost(props) {
             <div className="card-images px-[-1rem] mb-[0.5rem] border-y-[0.1rem] border-gray-200">
               {arrayImgs.map((item) => {
                 return (
-                  <>
-                    <img
-                      src={item}
-                      key={item}
-                      alt="not found"
-                      onError={({ currentTarget }) => {
-                        currentTarget.onerror = null; // prevents looping
-                        currentTarget.src = notFoundImage;
-                      }}
-                      className={`w-full min-w-[20rem]  h-[45rem] object-contain border-[1px] border-t-gray-200 `}
-                    />
-                  </>
+                  <img
+                    src={item}
+                    key={item}
+                    alt="not found"
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null; // prevents looping
+                      currentTarget.src = notFoundImage;
+                    }}
+                    className={`w-full min-w-[20rem]  h-[45rem] object-contain border-[1px] border-t-gray-200 `}
+                  />
                 );
               })}
             </div>
           )}
           <div className="card-react-button mb-[0.5rem] px-[2rem] flex gap-[0.5rem]">
             <ThumbUpOutlined
-              className="Icon text-blue8f3"
-              style={{ fontSize: "2rem" }}
+              className="Icon"
+              style={{ fontSize: "2rem", color: "var(--primary-color)" }}
             />
             <span className="text-grey1f">{totalLike}</span>
           </div>
           <hr className="mb-[1rem]" />
-          <div className="reactButton px-[1rem] flex mb-[1rem]">
+          <div className="reactButton px-[1rem] flex mb-[1rem] items-center">
             <MUI.ButtonWithIcon
               onClick={handleLikePost}
-              className="button-with-icon flex gap-[0.5rem] w-full "
+              className="button-with-icon flex gap-[1rem] w-full items-center"
             >
               {isLiked ? (
-                <ThumbUpAlt className=" " style={{ fontSize: "2.5rem" }} />
+                <ThumbUpAlt
+                  style={{
+                    fontSize: "2.5rem",
+                    marginRight: "0.5rem",
+                    color: "var(--primary-color)",
+                  }}
+                />
               ) : (
-                <ThumbUpOutlined style={{ fontSize: "2.5rem" }} />
+                <ThumbUpOutlined
+                  style={{ fontSize: "2.5rem", marginRight: "0.5rem" }}
+                />
               )}
               <span className=" leading-[1.3rem]">Like</span>
             </MUI.ButtonWithIcon>
             <MUI.ButtonWithIcon className="button-with-icon flex gap-[0.5rem] w-full">
               <ChatBubbleOutline
                 className=" outline-none"
-                style={{ fontSize: "2.5rem" }}
+                style={{ fontSize: "2.5rem", marginRight: "0.5rem" }}
               />
               <span className=" leading-[1.3rem]">Comment</span>
             </MUI.ButtonWithIcon>
             <MUI.ButtonWithIcon className="button-with-icon flex gap-[0.5rem] w-full">
-              <Send className="" style={{ fontSize: "2.5rem" }} />
+              <Send
+                className=""
+                style={{ fontSize: "2.5rem", marginRight: "0.5rem" }}
+              />
               <span className=" leading-[1.3rem]">Send</span>
             </MUI.ButtonWithIcon>
           </div>
