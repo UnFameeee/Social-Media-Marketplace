@@ -248,6 +248,11 @@ export class ProfileRepository {
                 ...paginate({ page })
             });
 
+            for(const element of queryData.rows){
+                const isSentFriendRequest = await this.friendshipRepository.isSentFriendRequest(profile_id, element.profile_id);
+                element["isSentFriendRequest"] = isSentFriendRequest;
+            }
+
             result.data = queryData.rows;
             page.totalElement = queryData.count;
             result.page = page;
