@@ -41,33 +41,33 @@ import {
   uploadImagePostSuccess,
 } from './uploadImage/uploadImageSlice';
 import {
-  acceptFriendRequestFailed,
-  acceptFriendRequestStart,
-  acceptFriendRequestSuccess,
+  acceptFailed,
+  acceptStart,
+  acceptSuccess,
   addFriendFailed,
   addFriendStart,
   addFriendSuccess,
-  denyFriendRequestFailed,
-  denyFriendRequestStart,
-  denyFriendRequestSuccess,
+  denyFailed,
+  denyStart,
+  denySuccess,
   getAllFriendFailed,
   getAllFriendForMainUserFailed,
   getAllFriendForMainUserStart,
   getAllFriendForMainUserSuccess,
   getAllFriendStart,
   getAllFriendSuccess,
-  getFriendRequestFailed,
-  getFriendRequestStart,
-  getFriendRequestSuccess,
+  getRequestFailed,
+  getRequestStart,
+  getRequestSuccess,
   getMutualFriendFailed,
   getMutualFriendStart,
   getMutualFriendSuccess,
   isFriendFailed,
   isFriendStart,
   isFriendSuccess,
-  isSentFriendRequestFailed,
-  isSentFriendRequestStart,
-  isSentFriendRequestSuccess,
+  isSentRequestFailed,
+  isSentRequestStart,
+  isSentRequestSuccess,
 } from './friend/friendSlice';
 import {
   getProfileDetailStart,
@@ -429,7 +429,7 @@ export const getAllFriendRequests = async (
   refreshToken,
   dispatch
 ) => {
-  dispatch(getFriendRequestStart());
+  dispatch(getRequestStart());
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -448,13 +448,13 @@ export const getAllFriendRequests = async (
       }
     );
     if (!res.data.message) {
-      dispatch(getFriendRequestSuccess(res.data.results));
+      dispatch(getRequestSuccess(res.data.results));
     } else {
-      dispatch(getFriendRequestFailed());
+      dispatch(getRequestFailed());
     }
   } catch (error) {
     console.log(error);
-    dispatch(getFriendRequestFailed());
+    dispatch(getRequestFailed());
   }
 };
 export const getAllFriends = async (
@@ -576,7 +576,7 @@ export const acceptFriendRequest = async (
   id,
   dispatch
 ) => {
-  dispatch(acceptFriendRequestStart());
+  dispatch(acceptStart());
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -592,13 +592,13 @@ export const acceptFriendRequest = async (
       }
     );
     if (!res.data.message) {
-      dispatch(acceptFriendRequestSuccess(res.data.results));
+      dispatch(acceptSuccess(res.data.results));
     } else {
-      dispatch(acceptFriendRequestFailed());
+      dispatch(acceptFailed());
     }
   } catch (error) {
     console.log(error);
-    dispatch(acceptFriendRequestFailed());
+    dispatch(acceptFailed());
   }
 };
 export const denyFriendRequest = async (
@@ -607,7 +607,7 @@ export const denyFriendRequest = async (
   id,
   dispatch
 ) => {
-  dispatch(denyFriendRequestStart());
+  dispatch(denyStart());
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -623,13 +623,13 @@ export const denyFriendRequest = async (
       }
     );
     if (!res.data.message) {
-      dispatch(denyFriendRequestSuccess(res.data.results));
+      dispatch(denySuccess(res.data.results));
     } else {
-      dispatch(denyFriendRequestFailed());
+      dispatch(denyFailed());
     }
   } catch (error) {
     console.log(error);
-    dispatch(denyFriendRequestFailed());
+    dispatch(denyFailed());
   }
 };
 export const isFriend = async (
@@ -668,7 +668,7 @@ export const isSentFriendReq = async (
   id,
   dispatch
 ) => {
-  dispatch(isSentFriendRequestStart());
+  dispatch(isSentRequestStart());
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -684,12 +684,12 @@ export const isSentFriendReq = async (
       }
     );
     if (!res.data.message) {
-      dispatch(isSentFriendRequestSuccess(res.data.results));
+      dispatch(isSentRequestSuccess(res.data.results));
     } else {
-      dispatch(isSentFriendRequestFailed());
+      dispatch(isSentRequestFailed());
     }
   } catch (error) {
-    dispatch(isSentFriendRequestFailed());
+    dispatch(isSentRequestFailed());
   }
 };
 // #endregion

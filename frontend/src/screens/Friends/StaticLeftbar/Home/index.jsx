@@ -19,7 +19,7 @@ const FriendHome = () => {
     (state) => state.auth.login.currentUser.refresh
   );
   const friendRequests = useSelector(
-    (state) => state.friends.getFriendRequests?.data?.data
+    (state) => state.friends.getRequests?.data?.data
   );
 
   const reRenderLayout = useOutletContext();

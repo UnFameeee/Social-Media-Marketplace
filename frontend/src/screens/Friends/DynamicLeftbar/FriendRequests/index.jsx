@@ -25,7 +25,7 @@ export default function FriendRequests() {
     (state) => state.auth.login.currentUser.refresh
   );
   const friendRequests = useSelector(
-    (state) => state.friends.getFriendRequests?.data
+    (state) => state.friends.getRequests?.data
   );
   const userData = useSelector(
     (state) => state.profile?.profileDetails?.data
@@ -35,7 +35,7 @@ export default function FriendRequests() {
   const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
-    if (!onDestroy) {
+    if (!onDestroy) {      
       getAllFriendRequests(accessToken, refreshToken, dispatch);
     }
     return () => {

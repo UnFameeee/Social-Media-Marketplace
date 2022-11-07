@@ -4,7 +4,6 @@ import {
   getAllFriends,
   getPostByProfile,
   getProfile,
-  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -29,7 +28,6 @@ export default function AllFriends() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
-  console.log(allFriends)
 
   const [profileClicked, setProfileClicked] = useState(false);
   const [reRender, setReRender] = useState(false);
@@ -46,7 +44,7 @@ export default function AllFriends() {
     return () => {
       onDestroy = true;
     };
-  }, []);
+  }, [reRender]);
 
   return (
     <TwoColumns
@@ -91,7 +89,9 @@ export default function AllFriends() {
                 dispatch,
                 false
               );
-              setProfileClicked(true);
+              if (profileClicked == false) {
+                setProfileClicked(true);
+              }
             },
             selected:
               profileClicked &&

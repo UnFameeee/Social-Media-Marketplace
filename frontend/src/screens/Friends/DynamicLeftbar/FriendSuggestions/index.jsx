@@ -13,6 +13,7 @@ import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import '../index.css';
+import { addFriendSaga } from '../../../../redux/friend/friendSlice';
 
 export default function FriendSuggestions() {
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ export default function FriendSuggestions() {
     return () => {
       onDestroy = true;
     };
-  }, [reRender]);
+  }, []);
 
   return (
     <TwoColumns
@@ -64,14 +65,11 @@ export default function FriendSuggestions() {
                 profileName={x.profile_name}
                 firstButtonConfig={{
                   name: 'Add Friend',
-                  onClick: async (e) => {
+                  onClick: (e) => {
                     e.stopPropagation();
-                    await addFriend(
-                      accessToken,
-                      refreshToken,
-                      x.profile_id,
-                      dispatch
-                    );
+                    let id = x.profile_id;
+                    dispatch(addFriendSaga({ accessToken, refreshToken, id, dispatch }));
+                    setProfileClicked(false);
                     setReRender(!reRender);
                   },
                 }}

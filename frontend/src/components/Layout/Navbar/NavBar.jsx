@@ -217,6 +217,7 @@ export default function NavBar() {
                 }}
                 value={item.tooltip}
                 sx={{textTransform: 'none'}}
+                onClick={() => {navigate(item.navigate)}}
               >
                 {item.icon ? (
                   <MUI.BetterIconButton hasBackground tooltip={item.tooltip}>

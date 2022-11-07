@@ -98,13 +98,13 @@ function UserProfile(props) {
         getPostByProfile(
           accessToken,
           refreshToken,
-          queryParams.id || userData?.profile_id,
+          queryParams.id ,
           dispatch
         );
         getAllFriends(
           accessToken,
           refreshToken,
-          queryParams.id || userData?.profile_id,
+          queryParams.id ,
           dispatch,
           false
         );
@@ -193,6 +193,7 @@ function UserProfile(props) {
                   isSentFriendReq={profileData?.isSentFriendRequest}
                   actionProps={{
                     accessToken: accessToken,
+                    refreshToken: refreshToken,
                     id: profileData?.profile_id,
                     dispatch: dispatch,
                   }}
@@ -212,6 +213,7 @@ function UserProfile(props) {
                     onClick={() => {
                       acceptFriendRequest(
                         accessToken,
+                        refreshToken,
                         profileData?.profile_id,
                         dispatch
                       );
@@ -234,6 +236,7 @@ function UserProfile(props) {
                     onClick={() => {
                       denyFriendRequest(
                         accessToken,
+                        refreshToken,
                         profileData?.profile_id,
                         dispatch
                       );
@@ -380,7 +383,7 @@ function ProfileAction({
   isSentFriendReq,
   actionProps,
 }) {
-  const { accessToken, id, dispatch } = actionProps;
+  const { accessToken, refreshToken, id, dispatch } = actionProps;
   const [menuClicked, setMenuClicked] = useState(false);
 
   function handleFirstAction() {
@@ -390,7 +393,7 @@ function ProfileAction({
         setMenuClicked(!menuClicked);
       } else {
         if (isSentFriendReq == 'NONE') {
-          addFriend(accessToken, id, dispatch);
+          addFriend(accessToken, refreshToken, id, dispatch);
         } else if (isSentFriendReq == 'REQUEST') {
         } else if (isSentFriendReq == 'TARGET') {
           setMenuClicked(!menuClicked);
@@ -420,19 +423,6 @@ function ProfileAction({
 
   return (
     <>
-      {/* <div className=" bg-blue8f3 [&>*]:text-white p-[0.75rem] rounded-[0.75rem] flex items-center gap-[0.3rem]">
-        <AddCircle style={{ fontSize: '2.2rem' }} />
-        <span className=" text-[1.6rem] font-semibold">
-          Add to story
-        </span>
-      </div>
-      <div className=" bg-slate-300 [&>*]:text-black p-[0.75rem] rounded-[0.75rem] flex items-center gap-[0.3rem]">
-        <Edit style={{ fontSize: '2.2rem' }} />
-        <span className=" text-[1.6rem] font-semibold">
-          Edit profile
-        </span>
-      </div> */}
-
       <ClickAwayListener
         onClickAway={() => {
           setMenuClicked(false);

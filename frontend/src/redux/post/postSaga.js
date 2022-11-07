@@ -1,5 +1,5 @@
 import { put, takeLatest, call, fork } from "redux-saga/effects";
-import { apiUrl } from "../../common/environment/environment";
+import api from "../../common/environment/environment";
 import { axiosInStanceJWT } from "../axiosJWT";
 import {
   createPostFailed,
@@ -49,7 +49,7 @@ const getAllPostSagaRequest = async (data) => {
       page: 0,
       pageSize: 5,
     };
-    const res = await axiosInStanceJWT.post(`${apiUrl}/post/all`, paging, {
+    const res = await axiosInStanceJWT.post(`${api.post}/all`, paging, {
       headers: config,
       ACCESS_PARAM: accessToken,
       REFRESH_PARAM: refreshToken,
@@ -86,7 +86,7 @@ const createPostSagaRequest = async (data) => {
     };
 
     const res = await axiosInStanceJWT.post(
-      `${apiUrl}/post/newPost`,
+      `${api.post}/newPost`,
       postData,
       {
         headers: config,
@@ -128,7 +128,7 @@ export const deletePostSagaRequest = async (
         Authorization: `Bearer ${accessToken}`,
     };
     const res = await axiosInStanceJWT.delete(
-      `${apiUrl}/post/delete/${postId}`,
+      `${api.post}/delete/${postId}`,
       { headers:config, ACCESS_PARAM: accessToken, REFRESH_PARAM: refreshToken }
     );
     if (!res.data.message) {
@@ -167,7 +167,7 @@ const updatePostSagaRequest = async (
       Authorization: `Bearer ${accessToken}`,
     };
     const res = await axiosInStanceJWT.put(
-      `${apiUrl}/post/updatePost`,
+      `${api.post}/updatePost`,
       updatePost,
       {
         headers: config,
@@ -209,7 +209,7 @@ const likePostSagaRequest = async (data) => {
         Authorization: `Bearer ${accessToken}`,
     };
     const res = await axiosInStanceJWT.post(
-      `${apiUrl}/post/like/${postId}`,
+      `${api.post}/like/${postId}`,
       {},
       { headers:config, ACCESS_PARAM: accessToken, REFRESH_PARAM: refreshToken }
     );
