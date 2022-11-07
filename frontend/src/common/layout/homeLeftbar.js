@@ -16,14 +16,14 @@ export const homeLeftbar = [
     middle: 'Marketplace',
     navigate: '/marketplace'
   },
-  {
-    left: <IoPeopleCircle />,
-    middle: 'Groups',
-    navigate: '/groups'
-  },
-  {
-    left: <IoPlayCircle />,
-    middle: 'Watch',
-    navigate: '/watch'
-  },
+  // {
+  //   left: <IoPeopleCircle />,
+  //   middle: 'Groups',
+  //   navigate: '/groups'
+  // },
+  // {
+  //   left: <IoPlayCircle />,
+  //   middle: 'Watch',
+  //   navigate: '/watch'
+  // },
 ];
