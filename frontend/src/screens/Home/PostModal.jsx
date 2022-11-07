@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
-import { uploadImages } from "../../redux/apiRequest";
+import { createPost, uploadImages } from "../../redux/apiRequest";
 import {
   Avatar,
   TextareaAutosize,
@@ -12,23 +12,13 @@ import {
   Typography,
 } from "@mui/material";
 import { PhotoLibrary } from "@mui/icons-material";
+import ImageUploading from "react-images-uploading";
 import {
   removeSingleUploadImagePost,
   resetUploadImagePostState,
 } from "../../redux/uploadImage/uploadImageSlice";
 import { createPostSaga, updatePostSaga } from "../../redux/post/postSlice";
 import notFoundImage from "../../assets/noimage_1.png";
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
 function PostModal(props) {
   //#region Declare variables
   const dispatch = useDispatch();
@@ -37,12 +27,6 @@ function PostModal(props) {
     written_text: props.postUpdateData?.written_text
       ? props.postUpdateData.written_text
       : "",
-    media_type: props.postUpdateData?.media_type
-      ? props.postUpdateData.media_type
-      : "",
-    media_location: props.postUpdateData?.media_location
-      ? JSON.parse(props.postUpdateData.media_location)
-      : "",
   });
   let uploadImageLinkLst = useSelector(
     (state) => state.uploadImage?.uploadImagePost?.data
@@ -50,7 +34,7 @@ function PostModal(props) {
   if (props.postUpdateData) {
     flagAction = "update";
   }
-  const { written_text, media_type, media_location } = postData;
+  const { written_text } = postData;
   const imgElement = useRef(null);
   const [imgArray, setImgArray] = useState([]);
   const [uploadFlag, setUpLoadFlag] = useState(false);
@@ -61,22 +45,39 @@ function PostModal(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const isPosting = useSelector((state) => state.post.create.isFetching);
+
+  const [images, setImages] = useState([]);
+  const maxNumber = 69;
   //#endregion
 
   //#region Function
   const closeModal = () => {
     props.setShowModal(false);
     props.setPostUpdateData(null);
-    setPostData({ written_text: "", media_type: "", media_location: [] });
+    setPostData({ written_text: "" });
     dispatch(resetUploadImagePostState());
     setImgArray([]);
     props.setReRender((prev) => !prev);
   };
-  const handlePost = (e) => {
+  const handlePost = async (e) => {
     e.preventDefault();
-    postData.media_location = JSON.stringify(uploadImageLinkLst);
-    // createPost(accessToken,refreshToken, postData, dispatch)
-    dispatch(createPostSaga({ accessToken, refreshToken, postData, dispatch }));
+    // postData.media_location = JSON.stringify(uploadImageLinkLst);
+    //dispatch(createPostSaga({ accessToken, refreshToken, postData, dispatch }));
+    console.log("images", images);
+    var imagesFormData = [];
+    for (let i = 0; i < images.length; i++) {
+      imagesFormData.push({ files: images[i].file });
+    }
+    const res = await createPost(accessToken, refreshToken, postData, dispatch);
+    const res2 = await uploadImages(
+      accessToken,
+      refreshToken,
+      res.results.post_id,
+      imagesFormData,
+      dispatch
+    );
+    console.log("lol createPost", res);
+    console.log("lol upload image", res2);
     closeModal();
   };
   const handleUpdatePost = (e) => {
@@ -111,15 +112,21 @@ function PostModal(props) {
     e.target.value = null;
   };
   const handleRemoveUploadImage = (imageKey) => {
-    let filterMedia_Location = media_location.filter((x) => x !== imageKey);
-    setPostData({
-      ...postData,
-      media_location: [...filterMedia_Location],
-    });
-    dispatch(removeSingleUploadImagePost(imageKey));
+    // let filterMedia_Location = media_location.filter((x) => x !== imageKey);
+    // setPostData({
+    //   ...postData,
+    //   media_location: [...filterMedia_Location],
+    // });
+    // dispatch(removeSingleUploadImagePost(imageKey));
   };
   const addToUploadImgArray = (height, width, url) => {
     setImgArray([...imgArray, { height: height, width: width, url: url }]);
+  };
+
+  const onChange = (imageList, addUpdateIndex) => {
+    // data for submit
+    console.log(imageList, addUpdateIndex);
+    setImages(imageList);
   };
   //#endregion
 
@@ -211,90 +218,178 @@ function PostModal(props) {
                 }
                 value={written_text}
               ></TextareaAutosize>
-              {!media_location.length > 0 && (
-                <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer mb-[2rem]">
-                  <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
-                    <div className="bg-gray-300 p-[1rem] rounded-[50%]">
-                      <PhotoLibrary
-                        className=" "
-                        style={{ fontSize: "3rem" }}
-                      />
-                    </div>
-                    <input
-                      type="file"
-                      id="upload_input"
-                      multiple
-                      name="upload"
-                      title=" "
-                      className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 cursor-pointer border-[1px] border-t-gray-200 "
-                      onChange={handlePreviewUploadImage}
-                    />
-                  </div>
-                </div>
-              )}
-              {media_location && media_location.length > 0 && (
-                <div className="relative shadow-lg bg-slate-100 border-[0.1rem] border-gray-300  rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll mb-[2rem]  ">
-                  <ul className="flex flex-wrap gap-[1rem]  ">
-                    {media_location.map((item) => (
-                      <li key={item} className=" w-full relative ">
-                        <a href={item}>
-                          <img
-                            src={item}
-                            alt="not found"
-                            onError={({ currentTarget }) => {
-                              currentTarget.onerror = null; // prevents looping
-                              currentTarget.src = notFoundImage;
-                            }}
-                            className=" w-[100%] object-fill rounded-xl "
-                            style={{ cursor: "default" }}
-                            ref={imgElement}
-                            onLoad={() =>
-                              addToUploadImgArray(
-                                imgElement.current.naturalHeight,
-                                imgElement.current.naturalWidth,
-                                item
-                              )
-                            }
-                          />
-                        </a>
+
+              <ImageUploading
+                multiple
+                value={images}
+                onChange={onChange}
+                maxNumber={maxNumber}
+                dataURLKey="data_url"
+              >
+                {({
+                  imageList,
+                  onImageUpload,
+                  onImageRemoveAll,
+                  onImageUpdate,
+                  onImageRemove,
+                  isDragging,
+                  dragProps,
+                }) => (
+                  // write your building UI
+                  <div className="upload__image-wrapper">
+                    {imageList && imageList.length == 0 && (
+                      <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer mb-[2rem]">
                         <div
-                          onClick={() => handleRemoveUploadImage(item)}
-                          className="Remove-Photo-button absolute cursor-pointer top-0"
+                          onClick={onImageUpload}
+                          className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative"
                         >
+                          <div className="bg-gray-300 p-[1rem] rounded-[50%]">
+                            <PhotoLibrary
+                              className=" "
+                              style={{ fontSize: "3rem" }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {imageList && imageList.length > 0 && (
+                      <div className="relative shadow-lg bg-slate-100 border-[0.1rem] border-gray-300  rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll mb-[2rem]  ">
+                        <ul className="flex flex-wrap gap-[1rem]  ">
+                          {imageList.map((image, index) => (
+                            <li key={index} className=" w-full relative ">
+                              <a href={image["data_url"]}>
+                                <img
+                                  src={image["data_url"]}
+                                  alt="not found"
+                                  onError={({ currentTarget }) => {
+                                    currentTarget.onerror = null; // prevents looping
+                                    currentTarget.src = notFoundImage;
+                                  }}
+                                  className=" w-[100%] object-fill rounded-xl "
+                                  style={{ cursor: "default" }}
+                                />
+                              </a>
+                              <div
+                                onClick={() => onImageRemove(index)}
+                                className="Remove-Photo-button absolute cursor-pointer top-0"
+                              >
+                                <Button
+                                  style={{
+                                    color: "white",
+                                    background: "var(--primary-color)",
+                                  }}
+                                >
+                                  x
+                                </Button>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                        <div className="Add-Photo-button absolute top-0 right-0">
                           <Button
+                            onClick={onImageUpload}
                             style={{
                               color: "white",
                               background: "var(--primary-color)",
                             }}
                           >
-                            x
+                            Add Photos
                           </Button>
                         </div>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="Add-Photo-button absolute top-0 right-0">
-                    <Button
-                      style={{
-                        color: "white",
-                        background: "var(--primary-color)",
-                      }}
-                    >
-                      Add Photos
-                    </Button>
-                    <input
-                      type="file"
-                      id="upload_input"
-                      multiple
-                      name="upload"
-                      accept="image/png, image/jpeg"
-                      className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 "
-                      onChange={handlePreviewUploadImage}
-                      style={{ cursor: "pointer" }}
-                    />
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
+                )}
+              </ImageUploading>
+
+              {
+                //   !media_location.length > 0 && (
+                //   <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer mb-[2rem]">
+                //     <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
+                //       <div className="bg-gray-300 p-[1rem] rounded-[50%]">
+                //         <PhotoLibrary
+                //           className=" "
+                //           style={{ fontSize: "3rem" }}
+                //         />
+                //       </div>
+                //       <input
+                //         type="file"
+                //         id="upload_input"
+                //         multiple
+                //         name="upload"
+                //         title=" "
+                //         className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 cursor-pointer border-[1px] border-t-gray-200 "
+                //         onChange={handlePreviewUploadImage}
+                //       />
+                //     </div>
+                //   </div>
+                // )
+              }
+              {
+                //   media_location && media_location.length > 0 && (
+                //   <div className="relative shadow-lg bg-slate-100 border-[0.1rem] border-gray-300  rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll mb-[2rem]  ">
+                //     <ul className="flex flex-wrap gap-[1rem]  ">
+                //       {media_location.map((item) => (
+                //         <li key={item} className=" w-full relative ">
+                //           <a href={item}>
+                //             <img
+                //               src={item}
+                //               alt="not found"
+                //               onError={({ currentTarget }) => {
+                //                 currentTarget.onerror = null; // prevents looping
+                //                 currentTarget.src = notFoundImage;
+                //               }}
+                //               className=" w-[100%] object-fill rounded-xl "
+                //               style={{ cursor: "default" }}
+                //               ref={imgElement}
+                //               onLoad={() =>
+                //                 addToUploadImgArray(
+                //                   imgElement.current.naturalHeight,
+                //                   imgElement.current.naturalWidth,
+                //                   item
+                //                 )
+                //               }
+                //             />
+                //           </a>
+                //           <div
+                //             onClick={() => handleRemoveUploadImage(item)}
+                //             className="Remove-Photo-button absolute cursor-pointer top-0"
+                //           >
+                //             <Button
+                //               style={{
+                //                 color: "white",
+                //                 background: "var(--primary-color)",
+                //               }}
+                //             >
+                //               x
+                //             </Button>
+                //           </div>
+                //         </li>
+                //       ))}
+                //     </ul>
+                //     <div className="Add-Photo-button absolute top-0 right-0">
+                //       <Button
+                //         style={{
+                //           color: "white",
+                //           background: "var(--primary-color)",
+                //         }}
+                //       >
+                //         Add Photos
+                //       </Button>
+                //       <input
+                //         type="file"
+                //         id="upload_input"
+                //         multiple
+                //         name="upload"
+                //         accept="image/png, image/jpeg"
+                //         className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 "
+                //         onChange={handlePreviewUploadImage}
+                //         style={{ cursor: "pointer" }}
+                //       />
+                //     </div>
+                //   </div>
+                // )
+              }
               <Button
                 onClick={props.postUpdateData ? handleUpdatePost : handlePost}
                 style={{

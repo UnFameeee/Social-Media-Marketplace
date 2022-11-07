@@ -200,7 +200,7 @@ export const createPost = async (
   post,
   dispatch
 ) => {
-  dispatch(createPostStart());
+  // dispatch(createPostStart());
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -216,11 +216,13 @@ export const createPost = async (
       }
     );
     if (!res.data.message) {
-      dispatch(createPostSuccess(res.data));
+      // dispatch(createPostSuccess(res.data));
       notify('Post Created', 'info');
+      return res.data
     } else {
-      dispatch(createPostFailed());
+      // dispatch(createPostFailed());
       notify(res.data.message, 'error');
+      return null
     }
   } catch (error) {
     console.log(error);
@@ -390,10 +392,11 @@ export const getPostByProfile = async (
 export const uploadImages = async (
   accessToken,
   refreshToken,
+  post_id,
   uploadImages,
   dispatch
 ) => {
-  dispatch(uploadImagePostStart());
+  // dispatch(uploadImagePostStart());
   try {
     const config = {
       'content-type': 'multipart/form-data;',
@@ -404,7 +407,7 @@ export const uploadImages = async (
       formData.append('files', file.files);
     });
     const res = await axiosInStanceJWT.post(
-      `${apiUrl}/image/post/upload`,
+      `${apiUrl}/image/profile_post/${post_id}/upload`,
       formData,
       {
         headers: config,
@@ -415,11 +418,11 @@ export const uploadImages = async (
     if (res.data.message) {
       notify(res.data.message, 'error');
     } else {
-      dispatch(uploadImagePostSuccess(res.data.results));
+      // dispatch(uploadImagePostSuccess(res.data.results));
     }
   } catch (error) {
     console.log(error);
-    dispatch(uploadImagePostFailed());
+    // dispatch(uploadImagePostFailed());
   }
 };
 

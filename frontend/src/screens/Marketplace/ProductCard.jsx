@@ -22,12 +22,12 @@ const ResponSiveButtonWrapper = styled.div`
     flex-direction: column;
   }
 `;
-function ProductCard() {
+function ProductCard(props) {
   const userData = useSelector((state) => state.auth.user.userData);
   function randomNumberInRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-  let randomNum = randomNumberInRange(800,1050)
+  let randomNum = randomNumberInRange(800, 1050);
   return (
     <ResponSiveGrid>
       <div className="card-Product card-product-normal shadow-md  p-[1rem] ">
