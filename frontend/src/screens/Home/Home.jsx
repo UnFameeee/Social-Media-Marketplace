@@ -27,7 +27,7 @@ function Home() {
   const userData = useSelector((state) => state.auth.user.userData);
    //#endregion
 
-   //#region Function
+  //#region Function
   const handleOpenPostModel = () => {
     setOpenCreatePost((prev) => !prev);
   };
