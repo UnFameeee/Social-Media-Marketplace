@@ -59,7 +59,7 @@ export class ProfileRepository {
     async findProfileById(profile_id: number, scope?: string): Promise<Profile> {
         try {
             return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
-                attributes: ["profile_id", "profile_name", "password", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
                 include: [
                     {
                         model: ProfileAvatarImage,
@@ -72,6 +72,17 @@ export class ProfileRepository {
                         attributes: []
                     }
                 ],
+                where: { profile_id: profile_id }
+            })
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async findProfileRefreshById(profile_id: number): Promise<Profile> {
+        try {
+            return await this.profileRepository.scope().findOne({
+                attributes: ["profile_id", "refreshToken"],
                 where: { profile_id: profile_id }
             })
         } catch (err) {
@@ -248,7 +259,7 @@ export class ProfileRepository {
                 ...paginate({ page })
             });
 
-            for(const element of queryData.rows){
+            for (const element of queryData.rows) {
                 const isSentFriendRequest = await this.friendshipRepository.isSentFriendRequest(profile_id, element.profile_id);
                 element["isSentFriendRequest"] = isSentFriendRequest;
             }
