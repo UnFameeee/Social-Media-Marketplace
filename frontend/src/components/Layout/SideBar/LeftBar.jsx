@@ -77,40 +77,38 @@ export default function LeftBar(props) {
     //   </div>
     // </>
     // #endregion
-    <ResponSiveDiv>
-      <Box
-        className={`left-bar ${
-          leftBarColor ? "drop-shadow-md" : ""
-        } ${listWrapper}`}
-        style={
-          leftBarColor
-            ? {
-                backgroundColor: leftBarColor,
-                // boxShadow: '0 0 1px rgba(0,0,0,0.1)',
-              }
-            : null
-        }
-      >
-        {before}
+    <Box
+      className={`left-bar ${
+        leftBarColor ? "drop-shadow-md" : ""
+      } ${listWrapper}`}
+      style={
+        leftBarColor
+          ? {
+              backgroundColor: leftBarColor,
+              // boxShadow: '0 0 1px rgba(0,0,0,0.1)',
+            }
+          : null
+      }
+    >
+      {before}
 
-        <List className={cx(classes.scroll, `left-bar-list ${listClassname}`)}>
-          {Helper.isArrayList(leftBarList)
-            ? leftBarList.map((list, index) => {
-                return (
-                  <ul key={index}>
-                    <LeftBarList leftBarList={list} multiList={index} />
-                    {index !== leftBarList.length - 1 && <MiddleHr />}
-                  </ul>
-                );
-              })
-            : Array.isArray(leftBarList) && (
-                <LeftBarList leftBarList={leftBarList} />
-              )}
-        </List>
+      <List className={cx(classes.scroll, `left-bar-list ${listClassname}`)}>
+        {Helper.isArrayList(leftBarList)
+          ? leftBarList.map((list, index) => {
+              return (
+                <ul key={index}>
+                  <LeftBarList leftBarList={list} multiList={index} />
+                  {index !== leftBarList.length - 1 && <MiddleHr />}
+                </ul>
+              );
+            })
+          : Array.isArray(leftBarList) && (
+              <LeftBarList leftBarList={leftBarList} />
+            )}
+      </List>
 
-        {after}
-      </Box>
-    </ResponSiveDiv>
+      {after}
+    </Box>
   );
 }
 

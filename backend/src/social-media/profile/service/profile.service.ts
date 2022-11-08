@@ -1,4 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
+import { response } from 'express';
 import { UpdateProfileDto } from 'src/common/models/dtos/update-profile.dto';
 import { Page } from 'src/common/models/view-model/page-model';
 import { PagingData } from 'src/common/models/view-model/paging.model';
@@ -119,4 +120,16 @@ export class ProfileService {
         response.results = res;
         return response;
     }
+
+    async getProfileGalleryById(profile_id: number, page: Page): Promise<any> {
+        try {
+            var response = new ResponseData<PagingData<any>>();
+            const res = await this.profileRepository.getProfileGalleryById(profile_id, page);
+            response.results = res;
+            return response;
+        } catch (err) {
+            ExceptionResponse(err)
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-import { Controller, Post, UploadedFiles, UseGuards, UseInterceptors, Request, Param } from '@nestjs/common';
+import { Controller, Post, UploadedFiles, UseGuards, UseInterceptors, Request, Param, Body, Delete } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
@@ -28,6 +28,34 @@ export class ProfilePostImageController {
 
         const response = await this.profilePostImageService.createUpdateProfilePostImage(profile.profile_id, post_id, arrayLink);
 
+        return response;
+    }
+
+    
+    // @Post('/profile_post/:post_id/update')
+    // @UseInterceptors(FilesInterceptor('files', null, storagePost))
+    // async updatePostImages(@UploadedFiles() files: Array<Express.Multer.File>, @Body() body: any) {
+
+    //     const apiURL = process.env.API_URL || 'http://127.0.0.1';
+    //     const port = process.env.LOCALHOST_PORT || 4321;
+    //     var arrayLink: string[] = [];
+
+    //     for (const file of files) {
+    //         arrayLink.push(`${apiURL.endsWith('/') ? apiURL + ":" + port : apiURL + ":" + port + '/'}${(file.destination).startsWith('./') ? file.destination.slice(2, file.destination.length) : file.destination}/${file.filename}`);
+    //     }
+    //     console.log(files);
+    //     console.log(body.url);
+
+    //     const response = await this.profilePostImageService.createUpdateProfilePostImage(profile.profile_id, post_id, arrayLink);
+
+    //     return response;
+    // }
+
+    
+    @Delete('/profile_post/:post_id/delete')
+    async deleteImageOfPost(@Param("post_id") post_id: number, @Body() body: any) {
+        const link = body.link;
+        const response = await this.profilePostImageService.deleteProfilePostImage(post_id, link);
         return response;
     }
 }

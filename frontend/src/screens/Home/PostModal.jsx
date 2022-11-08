@@ -3,14 +3,30 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
 import { uploadImages } from "../../redux/apiRequest";
-import { Avatar, TextareaAutosize } from "@mui/material";
-import { PhotoLibrary,} from "@mui/icons-material";
+import {
+  Avatar,
+  TextareaAutosize,
+  Button,
+  Box,
+  Modal,
+  Typography,
+} from "@mui/material";
+import { PhotoLibrary } from "@mui/icons-material";
 import {
   removeSingleUploadImagePost,
   resetUploadImagePostState,
 } from "../../redux/uploadImage/uploadImageSlice";
 import { createPostSaga, updatePostSaga } from "../../redux/post/postSlice";
-import notFoundImage from '../../assets/noimage_1.png'
+import notFoundImage from "../../assets/noimage_1.png";
+
+import styled from "styled-components";
+const ResponSiveDiv = styled.div`
+  @media only screen and (max-width: 700px) {
+    .mainContent {
+      width: 100%;
+    }
+  }
+`;
 function PostModal(props) {
   //#region Declare variables
   const dispatch = useDispatch();
@@ -58,7 +74,7 @@ function PostModal(props) {
     e.preventDefault();
     postData.media_location = JSON.stringify(uploadImageLinkLst);
     // createPost(accessToken,refreshToken, postData, dispatch)
-    dispatch(createPostSaga({ accessToken,refreshToken, postData, dispatch }));
+    dispatch(createPostSaga({ accessToken, refreshToken, postData, dispatch }));
     closeModal();
   };
   const handleUpdatePost = (e) => {
@@ -70,7 +86,9 @@ function PostModal(props) {
       media_location: JSON.stringify(postData.media_location),
     };
     // updatePost(accessToken,refreshToken, updatePost, dispatch);
-    dispatch(updatePostSaga({accessToken,refreshToken, updatePost, dispatch}))
+    dispatch(
+      updatePostSaga({ accessToken, refreshToken, updatePost, dispatch })
+    );
     closeModal();
   };
   const handleOnChangePostData = (event) => {
@@ -86,7 +104,7 @@ function PostModal(props) {
     for (let i = 0; i < files.length; i++) {
       temp.push({ files: files[i] });
     }
-    await uploadImages(accessToken,refreshToken, temp, dispatch);
+    await uploadImages(accessToken, refreshToken, temp, dispatch);
     setUpLoadFlag((prev) => !prev);
     e.target.value = null;
   };
@@ -102,7 +120,7 @@ function PostModal(props) {
     setImgArray([...imgArray, { height: height, width: width, url: url }]);
   };
   //#endregion
-  
+
   //#region UseEffect
   useEffect(() => {
     let onDestroy = false;
@@ -136,19 +154,24 @@ function PostModal(props) {
   //#endregion
   return (
     <>
-      {props.showModal ? (
-        <div
-          className="w-[100%] h-[100%] fixed left-0 top-0 z-20 "
-          style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
-        >
+      <Modal className="modal" open={props.showModal} onClose={closeModal}>
+        <ResponSiveDiv>
           <div className="mainContent rounded-xl fixed overflow-hidden py-[2rem] top-[50%] left-[50%] w-[70rem]  bg-white translate-x-[-50%] translate-y-[-50%]">
             <div className="flex items-center relative">
-              <button
-                className="absolute right-[2rem] top-[0rem] bg-slate-200 p-[0.5rem] rounded-md"
+              <Button
+                style={{
+                  position: "absolute",
+                  right: "2rem",
+                  top: "-0.5rem",
+                  padding: "0.5rem",
+                  borderRadius: "0.375rem",
+                  color: "var(--primary-color)",
+                  border: "1px solid var(--primary-color) ",
+                }}
                 onClick={closeModal}
               >
                 Close
-              </button>
+              </Button>
               <span className="  text-center w-full px-[2rem] text-[2.4rem] font-semibold">
                 {props.postUpdateData ? "Update Post" : "Create Post"}
               </span>
@@ -184,7 +207,7 @@ function PostModal(props) {
                 value={written_text}
               ></TextareaAutosize>
               {!media_location.length > 0 && (
-                <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer">
+                <div className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer mb-[2rem]">
                   <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
                     <div className="bg-gray-300 p-[1rem] rounded-[50%]">
                       <PhotoLibrary
@@ -205,7 +228,7 @@ function PostModal(props) {
                 </div>
               )}
               {media_location && media_location.length > 0 && (
-                <div className="relative bg-slate-100 rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll  ">
+                <div className="relative shadow-lg bg-slate-100 border-[0.1rem] border-gray-300  rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll mb-[2rem]  ">
                   <ul className="flex flex-wrap gap-[1rem]  ">
                     {media_location.map((item) => (
                       <li key={item} className=" w-full relative ">
@@ -231,21 +254,35 @@ function PostModal(props) {
                         </a>
                         <div
                           onClick={() => handleRemoveUploadImage(item)}
-                          className="absolute cursor-pointer top-0 w-[30px] h-[30px] bg-slate-200 rounded-lg flex items-center justify-center"
+                          className="Remove-Photo-button absolute cursor-pointer top-0"
                         >
-                          <span>x</span>
+                          <Button
+                            style={{
+                              color: "white",
+                              background: "var(--primary-color)",
+                            }}
+                          >
+                            x
+                          </Button>
                         </div>
                       </li>
                     ))}
                   </ul>
-                  <div className=" bg-slate-300 inline-block p-[1rem] rounded-lg cursor-pointer absolute top-0 right-0">
-                    <span>Add Photos</span>
+                  <div className="Add-Photo-button absolute top-0 right-0">
+                    <Button
+                      style={{
+                        color: "white",
+                        background: "var(--primary-color)",
+                      }}
+                    >
+                      Add Photos
+                    </Button>
                     <input
                       type="file"
                       id="upload_input"
                       multiple
                       name="upload"
-                      title=" "
+                      accept="image/png, image/jpeg"
                       className="text-[1rem] w-full h-full opacity-0 absolute top-0 left-0 "
                       onChange={handlePreviewUploadImage}
                       style={{ cursor: "pointer" }}
@@ -253,17 +290,25 @@ function PostModal(props) {
                   </div>
                 </div>
               )}
-              <button
+              <Button
                 onClick={props.postUpdateData ? handleUpdatePost : handlePost}
+                style={{
+                  color: postData.written_text
+                    ? "white"
+                    : "var(--primary-color)",
+                  background: postData.written_text
+                    ? "var(--primary-color)"
+                    : "#e4e6eb",
+                }}
                 className="w-full bg-blue8f3 text-white rounded-[0.5rem] py-[0.75rem] mt-[2rem] "
                 disabled={!postData.written_text}
               >
                 {props.postUpdateData ? "Update" : "Post"}
-              </button>
+              </Button>
             </div>
           </div>
-        </div>
-      ) : null}
+        </ResponSiveDiv>
+      </Modal>
     </>
   );
 }

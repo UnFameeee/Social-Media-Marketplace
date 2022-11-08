@@ -36,7 +36,7 @@ export default function RightBar(props) {
           width: "21%",
           height: "calc(100vh - var(--navbar-height))",
           overflowY: "scroll",
-          paddingBottom:"4.7rem",
+          paddingBottom: "4.7rem",
         }}
       >
         <ProductSideBarDetails />
@@ -179,68 +179,69 @@ export default function RightBar(props) {
       //   <hr className="text-greyf1" />
       // </>
       // #endregion
-
-      <Box
-        className={cx(classes.scroll)}
-        sx={{
-          position: "fixed",
-          bottom: 0,
-          right: 0,
-          width: "var(--sidebar-width)",
-          height: "calc(100vh - var(--navbar-height))",
-          overflowY: "scroll",
-        }}
-      >
+      <div className="right-bar">
         <Box
+          className={cx(classes.scroll)}
           sx={{
-            padding: "1.5rem 0 8px 0",
-            boxShadow: "0px 24px 3px -24px black",
+            position: "fixed",
+            bottom: 0,
+            right: 0,
+            width: "var(--sidebar-width)",
+            height: "calc(100vh - var(--navbar-height))",
+            overflowY: "scroll",
           }}
         >
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "0 8px",
+              padding: "1.5rem 0 8px 0",
+              boxShadow: "0px 24px 3px -24px black",
             }}
           >
-            <Typography>Friend Requests</Typography>
-            <Typography>See all</Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0 8px",
+              }}
+            >
+              <Typography>Friend Requests</Typography>
+              <Typography>See all</Typography>
+            </Box>
+            <FriendRequest />
           </Box>
-          <FriendRequest />
-        </Box>
-        <Box
-          sx={{
-            padding: "1.5rem 0 8px 0",
-            // boxShadow: '0px 24px 3px -24px black',
-          }}
-        >
           <Box
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "0 8px",
+              padding: "1.5rem 0 8px 0",
+              // boxShadow: '0px 24px 3px -24px black',
             }}
           >
-            <Typography>Contacts</Typography>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "0 8px",
+              }}
+            >
+              <Typography>Contacts</Typography>
+              <Box>
+                <IconButton>
+                  <EmergencyRecording style={{ fontSize: "2.5rem" }} />
+                </IconButton>
+                <IconButton>
+                  <Search style={{ fontSize: "2.5rem" }} />
+                </IconButton>
+                <IconButton>
+                  <MoreHoriz style={{ fontSize: "2.5rem" }} />
+                </IconButton>
+              </Box>
+            </Box>
             <Box>
-              <IconButton>
-                <EmergencyRecording style={{ fontSize: "2.5rem" }} />
-              </IconButton>
-              <IconButton>
-                <Search style={{ fontSize: "2.5rem" }} />
-              </IconButton>
-              <IconButton>
-                <MoreHoriz style={{ fontSize: "2.5rem" }} />
-              </IconButton>
+              <FriendContact />
             </Box>
           </Box>
-          <Box>
-            <FriendContact />
-          </Box>
         </Box>
-      </Box>
+      </div>
     );
 }
