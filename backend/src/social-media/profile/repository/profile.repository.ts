@@ -14,12 +14,15 @@ import { Sequelize } from 'sequelize-typescript';
 import { encode } from "src/common/utils/bcrypt-singleton.utils";
 import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_image.model";
 import { ProfileWallpaperImage } from "src/social-media/image/model/profile_wallpaper_image.mode";
+import { DescriptionRepository } from "./description.repository";
+import { Description } from "../model/description.model";
 @Injectable()
 export class ProfileRepository {
     constructor(
         @Inject(PROVIDER.Profile) private profileRepository: typeof Profile,
         // @Inject(PROVIDER.Friendship) private friendshipModelRepository: typeof Friendship,
-        @Inject(FriendshipRepository) private friendshipRepository: FriendshipRepository
+        @Inject(FriendshipRepository) private friendshipRepository: FriendshipRepository,
+        @Inject(DescriptionRepository) private descriptionRepository: DescriptionRepository
     ) { }
 
     async getAllProfile(page: Page): Promise<PagingData<Profile[]>> {
@@ -153,6 +156,9 @@ export class ProfileRepository {
         try {
             const user = { ...createUserDto };
             const newUser = await this.profileRepository.create(user);
+
+            await this.descriptionRepository.createProfileDescription(newUser.profile_id);
+
             return await this.profileRepository.findOne({ where: { profile_id: newUser.profile_id } });
         } catch (err) {
             throw new InternalServerErrorException(err.message);
@@ -288,6 +294,12 @@ export class ProfileRepository {
                         model: ProfileWallpaperImage,
                         as: "profile_wallpaper",
                         attributes: []
+                    },
+                    {
+                        model: Description,
+                        as: "profile_description",
+                        where: { profile_id: profile_id },
+                        attributes: ["description", "school", "location", "career"],
                     }
                 ],
                 where: { profile_id: profile_target_id },
