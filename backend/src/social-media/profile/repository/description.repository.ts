@@ -36,10 +36,6 @@ export class DescriptionRepository {
                     }
                 ]
             });
-
-            console.log(queryData)
-            console.log(queryData.description_id)
-
             await this.descriptionRepository.update(data, { where: { description_id: queryData.description_id } });
             return await this.descriptionRepository.findOne({
                 where: { description_id: queryData.description_id }
