@@ -1,40 +1,23 @@
 import React from "react";
 import { Avatar } from "@mui/material";
-import styled from "styled-components";
-const ResponSiveDiv = styled.div`
-  @media only screen and (max-width: 1260px) {
-    .postStatus-main {
-      width: 60rem;
-    }
-  }
-  @media only screen and (max-width: 1060px) {
-    .postStatus-main {
-      width: 50rem;
-    }
-  }
-`;
 function PostStatus(props) {
   const { profile } = props;
   return (
-    <ResponSiveDiv>
-      <div className="postStatus-main flex items-center gap-[0.5rem] w-[70rem]">
-        <Avatar
-          style={{ fontSize: "2rem" }}
-          alt={profile?.profile_name}
-          src={profile?.picture ? JSON.parse(profile?.picture) : null}
-        >
-          {profile?.profile_name?.at(0)}
-        </Avatar>
-        <div className="w-full ">
-          <div
-            onClick={props.onClick}
-            className=" hover:bg-gray-300 cursor-pointer text-gray-500 bg-slate-100 outline-none py-[0.65rem] px-[1.5rem] rounded-[5rem] w-full "
-          >
-            What's on your mind ?
-          </div>
-        </div>
+    <div className="flex items-center gap-[0.5rem] w-full">
+      <Avatar
+        style={{ fontSize: "2rem" }}
+        alt={profile?.profile_name}
+        src={profile?.picture ? JSON.parse(profile?.picture) : null}
+      >
+        {profile?.profile_name?.at(0)}
+      </Avatar>
+      <div className="w-full ">
+        <div
+          onClick={props.onClick}
+          className=" hover:bg-gray-300 cursor-pointer text-gray-500 bg-slate-100 outline-none py-[0.65rem] px-[1.5rem] rounded-[5rem] w-full "
+        >What's on your mind ?</div>
       </div>
-    </ResponSiveDiv>
+    </div>
   );
 }
 
