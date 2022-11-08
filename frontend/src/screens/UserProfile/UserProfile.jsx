@@ -1,11 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import React, {
-  useRef,
-  useLayoutEffect,
-  useState,
-  useEffect,
-} from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useLayoutEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import AvatarWithText from '../../components/Avatar/AvatarWithText';
 import {
   PhotoCamera,
@@ -34,15 +29,18 @@ import CardPost from '../../components/Card/CardPost';
 import GridSideInfo from './GridSideInfo';
 import PostModal from '../Home/PostModal';
 import {
-  acceptFriendRequest,
-  addFriend,
-  denyFriendRequest,
   getAllFriends,
   getPostByProfile,
   getProfile,
 } from '../../redux/apiRequest';
 import { Helper } from '../../utils/Helper';
 import MUI from '../../components/MUI';
+import {
+  acceptSaga,
+  addFriendSaga,
+  denySaga,
+  unfriendSaga,
+} from '../../redux/friend/friendSlice';
 
 function UserProfile(props) {
   const dispatch = useDispatch();
@@ -84,6 +82,14 @@ function UserProfile(props) {
   const handleGetPostUpdateData = (data) => {
     setPostUpdateData(data);
   };
+  const handleActions = (action) => {
+    action();
+    if (Helper.checkURL('profile', {}, true)) {
+      setReRender(!reRender);
+    } else {
+      props.setReRender(false);
+    }
+  };
 
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -98,13 +104,13 @@ function UserProfile(props) {
         getPostByProfile(
           accessToken,
           refreshToken,
-          queryParams.id ,
+          queryParams.id,
           dispatch
         );
         getAllFriends(
           accessToken,
           refreshToken,
-          queryParams.id ,
+          queryParams.id,
           dispatch,
           false
         );
@@ -195,8 +201,10 @@ function UserProfile(props) {
                     accessToken: accessToken,
                     refreshToken: refreshToken,
                     id: profileData?.profile_id,
+                    mainId: userData?.profile_id,
                     dispatch: dispatch,
                   }}
+                  action={handleActions}
                 />
               </div>
             </div>
@@ -211,18 +219,17 @@ function UserProfile(props) {
                     className="gap-[0.8rem]"
                     style={{ minWidth: '14rem' }}
                     onClick={() => {
-                      acceptFriendRequest(
-                        accessToken,
-                        refreshToken,
-                        profileData?.profile_id,
-                        dispatch
+                      let id = profileData?.profile_id;
+                      handleActions(
+                        dispatch(
+                          acceptSaga({
+                            accessToken,
+                            refreshToken,
+                            id,
+                            dispatch,
+                          })
+                        )
                       );
-                      if (Helper.checkURL('profile', {}, true)) {
-                        setReRender(!reRender);
-                      } else {
-                        props.setReRender[0]((prev) => !prev);
-                        props.setReRender[1]((prev) => !prev);
-                      }
                     }}
                   >
                     <FaUserPlus style={{ fontSize: '2.2rem' }} />
@@ -234,18 +241,17 @@ function UserProfile(props) {
                     className="gap-[0.8rem]"
                     style={{ minWidth: '14rem' }}
                     onClick={() => {
-                      denyFriendRequest(
-                        accessToken,
-                        refreshToken,
-                        profileData?.profile_id,
-                        dispatch
-                      );
-                      if (Helper.checkURL('profile', {}, true)) {
-                        setReRender(!reRender);
-                      } else {
-                        props.setReRender[0]((prev) => !prev);
-                        props.setReRender[1]((prev) => !prev);
-                      }
+                      let id = profileData?.profile_id;
+                      handleActions(() => {
+                        dispatch(
+                          denySaga({
+                            accessToken,
+                            refreshToken,
+                            id,
+                            dispatch,
+                          })
+                        );
+                      });
                     }}
                   >
                     <FaUserMinus style={{ fontSize: '2.2rem' }} />
@@ -382,8 +388,10 @@ function ProfileAction({
   isFriend,
   isSentFriendReq,
   actionProps,
+  action,
 }) {
-  const { accessToken, refreshToken, id, dispatch } = actionProps;
+  const { accessToken, refreshToken, id, mainId, dispatch } = actionProps;
+  const navigate = useNavigate();
   const [menuClicked, setMenuClicked] = useState(false);
 
   function handleFirstAction() {
@@ -393,12 +401,38 @@ function ProfileAction({
         setMenuClicked(!menuClicked);
       } else {
         if (isSentFriendReq == 'NONE') {
-          addFriend(accessToken, refreshToken, id, dispatch);
+          action(() => {
+            dispatch(
+              addFriendSaga({
+                accessToken,
+                refreshToken,
+                id,
+                dispatch,
+              })
+            );
+          });
         } else if (isSentFriendReq == 'REQUEST') {
+          action(() => {
+            dispatch(
+              addFriendSaga({
+                accessToken,
+                refreshToken,
+                id,
+                dispatch,
+              })
+            );
+          });
         } else if (isSentFriendReq == 'TARGET') {
           setMenuClicked(!menuClicked);
         }
       }
+    }
+  }
+
+  function handleSecondAction() {
+    if (isMainUser) {
+    } else {
+      navigate('/messenger');
     }
   }
 
@@ -407,6 +441,19 @@ function ProfileAction({
     actionList = [
       {
         middle: 'Unfriend',
+        onClick: () => {
+          action(() => {
+            dispatch(
+              unfriendSaga({
+                accessToken,
+                refreshToken,
+                id,
+                mainId,
+                dispatch,
+              })
+            );
+          });
+        },
       },
     ];
   }
@@ -414,9 +461,33 @@ function ProfileAction({
     actionList = [
       {
         middle: 'Confirm',
+        onClick: () => {
+          action(() => {
+            dispatch(
+              acceptSaga({
+                accessToken,
+                refreshToken,
+                id,
+                dispatch,
+              })
+            );
+          });
+        },
       },
       {
         middle: 'Deny',
+        onClick: () => {
+          action(() => {
+            dispatch(
+              denySaga({
+                accessToken,
+                refreshToken,
+                id,
+                dispatch,
+              })
+            );
+          });
+        },
       },
     ];
   }
@@ -487,6 +558,7 @@ function ProfileAction({
       <MUI.Button
         className="gap-[0.8rem]"
         style={{ minWidth: '14rem' }}
+        onClick={handleSecondAction}
       >
         {isMainUser ? (
           <>

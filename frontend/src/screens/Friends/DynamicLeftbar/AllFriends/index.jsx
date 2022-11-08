@@ -30,7 +30,6 @@ export default function AllFriends() {
   );
 
   const [profileClicked, setProfileClicked] = useState(false);
-  const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -44,7 +43,7 @@ export default function AllFriends() {
     return () => {
       onDestroy = true;
     };
-  }, [reRender]);
+  }, []);
 
   return (
     <TwoColumns
@@ -105,7 +104,7 @@ export default function AllFriends() {
       }}
     >
       {profileClicked && (
-        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+        <UserProfile setReRender={setProfileClicked} />
       )}
     </TwoColumns>
   );

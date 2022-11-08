@@ -2,12 +2,12 @@ import { Grid } from '@mui/material';
 import { useLayoutEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAllFriendRequests,
-  acceptFriendRequest,
-  denyFriendRequest,
-} from '../../../../redux/apiRequest';
+import { getAllFriendRequests } from '../../../../redux/apiRequest';
 import FriendCard from './FriendCard';
+import {
+  acceptSaga,
+  denySaga,
+} from '../../../../redux/friend/friendSlice';
 import '../index.css';
 
 const FriendHome = () => {
@@ -23,18 +23,17 @@ const FriendHome = () => {
   );
 
   const reRenderLayout = useOutletContext();
-  const [reRender, setReRender] = useState(false);
-   
+
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
       reRenderLayout(); //re-render the parent layout
-      getAllFriendRequests(accessToken,refreshToken, dispatch);
+      getAllFriendRequests(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
     };
-  }, [reRender]);
+  }, []);
 
   return (
     <>
@@ -47,26 +46,28 @@ const FriendHome = () => {
                 profileDetails={item}
                 firstButtonConfig={{
                   onClick: () => {
-                    acceptFriendRequest(
-                      accessToken,refreshToken,
-                      item.profile_id,
-                      dispatch
+                    let id = item.profile_id;
+                    dispatch(
+                      acceptSaga({
+                        accessToken,
+                        refreshToken,
+                        id,
+                        dispatch,
+                      })
                     );
-                    setTimeout(() => {
-                      setReRender(!reRender);
-                    }, 100);
                   },
-                }}               
+                }}
                 secondButtonConfig={{
                   onClick: () => {
-                    denyFriendRequest(
-                      accessToken,refreshToken,
-                      item.profile_id,
-                      dispatch
+                    let id = item.profile_id;
+                    dispatch(
+                      denySaga({
+                        accessToken,
+                        refreshToken,
+                        id,
+                        dispatch,
+                      })
                     );
-                    setTimeout(() => {
-                      setReRender(!reRender);
-                    }, 100);
                   },
                 }}
               />

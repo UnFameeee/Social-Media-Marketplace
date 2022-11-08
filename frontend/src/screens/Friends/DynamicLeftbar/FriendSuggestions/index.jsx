@@ -1,19 +1,17 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  addFriend,
   getAllFriends,
   getFriendSuggestion,
   getPostByProfile,
   getProfile,
-  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
-import '../index.css';
 import { addFriendSaga } from '../../../../redux/friend/friendSlice';
+import '../index.css';
 
 export default function FriendSuggestions() {
   const dispatch = useDispatch();
@@ -31,7 +29,6 @@ export default function FriendSuggestions() {
   );
 
   const [profileClicked, setProfileClicked] = useState(false);
-  const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -70,7 +67,6 @@ export default function FriendSuggestions() {
                     let id = x.profile_id;
                     dispatch(addFriendSaga({ accessToken, refreshToken, id, dispatch }));
                     setProfileClicked(false);
-                    setReRender(!reRender);
                   },
                 }}
               />
@@ -95,7 +91,9 @@ export default function FriendSuggestions() {
                 dispatch,
                 false
               );
-              setProfileClicked(true);
+              if (profileClicked == false) {
+                setProfileClicked(true);
+              }
             },
             selected:
               profileClicked && x.profile_id === userData?.profile_id,
@@ -107,7 +105,7 @@ export default function FriendSuggestions() {
       }}
     >
       {profileClicked && (
-        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+        <UserProfile setReRender={setProfileClicked} />
       )}
     </TwoColumns>
   );

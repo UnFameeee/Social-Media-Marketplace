@@ -144,7 +144,7 @@ function checkURL(value, defaultConfig = {}, lastOnly = false) {
 }
 
 function isMultiple(string, amount, defaultString) {
-  if (amount <= 0) {
+  if (!amount) {
     return defaultString;
   } else {
     if (amount > 1) {
