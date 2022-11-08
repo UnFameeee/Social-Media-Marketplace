@@ -8,13 +8,20 @@ import { ProfilePostImageRepository } from "../repository/profile_post_image.rep
 export class ProfilePostImageService {
     constructor(private readonly profilePostImageRepository: ProfilePostImageRepository) { };
 
-    async createUpdateProfilePostImage(profile_id: number, post_id: number, arrayLink: string[]): Promise< ResponseData<string[]>> {
-        //resolve save to database
-        //check update if exist, create if not exist
+    async createUpdateProfilePostImage(profile_id: number, post_id: number, arrayLink: string[]): Promise<ResponseData<string[]>> {
         try {
             var response = new ResponseData<string[]>();
-            // response.results = await this.profileRepository.getAllProfile(page);
-            response.results = await this.profilePostImageRepository.createUpdateProfilePostImage(profile_id, post_id ,arrayLink);
+            response.results = await this.profilePostImageRepository.createUpdateProfilePostImage(profile_id, post_id, arrayLink);
+            return response;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
+
+    async deleteProfilePostImage(post_id: number, link: string): Promise<ResponseData<boolean>> {
+        try {
+            var response = new ResponseData<boolean>();
+            response.results = await this.profilePostImageRepository.deleteProfilePostImage(post_id, link);
             return response;
         } catch (err) {
             ExceptionResponse(err);
