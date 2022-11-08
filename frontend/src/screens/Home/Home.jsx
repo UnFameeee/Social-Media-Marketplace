@@ -11,30 +11,55 @@ import ThreeColumns from "../../components/Layout/ThreeColumns";
 import { homeLeftbar } from "../../common/layout/homeLeftbar";
 import styled from "styled-components";
 const ResponSiveDiv = styled.div`
-@media screen and (max-width: 1280px) {
-  .left-bar {
-    width: 30rem;
-  }
-}
-@media screen and (max-width: 1105px) {
-  .left-bar {
-    width: 80px;
-  }
-  .threeColumn-wrapper .left-bar-text {
-    display: none;
-  }
-}
-  @media only screen and (max-width: 1105px) {
-    .threeColumn-wrapper  {
-      padding-left:10%;
+  @media screen and (max-width: 1620px) {
+    .threeColumn-wrapper {
+      padding-left: 20%;
+    }
+    .left-bar {
+      width: 25rem;
     }
   }
-  @media only screen and (max-width: 624px) {
+  @media screen and (max-width: 1400px) {
     .threeColumn-wrapper {
-      padding-left:0;
+      padding-left: 15%;
+    }
+    .left-bar {
+      width: 80px;
+    }
+    .threeColumn-wrapper .left-bar-text {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 1312px) {
+    .threeColumn-wrapper {
+      padding-left: 10%;
+    }
+  }
+  @media only screen and (max-width: 1124px) {
+    .threeColumn-wrapper {
+      padding-left: 5%;
     }
     .left-bar {
       display: none;
+    }
+  }
+  @media only screen and (max-width: 956px) {
+    .right-bar {
+      display: none;
+    }
+    .threeColumn-wrapper {
+      padding-left: 11%;
+    }
+    .post-status-wrapper{
+      width:65rem;
+    }
+    .cardPost {
+      width: 65rem;
+    }
+  }
+  @media only screen and (max-width: 808px) {
+    .threeColumn-wrapper {
+      padding-left: 0;
     }
   }
 `;
