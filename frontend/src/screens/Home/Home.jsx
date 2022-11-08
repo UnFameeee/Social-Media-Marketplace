@@ -9,6 +9,35 @@ import { getAllPost } from "../../redux/apiRequest";
 import { useEffect } from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
 import { homeLeftbar } from "../../common/layout/homeLeftbar";
+import styled from "styled-components";
+const ResponSiveDiv = styled.div`
+@media screen and (max-width: 1280px) {
+  .left-bar {
+    width: 30rem;
+  }
+}
+@media screen and (max-width: 1105px) {
+  .left-bar {
+    width: 80px;
+  }
+  .threeColumn-wrapper .left-bar-text {
+    display: none;
+  }
+}
+  @media only screen and (max-width: 1105px) {
+    .threeColumn-wrapper  {
+      padding-left:10%;
+    }
+  }
+  @media only screen and (max-width: 624px) {
+    .threeColumn-wrapper {
+      padding-left:0;
+    }
+    .left-bar {
+      display: none;
+    }
+  }
+`;
 function Home() {
   //#region Declare variables
   const dispatch = useDispatch();
@@ -57,47 +86,52 @@ function Home() {
           profile={userData.profile}
         />
       )}
-      <ThreeColumns
-        className="px-[30%] pt-6"
-        leftBarConfig={{
-          leftBarList: [
-            {
-              left: (
-                <Avatar
-                  style={{
-                    width: "3.6rem",
-                    height: "3.6rem",
-                    fontSize: "2rem",
-                  }}
-                  alt={userData.profile.profile_name}
-                  src={
-                    userData.profile?.picture
-                      ? JSON.parse(userData.profile?.picture)
-                      : null
-                  }
-                >
-                  {userData.profile.profile_name?.at(0)}
-                </Avatar>
-              ),
-              middle: userData.profile.profile_name,
-              navigate: `profile?id=${userData.profile.profile_id}`,
-            },
-          ].concat(homeLeftbar),
-        }}
-      >
-        <PostStatus profile={userData.profile} onClick={handleOpenPostModel} />
-        {posts &&
-          posts.map((post) => (
-            <CardPost
-              postData={post}
-              key={post.post_id}
-              profile={userData.profile}
-              setReRender={setReRender}
-              handleOpenPostModel={handleOpenPostModel}
-              handleGetPostUpdateData={handleGetPostUpdateData}
-            />
-          ))}
-      </ThreeColumns>
+      <ResponSiveDiv>
+        <ThreeColumns
+          className="threeColumn-wrapper px-[30%] pt-6"
+          leftBarConfig={{
+            leftBarList: [
+              {
+                left: (
+                  <Avatar
+                    style={{
+                      width: "3.6rem",
+                      height: "3.6rem",
+                      fontSize: "2rem",
+                    }}
+                    alt={userData.profile.profile_name}
+                    src={
+                      userData.profile?.picture
+                        ? JSON.parse(userData.profile?.picture)
+                        : null
+                    }
+                  >
+                    {userData.profile.profile_name?.at(0)}
+                  </Avatar>
+                ),
+                middle: userData.profile.profile_name,
+                navigate: `profile?id=${userData.profile.profile_id}`,
+              },
+            ].concat(homeLeftbar),
+          }}
+        >
+          <PostStatus
+            profile={userData.profile}
+            onClick={handleOpenPostModel}
+          />
+          {posts &&
+            posts.map((post) => (
+              <CardPost
+                postData={post}
+                key={post.post_id}
+                profile={userData.profile}
+                setReRender={setReRender}
+                handleOpenPostModel={handleOpenPostModel}
+                handleGetPostUpdateData={handleGetPostUpdateData}
+              />
+            ))}
+        </ThreeColumns>
+      </ResponSiveDiv>
     </>
   );
 }
