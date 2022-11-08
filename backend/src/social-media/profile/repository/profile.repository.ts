@@ -14,12 +14,20 @@ import { Sequelize } from 'sequelize-typescript';
 import { encode } from "src/common/utils/bcrypt-singleton.utils";
 import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_image.model";
 import { ProfileWallpaperImage } from "src/social-media/image/model/profile_wallpaper_image.mode";
+import { DescriptionRepository } from "./description.repository";
+import { Description } from "../model/description.model";
+import { ProfilePostImage } from "src/social-media/image/model/profile_post_image.model";
+import { Post } from "src/social-media/post/model/post.model";
 @Injectable()
 export class ProfileRepository {
     constructor(
         @Inject(PROVIDER.Profile) private profileRepository: typeof Profile,
         // @Inject(PROVIDER.Friendship) private friendshipModelRepository: typeof Friendship,
-        @Inject(FriendshipRepository) private friendshipRepository: FriendshipRepository
+        @Inject(FriendshipRepository) private friendshipRepository: FriendshipRepository,
+        @Inject(DescriptionRepository) private descriptionRepository: DescriptionRepository,
+        @Inject(PROVIDER.ProfileAvatarImage) private profileAvatarImageModelRepository: typeof ProfileAvatarImage,
+        @Inject(PROVIDER.ProfilePostImage) private profilePostImageModelRepository: typeof ProfilePostImage,
+        @Inject(PROVIDER.ProfileWallpaperImage) private profileWallpaperImageModelRepository: typeof ProfileWallpaperImage,
     ) { }
 
     async getAllProfile(page: Page): Promise<PagingData<Profile[]>> {
@@ -59,7 +67,7 @@ export class ProfileRepository {
     async findProfileById(profile_id: number, scope?: string): Promise<Profile> {
         try {
             return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
-                attributes: ["profile_id", "profile_name", "password", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
                 include: [
                     {
                         model: ProfileAvatarImage,
@@ -72,6 +80,17 @@ export class ProfileRepository {
                         attributes: []
                     }
                 ],
+                where: { profile_id: profile_id }
+            })
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async findProfileRefreshById(profile_id: number): Promise<Profile> {
+        try {
+            return await this.profileRepository.scope().findOne({
+                attributes: ["profile_id", "refreshToken"],
                 where: { profile_id: profile_id }
             })
         } catch (err) {
@@ -142,6 +161,9 @@ export class ProfileRepository {
         try {
             const user = { ...createUserDto };
             const newUser = await this.profileRepository.create(user);
+
+            await this.descriptionRepository.createProfileDescription(newUser.profile_id);
+
             return await this.profileRepository.findOne({ where: { profile_id: newUser.profile_id } });
         } catch (err) {
             throw new InternalServerErrorException(err.message);
@@ -248,6 +270,11 @@ export class ProfileRepository {
                 ...paginate({ page })
             });
 
+            for (const element of queryData.rows) {
+                const isSentFriendRequest = await this.friendshipRepository.isSentFriendRequest(profile_id, element.profile_id);
+                element["isSentFriendRequest"] = isSentFriendRequest;
+            }
+
             result.data = queryData.rows;
             page.totalElement = queryData.count;
             result.page = page;
@@ -272,6 +299,12 @@ export class ProfileRepository {
                         model: ProfileWallpaperImage,
                         as: "profile_wallpaper",
                         attributes: []
+                    },
+                    {
+                        model: Description,
+                        as: "profile_description",
+                        where: { profile_id: profile_id },
+                        attributes: ["description", "school", "location", "career"],
                     }
                 ],
                 where: { profile_id: profile_target_id },
@@ -328,6 +361,30 @@ export class ProfileRepository {
             queryData.refreshToken = null;
             const profile = await queryData.save();
             return profile.refreshToken ? false : true;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async getProfileGalleryById(profile_id: number, page: Page): Promise<PagingData<ProfilePostImage[]>> {
+        try {
+            var result = new PagingData<ProfilePostImage[]>();
+            const queryData = await this.profilePostImageModelRepository.findAndCountAll({
+                attributes: ["link"],
+                where: {
+                    profile_id: profile_id,
+                    link: { [Op.not]: null }
+                },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                raw: false,
+                ...paginate({ page })
+            })
+            result.data = queryData.rows;
+            page.totalElement = queryData.count;
+            result.page = page;
+            return result;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }

@@ -75,7 +75,9 @@ export class AuthController {
     @UseGuards(RefreshTokenGuard)
     @Get('/refresh')
     async refreshToken(@Request() request: RequestWithProfile) {
-        const profile = request.user["profile"];
+        const profile = request.user;
+        // console.log(profile);
+
         return this.authService.refreshTokens(profile["profile_id"], request.user["refreshToken"]);
     }
 

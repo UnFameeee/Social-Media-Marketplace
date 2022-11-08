@@ -13,33 +13,34 @@ export class ProfilePostImageRepository {
 
     async createUpdateProfilePostImage(profile_id: number, post_id: number, arrayLink: string[]): Promise<string[]> {
         try {
-            const queryDataCheck = await this.profilePostImageRepository.findAll({
-                include: [
-                    {
-                        model: Post,
-                        where: {
-                            post_id: post_id,
-                        },
-                        attributes: [],
-                    }
-                ],
-                raw: true,
-            });
+            // const queryDataCheck = await this.profilePostImageRepository.findAll({
+            //     include: [
+            //         {
+            //             model: Post,
+            //             where: {
+            //                 post_id: post_id,
+            //             },
+            //             attributes: [],
+            //         }
+            //     ],
+            //     raw: true,
+            // });
+
+
+            // if (queryDataCheck) {
+            //     const arrayQueryDataCheck: number[] = [];
+            //     for (const element of queryDataCheck) {
+            //         arrayQueryDataCheck.push(element["profile_post_image_id"])
+            //     }
+            //     await this.profilePostImageRepository.destroy({
+            //         where: {
+            //             profile_post_image_id: arrayQueryDataCheck,
+            //         }
+            //     })
+
+            // }
 
             var profilePostImage = new ProfilePostImageEntity();
-
-            if (queryDataCheck) {
-                const arrayQueryDataCheck: number[] = [];
-                for (const element of queryDataCheck) {
-                    arrayQueryDataCheck.push(element["profile_post_image_id"])
-                }
-                await this.profilePostImageRepository.destroy({
-                    where: {
-                        profile_post_image_id: arrayQueryDataCheck,
-                    }
-                })
-
-            }
             for (const element of arrayLink) {
                 profilePostImage.link = element;
                 profilePostImage.profile_id = profile_id;
@@ -81,5 +82,30 @@ export class ProfilePostImageRepository {
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
+    }
+
+    async deleteProfilePostImage(post_id: number, link: string): Promise<boolean> {
+        const queryData = await this.profilePostImageRepository.findOne({
+            where: { link: link },
+            include: [
+                {
+                    model: Post,
+                    where: {
+                        post_id: post_id,
+
+                    },
+                    attributes: [],
+                }
+            ],
+            raw: true,
+        });
+        if (queryData) {
+            const rowsDeleted = await this.profilePostImageRepository.destroy({
+                where: {
+                    profile_post_image_id: queryData.profile_post_image_id,
+                }
+            })
+            return (rowsDeleted > 0) ? true : false;
+        } else return false;
     }
 }
