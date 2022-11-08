@@ -16,13 +16,18 @@ import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_
 import { ProfileWallpaperImage } from "src/social-media/image/model/profile_wallpaper_image.mode";
 import { DescriptionRepository } from "./description.repository";
 import { Description } from "../model/description.model";
+import { ProfilePostImage } from "src/social-media/image/model/profile_post_image.model";
+import { Post } from "src/social-media/post/model/post.model";
 @Injectable()
 export class ProfileRepository {
     constructor(
         @Inject(PROVIDER.Profile) private profileRepository: typeof Profile,
         // @Inject(PROVIDER.Friendship) private friendshipModelRepository: typeof Friendship,
         @Inject(FriendshipRepository) private friendshipRepository: FriendshipRepository,
-        @Inject(DescriptionRepository) private descriptionRepository: DescriptionRepository
+        @Inject(DescriptionRepository) private descriptionRepository: DescriptionRepository,
+        @Inject(PROVIDER.ProfileAvatarImage) private profileAvatarImageModelRepository: typeof ProfileAvatarImage,
+        @Inject(PROVIDER.ProfilePostImage) private profilePostImageModelRepository: typeof ProfilePostImage,
+        @Inject(PROVIDER.ProfileWallpaperImage) private profileWallpaperImageModelRepository: typeof ProfileWallpaperImage,
     ) { }
 
     async getAllProfile(page: Page): Promise<PagingData<Profile[]>> {
@@ -356,6 +361,30 @@ export class ProfileRepository {
             queryData.refreshToken = null;
             const profile = await queryData.save();
             return profile.refreshToken ? false : true;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async getProfileGalleryById(profile_id: number, page: Page): Promise<PagingData<ProfilePostImage[]>> {
+        try {
+            var result = new PagingData<ProfilePostImage[]>();
+            const queryData = await this.profilePostImageModelRepository.findAndCountAll({
+                attributes: ["link"],
+                where: {
+                    profile_id: profile_id,
+                    link: { [Op.not]: null }
+                },
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                raw: false,
+                ...paginate({ page })
+            })
+            result.data = queryData.rows;
+            page.totalElement = queryData.count;
+            result.page = page;
+            return result;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
