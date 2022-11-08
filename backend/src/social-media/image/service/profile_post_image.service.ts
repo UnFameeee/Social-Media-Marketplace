@@ -1,0 +1,30 @@
+import { Injectable } from "@nestjs/common";
+import { ResponseData } from "src/common/models/view-model/success-message.model";
+import { ExceptionResponse } from "src/common/utils/custom-exception.filter";
+import { Profile } from "src/social-media/profile/model/profile.model";
+import { ProfilePostImageRepository } from "../repository/profile_post_image.repository";
+
+@Injectable()
+export class ProfilePostImageService {
+    constructor(private readonly profilePostImageRepository: ProfilePostImageRepository) { };
+
+    async createUpdateProfilePostImage(profile_id: number, post_id: number, arrayLink: string[]): Promise<ResponseData<string[]>> {
+        try {
+            var response = new ResponseData<string[]>();
+            response.results = await this.profilePostImageRepository.createUpdateProfilePostImage(profile_id, post_id, arrayLink);
+            return response;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
+
+    async deleteProfilePostImage(post_id: number, link: string): Promise<ResponseData<boolean>> {
+        try {
+            var response = new ResponseData<boolean>();
+            response.results = await this.profilePostImageRepository.deleteProfilePostImage(post_id, link);
+            return response;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
+}

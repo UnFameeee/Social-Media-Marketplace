@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Box,
   Avatar,
@@ -7,25 +7,35 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-} from '@mui/material';
-import { makeStyles } from 'tss-react/mui';
-import { Link } from 'react-router-dom';
-import { Helper } from '../../../utils/Helper';
-import MiddleHr from '../../FullWidthHr/MiddleHr';
-import '../Layout.css';
-
+} from "@mui/material";
+import { makeStyles } from "tss-react/mui";
+import { Link } from "react-router-dom";
+import { Helper } from "../../../utils/Helper";
+import MiddleHr from "../../FullWidthHr/MiddleHr";
+import "../Layout.css";
+import styled from "styled-components";
+const ResponSiveDiv = styled.div`
+  @media screen and (max-width: 940px) {
+    .left-bar {
+      width: 75px;
+    }
+    .left-bar-text {
+      display: none;
+    }
+  }
+`;
 const useStyles = makeStyles()(() => ({
   scroll: {
-    '&::-webkit-scrollbar': {
-      width: '1rem',
+    "&::-webkit-scrollbar": {
+      width: "1rem",
     },
-    '&::-webkit-scrollbar-track': {
-      boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0)',
-      borderRadius: '8px',
+    "&::-webkit-scrollbar-track": {
+      boxShadow: "inset 0 0 6px rgba(0, 0, 0, 0)",
+      borderRadius: "8px",
     },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      borderRadius: '8px',
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      borderRadius: "8px",
     },
   },
 }));
@@ -42,7 +52,7 @@ export default function LeftBar(props) {
   } = props;
 
   const { listWrapper, listClassname } = classNameConfig;
-  
+
   return (
     // #region oldCode
     // <>
@@ -67,12 +77,10 @@ export default function LeftBar(props) {
     //   </div>
     // </>
     // #endregion
-
     <Box
       className={`left-bar ${
-        leftBarColor ? 'drop-shadow-md' : ''
+        leftBarColor ? "drop-shadow-md" : ""
       } ${listWrapper}`}
-      
       style={
         leftBarColor
           ? {
@@ -84,12 +92,7 @@ export default function LeftBar(props) {
     >
       {before}
 
-      <List
-        className={cx(
-          classes.scroll,
-          `left-bar-list ${listClassname}`
-        )}
-      >
+      <List className={cx(classes.scroll, `left-bar-list ${listClassname}`)}>
         {Helper.isArrayList(leftBarList)
           ? leftBarList.map((list, index) => {
               return (
@@ -116,34 +119,29 @@ function LeftBarList({ leftBarList, multiList }) {
         return (
           <div key={index}>
             {item.title && (
-              <div
-                className={`left-bar-title ${
-                  multiList ? 'second' : ''
-                }`}
-              >
+              <div className={`left-bar-title ${multiList ? "second" : ""}`}>
                 {item.title}
               </div>
             )}
 
             {Helper.checkPropsInObject(
               item,
-              ['left', 'middle', 'right'],
+              ["left", "middle", "right"],
               false
             ) && (
               <ListItem className="list">
                 {item.navigate ? (
                   <Link
-                    to={`${item.navigate}`}
-                    style={{ width: '100%' }}
+                    to={item.navigate}
+                    style={{ width: "100%" }}
                     disabled={item.disabled}
                   >
                     <LeftBarListItem
                       item={item}
                       classNameConfig={`${
-                        index === leftBarList.length - 1 &&
-                        multiList >= 0
-                          ? 'multi'
-                          : ''
+                        index === leftBarList.length - 1 && multiList >= 0
+                          ? "multi"
+                          : ""
                       }`}
                     />
                   </Link>
@@ -151,10 +149,9 @@ function LeftBarList({ leftBarList, multiList }) {
                   <LeftBarListItem
                     item={item}
                     classNameConfig={`${
-                      index === leftBarList.length - 1 &&
-                      multiList >= 0
-                        ? 'multi'
-                        : ''
+                      index === leftBarList.length - 1 && multiList >= 0
+                        ? "multi"
+                        : ""
                     }`}
                   />
                 )}
@@ -172,23 +169,14 @@ function LeftBarListItem({ item, classNameConfig }) {
     <ListItemButton
       onClick={item.onClick}
       selected={item.selected}
+      disabled={item.disabled}
       className={`left-bar-button ${classNameConfig}`}
     >
       {item.left && (
-        <ListItemIcon
-          className={`left ${item.selected ? 'selected' : ''}`}
-        >
-          {Helper.checkPropsInObject(
-            item.left,
-            ['iconButton'],
-            false
-          ) ? (
+        <ListItemIcon className={`left ${item.selected ? "selected" : ""}`}>
+          {Helper.checkPropsInObject(item.left, ["iconButton"], false) ? (
             <Avatar className="rounded">{item.left.icon}</Avatar>
-          ) : Helper.checkPropsInObject(
-              item.left,
-              ['url', 'name'],
-              false
-            ) ? (
+          ) : Helper.checkPropsInObject(item.left, ["url", "name"], false) ? (
             <Avatar alt={item.left.name} src={item.left.url}>
               {item.left.name?.at(0)}
             </Avatar>
@@ -198,9 +186,7 @@ function LeftBarListItem({ item, classNameConfig }) {
         </ListItemIcon>
       )}
 
-      <ListItemText className="left-bar-text">
-        {item.middle}
-      </ListItemText>
+      <ListItemText className="left-bar-text">{item.middle}</ListItemText>
 
       {item.right && (
         <ListItemIcon className="right">{item.right}</ListItemIcon>

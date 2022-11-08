@@ -1,15 +1,33 @@
-import MUI from "../../../../components/MUI";
+import { Avatar } from '@mui/material';
+import MUI from '../../../../components/MUI';
 
 export default function FriendCard(props) {
-  const { imageURL, name } = props;
+  const { profileDetails, firstButtonConfig, secondButtonConfig } = props;
+
   return (
     <div className="friend-card">
-      <img alt="avatar" src={imageURL} />
+      <Avatar
+        className="image"
+        alt="avatar"
+        src={profileDetails.picture}
+      >
+        {profileDetails.profile_name?.at(0)}
+      </Avatar>
       <div className="bottom">
-        <span>{name}</span>
+        <span>{profileDetails.profile_name}</span>
 
-        <MUI.Button style={{ marginTop: '12px' }}>Confirm</MUI.Button>
-        <MUI.Button style={{ marginTop: '12px' }}>Deny</MUI.Button>
+        <MUI.Button
+          style={{ marginTop: '12px' }}
+          {...firstButtonConfig}
+        >
+          Confirm
+        </MUI.Button>
+        <MUI.Button
+          style={{ marginTop: '12px' }}
+          {...secondButtonConfig}
+        >
+          Deny
+        </MUI.Button>
       </div>
     </div>
   );

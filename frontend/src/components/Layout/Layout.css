@@ -3,7 +3,7 @@
   width: var(--sidebar-width);
   height: calc(100vh - var(--navbar-height));
   position: fixed;
-  bottom: 0;
+  /* bottom: 0; */
 }
 .left-bar-list {  
   height: 100%;
@@ -25,12 +25,19 @@
   font-size: 1.8rem !important;
   font-weight: 500;
 }
+.Mui-selected .left-bar-text .MuiTypography-root {
+  color: var(--primary-color);
+}
 .left-bar .left-bar-button.Mui-selected {
   background-color: rgba(0, 0, 0, 0.04);
   border-radius: 8px;
+  border: 2px solid  var(--primary-color);
 }
 .left-bar .left-bar-button.Mui-selected:hover {
   background-color: rgba(0, 0, 0, 0.04);
+}
+.left-bar .left-bar-button.Mui-disabled {
+  opacity: 1;
 }
 .left-bar .list {
   padding: 0.4rem 0.8rem;
@@ -72,6 +79,9 @@
 }
 .left-bar-button .right svg {
   color: black
+}
+a[disabled] {
+  pointer-events: none;
 }
 /* #endregion */
 

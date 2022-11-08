@@ -20,18 +20,30 @@ export class FriendshipController {
     }
 
     //Get all friend
-    @Post("/all")
-    async getAllFriend(@Request() request: any, @Body() page: Page) {
-        const profile = <Profile>request.user;
-        return await this.friendshipService.getAllFriend(profile, page);
+    @Post("/all/:profile_id")
+    async getAllFriend(@Param("profile_id") profile_id: number, @Body() page: Page) {
+        return await this.friendshipService.getAllFriend(profile_id, page);
     }
 
 
     //Add / Un-add friend
-    @Post("/addFriend/:profile_target_id")
-    async addFriend(@Request() request: any, @Param("profile_target_id") profile_target_id: number) {
+    @Post("/sendFriendRequest/:profile_target_id")
+    async sendFriendRequest(@Request() request: any, @Param("profile_target_id") profile_target_id: number) {
         const profile = <Profile>request.user;
-        return await this.friendshipService.addFriend(profile, profile_target_id);
+        return await this.friendshipService.sendFriendRequest(profile, profile_target_id);
+    }
+
+    @Post("/unfriend/:profile_target_id")
+    async unfriend(@Request() request: any, @Param("profile_target_id") profile_target_id: number) {
+        const profile = <Profile>request.user;
+        return await this.friendshipService.unfriend(profile, profile_target_id);
+    }
+
+    //Check status if user send friend request or not
+    @Post("/isSentFriendRequest/:profile_target_id")
+    async isSentFriendRequest(@Request() request: any, @Param("profile_target_id") profile_target_id: number) {
+        const profile = <Profile>request.user;
+        return await this.friendshipService.isSentFriendRequest(profile, profile_target_id);
     }
 
     //Accept friend request
@@ -39,6 +51,13 @@ export class FriendshipController {
     async acceptFriendRequest(@Request() request: any, @Param("profile_request_id") profile_request_id: number) {
         const profile = <Profile>request.user;
         return await this.friendshipService.acceptFriendRequest(profile, profile_request_id);
+    }
+
+    //Deny friend request
+    @Post("/denyFriendRequest/:profile_request_id")
+    async denyFriendRequest(@Request() request: any, @Param("profile_request_id") profile_request_id: number) {
+        const profile = <Profile>request.user;
+        return await this.friendshipService.denyFriendRequest(profile, profile_request_id);
     }
 
     //Mutual friend
@@ -50,7 +69,7 @@ export class FriendshipController {
 
     //Is friend ?
     @Get("/isFriend/:profile_target_id")
-    async isFriend(@Request() request: any, @Param("profile_target_id") profile_target_id: number){
+    async isFriend(@Request() request: any, @Param("profile_target_id") profile_target_id: number) {
         const profile = <Profile>request.user;
         return await this.friendshipService.isFriend(profile, profile_target_id);
     }

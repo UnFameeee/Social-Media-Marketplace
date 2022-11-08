@@ -7,6 +7,7 @@ module.exports = {
         'blue8f3': "#1a78f3",
         'greyf1':'#f1f1f1',
         'Truewhite':'#ffffff',
+        "primary-color": "var(--primary-color)",
       },
     },
   },

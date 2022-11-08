@@ -1,8 +1,10 @@
 import { ConflictException, Injectable } from '@nestjs/common';
+import { response } from 'express';
 import { UpdateProfileDto } from 'src/common/models/dtos/update-profile.dto';
 import { Page } from 'src/common/models/view-model/page-model';
 import { PagingData } from 'src/common/models/view-model/paging.model';
 import { ResponseData } from 'src/common/models/view-model/success-message.model';
+import { compare } from 'src/common/utils/bcrypt-singleton.utils';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 
 import { Profile } from '../model/profile.model';
@@ -33,6 +35,23 @@ export class ProfileService {
         }
     }
 
+    async getProfileDetailById(profile: Profile, profile_target_id: number): Promise<ResponseData<Profile>> {
+        try {
+            var response = new ResponseData<Profile>();
+            console.log()
+            var queryResult = await this.profileRepository.getProfileDetailById(profile.profile_id, profile_target_id);
+            if (queryResult) {
+                response.results = queryResult;
+            } else {
+                response.message = "This profile isn't exist"
+            }
+
+            return response;
+        } catch (err) {
+            ExceptionResponse(err)
+        }
+    }
+
     // async createNewProfile(createProfileDto: CreateProfileDto): Promise<Profile> {
     //     try {
     //         if (await this.profileRepository.findProfileByEmail(createProfileDto.email)) {
@@ -47,14 +66,26 @@ export class ProfileService {
     //     }
     // }
 
-    async updateProfile(id: number, updateProfileDto: UpdateProfileDto): Promise<ResponseData<boolean>> {
+    async updateProfile(profile: Profile, updateProfileDto: UpdateProfileDto): Promise<ResponseData<string>> {
         try {
-            var response = new ResponseData<boolean>();
-            if (await this.profileRepository.findProfileByEmailExcludeId(id, updateProfileDto.email)) {
+            var response = new ResponseData<string>();
+            if (await this.profileRepository.findProfileByEmailExcludeId(profile.profile_id, updateProfileDto.email)) {
                 throw new ConflictException("Email existed!!!");
             }
-            const res = await this.profileRepository.updateProfileWithId(id, updateProfileDto);
-            response.results = res ? true : false;
+
+            const oldPassword = await this.profileRepository.getPassword(profile.profile_id);
+
+            if (!await compare(updateProfileDto.old_password, oldPassword)) {
+                response.message = "Old password isn't matched";
+                return response;
+            }
+
+            const res = await this.profileRepository.updateProfileWithId(profile.profile_id, updateProfileDto);
+            if (!res) {
+                response.message = "Update profile unsuccessfully";
+                return response;
+            }
+            response.results = "Update profile successfully";
             return response;
         } catch (err) {
             ExceptionResponse(err)
@@ -82,4 +113,23 @@ export class ProfileService {
             ExceptionResponse(err)
         }
     }
+
+    async friendSuggestion(profile: Profile, page: Page): Promise<ResponseData<PagingData<Profile[]>>> {
+        var response = new ResponseData<PagingData<Profile[]>>();
+        const res = await this.profileRepository.friendSuggestion(profile.profile_id, page);
+        response.results = res;
+        return response;
+    }
+
+    async getProfileGalleryById(profile_id: number, page: Page): Promise<any> {
+        try {
+            var response = new ResponseData<PagingData<any>>();
+            const res = await this.profileRepository.getProfileGalleryById(profile_id, page);
+            response.results = res;
+            return response;
+        } catch (err) {
+            ExceptionResponse(err)
+        }
+    }
+
 }

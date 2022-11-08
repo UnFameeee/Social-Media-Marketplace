@@ -1,4 +1,5 @@
-import { AllowNull, AutoIncrement, Column, Default, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { AllowNull, AutoIncrement, Column, DataType, Default, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
+import { FRIENDREQUEST_STATUS } from "src/common/constants/friendship.constant";
 import { Role } from "src/common/constants/role.constant";
 @Table({
     tableName: "Profiles",
@@ -11,11 +12,11 @@ import { Role } from "src/common/constants/role.constant";
 
     scopes: {
         WITH_PASSWORD: {
-            attributes: { include: ['password'] }
+            attributes: { include: ['password', 'refreshToken'] }
         },
         
         WITHOUT_PASSWORD: {
-            attributes: { exclude: ['password'] }
+            attributes: { exclude: ['password', 'refreshToken'] }
         }
     },
 
@@ -41,9 +42,9 @@ export class Profile extends Model<Profile> {
     @Column
     birth: string;
 
-    @AllowNull
-    @Column
-    picture: string;
+    // @AllowNull
+    // @Column
+    // picture: string;
     
     @Default(true)
     @Column
@@ -53,7 +54,47 @@ export class Profile extends Model<Profile> {
     @Column
     role: Role;
 
-    @AllowNull
+    // @AllowNull
+    // @Column
+    // permission: string;
+
+    @AllowNull  
     @Column
-    permission: string;
+    refreshToken: string;
+ 
+    @Column(DataType.VIRTUAL(DataType.BOOLEAN))
+    get isFriend(): boolean {
+        return this.getDataValue("isFriend");
+    }
+
+    set isFriend(value: boolean){
+        this.setDataValue("isFriend", value);
+    }
+
+    @Column(DataType.VIRTUAL(DataType.STRING))
+    get isSentFriendRequest(): string {
+        return this.getDataValue("isSentFriendRequest");
+    }
+
+    set isSentFriendRequest(value: string){
+        this.setDataValue("isSentFriendRequest", value);
+    }
+
+    // @Column(DataType.VIRTUAL(DataType.STRING))
+    // get avatar(): string {
+    //     return this.getDataValue("avatar");
+    // }
+
+    // set avatar(value: string){
+    //     this.setDataValue("avatar", value);
+    // }
+
+    // @Column(DataType.VIRTUAL(DataType.ARRAY))
+    // get wallpaper(): string {
+    //     return this.getDataValue("wallpaper");
+    // } 
+
+    // set wallpaper(value: string){
+    //     this.setDataValue("wallpaper", value);
+    // }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import { Avatar } from "@mui/material";
 
 function GridSideInfo(props) {
     return (
@@ -14,7 +14,7 @@ function GridSideInfo(props) {
               </span>
             </div>
             {props.type === "friendPhoto" && (
-              <span className="text-[1.8rem] font-light">690 friends</span>
+              <span className="text-[1.8rem] font-light">{props.total} friends</span>
             )}
           </div>
           <ul className="grid grid-cols-3 gap-[0.5rem] ml-0 ">
@@ -79,12 +79,20 @@ function GridSideInfo(props) {
               props.listImg.map((item, index) => {
                 return (
                   <li key={index}>
-                    <img
+                    <Avatar
                       src={item.url}
-                      alt=""
+                      alt="item.name"
                       className="photoGridImage rounded-[1rem]"
-                    />
-                    {props.type === "friendPhoto" && <span className=" font-semibold">{item.name}</span>}
+                      sx={{
+                        height: '15rem',
+                        width: '100%',
+                        borderRadius: '0.8rem',
+                        fontSize: '10rem',
+                      }}
+                    >
+                      {item.name?.at(0)}
+                    </Avatar>
+                    {props.type === "friendPhoto" && <span className="font-semibold">{item.name}</span>}
                   </li>
                 );
               })}

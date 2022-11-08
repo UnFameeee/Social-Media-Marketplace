@@ -5,7 +5,7 @@ function AvatarWithText(props) {
   if (props.border) {
     classBorder = "border-2 border-blue-300";
   }
-  var alignCenter =''
+  var alignCenter = "";
   if (props.alignCenter) {
     alignCenter = "items-center";
   }
@@ -17,7 +17,7 @@ function AvatarWithText(props) {
       {props.url && (
         <img
           src={props.url}
-          className={`rounded-[50%] ${classBorder}`}
+          className={`rounded-[50%] ${classBorder} object-fit `}
           alt=""
           style={{ width: props.size, height: props.size }}
         />
@@ -43,6 +43,7 @@ function AvatarWithText(props) {
       {props.haveInput && (
         <div className="w-full">
           <input
+            onClick={props.onClick}
             type="text"
             placeholder={props.inputValue}
             className="bg-greyf1 outline-none py-[0.65rem] px-[1.5rem] rounded-[5rem] w-full"

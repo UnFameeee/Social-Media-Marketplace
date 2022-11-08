@@ -1,8 +1,9 @@
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { jwtConstants } from 'src/common/constants/jwt.constant';
 import { SCOPE } from 'src/common/constants/sequelize-scope.constant';
 import { ResponseData } from 'src/common/models/view-model/success-message.model';
+import { argon2_encode, argon2_verify } from 'src/common/utils/argon2-singleton.utils';
 import { compare, encode } from 'src/common/utils/bcrypt-singleton.utils';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 import { ProfileRepository } from 'src/social-media/profile/repository/profile.repository';
@@ -38,7 +39,7 @@ export class AuthService {
             registerProfileDto.password = await encode(registerProfileDto.password)
 
             const user = await this.profileRepository.createNewProfile(registerProfileDto);
-            if(user){
+            if (user) {
                 responseData.results = "Register successfully"
             }
             return responseData;
@@ -49,7 +50,7 @@ export class AuthService {
 
     async getAccessTokenThroughCookie(profile_id: number) {
         try {
-            const profile = await this.profileRepository.findProfileById( profile_id, SCOPE.WITHOUT_PASSWORD);
+            const profile = await this.profileRepository.findProfileById(profile_id, SCOPE.WITHOUT_PASSWORD);
             const payload: TokenPayload = { profile };
             const token = this.jwtService.sign(payload, {
                 secret: jwtConstants.access_secret,
@@ -66,8 +67,8 @@ export class AuthService {
         try {
             const profile = await this.profileRepository.findProfileById(profile_id, SCOPE.WITHOUT_PASSWORD);
             const payload: TokenPayload = { profile };
-            
-            const token = this.jwtService.sign(payload, {
+
+            const token = this.jwtService.sign({ profile_id }, {
                 secret: jwtConstants.refresh_secret,
                 expiresIn: jwtConstants.refresh_expires,
             });
@@ -94,12 +95,23 @@ export class AuthService {
 
             const access = await this.getAccessTokenThroughCookie(checkProfile.profile_id);
             const refresh = await this.getRefreshTokenThroughCookie(checkProfile.profile_id)
+
+            await this.updateRefreshToken(checkProfile.profile_id, refresh);
+
             const result = { access, refresh };
-            // const result = {access};
             return result;
         } catch (err) {
             ExceptionResponse(err);
         }
+    }
+
+
+    async getTokens(profile_id: number): Promise<any> {
+        const Profile = await this.profileRepository.findProfileById(profile_id);
+        const access = await this.getAccessTokenThroughCookie(Profile.profile_id);
+        const refresh = await this.getRefreshTokenThroughCookie(Profile.profile_id)
+        const result = { access, refresh };
+        return result;
     }
 
     async ModifiedCookieForLogout() {
@@ -107,5 +119,35 @@ export class AuthService {
             'Authentication=; HttpOnly; Path=/; Max-Age=0',
             'Refresh=; HttpOnly; Path=/; Max-Age=0'
         ];
+    }
+
+    async updateRefreshToken(profile_id: number, refreshToken: string) {
+        const hashedRefreshToken = await argon2_encode(refreshToken);
+        await this.profileRepository.updateRefreshToken(profile_id, hashedRefreshToken)
+    }
+
+    async logout(profile: any): Promise<ResponseData<boolean>> {
+        const response = new ResponseData<boolean>();
+        response.results = await this.profileRepository.deleteRefreshToken(profile.profile_id);
+        return response;
+    }
+
+    async refreshTokens(profile_id: number, refreshToken: string) {
+        try {
+            //If the token expired, it will catch by the guard.
+            const profile = await this.profileRepository.findProfileRefreshById(profile_id);
+            if (!profile || !profile.refreshToken)
+                throw new ForbiddenException('Access Denied');
+
+            const refreshTokenMatches = await argon2_verify(profile.refreshToken, refreshToken);
+
+            if (!refreshTokenMatches) throw new ForbiddenException('RefreshToken Invalid');
+
+            const token = await this.getTokens(profile_id);
+            await this.updateRefreshToken(profile_id, token.refresh);
+            return token;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
     }
 }

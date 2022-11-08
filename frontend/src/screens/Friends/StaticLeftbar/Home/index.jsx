@@ -1,48 +1,83 @@
 import { Grid } from '@mui/material';
-import { useEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  getAllFriendRequests,
+  acceptFriendRequest,
+  denyFriendRequest,
+} from '../../../../redux/apiRequest';
 import FriendCard from './FriendCard';
+import '../index.css';
 
 const FriendHome = () => {
-  // #region re-render the layout
+  const dispatch = useDispatch();
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
+  const friendRequests = useSelector(
+    (state) => state.friends.getFriendRequests?.data?.data
+  );
+
   const reRenderLayout = useOutletContext();
-  useEffect(() => {
-    reRenderLayout();
-  }, []);
-  // #endregion
+  const [reRender, setReRender] = useState(false);
+   
+  useLayoutEffect(() => {
+    let onDestroy = false;
+    if (!onDestroy) {
+      reRenderLayout(); //re-render the parent layout
+      getAllFriendRequests(accessToken,refreshToken, dispatch);
+    }
+    return () => {
+      onDestroy = true;
+    };
+  }, [reRender]);
 
   return (
     <>
-      <h2
-        style={{
-          fontSize: '2rem',
-          lineHeight: '2rem',
-          fontWeight: '500',
-          padding: '2.4rem 0 0 2.4rem',
-        }}
-      >
-        Friend Requests
-      </h2>
-      <Grid container sx={{ padding: '2rem' }}>
-        {[...Array(14)].map((item, index) => (
-          <Grid
-            key={index}
-            item
-            xs
-            style={{
-              maxWidth: '25rem',
-              minWidth: '20rem',
-              padding: '0.6rem',
-              borderRadius: '8px',
-            }}
-          >
-            <FriendCard
-              imageURL="https://cf.shopee.vn/file/8c178f3e0f1f947afa378dd7f15068a5"
-              name="Dibu"
-            />
-          </Grid>
-        ))}
-      </Grid>
+      <h2 className="friend-home-title">Friend Requests</h2>
+      {friendRequests?.length > 0 ? (
+        <Grid container sx={{ padding: '2rem' }}>
+          {friendRequests.map((item, index) => (
+            <Grid key={index} item xs className="friend-home-grid">
+              <FriendCard
+                profileDetails={item}
+                firstButtonConfig={{
+                  onClick: () => {
+                    acceptFriendRequest(
+                      accessToken,refreshToken,
+                      item.profile_id,
+                      dispatch
+                    );
+                    setTimeout(() => {
+                      setReRender(!reRender);
+                    }, 100);
+                  },
+                }}               
+                secondButtonConfig={{
+                  onClick: () => {
+                    denyFriendRequest(
+                      accessToken,refreshToken,
+                      item.profile_id,
+                      dispatch
+                    );
+                    setTimeout(() => {
+                      setReRender(!reRender);
+                    }, 100);
+                  },
+                }}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <h3 className="text-[8rem] text-center pt-[10rem]">
+          You have no friend requests
+        </h3>
+      )}
     </>
   );
 };

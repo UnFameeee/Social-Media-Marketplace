@@ -34,7 +34,7 @@ export default function Menu(props) {
     <MenuList className={`menu ${menuClass}`} {...other}>
       {before}
 
-      {list.map((item, index) => (
+      {list?.map((item, index) => (
         <MenuItem
           key={index}
           className={`menu-item ${menuItemClass}`}

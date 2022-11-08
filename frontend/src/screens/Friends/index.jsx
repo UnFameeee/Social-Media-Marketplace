@@ -1,16 +1,8 @@
-import { Outlet } from 'react-router-dom';
-import {
-  People,
-  GroupAdd,
-  Groups,
-  Cake,
-  PersonSearch,
-  KeyboardArrowRight,
-} from '@mui/icons-material';
-import TwoColumns from '../../components/Layout/TwoColumns';
-import { Helper } from '../../utils/Helper';
-import './index.css';
 import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
+import TwoColumns from '../../components/Layout/TwoColumns';
+import { staticLeftbar } from '../../common/layout/friendLeftbar';
+import { Helper } from '../../utils/Helper';
 
 export function StaticLeftbarLayout() {
   const [reRender, setReRender] = useState(true);
@@ -18,54 +10,17 @@ export function StaticLeftbarLayout() {
   return (
     <TwoColumns
       leftBarConfig={{
-        leftBarList: [
-          {
-            title: 'Friends',
-            left: {
-              iconButton: true,
-              icon: <People />,
-            },
-            middle: 'Home',
-            selected: Helper.checkURL('friends', {}, true),
-            navigate: '/friends',
-          },
-          {
-            left: {
-              iconButton: true,
-              icon: <GroupAdd />,
-            },
-            middle: 'Friend Requests',
-            right: <KeyboardArrowRight />,
-            navigate: 'requests',
-          },
-          {
-            left: {
-              iconButton: true,
-              icon: <PersonSearch />,
-            },
-            middle: 'Friend Suggestions',
-            right: <KeyboardArrowRight />,
-            navigate: 'suggestions',
-          },
-          {
-            left: {
-              iconButton: true,
-              icon: <Groups />,
-            },
-            middle: 'All Friends',
-            right: <KeyboardArrowRight />,
-            navigate: 'all',
-          },
-          {
-            left: {
-              iconButton: true,
-              icon: <Cake />,
-            },
-            middle: 'Birthdays',
-            selected: Helper.checkURL('birthdays', {}, true),
-            navigate: 'birthdays',
-          },
-        ],
+        leftBarList: staticLeftbar.map((x) => {
+          if (x.middle == 'Home') {
+            x['selected'] = Helper.checkURL('friends', {}, true);
+            x['disabled'] = Helper.checkURL('friends', {}, true);
+          }
+          else if (x.middle == 'Birthdays') {
+            x['selected'] = Helper.checkURL('birthdays', {}, true);
+            x['disabled'] = Helper.checkURL('birthdays', {}, true);            
+          }
+          return x
+        }),
         leftBarColor: 'white',
       }}
     >

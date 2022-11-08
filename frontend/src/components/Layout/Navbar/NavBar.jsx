@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { FacebookOutlined, Close } from '@mui/icons-material';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { FacebookOutlined, Close } from "@mui/icons-material";
 import {
   Paper,
   Grid,
@@ -10,35 +10,31 @@ import {
   ClickAwayListener,
   ToggleButton,
   ToggleButtonGroup,
-} from '@mui/material';
-import { IoLogOut } from 'react-icons/io5';
-import MUI from '../../MUI';
-import {
-  middleNavIcons,
-  rightNavIcons,
-} from '../../../common/layout/navbar';
-import { useDispatch } from 'react-redux';
-import { logOut } from '../../../redux/apiRequest';
-import { revertAll } from '../../../redux/resetStore';
-import '../Layout.css';
-import { Helper } from '../../../utils/Helper';
+} from "@mui/material";
+import { IoLogOut } from "react-icons/io5";
+import MUI from "../../MUI";
+import { useDispatch, useSelector } from "react-redux";
+import { middleNavIcons, rightNavIcons } from "../../../common/layout/navbar";
+import { revertAll } from "../../../redux/resetStore";
+import { Helper } from "../../../utils/Helper";
+import "../Layout.css";
+import { logOut } from "../../../redux/apiRequest";
 
 export default function NavBar() {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
-  const path = location.pathname;
 
   const [avatarMenu, setAvatarMenu] = useState(false);
-  const [value, setValue] = useState('');
-  const [rightGroup, setRightGroup] = useState('');
-
-  const handleLogout = () => {
-    // logOut(dispatch)
-    dispatch(revertAll());
-  };
+  const [value, setValue] = useState("");
+  const [rightGroup, setRightGroup] = useState("");
+  const userData = useSelector((state) => state.auth.user.userData);
+  const auth = useSelector((state) => state.auth.login);
+  
   function handleSearch() {}
-
+  const handleLogOut =()=>{
+    logOut(dispatch,auth.currentUser.access,auth.currentUser.refresh)
+    dispatch(revertAll())
+  }
   return (
     // #region oldCode
     // <div className="flex items-center px-5 py-1 bg-white fixed w-screen drop-shadow-md z-50">
@@ -100,15 +96,12 @@ export default function NavBar() {
 
     <Paper className="nav-bar drop-shadow-md">
       <Grid container className="nav-bar-wrapper">
-        <Grid item xs sx={{ display: 'flex' }}>
-          <IconButton
-            sx={{ padding: 0 }}
-            onClick={() => navigate('/')}
-          >
+        <Grid item xs sx={{ display: "flex" }}>
+          <IconButton sx={{ padding: 0 }} onClick={() => navigate("/")}>
             <FacebookOutlined
               sx={{
-                fontSize: '4.4rem',
-                color: 'var(--primary-color)',
+                fontSize: "4.4rem",
+                color: "var(--primary-color)",
               }}
             />
           </IconButton>
@@ -119,40 +112,40 @@ export default function NavBar() {
             handleSearch={handleSearch}
             menuConfig={{
               classNameConfig: {
-                menuClass: 'navbar-search',
-                middleClass: 'navbar-search',
+                menuClass: "navbar-search",
+                middleClass: "navbar-search",
               },
               list: [
                 {
                   left: {
-                    url: 'https://source.unsplash.com/random/300×300',
-                    name: 'Duy',
+                    url: "https://source.unsplash.com/random/300×300",
+                    name: "Duy",
                   },
-                  middle: 'Thạch Dương Duy',
+                  middle: "Thạch Dương Duy",
                 },
                 {
                   left: {
-                    url: 'https://source.unsplash.com/random/300×300',
-                    name: 'Vũ',
+                    url: "https://source.unsplash.com/random/300×300",
+                    name: "Vũ",
                   },
-                  middle: 'Nguyễn Hoàng Vũ',
+                  middle: "Nguyễn Hoàng Vũ",
                 },
                 {
                   left: {
-                    url: 'https://source.unsplash.com/random/300×300',
-                    name: 'Thắng',
+                    url: "https://source.unsplash.com/random/300×300",
+                    name: "Thắng",
                   },
-                  middle: 'Nguyễn Phạm Quốc Thắng',
+                  middle: "Nguyễn Phạm Quốc Thắng",
                 },
               ],
               before: (
-                <Typography sx={{ marginLeft: '1.6rem' }}>
+                <Typography sx={{ marginLeft: "1.6rem" }}>
                   Recent Searchs
                 </Typography>
               ),
               right: (
                 <IconButton className="right-menu">
-                  <Close sx={{ fontSize: '1.6rem' }} />
+                  <Close sx={{ fontSize: "1.6rem" }} />
                 </IconButton>
               ),
             }}
@@ -162,42 +155,42 @@ export default function NavBar() {
         <Grid
           item
           xs={5}
-          sx={{ display: 'flex', justifyContent: 'space-evenly' }}
+          sx={{ display: "flex", justifyContent: "space-evenly" }}
         >
           {middleNavIcons.map((item, index) => (
             <MUI.ButtonWithIcon
+            className="w-[22rem]"
               sx={{
-                padding: '1rem 0.8rem',
+                padding: "1rem 0.8rem",
               }}
               key={index}
               tooltip={item.tooltip}
               style={
                 Helper.checkURL(item.tooltip?.toLowerCase(), {
-                  url: 'home',
-                  path: '',
+                  url: "home",
+                  path: "",
                 })
                   ? {
-                      marginBottom: '-0.4rem',
+                      marginBottom: "-0.4rem",
                       borderBottomLeftRadius: 0,
                       borderBottomRightRadius: 0,
-                      color: 'var(--primary-color)',
-                      borderBottom:
-                        '0.4rem solid var(--primary-color)',
+                      color: "var(--primary-color)",
+                      borderBottom: "0.4rem solid var(--primary-color)",
                     }
                   : null
               }
               onClick={() => {
-                if (item.tooltip === 'Home') navigate('/');
+                if (item.tooltip === "Home") navigate("/");
                 else navigate(`/${item.tooltip?.toLowerCase()}`);
               }}
               disabled={Helper.checkURL(item.tooltip?.toLowerCase(), {
-                url: 'home',
-                path: '',
+                url: "home",
+                path: "",
               })}
             >
               {Helper.checkURL(item.tooltip?.toLowerCase(), {
-                url: 'home',
-                path: '',
+                url: "home",
+                path: "",
               })
                 ? item.icon[1]
                 : item.icon[0]}
@@ -205,55 +198,7 @@ export default function NavBar() {
           ))}
         </Grid>
 
-        <Grid
-          item
-          xs
-          sx={{ display: 'flex', justifyContent: 'flex-end' }}
-        >
-          {/* {rightNavIcons.map((item, index) => (
-            <div key={index} style={{ position: 'relative' }}>
-              {item.icon ? (
-                <MUI.BetterIconButton
-                  hasBackground
-                  tooltip={item.tooltip}
-                  sx={{
-                    marginRight: '0.8rem',
-                  }}
-                >
-                  {item.icon}
-                </MUI.BetterIconButton>
-              ) : (
-                <Avatar
-                  src="https://source.unsplash.com/random/300×300"
-                  onClick={() => setAvatarMenu(!avatarMenu)}
-                />
-              )}
-
-              {avatarMenu && item.avatar && (
-                <MUI.Menu
-                  sx={{ right: '2px', minWidth: '20rem' }}
-                  list={[
-                    {
-                      onClick: handleLogout,
-                      left: {
-                        icon: (
-                          <IoLogOut
-                            style={{
-                              fontSize: '2.4rem',
-                              color: 'black',
-                            }}
-                          />
-                        ),
-                        hasBackground: true,
-                      },
-                      middle: 'Log Out',
-                    },
-                  ]}
-                />
-              )}
-            </div>
-          ))} */}
-
+        <Grid item xs sx={{ display: "flex", justifyContent: "flex-end" }}>
           <ToggleButtonGroup
             value={rightGroup}
             exclusive
@@ -266,44 +211,53 @@ export default function NavBar() {
               <ToggleButton
                 key={index}
                 style={{
-                  position: 'relative',
+                  position: "relative",
                   border: 0,
-                  padding: '4px',
+                  padding: "4px",
                 }}
                 value={item.tooltip}
+                sx={{textTransform: 'none'}}
               >
                 {item.icon ? (
-                  <MUI.BetterIconButton
-                    hasBackground
-                    tooltip={item.tooltip}
-                  >
+                  <MUI.BetterIconButton hasBackground tooltip={item.tooltip}>
                     {item.icon}
                   </MUI.BetterIconButton>
                 ) : (
                   <div>
                     <Avatar
-                      src="https://source.unsplash.com/random/300×300"
                       onClick={() => setAvatarMenu(!avatarMenu)}
-                    />
+                      className="relative"
+                      style={{
+                        fontSize: "1.5rem",
+                      }}
+                      alt={userData.profile.profile_name}
+                      src={
+                        userData.profile?.picture
+                          ? JSON.parse(userData.profile?.picture)
+                          : null
+                      }
+                    >
+                      {userData.profile.profile_name?.at(0)}
+                    </Avatar>
 
                     {avatarMenu && (
                       <MUI.Menu
-                        sx={{ right: '2px', minWidth: '20rem' }}
+                        sx={{ right: "2px", minWidth: "20rem" }}
                         list={[
                           {
-                            onClick: handleLogout,
+                            onClick: handleLogOut,
                             left: {
                               icon: (
                                 <IoLogOut
                                   style={{
-                                    fontSize: '2.4rem',
-                                    color: 'black',
+                                    fontSize: "2.4rem",
+                                    color: "black",
                                   }}
                                 />
                               ),
                               hasBackground: true,
                             },
-                            middle: 'Log Out',
+                            middle: "Log Out",
                           },
                         ]}
                       />

@@ -9,6 +9,8 @@ import { Page } from "src/common/models/view-model/page-model";
 import { paginate } from "src/common/utils/paginate.utils";
 import { Sequelize } from "sequelize-typescript";
 import { PostLikeRepository } from "./post-like.repository";
+import { ProfilePostImage } from "src/social-media/image/model/profile_post_image.model";
+import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_image.model";
 
 @Injectable()
 export class PostRepository {
@@ -20,15 +22,34 @@ export class PostRepository {
         try {
             var result = new PagingData<Post[]>();
             var queryData = await this.postRepository.findAndCountAll({
-                attributes: ["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
-                include: [{
-                    model: Profile,
-                    attributes: [],
-                }],
+                attributes: [
+                    "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
+                    [Sequelize.col("Profile.profile_name"), "profile_name"],
+                    [Sequelize.col("Profile.profile_avatar.link"), "avatar"]
+                ],
+                include: [
+                    {
+                        model: Profile,
+                        attributes: [],
+                        include: [
+                            {
+                                model: ProfileAvatarImage,
+                                as: "profile_avatar",
+                                attributes: ["link"],
+                            },
+                        ]
+                    },
+                    {
+                        model: ProfilePostImage,
+                        as: "post_image",
+                        attributes: ["link"],
+                    }
+                ],
                 order: [
                     ['createdAt', 'DESC']
                 ],
                 raw: false,
+                subQuery: false,
                 ...paginate({ page })
             });
 
@@ -52,15 +73,35 @@ export class PostRepository {
         try {
             var result = new PagingData<Post[]>();
             var queryData = await this.postRepository.findAndCountAll({
-                attributes: ["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
-                include: [{
-                    model: Profile,
-                    attributes: [],
-                    where: { profile_id: profile_id },
-                }],
+                attributes: [
+                    "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
+                    [Sequelize.col("Profile.profile_name"), "profile_name"],
+                    [Sequelize.col("Profile.profile_avatar.link"), "avatar"]
+                ],
+                include: [
+                    {
+                        model: Profile,
+                        attributes: [],
+                        where: { profile_id: profile_id },
+                        include: [
+                            {
+                                model: ProfileAvatarImage,
+                                as: "profile_avatar",
+                                attributes: ["link"],
+                            },
+                        ]
+                    },
+                    {
+                        model: ProfilePostImage,
+                        as: "post_image",
+                        attributes: ["link"]
+                    }
+                ],
                 order: [
                     ['createdAt', 'DESC']
                 ],
+                raw: false,
+                subQuery: false,
                 ...paginate({ page })
             });
 
@@ -83,13 +124,32 @@ export class PostRepository {
     async getSinglePostDetailByPostId(post_id: number): Promise<Post> {
         try {
             const dataQuery = await this.postRepository.findOne({
-                attributes: ["post_id", "written_text", "media_type", "media_location", "createdAt", "updatedAt", "totalLike", "profile_id", [Sequelize.col("Profile.profile_name"), "profile_name"], [Sequelize.col("Profile.picture"), "picture"]],
-                include: [{
-                    model: Profile,
-                    attributes: [],
-                }],
-                where: { post_id: post_id }
+                where: { post_id: post_id },
+                attributes: [
+                    "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
+                    [Sequelize.col("Profile.profile_name"), "profile_name"],
+                    [Sequelize.col("Profile.profile_avatar.link"), "avatar"]
+                ],
+                include: [
+                    {
+                        model: Profile,
+                        attributes: [],
+                        include: [
+                            {
+                                model: ProfileAvatarImage,
+                                as: "profile_avatar",
+                                attributes: ["link"],
+                            },
+                        ]
+                    },
+                    {
+                        model: ProfilePostImage,
+                        as: "post_image",
+                        attributes: ["link"]
+                    }
+                ],
             });
+
             var totalLike = await this.postLikeRepository.allLikeOfPost(dataQuery["profile_id"], post_id);
             var isLiked = await this.postLikeRepository.isLikedPost(dataQuery["profile_id"], post_id);
             dataQuery.setDataValue("totalLike", totalLike);
@@ -103,16 +163,18 @@ export class PostRepository {
     async createNewPost(newPost: PostData): Promise<Post> {
         try {
             const res = await this.postRepository.create(newPost);
-            return this.postRepository.findOne({ where: { post_id: res.post_id } });
+            return await this.postRepository.findOne({ where: { post_id: res.post_id } });
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
     }
 
-    async updatePost(postData: PostData): Promise<Boolean> {
+    async updatePost(postData: PostData): Promise<Post> {
         try {
             const res = await this.postRepository.update(postData, { where: { post_id: postData.post_id } });
-            return res ? true : false;
+            return await this.postRepository.findOne({
+                where: { post_id: postData.post_id }
+            })
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
