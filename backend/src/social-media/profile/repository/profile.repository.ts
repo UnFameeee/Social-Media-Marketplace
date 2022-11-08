@@ -14,6 +14,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { encode } from "src/common/utils/bcrypt-singleton.utils";
 import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_image.model";
 import { ProfileWallpaperImage } from "src/social-media/image/model/profile_wallpaper_image.mode";
+import { Description } from "../model/description.model";
 @Injectable()
 export class ProfileRepository {
     constructor(
@@ -260,7 +261,7 @@ export class ProfileRepository {
 
     async getProfileDetailById(profile_id: number, profile_target_id: number): Promise<Profile> {
         try {
-            var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findOne({
+            var queryData = await this.profileRepository.findOne({
                 attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
                 include: [
                     {
@@ -272,6 +273,13 @@ export class ProfileRepository {
                         model: ProfileWallpaperImage,
                         as: "profile_wallpaper",
                         attributes: []
+                    },
+                    {
+                        model: Description,
+                        as: "profile_description",
+                        where: { profile_id: profile_target_id },
+                        attributes: ["description", "school", "location", "career"],
+                        required: false,
                     }
                 ],
                 where: { profile_id: profile_target_id },
