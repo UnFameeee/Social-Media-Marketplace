@@ -83,7 +83,7 @@ export class ProfileController {
     }
 
     @Get("/getProfileDetailById/:profile_target_id")
-    async getProfileDetailById(@Request() request: any, @Param("profile_target_id") profile_target_id) {
+    async getProfileDetailById(@Request() request: any, @Param("profile_target_id") profile_target_id: number) {
         const profile = <Profile>request.user;
         return await this.profileService.getProfileDetailById(profile, profile_target_id);
     }
