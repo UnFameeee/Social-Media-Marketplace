@@ -18,17 +18,15 @@ import {
 } from "../../redux/uploadImage/uploadImageSlice";
 import { createPostSaga, updatePostSaga } from "../../redux/post/postSlice";
 import notFoundImage from "../../assets/noimage_1.png";
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-};
+
+import styled from "styled-components";
+const ResponSiveDiv = styled.div`
+  @media only screen and (max-width: 700px) {
+    .mainContent {
+      width: 100%;
+    }
+  }
+`;
 function PostModal(props) {
   //#region Declare variables
   const dispatch = useDispatch();
@@ -156,11 +154,8 @@ function PostModal(props) {
   //#endregion
   return (
     <>
-      <Modal open={props.showModal} onClose={closeModal}>
-        <div
-          className="w-[100%] h-[100%] fixed left-0 top-0 z-20 "
-          style={{ backgroundColor: "rgba(0,0,0,0.4)" }}
-        >
+      <Modal className="modal" open={props.showModal} onClose={closeModal}>
+        <ResponSiveDiv>
           <div className="mainContent rounded-xl fixed overflow-hidden py-[2rem] top-[50%] left-[50%] w-[70rem]  bg-white translate-x-[-50%] translate-y-[-50%]">
             <div className="flex items-center relative">
               <Button
@@ -312,7 +307,7 @@ function PostModal(props) {
               </Button>
             </div>
           </div>
-        </div>
+        </ResponSiveDiv>
       </Modal>
     </>
   );
