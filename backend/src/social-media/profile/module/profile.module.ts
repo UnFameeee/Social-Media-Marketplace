@@ -3,10 +3,14 @@ import { friendshipProviders, profileProviders } from 'src/common/providers/all.
 import { ProfileController } from '../controller/profile.controller';
 import { ProfileRepository } from '../repository/profile.repository';
 import { ProfileService } from '../service/profile.service';
+import { DescriptionModule } from './description.module';
 import { FriendshipModule } from './friendship.module';
 
 @Module({
-  imports: [FriendshipModule],
+  imports: [
+    FriendshipModule,
+    DescriptionModule
+  ],
   controllers: [ProfileController],
   providers: [
     ProfileService,
