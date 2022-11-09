@@ -27,7 +27,7 @@ import {
   updatePostSuccess,
 } from "./postSlice";
 import { notifyService } from "../../services/notifyService";
-import { uploadImages } from "../apiRequest";
+import { removeUploadImages, uploadImages } from "../apiRequest";
 //#region reFreshPosts
 export function* reFreshPosts() {
   yield takeLatest(
@@ -196,7 +196,14 @@ function* handleUpdatePost(data) {
   }
 }
 const updatePostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, updatePost,removeImages, dispatch } = data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    updatePost,
+    uploadImage,
+    removeImages,
+    dispatch,
+  } = data.payload;
   dispatch(updatePostStart());
   try {
     const config = {
@@ -212,6 +219,26 @@ const updatePostSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
+      if (removeImages.length > 0) {
+        const resRemoveImage = await removeUploadImages(
+          accessToken,
+          refreshToken,
+          removeImages,
+          updatePost.post_id,
+          dispatch
+        );
+        console.log("resRemoveImage", resRemoveImage);
+      }
+      if (uploadImage.length > 0) {
+        const resImages = await uploadImages(
+          accessToken,
+          refreshToken,
+          uploadImage,
+          updatePost.post_id,
+          dispatch
+        );
+        console.log(resImages);
+      }
       dispatch(updatePostSagaSuccess({ accessToken, refreshToken }));
       notifyService.showSuccess("Update Post Successfully");
       return res;

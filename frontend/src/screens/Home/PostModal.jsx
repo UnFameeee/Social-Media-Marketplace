@@ -90,27 +90,25 @@ function PostModal(props) {
     closeModal();
   };
   const handleUpdatePost = (e) => {
+    debugger
     var updatePost = {
       post_id: props.postUpdateData.post_id,
       written_text: written_text,
     };
-    // removeUploadImages(
-    //   accessToken,
-    //   refreshToken,
-    //   uploadImagesRemoveLink,
-    //   post_id,
-    //   dispatch
-    // );
-    console.log("removeImages", removeImages, "updatePost", updatePost);
-    // dispatch(
-    //   updatePostSaga({
-    //     accessToken,
-    //     refreshToken,
-    //     updatePost,
-    //     removeImages,
-    //     dispatch,
-    //   })
-    // );
+    var uploadImage = [];
+    for (let i = 0; i < images.length; i++) {
+      uploadImage.push({ files: images[i].file });
+    }
+    dispatch(
+      updatePostSaga({
+        accessToken,
+        refreshToken,
+        updatePost,
+        uploadImage,
+        removeImages,
+        dispatch,
+      })
+    );
     closeModal();
   };
   const handleOnChangePostData = (event) => {
