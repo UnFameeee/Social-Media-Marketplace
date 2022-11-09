@@ -52,7 +52,7 @@ export class ProfilePostImageController {
     // }
 
     
-    @Delete('/profile_post/:post_id/delete')
+    @Post('/profile_post/:post_id/delete')
     async deleteImageOfPost(@Param("post_id") post_id: number, @Body() body: any) {
         const link = body.link;
         const response = await this.profilePostImageService.deleteProfilePostImage(post_id, link);
