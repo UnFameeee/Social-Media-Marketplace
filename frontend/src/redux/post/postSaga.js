@@ -27,6 +27,7 @@ import {
   updatePostSuccess,
 } from "./postSlice";
 import { notifyService } from "../../services/notifyService";
+import { uploadImages } from "../apiRequest";
 //#region reFreshPosts
 export function* reFreshPosts() {
   yield takeLatest(
@@ -89,7 +90,14 @@ function* handleCreatePost(data) {
   }
 }
 const createPostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, postData, dispatch } = data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    postData_written_text,
+    uploadImage,
+    dispatch,
+  } = data.payload;
+  debugger;
   dispatch(createPostStart());
   try {
     const config = {
@@ -98,7 +106,7 @@ const createPostSagaRequest = async (data) => {
 
     const res = await axiosInStanceJWT.post(
       `${apiUrl}/post/newPost`,
-      postData,
+      postData_written_text,
       {
         headers: config,
         ACCESS_PARAM: accessToken,
@@ -106,6 +114,17 @@ const createPostSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
+      if (uploadImage.length > 0) {
+        let post_id = res.data.results.post_id;
+        const resImages = await uploadImages(
+          accessToken,
+          refreshToken,
+          uploadImage,
+          post_id,
+          dispatch
+        );
+        console.log(resImages);
+      }
       dispatch(createPostSagaSuccess({ accessToken, refreshToken }));
       notifyService.showSuccess("Create Post Successfully");
       return res;

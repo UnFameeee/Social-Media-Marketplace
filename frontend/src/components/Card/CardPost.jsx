@@ -53,9 +53,7 @@ function CardPost(props) {
     post_id,
     profile_id,
     written_text,
-    media_type,
-    media_location,
-    picture,
+    post_image,
     isLiked,
     totalLike,
   } = postData;
@@ -71,9 +69,7 @@ function CardPost(props) {
       post_id: post_id,
       profile_id: profile_id,
       written_text: written_text,
-      media_type: media_type,
-      media_location: media_location,
-      picture: picture,
+      post_image: post_image,
     };
     props.handleGetPostUpdateData(tempPostData);
     props.handleOpenPostModel();
@@ -178,13 +174,13 @@ function CardPost(props) {
                 {written_text}
               </ShowMoreText>
             </div>
-            {media_location && arrayImgs.length > 0 && (
+            {post_image.length > 0 && (
               <div className="card-images px-[-1rem] mb-[0.5rem] border-y-[0.1rem] border-gray-200">
-                {arrayImgs.map((item) => {
+                {post_image.map((image,index) => {
                   return (
                     <img
-                      src={item}
-                      key={item}
+                      src={image.link}
+                      key={index}
                       alt="not found"
                       onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping

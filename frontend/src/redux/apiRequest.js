@@ -391,8 +391,10 @@ export const uploadImages = async (
   accessToken,
   refreshToken,
   uploadImages,
+  post_id,
   dispatch
 ) => {
+  debugger
   dispatch(uploadImagePostStart());
   try {
     const config = {
@@ -404,7 +406,7 @@ export const uploadImages = async (
       formData.append('files', file.files);
     });
     const res = await axiosInStanceJWT.post(
-      `${apiUrl}/image/post/upload`,
+      `${apiUrl}/image/profile_post/${post_id}/upload`,
       formData,
       {
         headers: config,
