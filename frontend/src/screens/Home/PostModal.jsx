@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
-import { uploadImages } from "../../redux/apiRequest";
+import { removeUploadImages, uploadImages } from "../../redux/apiRequest";
 import {
   Avatar,
   TextareaAutosize,
@@ -45,7 +45,8 @@ function PostModal(props) {
   if (props.postUpdateData) {
     flagAction = "update";
   }
-  const { written_text, post_image, media_location } = postData;
+  const { written_text, post_image } = postData;
+  console.log("post_image", post_image);
   const imgElement = useRef(null);
   const [imgArray, setImgArray] = useState([]);
   const [uploadFlag, setUpLoadFlag] = useState(false);
@@ -56,7 +57,8 @@ function PostModal(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const isPosting = useSelector((state) => state.post.create.isFetching);
-  const [images, setImages] = React.useState([]);
+  const [images, setImages] = useState([]);
+  const [removeImages, setRemoveImages] = useState([]);
   const maxNumber = 69;
   //#endregion
 
@@ -75,8 +77,6 @@ function PostModal(props) {
     for (let i = 0; i < images.length; i++) {
       uploadImage.push({ files: images[i].file });
     }
-    // postData.media_location = JSON.stringify(uploadImageLinkLst);
-    // createPost(accessToken,refreshToken, postData, dispatch)
     let postData_written_text = { written_text: written_text };
     dispatch(
       createPostSaga({
@@ -92,13 +92,24 @@ function PostModal(props) {
   const handleUpdatePost = (e) => {
     var updatePost = {
       post_id: props.postUpdateData.post_id,
-      profile_id: props.postUpdateData.profile_id,
-      written_text: postData.written_text,
-      post_image: postData.post_image,
+      written_text: written_text,
     };
-    // updatePost(accessToken,refreshToken, updatePost, dispatch);
+    // removeUploadImages(
+    //   accessToken,
+    //   refreshToken,
+    //   uploadImagesRemoveLink,
+    //   post_id,
+    //   dispatch
+    // );
+    console.log("removeImages", removeImages, "updatePost", updatePost);
     // dispatch(
-    //   updatePostSaga({ accessToken, refreshToken, updatePost, dispatch })
+    //   updatePostSaga({
+    //     accessToken,
+    //     refreshToken,
+    //     updatePost,
+    //     removeImages,
+    //     dispatch,
+    //   })
     // );
     closeModal();
   };
@@ -119,45 +130,46 @@ function PostModal(props) {
     setUpLoadFlag((prev) => !prev);
     e.target.value = null;
   };
-  const handleRemoveUploadImage = (imageKey) => {
-    let filterMedia_Location = media_location.filter((x) => x !== imageKey);
+  const handleRemoveUploadedImage = (imageKey) => {
+    let filter_post_image = post_image.filter((x) => x.link !== imageKey);
     setPostData({
       ...postData,
-      media_location: [...filterMedia_Location],
+      post_image: [...filter_post_image],
     });
-    dispatch(removeSingleUploadImagePost(imageKey));
+    setRemoveImages([...removeImages, imageKey]);
+    let post_id = props.postUpdateData.post_id;
+    console.log("uploadImagesRemoveLink", removeImages);
   };
   const addToUploadImgArray = (height, width, url) => {
     setImgArray([...imgArray, { height: height, width: width, url: url }]);
   };
 
-  const onChange = (imageList, addUpdateIndex) => {
-    // data for submit
-    console.log(imageList, addUpdateIndex);
+  const onChange = (imageList) => {
     setImages(imageList);
   };
+  console.log("imageList", images, "post_image", post_image);
   //#endregion
 
   //#region UseEffect
   useEffect(() => {
-    let onDestroy = false;
-    if (!onDestroy && uploadImageLinkLst.length > 0) {
-      if (flagAction === "post") {
-        setPostData({
-          ...postData,
-          media_location: [...uploadImageLinkLst],
-        });
-      } else if (flagAction === "update") {
-        dispatch(resetUploadImagePostState());
-        setPostData({
-          ...postData,
-          media_location: [...postData.media_location, ...uploadImageLinkLst],
-        });
-      }
-    }
-    return () => {
-      onDestroy = true;
-    };
+    // let onDestroy = false;
+    // if (!onDestroy && uploadImageLinkLst.length > 0) {
+    //   if (flagAction === "post") {
+    //     setPostData({
+    //       ...postData,
+    //       media_location: [...uploadImageLinkLst],
+    //     });
+    //   } else if (flagAction === "update") {
+    //     dispatch(resetUploadImagePostState());
+    //     setPostData({
+    //       ...postData,
+    //       media_location: [...postData.media_location, ...uploadImageLinkLst],
+    //     });
+    //   }
+    // }
+    // return () => {
+    //   onDestroy = true;
+    // };
   }, [uploadFlag]);
   useEffect(() => {
     // console.log("imgArray", imgArray);
@@ -248,7 +260,7 @@ function PostModal(props) {
                 }) => (
                   // write your building UI
                   <div className="upload__image-wrapper">
-                    {!imageList.length > 0 && (
+                    {!imageList.length > 0 && !post_image.length > 0 && (
                       <div
                         onClick={onImageUpload}
                         className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer mb-[2rem]"
@@ -263,9 +275,45 @@ function PostModal(props) {
                         </div>
                       </div>
                     )}
-                    {imageList && imageList.length > 0 && (
+                    {((imageList && imageList.length > 0) ||
+                      (post_image && post_image.length > 0)) && (
                       <div className="relative shadow-lg bg-slate-100 border-[0.1rem] border-gray-300  rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll mb-[2rem]  ">
                         <ul className="flex flex-wrap gap-[1rem]  ">
+                          {post_image &&
+                            post_image.map((image) => (
+                              <li
+                                key={image.link}
+                                className=" w-full relative "
+                              >
+                                <a href={image.link}>
+                                  <img
+                                    src={image.link}
+                                    alt="not found"
+                                    onError={({ currentTarget }) => {
+                                      currentTarget.onerror = null; // prevents looping
+                                      currentTarget.src = notFoundImage;
+                                    }}
+                                    className=" w-[100%] object-fill rounded-xl "
+                                    style={{ cursor: "default" }}
+                                  />
+                                </a>
+                                <div
+                                  onClick={() =>
+                                    handleRemoveUploadedImage(image.link)
+                                  }
+                                  className="Remove-Photo-button absolute cursor-pointer top-0"
+                                >
+                                  <Button
+                                    style={{
+                                      color: "white",
+                                      background: "var(--primary-color)",
+                                    }}
+                                  >
+                                    x
+                                  </Button>
+                                </div>
+                              </li>
+                            ))}
                           {imageList.map((image, index) => (
                             <li key={index} className=" w-full relative ">
                               <a href={image["data_url"]}>

@@ -196,7 +196,7 @@ function* handleUpdatePost(data) {
   }
 }
 const updatePostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, updatePost, dispatch } = data.payload;
+  const { accessToken, refreshToken, updatePost,removeImages, dispatch } = data.payload;
   dispatch(updatePostStart());
   try {
     const config = {

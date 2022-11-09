@@ -47,7 +47,6 @@ function CardPost(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const userData = useSelector((state) => state.auth?.user?.userData.profile);
-  const arrayImgs = props.postData.media_location;
   const { postData } = props;
   const {
     post_id,
