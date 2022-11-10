@@ -71,7 +71,7 @@ function ProductSideBarDetails() {
               //   <span>Your cart is still empty</span>
               // </div>
             }
-             { true && <ul className="cart-list flex flex-col gap-[1rem] h-[50rem] overflow-y-scroll ">
+             { true && <ul className="cart-list flex flex-col gap-[1rem] max-h-[50rem] overflow-y-scroll ">
                 {[
                   ...Array.from({ length: 5 }, () =>
                     randomNumberInRange(100, 250)
