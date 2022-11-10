@@ -16,7 +16,7 @@ export class ProfileWallpaperImageRepository {
                 include: [
                     {
                         model: Profile,
-                        where: { profile_id: profile_id, link: link },
+                        where: { profile_id: profile_id },
                         attributes: [],
                     }
                 ]

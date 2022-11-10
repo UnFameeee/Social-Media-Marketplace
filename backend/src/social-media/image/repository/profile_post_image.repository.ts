@@ -1,5 +1,6 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PROVIDER } from "src/common/providers/provider.constant";
+import { Op } from "sequelize";
 import { ProfilePostImageEntity } from "src/common/models/entity/profile_post_image";
 import { Post } from "src/social-media/post/model/post.model";
 import { ProfilePostImage } from "../model/profile_post_image.model";
@@ -84,15 +85,15 @@ export class ProfilePostImageRepository {
         }
     }
 
-    async deleteProfilePostImage(post_id: number, link: string): Promise<boolean> {
-        const queryData = await this.profilePostImageRepository.findOne({
-            where: { link: link },
+    async deleteProfilePostImage(post_id: number, linkArray: string[]): Promise<boolean> {
+        const queryData = await this.profilePostImageRepository.findAll({
+            attributes: ["profile_post_image_id"],
+            where: { link: { [Op.in]: linkArray } },
             include: [
                 {
-                    model: Post,
+                    model: Post,    
                     where: {
                         post_id: post_id,
-
                     },
                     attributes: [],
                 }
@@ -100,9 +101,13 @@ export class ProfilePostImageRepository {
             raw: true,
         });
         if (queryData) {
+            var idDeleted: number[] = []; 
+            for(const x of queryData){
+                idDeleted.push(x.profile_post_image_id);
+            }
             const rowsDeleted = await this.profilePostImageRepository.destroy({
                 where: {
-                    profile_post_image_id: queryData.profile_post_image_id,
+                    profile_post_image_id: { [Op.in]: idDeleted },
                 }
             })
             return (rowsDeleted > 0) ? true : false;

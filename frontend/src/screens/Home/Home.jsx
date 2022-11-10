@@ -60,6 +60,13 @@ const ResponSiveDiv = styled.div`
   @media only screen and (max-width: 808px) {
     .threeColumn-wrapper {
       padding-left: 0;
+      padding-right: 0;
+    }
+    .cardPost {
+      width: 100%;
+    }
+    .post-status-wrapper{
+      width: 100%;
     }
   }
 `;
