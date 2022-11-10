@@ -25,9 +25,9 @@ export class ProfileRepository {
         // @Inject(PROVIDER.Friendship) private friendshipModelRepository: typeof Friendship,
         @Inject(FriendshipRepository) private friendshipRepository: FriendshipRepository,
         @Inject(DescriptionRepository) private descriptionRepository: DescriptionRepository,
-        @Inject(PROVIDER.ProfileAvatarImage) private profileAvatarImageModelRepository: typeof ProfileAvatarImage,
+        // @Inject(PROVIDER.ProfileAvatarImage) private profileAvatarImageModelRepository: typeof ProfileAvatarImage,
         @Inject(PROVIDER.ProfilePostImage) private profilePostImageModelRepository: typeof ProfilePostImage,
-        @Inject(PROVIDER.ProfileWallpaperImage) private profileWallpaperImageModelRepository: typeof ProfileWallpaperImage,
+        // @Inject(PROVIDER.ProfileWallpaperImage) private profileWallpaperImageModelRepository: typeof ProfileWallpaperImage,
     ) { }
 
     async getAllProfile(page: Page): Promise<PagingData<Profile[]>> {
@@ -35,7 +35,11 @@ export class ProfileRepository {
             var result = new PagingData<Profile[]>();
 
             var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findAndCountAll({
-                attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                attributes: ["profile_id", "profile_name", "email", "birth",
+                    [Sequelize.col("profile_avatar.link"), "avatar"],
+                    [Sequelize.col("profile_wallpaper.link"), "wallpaper"],
+                    "isActivate", "role", "createdAt", "updatedAt"
+                ],
                 include: [
                     {
                         model: ProfileAvatarImage,
@@ -101,7 +105,11 @@ export class ProfileRepository {
     async findProfileByEmail(email: string, scope?: string): Promise<Profile> {
         try {
             return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
-                attributes: ["profile_id", "profile_name", "password", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                attributes: ["profile_id", "profile_name", "password", "email", "birth",
+                    [Sequelize.col("profile_avatar.link"), "avatar"],
+                    [Sequelize.col("profile_wallpaper.link"), "wallpaper"],
+                    "isActivate", "role", "createdAt", "updatedAt"
+                ],
                 include: [
                     {
                         model: ProfileAvatarImage,
@@ -248,7 +256,11 @@ export class ProfileRepository {
             var result = new PagingData<Profile[]>();
 
             var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findAndCountAll({
-                attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                attributes: ["profile_id", "profile_name", "email", "birth",
+                    [Sequelize.col("profile_avatar.link"), "avatar"],
+                    [Sequelize.col("profile_wallpaper.link"), "wallpaper"],
+                    "isActivate", "role", "createdAt", "updatedAt"
+                ],
                 include: [
                     {
                         model: ProfileAvatarImage,
@@ -288,7 +300,11 @@ export class ProfileRepository {
     async getProfileDetailById(profile_id: number, profile_target_id: number): Promise<Profile> {
         try {
             var queryData = await this.profileRepository.findOne({
-                attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                attributes: ["profile_id", "profile_name", "email", "birth",
+                    [Sequelize.col("profile_avatar.link"), "avatar"],
+                    [Sequelize.col("profile_wallpaper.link"), "wallpaper"],
+                    "isActivate", "role", "createdAt", "updatedAt"
+                ],
                 include: [
                     {
                         model: ProfileAvatarImage,
