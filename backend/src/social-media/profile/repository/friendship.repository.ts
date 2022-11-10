@@ -220,10 +220,9 @@ export class FriendshipRepository {
                     attributes: ["id", "status", "createdAt",
                         "profile_target",
                         [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"],
-                        [Sequelize.col("profile_target_id.picture"), "profile_target_picture"],
                         "profile_request",
                         [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"],
-                        [Sequelize.col("profile_request_id.picture"), "profile_request_picture"]],
+                    ],
                     include: [
                         {
                             model: Profile,
@@ -290,9 +289,11 @@ export class FriendshipRepository {
                         }
                     ]
                 },
-                attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"],
+                attributes: ["id", "status", "createdAt", "profile_target",
+                    [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"],
                     "profile_request",
-                    [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"], [Sequelize.col("profile_request_id.picture"), "profile_request_picture"]],
+                    [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"],
+                ],
                 include: [
                     {
                         model: Profile,
@@ -341,9 +342,11 @@ export class FriendshipRepository {
                     }
                 ]
             },
-            attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"],
+            attributes: ["id", "status", "createdAt", "profile_target",
+                [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"],
                 "profile_request",
-                [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"], [Sequelize.col("profile_request_id.picture"), "profile_request_picture"]],
+                [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"],
+            ],
             include: [
                 {
                     model: Profile,
@@ -375,9 +378,11 @@ export class FriendshipRepository {
                 status: FRIENDSHIP_STATUS.PENDING,
                 [Op.or]: [{ "$profile_request_id.profile_id$": profile_id }, { "$profile_target_id.profile_id$": profile_id }],
             },
-            attributes: ["id", "status", "createdAt", "profile_target", [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"], [Sequelize.col("profile_target_id.picture"), "profile_target_picture"],
+            attributes: ["id", "status", "createdAt", "profile_target",
+                [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"],
                 "profile_request",
-                [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"], [Sequelize.col("profile_request_id.picture"), "profile_request_picture"]],
+                [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"],
+            ],
             include: [
                 {
                     model: Profile,
