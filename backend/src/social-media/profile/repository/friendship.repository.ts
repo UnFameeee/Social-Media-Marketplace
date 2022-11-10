@@ -1,5 +1,5 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from 'src/common/constants/provider.constant';
+import { PROVIDER } from 'src/common/providers/provider.constant';
 import { Friendship } from './../model/friendship.model';
 import { PagingData } from 'src/common/models/view-model/paging.model';
 import { paginate } from "src/common/utils/paginate.utils";

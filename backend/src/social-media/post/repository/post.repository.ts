@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { InternalServerErrorException } from "@nestjs/common/exceptions";
-import { PROVIDER } from "src/common/constants/provider.constant";
+import { PROVIDER } from "src/common/providers/provider.constant";
 import { Profile } from "../../profile/model/profile.model";
 import { PostData } from "../../../common/models/dtos/post-data.dto";
 import { Post } from "../model/post.model";

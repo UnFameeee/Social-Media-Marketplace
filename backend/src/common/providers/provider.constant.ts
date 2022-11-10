@@ -4,6 +4,7 @@ export enum PROVIDER {
     Post = 'POST_REPOSITOTY',
     PostLike = 'POSTLIKE_REPOSITOTY',
     PostComment = 'POSTCOMMENT_REPOSITOTY',
+    ParentChildComment = 'PARENT_CHILD_COMMENT_REPOSITORY',
     Friendship = 'FRIENDSHIP_REPOSITOTY',
     Description = 'DESCRIPTION_REPOSITORY',
     ProfileAvatarImage = 'PROFILE_AVATAR_IMAGE_REPOSITORY',
