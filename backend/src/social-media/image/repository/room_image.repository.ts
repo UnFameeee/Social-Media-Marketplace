@@ -1,5 +1,5 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from "src/common/constants/provider.constant";
+import { PROVIDER } from "src/common/providers/provider.constant";
 import { RoomImage } from "../model/room_image";
 
 @Injectable()
