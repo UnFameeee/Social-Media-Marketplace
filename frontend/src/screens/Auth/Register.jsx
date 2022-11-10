@@ -38,6 +38,7 @@ export default function Register() {
               name="profile_name"
               label="Username"
               required
+              autoComplete="username"
             />
             <FormChildren.InputForm
               name="email"
@@ -48,11 +49,13 @@ export default function Register() {
               name="password"
               label="Password"
               required
+              autoComplete="new-password"
             />
             <FormChildren.PasswordInputForm
               name="rePassword"
               label="Confirm Password"
               required
+              autoComplete="new-password"
             />
             <FormChildren.DatePickerForm
               name="birth"

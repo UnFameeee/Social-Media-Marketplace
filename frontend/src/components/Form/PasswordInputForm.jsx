@@ -34,15 +34,15 @@ export default function PasswordInputForm({ name, ...props }) {
       InputProps={{
         endAdornment: (
           <InputAdornment position="end">
-            <IconButton
-              //aria-label="toggle password visibility"
-              onClick={handleClickShowPassword}
-              edge="end"
-            >
+            <IconButton onClick={handleClickShowPassword} edge="end">
               {showPassword ? (
-                <VisibilityOffOutlinedIcon sx={{transform: 'scale(1.3)'}}/>
+                <VisibilityOffOutlinedIcon
+                  sx={{ transform: 'scale(1.3)' }}
+                />
               ) : (
-                <VisibilityOutlinedIcon sx={{transform: 'scale(1.3)'}}/>
+                <VisibilityOutlinedIcon
+                  sx={{ transform: 'scale(1.3)' }}
+                />
               )}
             </IconButton>
           </InputAdornment>

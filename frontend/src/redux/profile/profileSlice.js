@@ -6,7 +6,12 @@ const initialState = {
     isFetching: false,
     error: false,
   },
-  getFriendSuggestion: {
+  updateAvt: {
+    data: null,
+    isFetching: false,
+    error: false,
+  },
+  updateWallpaper: {
     data: null,
     isFetching: false,
     error: false,
@@ -20,7 +25,12 @@ export const profileSlice = createSlice({
       isFetching: false,
       error: false,
     },
-    getFriendSuggestion: {
+    updateAvt: {
+      data: null,
+      isFetching: false,
+      error: false,
+    },
+    updateWallpaper: {
       data: null,
       isFetching: false,
       error: false,
@@ -39,18 +49,30 @@ export const profileSlice = createSlice({
     getProfileDetailFailed: (state) => {
       state.profileDetails.isFetching = false;
       state.profileDetails.error = true;
-    },    
+    },       
 
-    getFriendSuggestionStart: (state) => {
-      state.getFriendSuggestion.isFetching = true;
+    updateAvtStart: (state) => {
+      state.updateAvt.isFetching = true;
     },
-    getFriendSuggestionSuccess: (state, action) => {
-      state.getFriendSuggestion.isFetching = false;
-      state.getFriendSuggestion.data = action.payload;
+    updateAvtSuccess: (state, action) => {
+      state.updateAvt.isFetching = false;
+      state.updateAvt.data = action.payload;
     },
-    getFriendSuggestionFailed: (state) => {
-      state.getFriendSuggestion.isFetching = false;
-      state.getFriendSuggestion.error = true;
+    updateAvtFailed: (state) => {
+      state.updateAvt.isFetching = false;
+      state.updateAvt.error = true;
+    },
+
+    updateWallpaperStart: (state) => {
+      state.updateWallpaper.isFetching = true;
+    },
+    updateWallpaperSuccess: (state, action) => {
+      state.updateWallpaper.isFetching = false;
+      state.updateWallpaper.data = action.payload;
+    },
+    updateWallpaperFailed: (state) => {
+      state.updateWallpaper.isFetching = false;
+      state.updateWallpaper.error = true;
     },
   },
 });
@@ -60,9 +82,13 @@ export const {
     getProfileDetailSuccess,
     getProfileDetailFailed,
 
-    getFriendSuggestionStart,
-    getFriendSuggestionSuccess,
-    getFriendSuggestionFailed,
+    updateAvtStart,
+    updateAvtSuccess,
+    updateAvtFailed,
+
+    updateWallpaperStart,
+    updateWallpaperSuccess,
+    updateWallpaperFailed,
 
 } = profileSlice.actions;
 export default profileSlice.reducer;

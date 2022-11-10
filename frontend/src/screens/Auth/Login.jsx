@@ -38,11 +38,13 @@ export default function Login() {
               name="email"
               label="Email"
               required
+              autoComplete="username"
             />
             <FormChildren.PasswordInputForm
               name="password"
               label="Password"
               required
+              autoComplete="current-password"
             />
             <FormChildren.CheckBoxForm
               name="remember"

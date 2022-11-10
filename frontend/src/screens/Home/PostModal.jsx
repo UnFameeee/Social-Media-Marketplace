@@ -7,11 +7,9 @@ import {
   Avatar,
   TextareaAutosize,
   Button,
-  Box,
   Modal,
-  Typography,
 } from "@mui/material";
-import { PhotoLibrary } from "@mui/icons-material";
+import { Close, PhotoLibrary } from "@mui/icons-material";
 import {
   removeSingleUploadImagePost,
   resetUploadImagePostState,
@@ -202,11 +200,12 @@ function PostModal(props) {
                   color: "var(--primary-color)",
                   border: "1px solid var(--primary-color) ",
                 }}
+                className="[&>svg]:text-[2.6rem]"
                 onClick={closeModal}
               >
-                Close
+                <Close />
               </Button>
-              <span className="  text-center w-full px-[2rem] text-[2.4rem] font-semibold">
+              <span className="text-center w-full px-[2rem] text-[2.4rem] font-semibold">
                 {props.postUpdateData ? "Update Post" : "Create Post"}
               </span>
             </div>
@@ -275,7 +274,7 @@ function PostModal(props) {
                     )}
                     {((imageList && imageList.length > 0) ||
                       (post_image && post_image.length > 0)) && (
-                      <div className="relative shadow-lg bg-slate-100 border-[0.1rem] border-gray-300  rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll mb-[2rem]  ">
+                      <div className="relative shadow-lg bg-slate-100 border-[0.1rem] border-gray-300 rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll mb-[2rem]  ">
                         <ul className="flex flex-wrap gap-[1rem]  ">
                           {post_image &&
                             post_image.map((image) => (
@@ -335,8 +334,9 @@ function PostModal(props) {
                                     color: "white",
                                     background: "var(--primary-color)",
                                   }}
+                                  className="[&>svg]:text-[2.4rem]"
                                 >
-                                  x
+                                  <Close />
                                 </Button>
                               </div>
                             </li>

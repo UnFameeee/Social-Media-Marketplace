@@ -5,6 +5,7 @@ const api = {
   profile: apiUrl + '/profile',
   friend: apiUrl + '/friendship',
   post: apiUrl + '/post',
+  image: apiUrl + '/image',
 };
 
 export default api;

@@ -25,7 +25,6 @@ import {
   Avatar,
   ClickAwayListener,
   Modal,
-  Fade,
   Paper,
 } from '@mui/material';
 import SideBarButton from './SideBarButton';
@@ -395,7 +394,7 @@ function UserProfile(props) {
         </div>
       </div>
       <UpdateAvatar
-        actionProps={[openAvatarModal, setOpenAvatarModal]}
+        modalProps={[openAvatarModal, setOpenAvatarModal]}
         profileData={profileData}
       />
     </>
@@ -600,101 +599,112 @@ function ProfileAction({
   );
 }
 
-function UpdateAvatar({ actionProps, profileData }) {
+function UpdateAvatar({ modalProps, profileData }) {
   const inputRef = useRef(null);
   const [imageURL, setImageURL] = useState();
+  const [openConfirm, setOpenConfirm] = useState(false);
+
   const onImageChange = (e) => {
     const [file] = e.target.files;
     setImageURL(URL.createObjectURL(file));
   };
 
   const handleClose = () => {
-    actionProps[1](false);
     if (imageURL) {
-      setImageURL('');
+      setOpenConfirm(true);
+    } else {
+      modalProps[1](false);
     }
   };
 
   return (
     <Modal
-      open={actionProps[0]}
+      open={modalProps[0]}
       onClose={handleClose}
       closeAfterTransition
     >
-      <Fade in={actionProps[0]}>
-        <Paper
-          sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            width: 400,
-            boxShadow: 24,
-            p: '1.6rem 1.6rem 2.4rem 1.6rem',
-          }}
-        >
-          <div className="flex items-center">
-            <span className="flex-1 font-bold text-center text-[2rem]">
-              Update profile picture
-            </span>
-            <MUI.BetterIconButton
-              onClick={handleClose}
-              className="[&>div>svg]:text-[2rem] [&>div]:w-[3.2rem] [&>div]:h-[3.2rem]"
-              hasBackground
-            >
-              <CloseOutlined />
-            </MUI.BetterIconButton>
-          </div>
+      <Paper
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '44rem',
+          boxShadow: 24,
+          p: '1.6rem 1.6rem 2rem 1.6rem',
+        }}
+      >
+        <div className="text-center">
+          <span className="font-bold text-[2rem]">
+            Update profile picture
+          </span>
+          <MUI.BetterIconButton
+            onClick={handleClose}
+            className="[&>button>svg]:text-[2rem] [&>div]:w-[3.2rem] [&>div]:h-[3.2rem] absolute top-[1.2rem] right-[1.2rem]"
+          >
+            <CloseOutlined />
+          </MUI.BetterIconButton>
+        </div>
 
-          <div className="mt-[1.2rem] flex flex-col justify-center items-center gap-[2.4rem]">
-            <div className="relative w-[80%]">
-              <MUI.Button
-                className="w-[100%] z-10"
-                onClick={() => {
-                  inputRef.current.click();
-                }}
-              >
-                Upload photo
-              </MUI.Button>
-              <input
-                className="hidden"
-                type="file"
-                onChange={onImageChange}
-                ref={inputRef}
-              />
-            </div>
-            <Avatar
-              sx={{
-                borderRadius: 0,
-                width: '80%',
-                height: '28rem',
-                fontSize: '16rem',
-                cursor: 'pointer',
-              }}
-              alt={profileData?.profile_name}
-              src={
-                imageURL
-                  ? imageURL
-                  : profileData?.picture
-                  ? JSON.parse(profileData?.picture)
-                  : null
-              }
+        <div className="mt-[1.2rem] flex flex-col justify-center items-center gap-[2rem]">
+          <div className="relative w-[80%]">
+            <MUI.Button
+              className="w-[100%]"
               onClick={() => {
                 inputRef.current.click();
               }}
             >
-              {profileData?.profile_name?.at(0)}
-            </Avatar>
-          </div>
-
-          <div className="mt-[2.4rem] text-right">
-            <MUI.Button style={{ marginRight: '1.6rem' }}>
-              Cancel
+              Upload photo
             </MUI.Button>
-            <MUI.Button>Save</MUI.Button>
+            <input
+              className="hidden"
+              type="file"
+              onChange={onImageChange}
+              ref={inputRef}
+            />
           </div>
-        </Paper>
-      </Fade>
+          <Avatar
+            sx={{
+              borderRadius: 0,
+              width: '80%',
+              height: '32rem',
+              fontSize: '16rem',
+              cursor: 'pointer',
+            }}
+            alt={profileData?.profile_name}
+            src={
+              imageURL
+                ? imageURL
+                : profileData?.picture
+                ? JSON.parse(profileData?.picture)
+                : null
+            }
+            onClick={() => {
+              inputRef.current.click();
+            }}
+          >
+            {profileData?.profile_name?.at(0)}
+          </Avatar>
+        </div>
+
+        <div className="mt-[2rem] text-right">
+          <MUI.Button style={{ marginRight: '1.6rem' }} onClick={handleClose}>
+            Cancel
+          </MUI.Button>
+          <MUI.Button>Save</MUI.Button>
+        </div>
+
+        <MUI.ConfirmDialog
+          modalProps={[openConfirm, setOpenConfirm]}
+          title="Discard change"
+          actionName="discard change"
+          confirmAction={() => {
+            setOpenConfirm(false);
+            modalProps[1](false);
+            setImageURL('');
+          }}
+        />
+      </Paper>
     </Modal>
   );
 }

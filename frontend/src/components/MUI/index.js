@@ -6,6 +6,7 @@ import Button from './Button/Button';
 import { BetterIconButton, ButtonWithIcon } from './Button/IconButton';
 import SearchBar from './SearchBar';
 import Menu from './Menu';
+import ConfirmDialog from './Dialog';
 
 const MUI = {
   Input,
@@ -17,6 +18,7 @@ const MUI = {
   ButtonWithIcon,
   BetterIconButton,
   Menu,
+  ConfirmDialog,
 };
 
 export default MUI;

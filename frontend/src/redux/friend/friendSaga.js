@@ -1,4 +1,4 @@
-import { put, takeLatest, call, fork } from 'redux-saga/effects';
+import { put, takeLatest, call } from 'redux-saga/effects';
 import { axiosInStanceJWT } from '../axiosJWT';
 import api from '../../common/environment/environment';
 import { paging } from '../../common/constants/apiConfig';
@@ -20,13 +20,13 @@ import {
   denySuccess,
   getAllFriendForMainUserSuccess,
   getRequestSuccess,
+  getSuggestionSuccess,
   unfriendFailed,
   unfriendSaga,
   unfriendSagaSuccess,
   unfriendStart,
   unfriendSuccess,
 } from './friendSlice';
-import { getFriendSuggestionSuccess } from '../profile/profileSlice';
 import { notifyService } from '../../services/notifyService';
 
 // #region friend requests
@@ -238,7 +238,7 @@ export function* refreshFriendSuggestion() {
 function* handleRefreshSuggestionSaga(data) {
   try {
     const getAll = yield call(getAllSuggestionSaga, data);
-    yield put(getFriendSuggestionSuccess(getAll.data.results));
+    yield put(getSuggestionSuccess(getAll.data.results));
   } catch (error) {
     console.log(error);
   }
@@ -247,7 +247,7 @@ async function getAllSuggestionSaga(data) {
   const { accessToken, refreshToken } = data.payload;
   try {
     const res = await axiosInStanceJWT.post(
-      `${api.profile}/friendSuggestion`,
+      `${api.friend}/friendSuggestion`,
       paging,
       {
         headers: {

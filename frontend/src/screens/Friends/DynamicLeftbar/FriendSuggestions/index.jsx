@@ -22,7 +22,7 @@ export default function FriendSuggestions() {
     (state) => state.auth.login.currentUser.refresh
   );
   const allFriendSuggestions = useSelector(
-    (state) => state.profile?.getFriendSuggestion?.data
+    (state) => state.friends?.getSuggestion?.data
   );
   const userData = useSelector(
     (state) => state.profile?.profileDetails?.data
