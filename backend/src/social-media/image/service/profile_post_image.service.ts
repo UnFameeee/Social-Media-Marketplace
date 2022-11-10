@@ -18,10 +18,10 @@ export class ProfilePostImageService {
         }
     }
 
-    async deleteProfilePostImage(post_id: number, link: string): Promise<ResponseData<boolean>> {
+    async deleteProfilePostImage(post_id: number, linkArray: string[]): Promise<ResponseData<boolean>> {
         try {
             var response = new ResponseData<boolean>();
-            response.results = await this.profilePostImageRepository.deleteProfilePostImage(post_id, link);
+            response.results = await this.profilePostImageRepository.deleteProfilePostImage(post_id, linkArray);
             return response;
         } catch (err) {
             ExceptionResponse(err);
