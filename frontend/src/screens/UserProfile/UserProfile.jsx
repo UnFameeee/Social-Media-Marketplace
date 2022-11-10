@@ -48,6 +48,7 @@ import {
   unfriendSaga,
 } from '../../redux/friend/friendSlice';
 import { useRef } from 'react';
+import { updateAvtSaga } from '../../redux/profile/profileSlice';
 
 function UserProfile(props) {
   const dispatch = useDispatch();
@@ -396,6 +397,13 @@ function UserProfile(props) {
       <UpdateAvatar
         modalProps={[openAvatarModal, setOpenAvatarModal]}
         profileData={profileData}
+        actionProps={{
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          id: profileData?.profile_id,
+          mainId: userData?.profile_id,
+          dispatch: dispatch,
+        }}
       />
     </>
   );
@@ -599,13 +607,17 @@ function ProfileAction({
   );
 }
 
-function UpdateAvatar({ modalProps, profileData }) {
+function UpdateAvatar({ modalProps, profileData, actionProps }) {
+  const { accessToken, refreshToken, id, mainId, dispatch } =
+    actionProps;
   const inputRef = useRef(null);
+  const [avatar, setAvatar] = useState();
   const [imageURL, setImageURL] = useState();
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const onImageChange = (e) => {
     const [file] = e.target.files;
+    setAvatar(file);
     setImageURL(URL.createObjectURL(file));
   };
 
@@ -688,10 +700,27 @@ function UpdateAvatar({ modalProps, profileData }) {
         </div>
 
         <div className="mt-[2rem] text-right">
-          <MUI.Button style={{ marginRight: '1.6rem' }} onClick={handleClose}>
+          <MUI.Button
+            style={{ marginRight: '1.6rem' }}
+            onClick={handleClose}
+          >
             Cancel
           </MUI.Button>
-          <MUI.Button>Save</MUI.Button>
+          <MUI.Button
+            onClick={() => {
+              dispatch(
+                updateAvtSaga({
+                  accessToken,
+                  refreshToken,
+                  avatar,
+                  id,
+                  dispatch,
+                })
+              );
+            }}
+          >
+            Save
+          </MUI.Button>
         </div>
 
         <MUI.ConfirmDialog

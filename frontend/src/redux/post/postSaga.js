@@ -105,7 +105,7 @@ const createPostSagaRequest = async (data) => {
     };
 
     const res = await axiosInStanceJWT.post(
-      `${api.post}/post/newPost`,
+      `${api.post}/newPost`,
       postData_written_text,
       {
         headers: config,

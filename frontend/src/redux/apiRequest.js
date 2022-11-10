@@ -766,10 +766,10 @@ export const getFriendSuggestion = async (
     };
     const paging = {
       page: 0,
-      pageSize: 5,
+      pageSize: 7,
     };
     const res = await axiosInStanceJWT.post(
-      `${api.friend}/friendSuggestion`,
+      `${api.profile}/friendSuggestion`,
       paging,
       {
         headers: config,

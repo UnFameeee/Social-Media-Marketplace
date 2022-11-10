@@ -4,11 +4,16 @@ import api from '../../common/environment/environment';
 import {
   getProfileDetailSuccess,
   updateAvtFailed,
+  updateAvtSaga,
+  updateAvtSagaSuccess,
   updateAvtSuccess,
   updateWallpaperFailed,
+  updateWallpaperSaga,
+  updateWallpaperSagaSuccess,
   updateWallpaperSuccess,
 } from './profileSlice';
 import { notifyService } from '../../services/notifyService';
+import { paging } from '../../common/constants/apiConfig';
 
 export function* refreshProfile() {
   yield takeLatest(
@@ -61,11 +66,13 @@ function* handleUpdateAvt(data) {
 async function updateAvtSagaRequest(data) {
   const { accessToken, refreshToken, avatar, id, dispatch } =
     data.payload;
+  var bodyFormData = new FormData();
+  bodyFormData.append('file', avatar); 
 
   try {
     const res = await axiosInStanceJWT.post(
       `${api.image}/profile_avatar/upload`,
-      avatar,
+      bodyFormData,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -76,7 +83,9 @@ async function updateAvtSagaRequest(data) {
     );
     if (!res.data.message) {
       notifyService.showSuccess('Update Avatar Successfully!');
-      dispatch(updateAvtSagaSuccess({ accessToken, refreshToken, id }));
+      dispatch(
+        updateAvtSagaSuccess({ accessToken, refreshToken, id })
+      );
       return res;
     } else {
       notifyService.showError(res.data.message);
@@ -117,7 +126,9 @@ async function updateWallSagaRequest(data) {
     );
     if (!res.data.message) {
       notifyService.showSuccess('Update Wallpaper Successfully!');
-      dispatch(updateWallpaperSagaSuccess({ accessToken, refreshToken, id }));
+      dispatch(
+        updateWallpaperSagaSuccess({ accessToken, refreshToken, id })
+      );
       return res;
     } else {
       notifyService.showError(res.data.message);

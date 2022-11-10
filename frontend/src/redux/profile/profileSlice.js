@@ -62,6 +62,8 @@ export const profileSlice = createSlice({
       state.updateAvt.isFetching = false;
       state.updateAvt.error = true;
     },
+    updateAvtSaga() {},
+    updateAvtSagaSuccess() {},
 
     updateWallpaperStart: (state) => {
       state.updateWallpaper.isFetching = true;
@@ -74,6 +76,8 @@ export const profileSlice = createSlice({
       state.updateWallpaper.isFetching = false;
       state.updateWallpaper.error = true;
     },
+    updateWallpaperSaga() {},
+    updateWallpaperSagaSuccess() {},
   },
 });
 
@@ -90,5 +94,9 @@ export const {
     updateWallpaperSuccess,
     updateWallpaperFailed,
 
+    updateAvtSaga,
+    updateAvtSagaSuccess,
+    updateWallpaperSaga,
+    updateWallpaperSagaSuccess
 } = profileSlice.actions;
 export default profileSlice.reducer;

@@ -247,7 +247,7 @@ async function getAllSuggestionSaga(data) {
   const { accessToken, refreshToken } = data.payload;
   try {
     const res = await axiosInStanceJWT.post(
-      `${api.friend}/friendSuggestion`,
+      `${api.profile}/friendSuggestion`,
       paging,
       {
         headers: {
