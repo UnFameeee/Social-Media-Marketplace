@@ -12,6 +12,7 @@ import {
   Favorite,
   AccessTimeFilled,
   RssFeed,
+  CloseOutlined,
 } from '@mui/icons-material';
 import { BiMessageRoundedDetail } from 'react-icons/bi';
 import {
@@ -20,7 +21,13 @@ import {
   FaUserMinus,
   FaUserTimes,
 } from 'react-icons/fa';
-import { Avatar, ClickAwayListener } from '@mui/material';
+import {
+  Avatar,
+  ClickAwayListener,
+  Modal,
+  Fade,
+  Paper,
+} from '@mui/material';
 import SideBarButton from './SideBarButton';
 import SideBarLi from './SideBarLi';
 import FullWidthHr from '../../components/FullWidthHr/FullWidthHr';
@@ -41,6 +48,7 @@ import {
   denySaga,
   unfriendSaga,
 } from '../../redux/friend/friendSlice';
+import { useRef } from 'react';
 
 function UserProfile(props) {
   const dispatch = useDispatch();
@@ -90,6 +98,8 @@ function UserProfile(props) {
       props.setReRender(false);
     }
   };
+
+  const [openAvatarModal, setOpenAvatarModal] = useState(false);
 
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -168,12 +178,17 @@ function UserProfile(props) {
                 {profileData?.profile_name?.at(0)}
               </Avatar>
               {profileData?.profile_id == userData?.profile_id && (
-                <div className="bg-white absolute right-0 top-[12rem] z-1 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer">
+                <button
+                  className="bg-white absolute right-0 top-[12rem] z-1 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer"
+                  onClick={() => {
+                    setOpenAvatarModal(true);
+                  }}
+                >
                   <PhotoCamera
                     className=" bg-white  right-0 top-[12rem] z-1"
                     style={{ fontSize: '2.5rem' }}
                   />
-                </div>
+                </button>
               )}
             </div>
             <div className="flex pl-[24rem] pr-[4rem] items-center justify-center py-[3.5rem] ">
@@ -379,6 +394,10 @@ function UserProfile(props) {
             ))}
         </div>
       </div>
+      <UpdateAvatar
+        actionProps={[openAvatarModal, setOpenAvatarModal]}
+        profileData={profileData}
+      />
     </>
   );
 }
@@ -390,7 +409,8 @@ function ProfileAction({
   actionProps,
   action,
 }) {
-  const { accessToken, refreshToken, id, mainId, dispatch } = actionProps;
+  const { accessToken, refreshToken, id, mainId, dispatch } =
+    actionProps;
   const navigate = useNavigate();
   const [menuClicked, setMenuClicked] = useState(false);
 
@@ -577,6 +597,105 @@ function ProfileAction({
         )}
       </MUI.Button>
     </>
+  );
+}
+
+function UpdateAvatar({ actionProps, profileData }) {
+  const inputRef = useRef(null);
+  const [imageURL, setImageURL] = useState();
+  const onImageChange = (e) => {
+    const [file] = e.target.files;
+    setImageURL(URL.createObjectURL(file));
+  };
+
+  const handleClose = () => {
+    actionProps[1](false);
+    if (imageURL) {
+      setImageURL('');
+    }
+  };
+
+  return (
+    <Modal
+      open={actionProps[0]}
+      onClose={handleClose}
+      closeAfterTransition
+    >
+      <Fade in={actionProps[0]}>
+        <Paper
+          sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            boxShadow: 24,
+            p: '1.6rem 1.6rem 2.4rem 1.6rem',
+          }}
+        >
+          <div className="flex items-center">
+            <span className="flex-1 font-bold text-center text-[2rem]">
+              Update profile picture
+            </span>
+            <MUI.BetterIconButton
+              onClick={handleClose}
+              className="[&>div>svg]:text-[2rem] [&>div]:w-[3.2rem] [&>div]:h-[3.2rem]"
+              hasBackground
+            >
+              <CloseOutlined />
+            </MUI.BetterIconButton>
+          </div>
+
+          <div className="mt-[1.2rem] flex flex-col justify-center items-center gap-[2.4rem]">
+            <div className="relative w-[80%]">
+              <MUI.Button
+                className="w-[100%] z-10"
+                onClick={() => {
+                  inputRef.current.click();
+                }}
+              >
+                Upload photo
+              </MUI.Button>
+              <input
+                className="hidden"
+                type="file"
+                onChange={onImageChange}
+                ref={inputRef}
+              />
+            </div>
+            <Avatar
+              sx={{
+                borderRadius: 0,
+                width: '80%',
+                height: '28rem',
+                fontSize: '16rem',
+                cursor: 'pointer',
+              }}
+              alt={profileData?.profile_name}
+              src={
+                imageURL
+                  ? imageURL
+                  : profileData?.picture
+                  ? JSON.parse(profileData?.picture)
+                  : null
+              }
+              onClick={() => {
+                inputRef.current.click();
+              }}
+            >
+              {profileData?.profile_name?.at(0)}
+            </Avatar>
+          </div>
+
+          <div className="mt-[2.4rem] text-right">
+            <MUI.Button style={{ marginRight: '1.6rem' }}>
+              Cancel
+            </MUI.Button>
+            <MUI.Button>Save</MUI.Button>
+          </div>
+        </Paper>
+      </Fade>
+    </Modal>
   );
 }
 
