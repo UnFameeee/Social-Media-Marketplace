@@ -30,9 +30,8 @@ function Marketplace() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    speed: 5000,
+    speed: 750,
     autoplaySpeed: 5000,
-    fade: true,
     cssEase: "linear",
   };
   const [page, setPage] = React.useState(1);

@@ -14,7 +14,6 @@ const ResponSiveGrid = styled.div`
 `;
 const ResponSiveButtonWrapper = styled.div`
   display: flex;
-  height: 3/5;
   justify-content: space-around;
   gap: 1rem;
   font-size: 1.5rem;
@@ -68,12 +67,29 @@ function ProductCard() {
           </div>
         </div>
         <ResponSiveButtonWrapper>
-          <button className="btn-view-detail w-full h-full p-[0.5rem] flex items-center">
-            <span className="w-full">View details</span>
-          </button>
-          <button className="btn-add-to-cart w-full h-full p-[0.5rem] flex items-center  ">
-            <span className="w-full">Add to cart</span>
-          </button>
+        <Button
+        style={{
+          color: "black",
+          background: "white",
+          border: "1px solid var(--primary-color)",
+          borderRadius: "0px 8px 0px 8px",
+          MozBorderRadius: "0px 8px 0px 8px",
+          WebkitBorderRadius: "0px 8px 0px 8px",
+        }}
+      >
+        <span className="text-[1.3rem]">View details</span>
+      </Button>
+      <Button
+        style={{
+          color: "white",
+          background: "var(--primary-color)",
+          borderRadius: "0px 8px 0px 8px",
+          MozBorderRadius: "0px 8px 0px 8px",
+          WebkitBorderRadius: "0px 8px 0px 8px",
+        }}
+      >
+        <span className=" text-[1.3rem]">Add to cart</span>
+      </Button>
         </ResponSiveButtonWrapper>
       </div>
     </ResponSiveGrid>
