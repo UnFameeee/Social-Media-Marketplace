@@ -1,5 +1,5 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from "src/common/constants/provider.constant";
+import { PROVIDER } from "src/common/providers/provider.constant";
 import { ProfileWallpaperImageEntity } from "src/common/models/entity/profile_wallpaper";
 import { Profile } from "src/social-media/profile/model/profile.model";
 import { ProfileWallpaperImage } from "../model/profile_wallpaper_image.mode";

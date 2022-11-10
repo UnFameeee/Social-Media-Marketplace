@@ -1,5 +1,5 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from "src/common/constants/provider.constant";
+import { PROVIDER } from "src/common/providers/provider.constant";
 import { DescriptionEntity } from "src/common/models/entity/description";
 import { Description } from "../model/description.model";
 import { Profile } from "../model/profile.model";

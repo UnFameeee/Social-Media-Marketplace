@@ -1,6 +1,6 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Op } from "sequelize";
-import { PROVIDER } from "src/common/constants/provider.constant";
+import { PROVIDER } from "src/common/providers/provider.constant";
 import { Profile } from "../model/profile.model";
 import { CreateProfileDto } from "../../../common/models/dtos/create-profile.dto";
 import { UpdateProfileDto } from "src/common/models/dtos/update-profile.dto";
