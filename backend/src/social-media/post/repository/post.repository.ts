@@ -24,12 +24,13 @@ export class PostRepository {
             var queryData = await this.postRepository.findAndCountAll({
                 attributes: [
                     "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
-                    [Sequelize.col("Profile.profile_name"), "profile_name"],
-                    [Sequelize.col("Profile.profile_avatar.link"), "avatar"]
+                    [Sequelize.col("post_profile.profile_name"), "profile_name"],
+                    [Sequelize.col("post_profile.profile_avatar.link"), "avatar"]
                 ],
                 include: [
                     {
                         model: Profile,
+                        as: "post_profile",
                         attributes: [],
                         include: [
                             {
@@ -75,12 +76,13 @@ export class PostRepository {
             var queryData = await this.postRepository.findAndCountAll({
                 attributes: [
                     "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
-                    [Sequelize.col("Profile.profile_name"), "profile_name"],
-                    [Sequelize.col("Profile.profile_avatar.link"), "avatar"]
+                    [Sequelize.col("post_profile.profile_name"), "profile_name"],
+                    [Sequelize.col("post_profile.profile_avatar.link"), "avatar"]
                 ],
                 include: [
                     {
                         model: Profile,
+                        as: "post_profile",
                         attributes: [],
                         where: { profile_id: profile_id },
                         include: [
@@ -127,12 +129,13 @@ export class PostRepository {
                 where: { post_id: post_id },
                 attributes: [
                     "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
-                    [Sequelize.col("Profile.profile_name"), "profile_name"],
-                    [Sequelize.col("Profile.profile_avatar.link"), "avatar"]
+                    [Sequelize.col("post_profile.profile_name"), "profile_name"],
+                    [Sequelize.col("post_profile.profile_avatar.link"), "avatar"]
                 ],
                 include: [
                     {
                         model: Profile,
+                        as: "post_profile",
                         attributes: [],
                         include: [
                             {
