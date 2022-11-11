@@ -1,64 +1,18 @@
 import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
-import { homeLeftbar } from "../../common/layout/homeLeftbar";
-import { Avatar, Pagination, Typography } from "@mui/material";
+import { Tooltip, Pagination, Typography, Fab } from "@mui/material";
 import { useSelector } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
 import ProductCard from "./ProductCard";
 import styled from "styled-components";
 const ResponSiveDiv = styled.div`
-.product-container {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  display: grid;
-  gap: 10px;
-}
-@media only screen and (max-width: 1780px) {
-  .product-container {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  .fab-btn-check-out{
+    display:none;
   }
-}
-@media only screen and (max-width: 1510px) {
-  .product-container {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-@media only screen and (max-width: 1252px) {
-  .product-container {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    justify-content: center;
-  }
-}
-@media only screen and (max-width: 958px) {
-  .product-container {
-    grid-template-columns: repeat(1, minmax(0, 0.8fr));
-    justify-content: center;
-  }
-}
-@media only screen and (max-width: 820px) {
-  .product-container {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    justify-content: center;
-  }
-  .ProductSideBarDetails {
-    display: none;
-  }
-  .ThreeColumns {
-    padding-left: 1%;
-    padding-right: 1%;
-  }
-}
-@media only screen and (max-width: 508px) {
-  .product-container {
-    grid-template-columns: repeat(1, minmax(0, 0.8fr));
-    justify-content: center;
-  }
-}
- 
-`;
-const ResponSiveGrid = styled.div`
   .product-container {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     display: grid;
@@ -91,6 +45,16 @@ const ResponSiveGrid = styled.div`
       grid-template-columns: repeat(2, minmax(0, 1fr));
       justify-content: center;
     }
+    .ProductSideBarDetails {
+      display: none;
+    }
+    .fab-btn-check-out{
+      display:block;
+    }
+    .ThreeColumns {
+      padding-left: 1%;
+      padding-right: 1%;
+    }
   }
   @media only screen and (max-width: 508px) {
     .product-container {
@@ -99,7 +63,6 @@ const ResponSiveGrid = styled.div`
     }
   }
 `;
-
 function Marketplace() {
   const userData = useSelector((state) => state.auth.user.userData);
   const settings = {
@@ -127,6 +90,9 @@ function Marketplace() {
         }}
       >
         <div className="main-market-place mb-[2rem] rounded-xl h-full p-[1.5rem] shadow-2xl ">
+          <Fab className="fab-btn-check-out" color="primary" aria-label="add" style={{background:'var(--primary-color)',top:'50%',position:'fixed'}} >
+            <ShoppingCartCheckoutIcon style={{fontSize:'2.5rem'}} />
+          </Fab>
           <div className="slide-show">
             <Slider {...settings} className="">
               {[
@@ -147,10 +113,9 @@ function Marketplace() {
             </Slider>
           </div>
           <div className="product-container mb-[1rem]">
-
-              {[...Array(15)].map((index) => (
-                <ProductCard key={index} />
-              ))}
+            {[...Array(15)].map((index) => (
+              <ProductCard key={index} />
+            ))}
           </div>
           <div className="Pagination float-right">
             <Typography>Page: {page}</Typography>
