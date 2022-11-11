@@ -5,20 +5,20 @@
   border: 1px solid gray;
   border-bottom: 0px;
   .brief-detail-img {
-    border-radius: 15px 15px 0px 0px;
-    -moz-border-radius: 15px 15px 0px 0px;
-    -webkit-border-radius: 15px 15px 0px 0px;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
   }
 }
 .card-product-normal {
-  border-radius: 15px 15px 0px 0px;
-  -moz-border-radius: 15px 15px 0px 0px;
-  -webkit-border-radius: 15px 15px 0px 0px;
+  border-radius: 15px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
   border: 1px solid gray;
   img {
-    border-radius: 15px 15px 0px 0px;
-    -moz-border-radius: 15px 15px 0px 0px;
-    -webkit-border-radius: 15px 15px 0px 0px;
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
   }
 }
 
@@ -26,18 +26,18 @@
   color: black;
   background: white;
   border: 1px solid var(--primary-color);
-  border-radius: 0px 8px 0px 8px;
-  -moz-border-radius: 0px 8px 0px 8px;
-  -webkit-border-radius: 0px 8px 0px 8px;
+  border-radius: 8px 8px 8px 8px;
+  -moz-border-radius:8px 8px 8px 8px;
+  -webkit-border-radius:8px 8px 8px 8px;
 }
-.btn-add-to-cart{
+.btn-add-to-cart {
   color: white;
   background: var(--primary-color);
   border-radius: 0px 8px 0px 8px;
   -moz-border-radius: 0px 8px 0px 8px;
   -webkit-border-radius: 0px 8px 0px 8px;
 }
-.btn-check-out{
+.btn-check-out {
   color: white;
   background: var(--primary-color);
   border-radius: 0px 8px 0px 8px;
