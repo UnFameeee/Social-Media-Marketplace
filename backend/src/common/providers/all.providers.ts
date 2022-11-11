@@ -1,4 +1,4 @@
-import { PROVIDER } from "src/common/constants/provider.constant";
+import { PROVIDER } from "src/common/providers/provider.constant";
 import { PostComment } from "src/social-media/post/model/post-comment.model";
 import { PostLike } from "src/social-media/post/model/post-like.model";
 import { Post } from "src/social-media/post/model/post.model";
@@ -13,6 +13,7 @@ import { ChatConnectedProfile } from "src/social-media/message/model/connected.m
 import { ChatJoinedRoom } from "src/social-media/message/model/joined_room.model";
 import { ChatMessage } from "src/social-media/message/model/message.model";
 import { ChatRoom } from "src/social-media/message/model/room.model";
+import { ParentChildComment } from "src/social-media/post/model/parent_child_comment.model";
 
 export const postProviders = [
     {
@@ -32,6 +33,13 @@ export const postCommentProviders = [
     {
         provide: PROVIDER.PostComment,
         useValue: PostComment
+    }
+]
+
+export const parentChildCommentProviders = [
+    {
+        provide: PROVIDER.ParentChildComment,
+        useValue: ParentChildComment
     }
 ]
 

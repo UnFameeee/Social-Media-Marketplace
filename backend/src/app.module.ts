@@ -8,14 +8,24 @@ import { ImageModule } from './social-media/image/module/image.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { FriendshipModule } from './social-media/profile/module/friendship.module';
+import { PostCommentModule } from './social-media/post/module/post-comment.module';
 
 
 @Module({
-  imports: [ProfileModule, PostModule, PostLikeModule, DatabaseModule, AuthModule, ImageModule, FriendshipModule,
+  imports: [
+    ProfileModule,
+    PostModule,
+    PostCommentModule,
+    PostLikeModule,
+    DatabaseModule,
+    AuthModule,
+    ImageModule,
+    FriendshipModule,
     ServeStaticModule.forRoot({
       serveRoot: '/uploads/images',
       rootPath: join(__dirname, '../uploads/images'),
-    })],
+    })
+  ],
   controllers: [],
   providers: [],
 })

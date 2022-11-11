@@ -18,6 +18,7 @@ import { ChatConnectedProfile } from './../social-media/message/model/connected.
 import { ProfileWallpaperImage } from 'src/social-media/image/model/profile_wallpaper_image.mode';
 import { ProfilePostImage } from 'src/social-media/image/model/profile_post_image.model';
 import { RoomImage } from 'src/social-media/image/model/room_image';
+import { ParentChildComment } from 'src/social-media/post/model/parent_child_comment.model';
 
 export const databaseProviders = [
     {
@@ -46,7 +47,7 @@ export const databaseProviders = [
             });
 
             // sequelize.options
-            sequelize.addModels([Profile, Friendship, Post, PostLike, PostComment, ProfileAvatarImage, ProfilePostImage, ProfileWallpaperImage, Description, ChatRoom, ChatConnectedProfile, ChatJoinedRoom, ChatMessage, RoomImage]);
+            sequelize.addModels([Profile, Friendship, Post, PostLike, PostComment, ParentChildComment, ProfileAvatarImage, ProfilePostImage, ProfileWallpaperImage, Description, ChatRoom, ChatConnectedProfile, ChatJoinedRoom, ChatMessage, RoomImage]);
             //associations
             Profile.hasMany(Friendship, { foreignKey: { name: "profile_request", field: "profile_request" } });
             Friendship.belongsTo(Profile, { foreignKey: { name: "profile_request", field: "profile_request" }, as: "profile_request_id" })
@@ -54,11 +55,15 @@ export const databaseProviders = [
             Friendship.belongsTo(Profile, { foreignKey: { name: "profile_target", field: "profile_target" }, as: "profile_target_id" })
 
             Profile.hasMany(Post, { foreignKey: { name: "profile_id", field: "profile_id" } });
-            Post.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            Post.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" }, as: "post_profile" });
 
             Profile.hasMany(PostComment, { foreignKey: { name: "profile_id", field: "profile_id" } });
-            PostComment.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } })
-            Post.hasMany(PostComment, { foreignKey: { name: "post_id", field: "post_id" } });
+            PostComment.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" }, as: "comment_profile"});
+
+            // PostComment.hasOne(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            // Profile.belongsTo(PostComment, { foreignKey: { name: "profile_id", field: "profile_id" }});
+
+            Post.hasMany(PostComment, { foreignKey: { name: "post_id", field: "post_id" } , as: "post_comment"});
             PostComment.belongsTo(Post, { foreignKey: { name: "post_id", field: "post_id" } })
 
             Profile.hasMany(PostLike, { foreignKey: { name: "profile_id", field: "profile_id" } });
@@ -66,6 +71,10 @@ export const databaseProviders = [
             Post.hasMany(PostLike, { foreignKey: { name: "post_id", field: "post_id" } });
             PostLike.belongsTo(Post, { foreignKey: { name: "post_id", field: "post_id" } });
 
+            PostComment.hasMany(ParentChildComment, { foreignKey: { name: "parent_comment_id", field: "parent_comment_id" }, as: "all_child_comment" });
+            ParentChildComment.belongsTo(PostComment, { foreignKey: { name: "parent_comment_id", field: "parent_comment_id" }, as: "parent_comment" })
+            PostComment.hasMany(ParentChildComment, { foreignKey: { name: "child_comment_id", field: "child_comment_id" }, as: "all_parent_comment" });
+            ParentChildComment.belongsTo(PostComment, { foreignKey: { name: "child_comment_id", field: "child_comment_id" }, as: "child_comment" })
 
             Profile.hasOne(ProfileWallpaperImage, { foreignKey: { name: "profile_id", field: "profile_id" }, as: "profile_wallpaper" });
             ProfileWallpaperImage.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });

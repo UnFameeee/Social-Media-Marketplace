@@ -19,7 +19,8 @@ export class AuthService {
 
     async validateProfile(email: string, password: string): Promise<any> {
         const profile = await this.profileRepository.findProfileByEmail(email, SCOPE.WITH_PASSWORD);
-        if (profile && compare(password, profile.password)) {
+        
+        if (profile && await compare(password, profile.password)) {
             return profile;
         }
         return null;
@@ -87,6 +88,7 @@ export class AuthService {
     async login(profile: any) {
         try {
             const checkProfile = await this.profileRepository.findProfileByEmail(profile.email);
+
             if (!checkProfile) {
                 throw new NotFoundException("Wrong Email of Password, please try again!");
             } else if (!checkProfile.isActivate) {

@@ -1,20 +1,40 @@
-import { Controller, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { PostCommentDto } from 'src/common/models/dtos/post-comment.dto';
+import { Page } from 'src/common/models/view-model/page-model';
+import { Profile } from 'src/social-media/profile/model/profile.model';
 import { PostCommentService } from '../service/post-comment.service';
 
 @UseGuards(JwtAuthGuard)
 @ApiTags('Post')
-@Controller('/api/post')
+@ApiBearerAuth()
+@Controller('/api/post/comment')
 export class PostCommentController {
-    constructor(private readonly postCommentService: PostCommentService){};
+    constructor(private readonly postCommentService: PostCommentService) { };
 
     //Comment to a post
-    
-
-    //Update comment of a post
-
-    //Delete comment of a post
+    @Post("/create")
+    async createComment(@Request() request: any, @Body() postCommentDto: PostCommentDto) {
+        const profile = <Profile>request.user;
+        return await this.postCommentService.createComment(profile, postCommentDto);
+    }
 
     //See all comment of post
+    @Get("/:post_id")
+    async getAllCommentOfPost(@Param("post_id") post_id: number, @Body() page: Page) {
+        return await this.postCommentService.getAllCommentOfPost(post_id, page);
+    }
+
+    //Update comment of a post
+    @Put("/update/:post_comment_id")
+    async updateComment(@Param("post_comment_id") post_comment_id: number, @Body() body: any) {
+        return await this.postCommentService.updateComment(post_comment_id, body.comment_text);
+    }
+    
+    //Delete comment of a post
+    @Delete("/delete/:post_comment_id")
+    async deleteComment(@Param("post_comment_id") post_comment_id: number) {
+        return await this.postCommentService.deleteComment(post_comment_id);
+    }
 }
