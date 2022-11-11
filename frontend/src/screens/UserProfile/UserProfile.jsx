@@ -147,18 +147,21 @@ function UserProfile(props) {
       <div className="flex justify-center pt-[2%] bg-white shadow-md">
         <div className="relative">
           <img
-            src="https://source.unsplash.com/random/100×100"
-            className="w-[120rem] h-[30rem] object-cover rounded-bl-xl rounded-br-xl shadow-lg"
-            alt=""
+            src=""
+            className="w-[120rem] h-[30rem] object-cover rounded-bl-xl rounded-br-xl shadow-lg bg-[#f0f2f5]"
+            alt="wallpaper"
           />
           {profileData?.profile_id == userData?.profile_id && (
-            <div className="hover:cursor-pointer flex items-center absolute right-[1rem] top-[25rem] bg-white p-[0.65rem] rounded-lg gap-[0.75rem]">
+            <button
+              className="flex items-center absolute right-[1rem] top-[25rem] bg-white p-[0.65rem] rounded-lg gap-[0.75rem]"
+              style={{ border: '1px #bdbdbd solid' }}
+            >
               <PhotoCamera
                 className=""
                 style={{ fontSize: '2.5rem' }}
               />
               <span className="text-[1.8rem]">Edit Cover Photo</span>
-            </div>
+            </button>
           )}
           <div className="">
             <div className="bigRoundAvt absolute  left-[3.5rem] top-[26rem]">
@@ -169,11 +172,7 @@ function UserProfile(props) {
                   fontSize: '10rem',
                 }}
                 alt={profileData?.profile_name}
-                src={
-                  profileData?.picture
-                    ? JSON.parse(profileData?.picture)
-                    : null
-                }
+                src={profileData?.avatar ? profileData?.avatar : null}
               >
                 {profileData?.profile_name?.at(0)}
               </Avatar>
@@ -350,7 +349,7 @@ function UserProfile(props) {
                 rightLabel="See all Friends"
                 listImg={allFriends?.data?.map((x) => {
                   return {
-                    url: x.picture,
+                    url: x.avatar,
                     name: x.profile_name,
                   };
                 })}
@@ -401,7 +400,6 @@ function UserProfile(props) {
           accessToken: accessToken,
           refreshToken: refreshToken,
           id: profileData?.profile_id,
-          mainId: userData?.profile_id,
           dispatch: dispatch,
         }}
       />
@@ -608,8 +606,7 @@ function ProfileAction({
 }
 
 function UpdateAvatar({ modalProps, profileData, actionProps }) {
-  const { accessToken, refreshToken, id, mainId, dispatch } =
-    actionProps;
+  const { accessToken, refreshToken, id, dispatch } = actionProps;
   const inputRef = useRef(null);
   const [avatar, setAvatar] = useState();
   const [imageURL, setImageURL] = useState();
@@ -687,8 +684,8 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
             src={
               imageURL
                 ? imageURL
-                : profileData?.picture
-                ? JSON.parse(profileData?.picture)
+                : profileData?.avatar
+                ? profileData?.avatar
                 : null
             }
             onClick={() => {
@@ -717,6 +714,7 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
                   dispatch,
                 })
               );
+              modalProps[1](false);
             }}
           >
             Save

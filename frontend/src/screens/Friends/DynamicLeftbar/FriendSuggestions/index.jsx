@@ -54,14 +54,14 @@ export default function FriendSuggestions() {
         leftBarList: allFriendSuggestions?.data?.map((x) => {
           return {
             left: {
-              url: x.picture,
+              url: x.avatar,
               name: x.profile_name,
             },
             middle: (
               <LeftbarMiddleItem
                 profileName={x.profile_name}
                 firstButtonConfig={{
-                  name: 'Add Friend',
+                  name: x.isSentFriendRequest != "REQUEST" ? 'Add Friend' : 'Cancel Your Request',
                   onClick: (e) => {
                     e.stopPropagation();
                     let id = x.profile_id;

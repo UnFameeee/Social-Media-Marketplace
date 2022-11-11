@@ -32,9 +32,8 @@ function* handleRefreshProfileSaga(data) {
 async function getProfileDetailsSaga(data) {
   const { accessToken, refreshToken, id } = data.payload;
   try {
-    const res = await axiosInStanceJWT.post(
+    const res = await axiosInStanceJWT.get(
       `${api.profile}/getProfileDetailById/${id}`,
-      paging,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -67,7 +66,7 @@ async function updateAvtSagaRequest(data) {
   const { accessToken, refreshToken, avatar, id, dispatch } =
     data.payload;
   var bodyFormData = new FormData();
-  bodyFormData.append('file', avatar); 
+  bodyFormData.append('file', avatar);
 
   try {
     const res = await axiosInStanceJWT.post(

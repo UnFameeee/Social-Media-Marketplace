@@ -64,7 +64,7 @@ export default function AllFriends() {
         leftBarList: allFriends?.data?.map((x) => {
           return {
             left: {
-              url: x.picture,
+              url: x.avatar,
               name: x.profile_name,
             },
             middle: x.profile_name,

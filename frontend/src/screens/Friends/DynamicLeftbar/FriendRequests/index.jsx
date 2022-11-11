@@ -59,7 +59,7 @@ export default function FriendRequests() {
         leftBarList: friendRequests?.data?.map((x) => {
           return {
             left: {
-              url: x.picture,
+              url: x.avatar,
               name: x.profile_name,
             },
             middle: (

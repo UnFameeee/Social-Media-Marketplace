@@ -9,7 +9,7 @@ export default function FriendCard(props) {
       <Avatar
         className="image"
         alt="avatar"
-        src={profileDetails.picture}
+        src={profileDetails.avatar}
       >
         {profileDetails.profile_name?.at(0)}
       </Avatar>

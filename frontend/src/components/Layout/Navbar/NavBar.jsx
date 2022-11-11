@@ -31,6 +31,9 @@ export default function NavBar() {
   const [value, setValue] = useState('');
   const [rightGroup, setRightGroup] = useState('');
   const userData = useSelector((state) => state.auth.user.userData);
+  const profileData = useSelector(
+    (state) => state.profile?.profileDetails?.data
+  );
   const auth = useSelector((state) => state.auth.login);
 
   function handleSearch() {}
@@ -42,6 +45,7 @@ export default function NavBar() {
     );
     dispatch(revertAll());
   };
+
   return (
     <Paper className="nav-bar drop-shadow-md">
       <Grid container className="nav-bar-wrapper">
@@ -162,6 +166,7 @@ export default function NavBar() {
             value={rightGroup}
             exclusive
             onChange={(e, x) => {
+              e.preventDefault();
               setRightGroup(x);
             }}
             aria-label="right-button"
@@ -199,9 +204,9 @@ export default function NavBar() {
                       }}
                       alt={userData.profile.profile_name}
                       src={
-                        userData.profile?.picture
-                          ? JSON.parse(userData.profile?.picture)
-                          : null
+                        userData.profile?.profile_id == profileData?.profile_id
+                          ? profileData?.avatar
+                          : userData.profile?.avatar
                       }
                     >
                       {userData.profile.profile_name?.at(0)}
