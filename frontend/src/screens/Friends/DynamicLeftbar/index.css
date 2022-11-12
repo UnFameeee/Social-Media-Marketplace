@@ -1,5 +1,6 @@
 /* #region layout */
-.landing-layout {
+.landing-layout,
+.landing-layout.two-column #profileTop {
   padding-top: 0;
 }
 .two-column {
@@ -43,7 +44,7 @@
   justify-content: space-evenly;
 }
 .action .action-btn {
-  width: 11rem;
+  width: 13.5rem;
   max-height: 4rem;
   pointer-events: auto;
 }

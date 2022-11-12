@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { revertAll } from '../resetStore';
 const initialState = {
-  getFriendRequests: {
+  getRequests: {
     data: null,
     isFetching: false,
     error: false,
@@ -16,6 +16,11 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  getSuggestion: {
+    data: null,
+    isFetching: false,
+    error: false,
+  },
   getMutualFriends: {
     data: null,
     isFetching: false,
@@ -26,22 +31,27 @@ const initialState = {
     isFetching: false,
     error: false,
   },
-  acceptFriendRequest: {
+  accept: {
     data: false,
     isFetching: false,
     error: false,
   },
-  denyFriendRequest: {
-      data: false,
-      isFetching: false,
-      error: false,
-    },
+  deny: {
+    data: false,
+    isFetching: false,
+    error: false,
+  },
   isFriend: {
     data: false,
     isFetching: false,
     error: false,
   },
-  isSentFriendRequest: {
+  unfriend: {
+    data: false,
+    isFetching: false,
+    error: false,
+  },
+  isSentRequest: {
     data: false,
     isFetching: false,
     error: false,
@@ -50,7 +60,7 @@ const initialState = {
 export const friendSlice = createSlice({
   name: 'friends',
   initialState: {
-    getFriendRequests: {
+    getRequests: {
       data: null,
       isFetching: false,
       error: false,
@@ -65,6 +75,11 @@ export const friendSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    getSuggestion: {
+      data: null,
+      isFetching: false,
+      error: false,
+    },
     getMutualFriends: {
       data: null,
       isFetching: false,
@@ -75,12 +90,12 @@ export const friendSlice = createSlice({
       isFetching: false,
       error: false,
     },
-    acceptFriendRequest: {
+    accept: {
       data: false,
       isFetching: false,
       error: false,
     },
-    denyFriendRequest: {
+    deny: {
       data: false,
       isFetching: false,
       error: false,
@@ -90,7 +105,12 @@ export const friendSlice = createSlice({
       isFetching: false,
       error: false,
     },
-    isSentFriendRequest: {
+    unfriend: {
+      data: false,
+      isFetching: false,
+      error: false,
+    },
+    isSentRequest: {
       data: false,
       isFetching: false,
       error: false,
@@ -99,16 +119,16 @@ export const friendSlice = createSlice({
   extraReducers: (builder) =>
     builder.addCase(revertAll, () => initialState),
   reducers: {
-    getFriendRequestStart: (state) => {
-      state.getFriendRequests.isFetching = true;
+    getRequestStart: (state) => {
+      state.getRequests.isFetching = true;
     },
-    getFriendRequestSuccess: (state, action) => {
-      state.getFriendRequests.isFetching = false;
-      state.getFriendRequests.data = action.payload;
+    getRequestSuccess: (state, action) => {
+      state.getRequests.isFetching = false;
+      state.getRequests.data = action.payload;
     },
-    getFriendRequestFailed: (state) => {
-      state.getFriendRequests.isFetching = false;
-      state.getFriendRequests.error = true;
+    getRequestFailed: (state) => {
+      state.getRequests.isFetching = false;
+      state.getRequests.error = true;
     },
 
     getAllFriendStart: (state) => {
@@ -135,6 +155,18 @@ export const friendSlice = createSlice({
       state.getAllForMainUser.error = true;
     },
 
+    getSuggestionStart: (state) => {
+      state.getSuggestion.isFetching = true;
+    },
+    getSuggestionSuccess: (state, action) => {
+      state.getSuggestion.isFetching = false;
+      state.getSuggestion.data = action.payload;
+    },
+    getSuggestionFailed: (state) => {
+      state.getSuggestion.isFetching = false;
+      state.getSuggestion.error = true;
+    },
+
     getMutualFriendStart: (state) => {
       state.getMutualFriends.isFetching = true;
     },
@@ -158,30 +190,36 @@ export const friendSlice = createSlice({
       state.addFriend.isFetching = false;
       state.addFriend.error = true;
     },
+    addFriendSaga() {},
+    addFriendSagaSuccess() {},
 
-    acceptFriendRequestStart: (state) => {
-      state.acceptFriendRequest.isFetching = true;
+    acceptStart: (state) => {
+      state.accept.isFetching = true;
     },
-    acceptFriendRequestSuccess: (state, action) => {
-      state.acceptFriendRequest.isFetching = false;
-      state.acceptFriendRequest.data = action.payload;
+    acceptSuccess: (state, action) => {
+      state.accept.isFetching = false;
+      state.accept.data = action.payload;
     },
-    acceptFriendRequestFailed: (state) => {
-      state.acceptFriendRequest.isFetching = false;
-      state.acceptFriendRequest.error = true;
+    acceptFailed: (state) => {
+      state.accept.isFetching = false;
+      state.accept.error = true;
     },
+    acceptSaga() {},
+    acceptSagaSuccess() {},
 
-    denyFriendRequestStart: (state) => {
-      state.denyFriendRequest.isFetching = true;
+    denyStart: (state) => {
+      state.deny.isFetching = true;
     },
-    denyFriendRequestSuccess: (state, action) => {
-      state.denyFriendRequest.isFetching = false;
-      state.denyFriendRequest.data = action.payload;
+    denySuccess: (state, action) => {
+      state.deny.isFetching = false;
+      state.deny.data = action.payload;
     },
-    denyFriendRequestFailed: (state) => {
-      state.denyFriendRequest.isFetching = false;
-      state.denyFriendRequest.error = true;
+    denyFailed: (state) => {
+      state.deny.isFetching = false;
+      state.deny.error = true;
     },
+    denySaga() {},
+    denySagaSuccess() {},
 
     isFriendStart: (state) => {
       state.isFriend.isFetching = true;
@@ -195,57 +233,86 @@ export const friendSlice = createSlice({
       state.isFriend.error = true;
     },
 
-    isSentFriendRequestStart: (state) => {
-      state.isSentFriendRequest.isFetching = true;
+    unfriendStart: (state) => {
+      state.unfriend.isFetching = true;
     },
-    isSentFriendRequestSuccess: (state, action) => {
-      state.isSentFriendRequest.isFetching = false;
-      state.isSentFriendRequest.data = action.payload;
+    unfriendSuccess: (state, action) => {
+      state.unfriend.isFetching = false;
+      state.unfriend.data = action.payload;
     },
-    isSentFriendRequestFailed: (state) => {
-      state.isSentFriendRequest.isFetching = false;
-      state.isSentFriendRequest.error = true;
+    unfriendFailed: (state) => {
+      state.unfriend.isFetching = false;
+      state.unfriend.error = true;
+    },
+    unfriendSaga() {},
+    unfriendSagaSuccess() {},
+
+    isSentRequestStart: (state) => {
+      state.isSentRequest.isFetching = true;
+    },
+    isSentRequestSuccess: (state, action) => {
+      state.isSentRequest.isFetching = false;
+      state.isSentRequest.data = action.payload;
+    },
+    isSentRequestFailed: (state) => {
+      state.isSentRequest.isFetching = false;
+      state.isSentRequest.error = true;
     },
   },
 });
 
 export const {
-    getFriendRequestStart,
-    getFriendRequestSuccess,
-    getFriendRequestFailed,
+  getRequestStart,
+  getRequestSuccess,
+  getRequestFailed,
 
-    getAllFriendStart,
-    getAllFriendSuccess,
-    getAllFriendFailed,
+  getAllFriendStart,
+  getAllFriendSuccess,
+  getAllFriendFailed,
 
-    getAllFriendForMainUserStart,
-    getAllFriendForMainUserSuccess,
-    getAllFriendForMainUserFailed,
+  getAllFriendForMainUserStart,
+  getAllFriendForMainUserSuccess,
+  getAllFriendForMainUserFailed,
 
-    getMutualFriendStart,
-    getMutualFriendSuccess,
-    getMutualFriendFailed,
+  getSuggestionStart,
+  getSuggestionSuccess,
+  getSuggestionFailed,
 
-    addFriendStart,
-    addFriendSuccess,
-    addFriendFailed,
+  getMutualFriendStart,
+  getMutualFriendSuccess,
+  getMutualFriendFailed,
 
-    acceptFriendRequestStart,
-    acceptFriendRequestSuccess,
-    acceptFriendRequestFailed,
+  addFriendStart,
+  addFriendSuccess,
+  addFriendFailed,
 
-    denyFriendRequestStart,
-    denyFriendRequestSuccess,
-    denyFriendRequestFailed,
+  acceptStart,
+  acceptSuccess,
+  acceptFailed,
 
-    isFriendStart,
-    isFriendSuccess,
-    isFriendFailed,
+  denyStart,
+  denySuccess,
+  denyFailed,
 
-    isSentFriendRequestStart,
-    isSentFriendRequestSuccess,
-    isSentFriendRequestFailed,
-    
+  isFriendStart,
+  isFriendSuccess,
+  isFriendFailed,
 
+  unfriendStart,
+  unfriendSuccess,
+  unfriendFailed,
+
+  isSentRequestStart,
+  isSentRequestSuccess,
+  isSentRequestFailed,
+
+  addFriendSaga,
+  addFriendSagaSuccess,
+  acceptSaga,
+  acceptSagaSuccess,
+  denySaga,
+  denySagaSuccess,
+  unfriendSaga,
+  unfriendSagaSuccess
 } = friendSlice.actions;
 export default friendSlice.reducer;

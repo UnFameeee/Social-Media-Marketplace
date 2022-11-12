@@ -1,17 +1,16 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  addFriend,
   getAllFriends,
   getFriendSuggestion,
   getPostByProfile,
   getProfile,
-  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
+import { addFriendSaga } from '../../../../redux/friend/friendSlice';
 import '../index.css';
 
 export default function FriendSuggestions() {
@@ -23,14 +22,13 @@ export default function FriendSuggestions() {
     (state) => state.auth.login.currentUser.refresh
   );
   const allFriendSuggestions = useSelector(
-    (state) => state.profile?.getFriendSuggestion?.data
+    (state) => state.friends?.getSuggestion?.data
   );
   const userData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
 
   const [profileClicked, setProfileClicked] = useState(false);
-  const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -39,7 +37,7 @@ export default function FriendSuggestions() {
     return () => {
       onDestroy = true;
     };
-  }, [reRender]);
+  }, []);
 
   return (
     <TwoColumns
@@ -56,23 +54,19 @@ export default function FriendSuggestions() {
         leftBarList: allFriendSuggestions?.data?.map((x) => {
           return {
             left: {
-              url: x.picture,
+              url: x.avatar,
               name: x.profile_name,
             },
             middle: (
               <LeftbarMiddleItem
                 profileName={x.profile_name}
                 firstButtonConfig={{
-                  name: 'Add Friend',
-                  onClick: async (e) => {
+                  name: x.isSentFriendRequest != "REQUEST" ? 'Add Friend' : 'Cancel Your Request',
+                  onClick: (e) => {
                     e.stopPropagation();
-                    await addFriend(
-                      accessToken,
-                      refreshToken,
-                      x.profile_id,
-                      dispatch
-                    );
-                    setReRender(!reRender);
+                    let id = x.profile_id;
+                    dispatch(addFriendSaga({ accessToken, refreshToken, id, dispatch }));
+                    setProfileClicked(false);
                   },
                 }}
               />
@@ -97,7 +91,9 @@ export default function FriendSuggestions() {
                 dispatch,
                 false
               );
-              setProfileClicked(true);
+              if (profileClicked == false) {
+                setProfileClicked(true);
+              }
             },
             selected:
               profileClicked && x.profile_id === userData?.profile_id,
@@ -109,7 +105,7 @@ export default function FriendSuggestions() {
       }}
     >
       {profileClicked && (
-        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+        <UserProfile setReRender={setProfileClicked} />
       )}
     </TwoColumns>
   );

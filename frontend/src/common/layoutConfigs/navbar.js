@@ -54,6 +54,7 @@ export const rightNavIcons = [
   {
     icon: <IoChatbubbleEllipses style={{ fontSize: '2.4rem' }} />,
     tooltip: 'Chat',
+    navigate: '/messenger'
   },
   {
     icon: <IoNotifications style={{ fontSize: '2.4rem' }} />,

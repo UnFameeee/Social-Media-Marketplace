@@ -144,12 +144,29 @@ function checkURL(value, defaultConfig = {}, lastOnly = false) {
 }
 
 function isMultiple(string, amount, defaultString) {
-  if (amount <= 0) {
+  if (!amount) {
     return defaultString;
   } else {
     if (amount > 1) {
       return amount + ' ' + string + 's';
     } else return amount + ' ' + string;
+  }
+}
+
+function isEmptyObject(obj, checkValue = false) {
+  if (!checkValue) {
+    for (var prop in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+        return false;
+      }
+    }
+
+    return JSON.stringify(obj) === JSON.stringify({});
+  } else {
+    Object.values(obj).map(x => {
+      if(x) return false;
+    })
+    return true;
   }
 }
 
@@ -170,4 +187,5 @@ export const Helper = {
   isObjectList,
   checkURL,
   isMultiple,
+  isEmptyObject,
 };

@@ -22,7 +22,7 @@ function PostStatus(props) {
           <Avatar
             style={{ fontSize: "2rem" }}
             alt={profile?.profile_name}
-            src={profile?.picture ? JSON.parse(profile?.picture) : null}
+            src={profile?.avatar ? profile?.avatar : null}
           >
             {profile?.profile_name?.at(0)}
           </Avatar>

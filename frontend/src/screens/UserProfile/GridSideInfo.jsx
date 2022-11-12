@@ -9,9 +9,9 @@ function GridSideInfo(props) {
               <span className="font-bold text-[2.3rem] flex-1">
                 {props.leftLabel}
               </span>
-              <span className=" text-center text-blue8f3">
-                {props.rightLabel}
-              </span>
+              <button className=" text-center text-blue8f3" onClick={props.rightLabel.onClick}>
+                {props.rightLabel.text}
+              </button>
             </div>
             {props.type === "friendPhoto" && (
               <span className="text-[1.8rem] font-light">{props.total} friends</span>

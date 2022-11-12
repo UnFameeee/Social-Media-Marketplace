@@ -4,7 +4,6 @@ import {
   getAllFriends,
   getPostByProfile,
   getProfile,
-  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -15,24 +14,22 @@ import '../index.css';
 export default function AllFriends() {
   const dispatch = useDispatch();
   const accessToken = useSelector(
-    (state) => state.auth.login.currentUser.access
+    (state) => state.auth.login?.currentUser?.access
   );
   const refreshToken = useSelector(
-    (state) => state.auth.login.currentUser.refresh
+    (state) => state.auth.login?.currentUser?.refresh
   );
   const allFriends = useSelector(
     (state) => state.friends.getAllForMainUser?.data
   );
   const userData = useSelector(
-    (state) => state.auth?.user?.userData?.profile
+    (state) => state.auth.user?.userData?.profile
   );
   const profileData = useSelector(
-    (state) => state.profile?.profileDetails?.data
+    (state) => state.profile.profileDetails?.data
   );
-  console.log(allFriends)
 
   const [profileClicked, setProfileClicked] = useState(false);
-  const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -67,7 +64,7 @@ export default function AllFriends() {
         leftBarList: allFriends?.data?.map((x) => {
           return {
             left: {
-              url: x.picture,
+              url: x.avatar,
               name: x.profile_name,
             },
             middle: x.profile_name,
@@ -91,7 +88,9 @@ export default function AllFriends() {
                 dispatch,
                 false
               );
-              setProfileClicked(true);
+              if (profileClicked == false) {
+                setProfileClicked(true);
+              }
             },
             selected:
               profileClicked &&
@@ -105,7 +104,7 @@ export default function AllFriends() {
       }}
     >
       {profileClicked && (
-        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+        <UserProfile setReRender={setProfileClicked} />
       )}
     </TwoColumns>
   );

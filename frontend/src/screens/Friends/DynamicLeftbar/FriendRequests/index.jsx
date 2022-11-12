@@ -2,19 +2,17 @@ import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   getAllFriendRequests,
-  acceptFriendRequest,
   getProfile,
-  denyFriendRequest,
   getPostByProfile,
   getAllFriends,
-  isSentFriendReq,
 } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
-import '../index.css';
 import { Helper } from '../../../../utils/Helper';
+import { acceptSaga, denySaga } from '../../../../redux/friend/friendSlice';
+import '../index.css';
 
 export default function FriendRequests() {
   const dispatch = useDispatch();
@@ -25,14 +23,13 @@ export default function FriendRequests() {
     (state) => state.auth.login.currentUser.refresh
   );
   const friendRequests = useSelector(
-    (state) => state.friends.getFriendRequests?.data
+    (state) => state.friends.getRequests?.data
   );
   const userData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
 
   const [profileClicked, setProfileClicked] = useState(false);
-  const [reRender, setReRender] = useState(false);
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -41,7 +38,7 @@ export default function FriendRequests() {
     return () => {
       onDestroy = true;
     };
-  }, [reRender]);
+  }, []);
 
   return (
     <TwoColumns
@@ -62,34 +59,26 @@ export default function FriendRequests() {
         leftBarList: friendRequests?.data?.map((x) => {
           return {
             left: {
-              url: x.picture,
+              url: x.avatar,
               name: x.profile_name,
             },
             middle: (
               <LeftbarMiddleItem
                 profileName={x.profile_name}
                 firstButtonConfig={{
-                  onClick: () => {
-                    acceptFriendRequest(
-                      accessToken,
-                      refreshToken,
-                      x.profile_id,
-                      dispatch
-                    );
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    let id = x.profile_id;
+                    dispatch(acceptSaga({ accessToken, refreshToken, id, dispatch }));
                     setProfileClicked(false);
-                    setReRender(!reRender);
                   },
                 }}
                 secondButtonConfig={{
-                  onClick: () => {
-                    denyFriendRequest(
-                      accessToken,
-                      refreshToken,
-                      x.profile_id,
-                      dispatch
-                    );
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    let id = x.profile_id;
+                    dispatch(denySaga({ accessToken, refreshToken, id, dispatch }));
                     setProfileClicked(false);
-                    setReRender(!reRender);
                   },
                 }}
               />
@@ -114,7 +103,9 @@ export default function FriendRequests() {
                 dispatch,
                 false
               );
-              setProfileClicked(true);
+              if (profileClicked == false) {
+                setProfileClicked(true);
+              }
             },
             selected:
               profileClicked && x.profile_id === userData?.profile_id,
@@ -126,7 +117,7 @@ export default function FriendRequests() {
       }}
     >
       {profileClicked && (
-        <UserProfile setReRender={[setReRender, setProfileClicked]} />
+        <UserProfile setReRender={setProfileClicked} />
       )}
     </TwoColumns>
   );

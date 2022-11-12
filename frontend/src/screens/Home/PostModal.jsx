@@ -7,11 +7,9 @@ import {
   Avatar,
   TextareaAutosize,
   Button,
-  Box,
   Modal,
-  Typography,
 } from "@mui/material";
-import { PhotoLibrary } from "@mui/icons-material";
+import { Close, PhotoLibrary } from "@mui/icons-material";
 import {
   resetUploadImagePostState,
 } from "../../redux/uploadImage/uploadImageSlice";
@@ -275,8 +273,9 @@ function PostModal(props) {
                                     color: "white",
                                     background: "var(--primary-color)",
                                   }}
+                                  className="[&>svg]:text-[2.4rem]"
                                 >
-                                  x
+                                  <Close />
                                 </Button>
                               </div>
                             </li>

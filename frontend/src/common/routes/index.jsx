@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import WithNav from '../../components/Layout/Navbar/WithNav';
-import WithoutNav from '../../components/Layout/Navbar/WithoutNav';
-import RequireAuth from '../../screens/Auth/RequireAuth';
+import WithNav from './WithNav';
+import WithoutNav from './WithoutNav';
+import RequireAuth from './RequireAuth';
 import Home from '../../screens/Home/Home';
 import Login from '../../screens/Auth/Login';
 import Register from '../../screens/Auth/Register';

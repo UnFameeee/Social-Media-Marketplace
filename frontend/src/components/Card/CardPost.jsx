@@ -86,8 +86,8 @@ function CardPost(props) {
                   style={{ fontSize: "2rem" }}
                   alt={props.postData.profile_name}
                   src={
-                    props.postData?.picture
-                      ? JSON.parse(props.postData?.picture)
+                    props.postData?.avatar
+                      ? props.postData?.avatar
                       : null
                   }
                 >

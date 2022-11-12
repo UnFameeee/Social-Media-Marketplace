@@ -8,8 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllPost } from "../../redux/apiRequest";
 import { useEffect } from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
-import { homeLeftbar } from "../../common/layout/homeLeftbar";
+import { homeLeftbar } from "../../common/layoutConfigs/homeLeftbar";
 import styled from "styled-components";
+
 const ResponSiveDiv = styled.div`
   @media screen and (max-width: 1620px) {
     .threeColumn-wrapper {
@@ -96,6 +97,9 @@ function Home() {
     (state) => state.auth.login.currentUser.refresh
   );
   const userData = useSelector((state) => state.auth.user.userData);
+  const profileData = useSelector(
+    (state) => state.profile?.profileDetails?.data
+  );
   //#endregion
 
   //#region Function
@@ -145,9 +149,9 @@ function Home() {
                     }}
                     alt={userData.profile.profile_name}
                     src={
-                      userData.profile?.picture
-                        ? JSON.parse(userData.profile?.picture)
-                        : null
+                        userData.profile?.profile_id == profileData?.profile_id
+                          ? profileData?.avatar
+                          : userData.profile?.avatar
                     }
                   >
                     {userData.profile.profile_name?.at(0)}
@@ -160,7 +164,11 @@ function Home() {
           }}
         >
           <PostStatus
-            profile={userData.profile}
+            profile={
+              userData.profile?.profile_id == profileData?.profile_id
+                ? profileData
+                : userData.profile
+            }
             onClick={handleOpenPostModel}
           />
           {posts &&
