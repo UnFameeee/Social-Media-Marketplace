@@ -7,6 +7,8 @@ import {
   updateAvtSaga,
   updateAvtSagaSuccess,
   updateAvtSuccess,
+  updateDetailSaga,
+  updateDetailSagaSuccess,
   updateWallpaperFailed,
   updateWallpaperSaga,
   updateWallpaperSagaSuccess,
@@ -17,7 +19,7 @@ import { paging } from '../../common/constants/apiConfig';
 
 export function* refreshProfile() {
   yield takeLatest(
-    [updateAvtSagaSuccess.type, updateWallpaperSagaSuccess.type],
+    [updateAvtSagaSuccess.type, updateWallpaperSagaSuccess.type, updateDetailSagaSuccess.type],
     handleRefreshProfileSaga
   );
 }
@@ -108,13 +110,16 @@ function* handleUpdateWall(data) {
   }
 }
 async function updateWallSagaRequest(data) {
-  const { accessToken, refreshToken, avatar, id, dispatch } =
+  const { accessToken, refreshToken, wallpaper, id, dispatch } =
     data.payload;
+
+  var bodyFormData = new FormData();
+  bodyFormData.append('file', wallpaper);
 
   try {
     const res = await axiosInStanceJWT.post(
       `${api.image}/profile_wallpaper/upload`,
-      avatar,
+      bodyFormData,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -136,5 +141,48 @@ async function updateWallSagaRequest(data) {
   } catch (error) {
     notifyService.showError('Update Wallpaper Failed!');
     dispatch(updateWallpaperFailed());
+  }
+}
+
+export function* updateDetailReq() {
+  yield takeLatest(updateDetailSaga.type, handleUpdateDetail);
+}
+function* handleUpdateDetail(data) {
+  try {
+    const accept = yield call(updateDetailSagaRequest, data);
+    // yield put(updateDetailSuccess(accept.data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function updateDetailSagaRequest(data) {
+  const { accessToken, refreshToken, description, id, dispatch } =
+    data.payload;
+
+  try {
+    const res = await axiosInStanceJWT.put(
+      `${api.profile}/description`,
+      description,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      notifyService.showSuccess('Update Profile Successfully!');
+      dispatch(
+        updateDetailSagaSuccess({ accessToken, refreshToken, id })
+      );
+      return res;
+    } else {
+      notifyService.showError(res.data.message);
+      // dispatch(updateWallpaperFailed());
+    }
+  } catch (error) {
+    notifyService.showError('Update Profile Failed!');
+    // dispatch(updateWallpaperFailed());
   }
 }

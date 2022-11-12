@@ -4,8 +4,6 @@ import SelectForm from './SelectForm';
 import DatePickerForm from './DatePickerForm';
 import CheckBoxForm from './CheckBoxForm';
 import ButtonForm from './ButtonForm';
-import PasswordInputForm from './PasswordInputForm';
-import NumberInputForm from './NumberInputForm';
 
 export const FormChildren = {
   InputForm,
@@ -13,8 +11,6 @@ export const FormChildren = {
   DatePickerForm,
   CheckBoxForm,
   ButtonForm,
-  PasswordInputForm,
-  NumberInputForm,
 };
 
 export function ValidateForm(props) {
@@ -23,7 +19,8 @@ export function ValidateForm(props) {
     validationSchema,
     onSubmit,
     children,
-    handleValid,
+    style = {},
+    handleValid = () => {},
     ...other
   } = props;
 
@@ -38,7 +35,7 @@ export function ValidateForm(props) {
     >
       {(props) => {
         handleValid(props);
-        return <Form>{children}</Form>;
+        return <Form style={style}>{children}</Form>;
       }}
     </Formik>
   );

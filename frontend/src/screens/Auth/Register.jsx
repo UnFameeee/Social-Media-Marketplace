@@ -45,13 +45,15 @@ export default function Register() {
               label="Email"
               required
             />
-            <FormChildren.PasswordInputForm
+            <FormChildren.InputForm
+              type="password"
               name="password"
               label="Password"
               required
               autoComplete="new-password"
             />
-            <FormChildren.PasswordInputForm
+            <FormChildren.InputForm
+              type="password"
               name="rePassword"
               label="Confirm Password"
               required

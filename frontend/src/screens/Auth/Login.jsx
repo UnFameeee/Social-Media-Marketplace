@@ -40,7 +40,8 @@ export default function Login() {
               required
               autoComplete="username"
             />
-            <FormChildren.PasswordInputForm
+            <FormChildren.InputForm
+              type="password"
               name="password"
               label="Password"
               required

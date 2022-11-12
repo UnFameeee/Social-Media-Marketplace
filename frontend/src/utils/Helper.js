@@ -153,6 +153,23 @@ function isMultiple(string, amount, defaultString) {
   }
 }
 
+function isEmptyObject(obj, checkValue = false) {
+  if (!checkValue) {
+    for (var prop in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+        return false;
+      }
+    }
+
+    return JSON.stringify(obj) === JSON.stringify({});
+  } else {
+    Object.values(obj).map(x => {
+      if(x) return false;
+    })
+    return true;
+  }
+}
+
 export const Helper = {
   generateId,
   checkPropsInObject,
@@ -170,4 +187,5 @@ export const Helper = {
   isObjectList,
   checkURL,
   isMultiple,
+  isEmptyObject,
 };

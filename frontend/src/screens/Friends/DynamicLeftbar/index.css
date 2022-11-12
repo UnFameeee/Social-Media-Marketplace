@@ -1,5 +1,6 @@
 /* #region layout */
-.landing-layout {
+.landing-layout,
+.landing-layout.two-column #profileTop {
   padding-top: 0;
 }
 .two-column {

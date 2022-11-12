@@ -14,19 +14,19 @@ import '../index.css';
 export default function AllFriends() {
   const dispatch = useDispatch();
   const accessToken = useSelector(
-    (state) => state.auth.login.currentUser.access
+    (state) => state.auth.login?.currentUser?.access
   );
   const refreshToken = useSelector(
-    (state) => state.auth.login.currentUser.refresh
+    (state) => state.auth.login?.currentUser?.refresh
   );
   const allFriends = useSelector(
     (state) => state.friends.getAllForMainUser?.data
   );
   const userData = useSelector(
-    (state) => state.auth?.user?.userData?.profile
+    (state) => state.auth.user?.userData?.profile
   );
   const profileData = useSelector(
-    (state) => state.profile?.profileDetails?.data
+    (state) => state.profile.profileDetails?.data
   );
 
   const [profileClicked, setProfileClicked] = useState(false);

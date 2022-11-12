@@ -49,7 +49,9 @@ export const profileSlice = createSlice({
     getProfileDetailFailed: (state) => {
       state.profileDetails.isFetching = false;
       state.profileDetails.error = true;
-    },       
+    },
+    updateDetailSaga() {},
+    updateDetailSagaSuccess() {},      
 
     updateAvtStart: (state) => {
       state.updateAvt.isFetching = true;
@@ -97,6 +99,8 @@ export const {
     updateAvtSaga,
     updateAvtSagaSuccess,
     updateWallpaperSaga,
-    updateWallpaperSagaSuccess
+    updateWallpaperSagaSuccess,
+    updateDetailSaga,
+    updateDetailSagaSuccess,
 } = profileSlice.actions;
 export default profileSlice.reducer;
