@@ -25,6 +25,9 @@ const ResponSiveDiv = styled.div`
     display: grid;
     gap: 10px;
   }
+  .productCartDetailModal{
+    display: none;
+  }
   @media only screen and (max-width: 1780px) {
     .product-container {
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -39,6 +42,9 @@ const ResponSiveDiv = styled.div`
     .btn-product-action {
       flex-direction: column;
     }
+  }
+  @media only screen and (max-height:600px){
+
   }
   @media only screen and (max-width: 1252px) {
     .product-container {
@@ -66,9 +72,6 @@ const ResponSiveDiv = styled.div`
     .ThreeColumns {
       padding-left: 1%;
       padding-right: 1%;
-    }
-    .productCartDetailModal{
-      display:flex;
     }
   }
   @media only screen and (max-width: 508px) {

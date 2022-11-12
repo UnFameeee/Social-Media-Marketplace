@@ -8,16 +8,14 @@ import ProductCartDetailModal from "./ProductCartDetailModal";
 import macbook_example from "../../assets/macbook.jpeg";
 function ProductCard() {
   const userData = useSelector((state) => state.auth.user.userData);
-  function randomNumberInRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
   const [showModal, setShowModal] = useState(false);
+
   const handleShowModalDetail = () => {
-    if (window.innerWidth <= 820) {
-      setShowModal((prev) => !prev);
+    if (window.innerWidth <= 822) {
+      setShowModal(true);
     }
   };
-  let randomNum = randomNumberInRange(800, 1050);
+
   return (
     <>
       <ProductCartDetailModal
@@ -65,8 +63,9 @@ function ProductCard() {
             <span>365 USD</span>
           </div>
         </div>
-        <div className="btn-product-action" >
+        <div className="btn-product-action">
           <Button
+            onClick={handleShowModalDetail}
             style={{
               color: "black",
               background: "white",
@@ -74,11 +73,10 @@ function ProductCard() {
               borderRadius: "8px",
               MozBorderRadius: "8px",
               WebkitBorderRadius: "8px",
+              textTransform: "capitalize",
             }}
           >
-            <span className="text-[1.3rem]" onClick={handleShowModalDetail}>
-              View details
-            </span>
+            <span className="text-[1.3rem]">View details</span>
           </Button>
           <Button
             style={{
@@ -87,6 +85,7 @@ function ProductCard() {
               borderRadius: "8px",
               MozBorderRadius: "8px",
               WebkitBorderRadius: "8px",
+              textTransform: "capitalize",
             }}
           >
             <span className=" text-[1.3rem]">Add to cart</span>
