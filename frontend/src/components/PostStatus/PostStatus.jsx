@@ -17,7 +17,7 @@ function PostStatus(props) {
   const { profile } = props;
   return (
     <ResponSiveDiv>
-      <div className="post-status-wrapper mb-[2rem] bg-white rounded-xl p-[1.5rem] shadow-md w-[70rem] ">
+      <div className="post-status-wrapper mb-[2rem] bg-white rounded-xl p-[2rem] shadow-md w-[70rem] border-2">
         <div className="post-status-main-content flex items-center gap-[0.5rem] w-full">
           <Avatar
             style={{ fontSize: "2rem" }}
