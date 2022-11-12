@@ -1,11 +1,11 @@
 import { Body, Controller, Get, HttpCode, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { Profile } from 'src/social-media/profile/model/profile.model';
 import { AuthService } from './auth.service';
-import { RegisterProfileDto } from '../common/models/dtos/register-profile.dto';
+import { RegisterProfileDto } from '../database/dtos/register-profile.dto';
 import RequestWithProfile from './interface/requestWithProfile.interface';
 import { RefreshTokenGuard } from './guards/refreshToken.guard';
+import { Profile } from 'src/database/model/profile.model';
 
 @ApiTags('Auth')
 @Controller('/api/auth')

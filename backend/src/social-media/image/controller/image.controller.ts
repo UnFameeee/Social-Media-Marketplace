@@ -2,8 +2,8 @@ import { Body, Controller, Post, UploadedFile, UploadedFiles, UseGuards, UseInte
 import { FileInterceptor, FilesInterceptor, AnyFilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { ResponseData } from 'src/common/models/view-model/success-message.model';
-import { storagePost } from '../config/storage.config';
+import { ResponseData } from 'src/database/view-model/success-message.model';
+import { storagePost } from '../../../common/config/storage.config';
 
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()

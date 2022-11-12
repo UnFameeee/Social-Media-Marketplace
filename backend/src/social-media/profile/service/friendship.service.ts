@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { FriendshipRepository } from './../repository/friendship.repository';
-import { PagingData } from 'src/common/models/view-model/paging.model';
-import { Friendship } from 'src/social-media/profile/model/friendship.model';
-import { Page } from 'src/common/models/view-model/page-model';
-import { ResponseData } from 'src/common/models/view-model/success-message.model';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-import { Profile } from '../model/profile.model';
-
+import { Profile } from 'src/database/model/profile.model';
+import { Page } from 'src/database/view-model/page-model';
+import { ResponseData } from 'src/database/view-model/success-message.model';
+import { Friendship } from 'src/database/model/friendship.model';
+import { PagingData } from 'src/database/view-model/paging.model';
 @Injectable()
 export class FriendshipService {
     constructor(private readonly friendshipRepository: FriendshipRepository) { }

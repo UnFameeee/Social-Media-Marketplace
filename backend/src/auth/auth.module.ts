@@ -12,13 +12,15 @@ import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
 
 @Module({
     imports: [ProfileModule, PassportModule, ConfigModule,
-    JwtModule.register({
-        secret: jwtConstants.access_secret,
-        signOptions: { 
-            expiresIn: jwtConstants.access_expires,
-        }
-    })],
-    providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy],
+        JwtModule.register({
+            secret: jwtConstants.access_secret,
+            signOptions: {
+                expiresIn: jwtConstants.access_expires,
+            }
+        })],
+    providers: [
+        AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy
+    ],
     controllers: [AuthController],
 })
-export class AuthModule {}
+export class AuthModule { }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ResponseData } from 'src/common/models/view-model/success-message.model';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-import { Description } from '../model/description.model';
+import { Description } from 'src/database/model/description.model';
+import { ResponseData } from 'src/database/view-model/success-message.model';
 import { DescriptionRepository } from '../repository/description.repository';
 
 @Injectable()

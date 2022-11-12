@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post, Request, RequestMethod, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { Profile } from 'src/database/model/profile.model';
+import { Page } from 'src/database/view-model/page-model';
 import { FriendshipService } from '../service/friendship.service';
-import { Page } from 'src/common/models/view-model/page-model';
-import { Profile } from '../model/profile.model';
 
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)

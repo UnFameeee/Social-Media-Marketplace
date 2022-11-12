@@ -1,7 +1,7 @@
 import { Controller, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Profile } from 'src/social-media/profile/model/profile.model';
+import { Profile } from 'src/database/model/profile.model';
 import { PostLikeService } from '../service/post-like.service';
 
 @UseGuards(JwtAuthGuard)
@@ -16,12 +16,7 @@ export class PostLikeController {
         const profile = <Profile>request.user;
         return await this.postLikeService.likeUnlikePost(profile, postId);
     }
-    //Unlike a post
-    // @Post("/unlike/:post_id")
-    // async unlikePost(@Request() request: any, @Param("post_id") postId: number){
-    //     const profile = <Profile>request.user;
-    //     return await this.postLikeService.likeUnlikePost(profile, postId);
-    // }
+    
     //See all like of post
     @Post("/allLikeOfPost/:post_id")
     async allLikeOfPost(@Request() request: any, @Param("post_id") postId: number){

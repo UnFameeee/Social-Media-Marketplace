@@ -2,8 +2,8 @@ import { Controller, Post, UploadedFiles, UseGuards, UseInterceptors, Request, P
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Profile } from 'src/social-media/profile/model/profile.model';
-import { storagePost } from '../config/storage.config';
+import { Profile } from 'src/database/model/profile.model';
+import { storagePost } from '../../../common/config/storage.config';
 import { ProfilePostImageService } from '../service/profile_post_image.service';
 
 @UseGuards(JwtAuthGuard)
