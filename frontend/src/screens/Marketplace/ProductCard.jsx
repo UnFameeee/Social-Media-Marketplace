@@ -1,31 +1,34 @@
-import React from "react";
-import { Avatar, Button } from "@mui/material";
+import React, { useState } from "react";
+import { Avatar, Button, Modal } from "@mui/material";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import "./ProductCard.scss";
 import styled from "styled-components";
-const ResponSiveButtonWrapper = styled.div`
-  display: flex;
-  justify-content: space-evenly;
-  gap: 1rem;
-  font-size: 1.5rem;
-  @media only screen and (max-width: 1402px) {
-    flex-direction: column;
-  }
-`;
+import ProductCartDetailModal from "./ProductCartDetailModal";
+import macbook_example from "../../assets/macbook.jpeg";
 function ProductCard() {
   const userData = useSelector((state) => state.auth.user.userData);
   function randomNumberInRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
+  const [showModal, setShowModal] = useState(false);
+  const handleShowModalDetail = () => {
+    if (window.innerWidth <= 820) {
+      setShowModal((prev) => !prev);
+    }
+  };
   let randomNum = randomNumberInRange(800, 1050);
   return (
     <>
+      <ProductCartDetailModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
       <div className="card-Product card-product-normal shadow-md  p-[1.5rem] ">
         <div className="card-image relative mb-[1rem]">
           <img
-            className="w-full h-[25rem] rounded-lg shadow-lg"
-            src={`https://source.unsplash.com/random/1000x${randomNum}/?macbook`}
+            className="w-full rounded-lg shadow-lg"
+            src={macbook_example}
             alt=""
           />
           <div className=" absolute  top-[1rem] right-[1rem] p-[0.5rem] rounded-md bg-[#9a6de1]">
@@ -47,8 +50,12 @@ function ProductCard() {
             {userData.profile.profile_name?.at(0)}
           </Avatar>
           <div className="flex flex-col ">
-            <span className="font-bold line-clamp-1 ">Product name Lorem ipsum dolor sit amet.</span>
-            <span className=" font-light line-clamp-1">@Nguyễn Hoàng Hai Dụ</span>
+            <span className="font-bold line-clamp-1 ">
+              Product name Lorem ipsum dolor sit amet.
+            </span>
+            <span className=" font-light line-clamp-1">
+              @Nguyễn Hoàng Hai Dụ
+            </span>
           </div>
         </div>
         <div className="card-price mb-[1rem]  text-[1.6rem]">
@@ -58,7 +65,7 @@ function ProductCard() {
             <span>365 USD</span>
           </div>
         </div>
-        <ResponSiveButtonWrapper>
+        <div className="btn-product-action" >
           <Button
             style={{
               color: "black",
@@ -69,7 +76,9 @@ function ProductCard() {
               WebkitBorderRadius: "8px",
             }}
           >
-            <span className="text-[1.3rem]">View details</span>
+            <span className="text-[1.3rem]" onClick={handleShowModalDetail}>
+              View details
+            </span>
           </Button>
           <Button
             style={{
@@ -82,7 +91,7 @@ function ProductCard() {
           >
             <span className=" text-[1.3rem]">Add to cart</span>
           </Button>
-        </ResponSiveButtonWrapper>
+        </div>
       </div>
     </>
   );
