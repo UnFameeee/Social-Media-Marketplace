@@ -1,46 +1,44 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
-   @apply bg-greyf1 box-border text-[62.5%]
+    @apply bg-greyf1 box-border text-[62.5%];
   }
 
   body {
-    @apply text-[1.6rem]
+    @apply text-[1.6rem];
   }
 
-  img{
-    @apply hover:cursor-pointer
+  img {
+    @apply hover:cursor-pointer;
   }
 }
 @layer components {
-  .Icon{
-    @apply hover:cursor-pointer
+  .Icon {
+    @apply hover:cursor-pointer;
   }
   .navBarIcon {
     @apply text-slate-500 p-[0.5rem] box-border delay-[0] group-hover:text-blue8f3;
   }
-  .navBarIconHr{
+  .navBarIconHr {
     @apply invisible group-hover:visible delay-100 absolute h-[0.5rem] border-0 bg-blue8f3 rounded-sm  w-full right-[0];
   }
-  .navBarLi{
+  .navBarLi {
     @apply px-[4rem] pt-[1.2rem] relative hover:cursor-pointer hover:bg-greyf1 delay-[0];
   }
-  .leftHomeSideBarLi{
-    @apply flex gap-[0.8rem] items-center py-[1.2rem] hover:bg-slate-300 hover:cursor-pointer delay-100 px-[2.4rem] rounded-md w-full
+  .leftHomeSideBarLi {
+    @apply flex gap-[0.8rem] items-center py-[1.2rem] hover:bg-slate-300 hover:cursor-pointer delay-100 px-[2.4rem] rounded-md w-full;
   }
 
-  .hoverChangeBg{
-    @apply py-[0.5rem] hover:bg-slate-300 hover:cursor-pointer delay-100 rounded-md items-center
+  .hoverChangeBg {
+    @apply py-[0.5rem] hover:bg-slate-300 hover:cursor-pointer delay-100 rounded-md items-center;
   }
 
-  .photoGridImage{
-  @apply w-[100%] h-[150px] object-cover
+  .photoGridImage {
+    @apply w-[100%] h-[150px] object-cover;
   }
-
 }
 
 :root {
@@ -64,7 +62,7 @@
 html {
   /* width: 100vw;
   height: 100vh; */
-  font-family: 'Roboto', sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
   font-size: 62.5%;
   box-sizing: border-box;
 }
@@ -73,7 +71,6 @@ body {
   margin: 0;
   font-size: 1.6rem !important;
 }
-
 
 /* Config MUI components */
 .MuiFormHelperText-root {
@@ -87,10 +84,8 @@ body {
 .MuiFormLabel-root,
 .MuiInputBase-root,
 .MuiTypography-root,
-.MuiCalendarPicker-root
-.MuiPickersDay-root,
+.MuiCalendarPicker-root .MuiPickersDay-root,
 .PrivatePickersYear-root button,
-.PrivatePickersFadeTransitionGroup-root 
-{  
+.PrivatePickersFadeTransitionGroup-root {
   font-size: 1.6rem !important;
 }

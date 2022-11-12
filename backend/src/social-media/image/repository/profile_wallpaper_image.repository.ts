@@ -1,8 +1,8 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from "src/common/providers/provider.constant";
-import { ProfileWallpaperImageEntity } from "src/common/models/entity/profile_wallpaper";
-import { Profile } from "src/social-media/profile/model/profile.model";
-import { ProfileWallpaperImage } from "../model/profile_wallpaper_image.mode";
+import { ProfileWallpaperImageEntity } from "src/database/entity/profile_wallpaper";
+import { Profile } from "src/database/model/profile.model";
+import { ProfileWallpaperImage } from "src/database/model/profile_wallpaper_image.mode";
+import { PROVIDER } from "src/database/providers/provider.constant";
 
 @Injectable()
 export class ProfileWallpaperImageRepository {
@@ -42,6 +42,31 @@ export class ProfileWallpaperImageRepository {
                 })
                 return querydata.link;
             }
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async deleteProfileWallpaperImage(profile_id: number): Promise<boolean> {
+        try {
+            const queryDeleteData = await this.profileWallpaperImageRepository.findOne({
+                include: [
+                    {
+                        model: Profile,
+                        where: { profile_id: profile_id }
+                    }
+                ]
+            })
+            if (queryDeleteData) {
+                await queryDeleteData.destroy();
+
+                const queryData = await this.profileWallpaperImageRepository.findOne({
+                    where: { profile_wallpaper_image_id: queryDeleteData.profile_wallpaper_image_id }
+                })
+
+                return queryData ? false : true;
+            } return false;
+
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }

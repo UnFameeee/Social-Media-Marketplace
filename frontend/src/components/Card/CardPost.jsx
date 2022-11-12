@@ -24,18 +24,6 @@ import ShowMoreText from "react-show-more-text";
 import { deletePostSaga, likePostSaga } from "../../redux/post/postSlice";
 import notFoundImage from "../../assets/noimage_1.png";
 import styled from "styled-components";
-const ResponSiveDiv = styled.div`
-  @media only screen and (max-width: 1240px) {
-    .cardPost{
-      width:60rem;
-    }
-  }
-  @media only screen and (max-width: 1068px) {
-    .cardPost{
-      width:50rem;
-    }
-  }
-`;
 function CardPost(props) {
   //#region Declare variables
   const dispatch = useDispatch();
@@ -90,7 +78,6 @@ function CardPost(props) {
   return (
     <>
       {/* {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && ( */}
-      <ResponSiveDiv>
         <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-[70rem]">
           <div className="w-full bg">
             <div className="card-header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
@@ -272,7 +259,6 @@ function CardPost(props) {
             </div>
           </div>
         </div>
-      </ResponSiveDiv>
     </>
   );
 }

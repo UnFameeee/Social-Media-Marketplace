@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { ResponseData } from "src/common/models/view-model/success-message.model";
 import { ExceptionResponse } from "src/common/utils/custom-exception.filter";
-import { Profile } from "src/social-media/profile/model/profile.model";
+import { Profile } from "src/database/model/profile.model";
+import { ResponseData } from "src/database/view-model/success-message.model";
 
 @Injectable()
 export class RoomImageService {

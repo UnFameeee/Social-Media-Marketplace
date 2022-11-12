@@ -1,8 +1,8 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from "src/common/providers/provider.constant";
-import { DescriptionEntity } from "src/common/models/entity/description";
-import { Description } from "../model/description.model";
-import { Profile } from "../model/profile.model";
+import { DescriptionEntity } from "src/database/entity/description";
+import { Description } from "src/database/model/description.model";
+import { Profile } from "src/database/model/profile.model";
+import { PROVIDER } from "src/database/providers/provider.constant";
 
 @Injectable()
 export class DescriptionRepository {
@@ -12,7 +12,7 @@ export class DescriptionRepository {
 
     async createProfileDescription(profile_id: number): Promise<Description> {
         try {
-            const newDescription = new DescriptionEntity;
+            const newDescription = new DescriptionEntity();
             newDescription.profile_id = profile_id;
             const queryCreateData = await this.descriptionRepository.create(newDescription);
             return await this.descriptionRepository.findOne({

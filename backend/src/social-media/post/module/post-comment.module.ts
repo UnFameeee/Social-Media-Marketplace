@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { parentChildCommentProviders, postCommentProviders, postProviders } from 'src/common/providers/all.providers';
+import { parentChildCommentProviders, postCommentProviders, postProviders } from 'src/database/providers/all.providers';
 import { PostCommentController } from '../controller/post-comment.controller';
 import { PostCommentRepository } from '../repository/post-comment.repository';
 import { PostCommentService } from '../service/post-comment.service';

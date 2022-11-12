@@ -26,22 +26,7 @@ export default function RightBar(props) {
   const { classes, cx } = useStyles();
   const { marketplace } = props;
   if (marketplace) {
-    return (
-      <Box
-        className={cx(classes.scroll)}
-        sx={{
-          position: "fixed",
-          top: "76px",
-          right: 0,
-          width: "21%",
-          height: "calc(100vh - var(--navbar-height))",
-          overflowY: "scroll",
-          paddingBottom: "4.7rem",
-        }}
-      >
-        <ProductSideBarDetails />
-      </Box>
-    );
+    return <ProductSideBarDetails />;
   } else
     return (
       // #region oldCode

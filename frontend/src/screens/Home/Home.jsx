@@ -20,6 +20,7 @@ const ResponSiveDiv = styled.div`
       width: 25rem;
     }
   }
+  
   @media screen and (max-width: 1400px) {
     .threeColumn-wrapper {
       padding-left: 15%;
@@ -36,12 +37,23 @@ const ResponSiveDiv = styled.div`
       padding-left: 10%;
     }
   }
+  @media only screen and (max-width: 1240px) {
+    .cardPost{
+      width:60rem;
+    }
+  }
   @media only screen and (max-width: 1124px) {
     .threeColumn-wrapper {
       padding-left: 5%;
     }
     .left-bar {
       display: none;
+    }
+  }
+  
+  @media only screen and (max-width: 1068px) {
+    .cardPost{
+      width:50rem;
     }
   }
   @media only screen and (max-width: 956px) {

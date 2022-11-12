@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { PostCommentDto } from 'src/common/models/dtos/post-comment.dto';
-import { PostCommentEntity } from 'src/common/models/entity/post-comment';
-import { Page } from 'src/common/models/view-model/page-model';
-import { ResponseData } from 'src/common/models/view-model/success-message.model';
+import { PostCommentDto } from 'src/database/dtos/post-comment.dto';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-import { Profile } from 'src/social-media/profile/model/profile.model';
 import { PostCommentRepository } from '../repository/post-comment.repository';
+import { Profile } from 'src/database/model/profile.model';
+import { ResponseData } from 'src/database/view-model/success-message.model';
+import { Page } from 'src/database/view-model/page-model';
 
 @Injectable()
 export class PostCommentService {

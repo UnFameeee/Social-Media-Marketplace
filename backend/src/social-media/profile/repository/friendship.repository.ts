@@ -1,16 +1,16 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from 'src/common/providers/provider.constant';
-import { Friendship } from './../model/friendship.model';
-import { PagingData } from 'src/common/models/view-model/paging.model';
+import { PROVIDER } from 'src/database/providers/provider.constant';
 import { paginate } from "src/common/utils/paginate.utils";
-import { Page } from "src/common/models/view-model/page-model";
-import { Profile } from 'src/social-media/profile/model/profile.model';
 import { Sequelize } from "sequelize-typescript";
 import { FRIENDREQUEST_STATUS, FRIENDSHIP_STATUS } from "src/common/constants/friendship.constant";
-import { FriendshipEntity } from "src/common/models/entity/friendship";
 import { Op } from "sequelize";
-import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_image.model";
-import { ProfileWallpaperImage } from "src/social-media/image/model/profile_wallpaper_image.mode";
+import { PagingData } from "src/database/view-model/paging.model";
+import { Friendship } from "src/database/model/friendship.model";
+import { Page } from "src/database/view-model/page-model";
+import { Profile } from "src/database/model/profile.model";
+import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
+import { ProfileWallpaperImage } from "src/database/model/profile_wallpaper_image.mode";
+import { FriendshipEntity } from "src/database/entity/friendship";
 
 @Injectable()
 export class FriendshipRepository {
