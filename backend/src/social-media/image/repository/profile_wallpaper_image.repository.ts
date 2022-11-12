@@ -46,4 +46,29 @@ export class ProfileWallpaperImageRepository {
             throw new InternalServerErrorException(err.message);
         }
     }
+
+    async deleteProfileWallpaperImage(profile_id: number): Promise<boolean> {
+        try {
+            const queryDeleteData = await this.profileWallpaperImageRepository.findOne({
+                include: [
+                    {
+                        model: Profile,
+                        where: { profile_id: profile_id }
+                    }
+                ]
+            })
+            if (queryDeleteData) {
+                await queryDeleteData.destroy();
+
+                const queryData = await this.profileWallpaperImageRepository.findOne({
+                    where: { profile_wallpaper_image_id: queryDeleteData.profile_wallpaper_image_id }
+                })
+
+                return queryData ? false : true;
+            } return false;
+
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
 }

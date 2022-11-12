@@ -32,14 +32,12 @@ export default function RightBar(props) {
         sx={{
           position: "fixed",
           top: "76px",
-          right: 0,
-          width: "21%",
-          height: "calc(100vh - var(--navbar-height))",
-          overflowY: "scroll",
+          left: "1%",
+          width: "400px",
           paddingBottom: "4.7rem",
         }}
       >
-        <ProductSideBarDetails />
+        <ProductSideBarDetails  />
       </Box>
     );
   } else

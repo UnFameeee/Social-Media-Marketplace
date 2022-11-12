@@ -18,4 +18,14 @@ export class ProfileAvatarImageService {
             ExceptionResponse(err);
         }
     }
+
+    async deleteProfileAvatarImage(profile_id: number): Promise<ResponseData<boolean>> {
+        try {
+            var response = new ResponseData<boolean>();
+            response.results = await this.profileAvatarImageRepository.deleteProfileAvatarImage(profile_id);
+            return response;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
 }

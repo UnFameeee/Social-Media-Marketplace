@@ -4,18 +4,9 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import "./ProductCard.scss";
 import styled from "styled-components";
-const ResponSiveGrid = styled.div`
-  @media only screen and (max-width: 868px) {
-  }
-  @media only screen and (max-width: 1402px) {
-  }
-  @media only screen and (max-width: 906px) {
-  }
-`;
 const ResponSiveButtonWrapper = styled.div`
   display: flex;
-  height: 3/5;
-  justify-content: space-around;
+  justify-content: space-evenly;
   gap: 1rem;
   font-size: 1.5rem;
   @media only screen and (max-width: 1402px) {
@@ -27,13 +18,13 @@ function ProductCard() {
   function randomNumberInRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-  let randomNum = randomNumberInRange(800,1050)
+  let randomNum = randomNumberInRange(800, 1050);
   return (
-    <ResponSiveGrid>
-      <div className="card-Product card-product-normal shadow-md  p-[1rem] ">
+    <>
+      <div className="card-Product card-product-normal shadow-md  p-[1.5rem] ">
         <div className="card-image relative mb-[1rem]">
           <img
-            className="w-full h-[25rem] rounded-lg"
+            className="w-full h-[25rem] rounded-lg shadow-lg"
             src={`https://source.unsplash.com/random/1000x${randomNum}/?macbook`}
             alt=""
           />
@@ -55,9 +46,9 @@ function ProductCard() {
           >
             {userData.profile.profile_name?.at(0)}
           </Avatar>
-          <div className="flex flex-col">
-            <span className="font-bold">Product name</span>
-            <span className=" font-light">@Nguyễn Hoàng Hai Dụ</span>
+          <div className="flex flex-col ">
+            <span className="font-bold line-clamp-1 ">Product name Lorem ipsum dolor sit amet.</span>
+            <span className=" font-light line-clamp-1">@Nguyễn Hoàng Hai Dụ</span>
           </div>
         </div>
         <div className="card-price mb-[1rem]  text-[1.6rem]">
@@ -68,15 +59,32 @@ function ProductCard() {
           </div>
         </div>
         <ResponSiveButtonWrapper>
-          <button className="btn-view-detail w-full h-full p-[0.5rem] flex items-center">
-            <span className="w-full">View details</span>
-          </button>
-          <button className="btn-add-to-cart w-full h-full p-[0.5rem] flex items-center  ">
-            <span className="w-full">Add to cart</span>
-          </button>
+          <Button
+            style={{
+              color: "black",
+              background: "white",
+              border: "1px solid var(--primary-color)",
+              borderRadius: "8px",
+              MozBorderRadius: "8px",
+              WebkitBorderRadius: "8px",
+            }}
+          >
+            <span className="text-[1.3rem]">View details</span>
+          </Button>
+          <Button
+            style={{
+              color: "white",
+              background: "var(--primary-color)",
+              borderRadius: "8px",
+              MozBorderRadius: "8px",
+              WebkitBorderRadius: "8px",
+            }}
+          >
+            <span className=" text-[1.3rem]">Add to cart</span>
+          </Button>
         </ResponSiveButtonWrapper>
       </div>
-    </ResponSiveGrid>
+    </>
   );
 }
 

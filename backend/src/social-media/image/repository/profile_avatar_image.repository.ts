@@ -46,4 +46,29 @@ export class ProfileAvatarImageRepository {
             throw new InternalServerErrorException(err.message);
         }
     }
+
+    async deleteProfileAvatarImage(profile_id: number): Promise<boolean> {
+        try {
+            const queryDeleteData = await this.profileAvatarImageRepository.findOne({
+                include: [
+                    {
+                        model: Profile,
+                        where: { profile_id: profile_id }
+                    }
+                ]
+            })
+            if (queryDeleteData) {
+                await queryDeleteData.destroy();
+                const queryData = await this.profileAvatarImageRepository.findOne({
+                    where: { profile_avatar_image_id: queryDeleteData.profile_avatar_image_id }
+                })
+
+                return queryData ? false : true;
+            } return false;
+
+
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
 }

@@ -18,4 +18,14 @@ export class ProfileWallpaperImageService {
             ExceptionResponse(err);
         }
     }
+
+    async deleteProfileWallpaperImage(profile_id: number): Promise<ResponseData<boolean>> {
+        try {
+            var response = new ResponseData<boolean>();
+            response.results = await this.profileWallpaperImageRepository.deleteProfileWallpaperImage(profile_id);
+            return response;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
 }
