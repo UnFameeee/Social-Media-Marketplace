@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { chatroomImageProviders, postProviders, profileAvatarImageProviders, profilePostImageProviders, profileWallpaperImageProviders } from 'src/common/providers/all.providers';
+import { chatroomImageProviders, postProviders, profileAvatarImageProviders, profilePostImageProviders, profileWallpaperImageProviders } from 'src/database/providers/all.providers';
 import { ImageController } from '../controller/image.controller';
 import { ProfileAvatarImageController } from '../controller/profile_avatar_image.controller';
 import { ProfilePostImageController } from '../controller/profile_post_image.controller';

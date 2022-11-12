@@ -2,11 +2,11 @@ import { Body, Controller, Get, Param, Post, UseGuards, Request } from '@nestjs/
 import { Delete, Patch, Put } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { UpdateProfileDto } from 'src/common/models/dtos/update-profile.dto';
-import { Page } from 'src/common/models/view-model/page-model';
-import { PagingData } from 'src/common/models/view-model/paging.model';
-import { ResponseData } from 'src/common/models/view-model/success-message.model';
-import { Profile } from '../model/profile.model';
+import { UpdateProfileDto } from 'src/database/dtos/update-profile.dto';
+import { Profile } from 'src/database/model/profile.model';
+import { Page } from 'src/database/view-model/page-model';
+import { PagingData } from 'src/database/view-model/paging.model';
+import { ResponseData } from 'src/database/view-model/success-message.model';
 import { ProfileService } from '../service/profile.service';
 
 @ApiBearerAuth()

@@ -1,14 +1,12 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { response } from 'express';
-import { UpdateProfileDto } from 'src/common/models/dtos/update-profile.dto';
-import { Page } from 'src/common/models/view-model/page-model';
-import { PagingData } from 'src/common/models/view-model/paging.model';
-import { ResponseData } from 'src/common/models/view-model/success-message.model';
+import { UpdateProfileDto } from 'src/database/dtos/update-profile.dto';
 import { compare } from 'src/common/utils/bcrypt-singleton.utils';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-
-import { Profile } from '../model/profile.model';
 import { ProfileRepository } from '../repository/profile.repository';
+import { Page } from 'src/database/view-model/page-model';
+import { ResponseData } from 'src/database/view-model/success-message.model';
+import { PagingData } from 'src/database/view-model/paging.model';
+import { Profile } from 'src/database/model/profile.model';
 
 @Injectable()
 export class ProfileService {

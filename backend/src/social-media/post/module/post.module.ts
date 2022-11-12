@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { postProviders } from 'src/common/providers/all.providers';
+import { postProviders } from 'src/database/providers/all.providers';
 import { PostController } from '../controller/post.controller';
 import { PostRepository } from '../repository/post.repository';
 import { PostService } from '../service/post.service';

@@ -1,16 +1,16 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { InternalServerErrorException } from "@nestjs/common/exceptions";
-import { PROVIDER } from "src/common/providers/provider.constant";
-import { Profile } from "../../profile/model/profile.model";
-import { PostData } from "../../../common/models/dtos/post-data.dto";
-import { Post } from "../model/post.model";
-import { PagingData } from "src/common/models/view-model/paging.model";
-import { Page } from "src/common/models/view-model/page-model";
+import { PROVIDER } from "src/database/providers/provider.constant";
+import { PostData } from "../../../database/dtos/post-data.dto";
 import { paginate } from "src/common/utils/paginate.utils";
 import { Sequelize } from "sequelize-typescript";
 import { PostLikeRepository } from "./post-like.repository";
-import { ProfilePostImage } from "src/social-media/image/model/profile_post_image.model";
-import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_image.model";
+import { Page } from "src/database/view-model/page-model";
+import { PagingData } from "src/database/view-model/paging.model";
+import { Post } from "src/database/model/post.model";
+import { Profile } from "src/database/model/profile.model";
+import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
+import { ProfilePostImage } from "src/database/model/profile_post_image.model";
 
 @Injectable()
 export class PostRepository {

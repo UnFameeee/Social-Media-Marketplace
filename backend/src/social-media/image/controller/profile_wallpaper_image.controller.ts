@@ -1,9 +1,9 @@
-import { Controller, Request, Post, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Request, Post, UploadedFile, UseGuards, UseInterceptors, Delete } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Profile } from 'src/social-media/profile/model/profile.model';
-import { storageWallpaper } from '../config/storage.config';
+import { Profile } from 'src/database/model/profile.model';
+import { storageWallpaper } from '../../../common/config/storage.config';
 import { ProfileWallpaperImageService } from '../service/profile_wallpaper_image.service';
 
 @UseGuards(JwtAuthGuard)
@@ -29,4 +29,9 @@ export class ProfileWallpaperImageController {
         return response;
     }
 
+    @Delete("/profile_wallpaper/delete")
+    async deleteProfileWallpaperImage(@Request() request: any) {
+        const profile = <Profile>request.user;
+        return await this.profileWallpaperImageService.deleteProfileWallpaperImage(profile.profile_id);
+    }
 }

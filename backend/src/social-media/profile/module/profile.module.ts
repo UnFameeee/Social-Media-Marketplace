@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { friendshipProviders, profileAvatarImageProviders, profilePostImageProviders, profileProviders, profileWallpaperImageProviders } from 'src/common/providers/all.providers';
+import { friendshipProviders, profileAvatarImageProviders, profilePostImageProviders, profileProviders, profileWallpaperImageProviders } from 'src/database/providers/all.providers';
 import { ProfileController } from '../controller/profile.controller';
 import { ProfileRepository } from '../repository/profile.repository';
 import { ProfileService } from '../service/profile.service';

@@ -1,0 +1,22 @@
+export enum PROVIDER {
+    Profile = 'PROFILE_REPOSITORY',
+    Auth = 'AUTH_REPOSITORY',
+    Post = 'POST_REPOSITOTY',
+    PostLike = 'POSTLIKE_REPOSITOTY',
+    PostComment = 'POSTCOMMENT_REPOSITOTY',
+    ParentChildComment = 'PARENT_CHILD_COMMENT_REPOSITORY',
+    Friendship = 'FRIENDSHIP_REPOSITOTY',
+    Description = 'DESCRIPTION_REPOSITORY',
+    ProfileAvatarImage = 'PROFILE_AVATAR_IMAGE_REPOSITORY',
+    ProfileWallpaperImage = 'PROFILE_WALLPAPER_IMAGE_REPOSITORY',
+    ProfilePostImage = 'PROFILE_POST_IMAGE_REPOSITORY',
+
+
+
+    
+    ChatroomImage = 'CHATROOM_IMAGE_REPOSITORY',
+    ChatConnectedProfile = 'CHAT_CONNECTED_PROFILE_REPOSITORY',
+    ChatJoinedRoom = 'CHAT_JOINED_ROOM_REPOSITOTY',
+    ChatMessage = 'CHAT_MESSAGE_REPOSITOTY',
+    ChatRoom = 'CHAT_ROOM_REPOSITOTY',
+}
