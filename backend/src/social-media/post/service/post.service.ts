@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { ResponseData } from 'src/common/models/view-model/success-message.model';
+
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-import { Profile } from '../../profile/model/profile.model';
-import { PostData } from '../../../common/models/dtos/post-data.dto';
-import { Post } from '../model/post.model';
+import { Post } from 'src/database/model/post.model';
+import { Profile } from 'src/database/model/profile.model';
+import { Page } from 'src/database/view-model/page-model';
+import { PagingData } from 'src/database/view-model/paging.model';
+import { ResponseData } from 'src/database/view-model/success-message.model';
+import { PostData } from '../../../database/dtos/post-data.dto';
 import { PostRepository } from '../repository/post.repository';
-import { PagingData } from 'src/common/models/view-model/paging.model';
-import { Page } from 'src/common/models/view-model/page-model';
 
 @Injectable()
 export class PostService {

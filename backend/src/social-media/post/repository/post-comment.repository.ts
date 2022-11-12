@@ -1,18 +1,18 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from "src/common/providers/provider.constant";
-import { PostCommentDto } from "src/common/models/dtos/post-comment.dto";
-import { PostCommentEntity } from "src/common/models/entity/post-comment";
-import { PostComment } from "../model/post-comment.model";
-import { Post } from "../model/post.model";
-import { ParentChildComment } from "../model/parent_child_comment.model";
-import { ParentChildCommentEntity } from "src/common/models/entity/parent-child-comment";
+import { PROVIDER } from "src/database/providers/provider.constant";
+import { PostCommentDto } from "src/database/dtos/post-comment.dto";
 import { Sequelize } from "sequelize-typescript";
 import { Op } from "sequelize";
-import { Profile } from "src/social-media/profile/model/profile.model";
-import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_image.model";
-import { Page } from "src/common/models/view-model/page-model";
 import { paginate } from "src/common/utils/paginate.utils";
-import { PagingData } from "src/common/models/view-model/paging.model";
+import { Post } from "src/database/model/post.model";
+import { PostComment } from "src/database/model/post-comment.model";
+import { ParentChildComment } from "src/database/model/parent_child_comment.model";
+import { PostCommentEntity } from "src/database/entity/post-comment";
+import { ParentChildCommentEntity } from "src/database/entity/parent-child-comment";
+import { Page } from "src/database/view-model/page-model";
+import { PagingData } from "src/database/view-model/paging.model";
+import { Profile } from "src/database/model/profile.model";
+import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
 
 @Injectable()
 export class PostCommentRepository {

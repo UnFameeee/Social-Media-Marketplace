@@ -1,9 +1,9 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from "src/common/providers/provider.constant";
+import { PROVIDER } from "src/database/providers/provider.constant";
 import { Op } from "sequelize";
-import { ProfilePostImageEntity } from "src/common/models/entity/profile_post_image";
-import { Post } from "src/social-media/post/model/post.model";
-import { ProfilePostImage } from "../model/profile_post_image.model";
+import { Post } from "src/database/model/post.model";
+import { ProfilePostImage } from "src/database/model/profile_post_image.model";
+import { ProfilePostImageEntity } from "src/database/entity/profile_post_image";
 
 @Injectable()
 export class ProfilePostImageRepository {

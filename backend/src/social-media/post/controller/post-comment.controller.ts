@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { PostCommentDto } from 'src/common/models/dtos/post-comment.dto';
-import { Page } from 'src/common/models/view-model/page-model';
-import { Profile } from 'src/social-media/profile/model/profile.model';
+import { PostCommentDto } from 'src/database/dtos/post-comment.dto';
+import { Profile } from 'src/database/model/profile.model';
+import { Page } from 'src/database/view-model/page-model';
+
 import { PostCommentService } from '../service/post-comment.service';
 
 @UseGuards(JwtAuthGuard)

@@ -2,9 +2,9 @@ import { Controller, Delete, Post, Request, UploadedFile, UseGuards, UseIntercep
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { ResponseData } from 'src/common/models/view-model/success-message.model';
-import { Profile } from 'src/social-media/profile/model/profile.model';
-import { storageAvatar } from '../config/storage.config';
+import { Profile } from 'src/database/model/profile.model';
+import { ResponseData } from 'src/database/view-model/success-message.model';
+import { storageAvatar } from '../../../common/config/storage.config';
 import { ProfileAvatarImageService } from '../service/profile_avatar_image.service';
 
 @UseGuards(JwtAuthGuard)

@@ -1,8 +1,8 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from "src/common/providers/provider.constant";
-import { ProfileAvatarImageEntity } from "src/common/models/entity/profile_avatar";
-import { Profile } from "src/social-media/profile/model/profile.model";
-import { ProfileAvatarImage } from "../model/profile_avatar_image.model";
+import { ProfileAvatarImageEntity } from "src/database/entity/profile_avatar";
+import { Profile } from "src/database/model/profile.model";
+import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
+import { PROVIDER } from "src/database/providers/provider.constant";
 
 @Injectable()
 export class ProfileAvatarImageRepository {

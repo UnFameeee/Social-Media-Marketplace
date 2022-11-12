@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common";
-import { ResponseData } from "src/common/models/view-model/success-message.model";
 import { ExceptionResponse } from "src/common/utils/custom-exception.filter";
-import { Profile } from "src/social-media/profile/model/profile.model";
+import { ResponseData } from "src/database/view-model/success-message.model";
 import { ProfilePostImageRepository } from "../repository/profile_post_image.repository";
 
 @Injectable()

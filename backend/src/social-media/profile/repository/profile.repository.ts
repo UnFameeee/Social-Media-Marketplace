@@ -1,23 +1,23 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Op } from "sequelize";
-import { PROVIDER } from "src/common/providers/provider.constant";
-import { Profile } from "../model/profile.model";
-import { CreateProfileDto } from "../../../common/models/dtos/create-profile.dto";
-import { UpdateProfileDto } from "src/common/models/dtos/update-profile.dto";
+import { PROVIDER } from "src/database/providers/provider.constant";
+import { CreateProfileDto } from "../../../database/dtos/create-profile.dto";
+import { UpdateProfileDto } from "src/database/dtos/update-profile.dto";
 import { SCOPE } from "src/common/constants/sequelize-scope.constant";
-import { PagingData } from "src/common/models/view-model/paging.model";
-import { Page } from "src/common/models/view-model/page-model";
 import { paginate } from "src/common/utils/paginate.utils";
 import { FriendshipRepository } from "./friendship.repository";
 import { FRIENDSHIP_LIMIT } from "src/common/constants/friendship.constant";
 import { Sequelize } from 'sequelize-typescript';
 import { encode } from "src/common/utils/bcrypt-singleton.utils";
-import { ProfileAvatarImage } from "src/social-media/image/model/profile_avatar_image.model";
-import { ProfileWallpaperImage } from "src/social-media/image/model/profile_wallpaper_image.mode";
 import { DescriptionRepository } from "./description.repository";
-import { Description } from "../model/description.model";
-import { ProfilePostImage } from "src/social-media/image/model/profile_post_image.model";
-import { Post } from "src/social-media/post/model/post.model";
+import { Profile } from "src/database/model/profile.model";
+import { Page } from "src/database/view-model/page-model";
+import { PagingData } from "src/database/view-model/paging.model";
+import { ProfilePostImage } from "src/database/model/profile_post_image.model";
+import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
+import { ProfileWallpaperImage } from "src/database/model/profile_wallpaper_image.mode";
+import { Description } from "src/database/model/description.model";
+
 @Injectable()
 export class ProfileRepository {
     constructor(

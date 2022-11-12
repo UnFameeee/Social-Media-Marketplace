@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { Profile } from "src/social-media/profile/model/profile.model";
+import { Profile } from "src/database/model/profile.model";
 
 interface RequestWithProfile extends Request {
     profile: Profile;

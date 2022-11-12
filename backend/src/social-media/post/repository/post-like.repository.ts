@@ -1,9 +1,10 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { PROVIDER } from "src/common/providers/provider.constant";
-import { PostLikeEntity } from "src/common/models/entity/post-like";
-import { Profile } from "src/social-media/profile/model/profile.model";
-import { PostLike } from "../model/post-like.model";
-import { Post } from "../model/post.model";
+import { PostLikeEntity } from "src/database/entity/post-like";
+import { PostLike } from "src/database/model/post-like.model";
+import { Post } from "src/database/model/post.model";
+import { Profile } from "src/database/model/profile.model";
+import { PROVIDER } from "src/database/providers/provider.constant";
+
 
 @Injectable()
 export class PostLikeRepository {
