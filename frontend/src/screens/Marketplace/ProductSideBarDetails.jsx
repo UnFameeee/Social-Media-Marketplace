@@ -12,6 +12,7 @@ import "./ProductCard.scss";
 import { useEffect } from "react";
 import cart_empty_image from "../../assets/cart_empty.png";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 const ResponSiveButtonWrapper = styled.div`
   display: flex;
   height: 3/5;
@@ -30,6 +31,10 @@ function ProductSideBarDetails() {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const navigate = useNavigate()
+  const handleNavigateToCheckOut = () =>{
+    navigate('/checkout')
+  }
   return (
     <div className="ProductSideBarDetails fixed top-[76px] left-[1%] w-[400px]">
       <div className="card-Product card-product-detail p-0 bg-white shadow-md max-h-[80vh]">
@@ -221,6 +226,7 @@ function ProductSideBarDetails() {
             background: "var(--primary-color)",
             borderRadius: "0px 0px 15px 15px",
           }}
+          onClick={handleNavigateToCheckOut}
         >
           Proceed Check Out
         </Button>
