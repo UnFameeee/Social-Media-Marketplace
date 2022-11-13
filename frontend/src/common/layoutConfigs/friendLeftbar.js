@@ -44,12 +44,12 @@ export const staticLeftbar = [
     right: <KeyboardArrowRight />,
     navigate: 'all',
   },
-  {
-    left: {
-      iconButton: true,
-      icon: <Cake />,
-    },
-    middle: 'Birthdays',
-    navigate: 'birthdays',
-  },
+  // {
+  //   left: {
+  //     iconButton: true,
+  //     icon: <Cake />,
+  //   },
+  //   middle: 'Birthdays',
+  //   navigate: 'birthdays',
+  // },
 ];

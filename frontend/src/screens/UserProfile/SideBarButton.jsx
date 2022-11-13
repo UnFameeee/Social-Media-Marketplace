@@ -1,5 +1,3 @@
-import React from 'react';
-
 function SideBarButton({ label, onClick, ...others }) {
   return (
     <button

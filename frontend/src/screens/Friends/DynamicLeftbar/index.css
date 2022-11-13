@@ -44,7 +44,7 @@
   justify-content: space-evenly;
 }
 .action .action-btn {
-  width: 13.5rem;
+  width: 44%;
   max-height: 4rem;
   pointer-events: auto;
 }

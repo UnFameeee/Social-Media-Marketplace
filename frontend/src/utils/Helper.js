@@ -42,12 +42,11 @@ function equalArrays(a, b) {
 }
 
 function convertArrayToObject(array, key) {
-  const initialValue = {};
   return array.reduce((obj, item, index) => {
     return key
       ? { ...obj, [item[key]]: item }
       : { ...obj, [index]: item };
-  }, initialValue);
+  }, {});
 }
 
 function toUpperCaseFirstLetter(str) {
@@ -154,21 +153,46 @@ function isMultiple(string, amount, defaultString) {
 }
 
 function isEmptyObject(obj, checkValue = false) {
+  let res = true;
   if (!checkValue) {
     for (var prop in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-        return false;
+        res = false;
       }
     }
-
-    return JSON.stringify(obj) === JSON.stringify({});
+    return res && JSON.stringify(obj) === JSON.stringify({});
   } else {
-    Object.values(obj).map(x => {
-      if(x) return false;
-    })
-    return true;
+    if (obj) {
+      Object.values(obj).map((x) => {
+        if (x) {
+          res = false;
+        }
+      });
+    }
+    return res;
   }
 }
+
+function convertArrayObjectToObject(arrayObject) {
+  return arrayObject.reduce(function (obj, item) {
+    var keys = Object.keys(item);
+    obj[keys[0]] = item[keys[0]] ?? '';
+    return obj;
+  }, {});
+}
+
+function sortEntriesByKey(desc = false) {
+  const n = { less: desc ? 1 : -1, more: desc ? -1 : 1 };
+  return (curr, next) =>
+    curr?.[0] < next?.[0] ? n.less : curr?.[0] > next?.[0] ? n.more : 0;
+};
+
+function sortArrayByKey(key = "id", desc = false) {
+  if (!key) return undefined;
+  const n = { less: desc ? 1 : -1, more: desc ? -1 : 1 };
+  return (curr, next) =>
+    curr?.[key] < next?.[key] ? n.less : curr?.[key] > next?.[key] ? n.more : 0;
+};
 
 export const Helper = {
   generateId,
@@ -188,4 +212,7 @@ export const Helper = {
   checkURL,
   isMultiple,
   isEmptyObject,
+  convertArrayObjectToObject,
+  sortEntriesByKey,
+  sortArrayByKey,
 };

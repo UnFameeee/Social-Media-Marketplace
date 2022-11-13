@@ -66,6 +66,8 @@ export const profileSlice = createSlice({
     },
     updateAvtSaga() {},
     updateAvtSagaSuccess() {},
+    deleteAvtSaga() {},
+    deleteAvtSagaSuccess() {},
 
     updateWallpaperStart: (state) => {
       state.updateWallpaper.isFetching = true;
@@ -80,6 +82,8 @@ export const profileSlice = createSlice({
     },
     updateWallpaperSaga() {},
     updateWallpaperSagaSuccess() {},
+    deleteWallpaperSaga() {},
+    deleteWallpaperSagaSuccess() {},
   },
 });
 
@@ -98,8 +102,12 @@ export const {
 
     updateAvtSaga,
     updateAvtSagaSuccess,
+    deleteAvtSaga,
+    deleteAvtSagaSuccess,
     updateWallpaperSaga,
     updateWallpaperSagaSuccess,
+    deleteWallpaperSaga,
+    deleteWallpaperSagaSuccess,
     updateDetailSaga,
     updateDetailSagaSuccess,
 } = profileSlice.actions;

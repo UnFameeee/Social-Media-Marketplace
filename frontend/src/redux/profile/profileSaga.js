@@ -2,6 +2,10 @@ import { put, takeLatest, call } from 'redux-saga/effects';
 import { axiosInStanceJWT } from '../axiosJWT';
 import api from '../../common/environment/environment';
 import {
+  deleteAvtSaga,
+  deleteAvtSagaSuccess,
+  deleteWallpaperSaga,
+  deleteWallpaperSagaSuccess,
   getProfileDetailSuccess,
   updateAvtFailed,
   updateAvtSaga,
@@ -15,11 +19,16 @@ import {
   updateWallpaperSuccess,
 } from './profileSlice';
 import { notifyService } from '../../services/notifyService';
-import { paging } from '../../common/constants/apiConfig';
 
 export function* refreshProfile() {
   yield takeLatest(
-    [updateAvtSagaSuccess.type, updateWallpaperSagaSuccess.type, updateDetailSagaSuccess.type],
+    [
+      updateAvtSagaSuccess.type,
+      updateWallpaperSagaSuccess.type,
+      updateDetailSagaSuccess.type,
+      deleteAvtSagaSuccess.type,
+      deleteWallpaperSagaSuccess.type,
+    ],
     handleRefreshProfileSaga
   );
 }
@@ -58,8 +67,8 @@ export function* updateAvtReq() {
 }
 function* handleUpdateAvt(data) {
   try {
-    const accept = yield call(updateAvtSagaRequest, data);
-    yield put(updateAvtSuccess(accept.data));
+    const avt = yield call(updateAvtSagaRequest, data);
+    yield put(updateAvtSuccess(avt.data));
   } catch (error) {
     console.log(error);
   }
@@ -103,8 +112,8 @@ export function* updateWallReq() {
 }
 function* handleUpdateWall(data) {
   try {
-    const accept = yield call(updateWallSagaRequest, data);
-    yield put(updateWallpaperSuccess(accept.data));
+    const wall = yield call(updateWallSagaRequest, data);
+    yield put(updateWallpaperSuccess(wall.data));
   } catch (error) {
     console.log(error);
   }
@@ -149,8 +158,8 @@ export function* updateDetailReq() {
 }
 function* handleUpdateDetail(data) {
   try {
-    const accept = yield call(updateDetailSagaRequest, data);
-    // yield put(updateDetailSuccess(accept.data));
+    const detail = yield call(updateDetailSagaRequest, data);
+    // yield put(updateDetailSuccess(detail.data));
   } catch (error) {
     console.log(error);
   }
@@ -184,5 +193,89 @@ async function updateDetailSagaRequest(data) {
   } catch (error) {
     notifyService.showError('Update Profile Failed!');
     // dispatch(updateWallpaperFailed());
+  }
+}
+
+export function* deleteAvtReq() {
+  yield takeLatest(deleteAvtSaga.type, handleDeleteAvt);
+}
+function* handleDeleteAvt(data) {
+  try {
+    const delAvt = yield call(deleteAvtSagaRequest, data);
+    // yield put(deleteAvtSuccess(delAvt.data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function deleteAvtSagaRequest(data) {
+  const { accessToken, refreshToken, id, dispatch } =
+    data.payload;
+
+  try {
+    const res = await axiosInStanceJWT.delete(
+      `${api.image}/profile_avatar/delete`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      notifyService.showSuccess('Remove Avatar Successfully!');
+      dispatch(
+        deleteAvtSagaSuccess({ accessToken, refreshToken, id })
+      );
+      return res;
+    } else {
+      notifyService.showError(res.data.message);
+      // dispatch(deleteAvtFailed());
+    }
+  } catch (error) {
+    notifyService.showError('Remove Avatar Failed!');
+    // dispatch(deleteAvtFailed());
+  }
+}
+
+export function* deleteWallReq() {
+  yield takeLatest(deleteWallpaperSaga.type, handleDeleteWall);
+}
+function* handleDeleteWall(data) {
+  try {
+    const deleteWall = yield call(deleteWallSagaRequest, data);
+    // yield put(deleteWallpaperSuccess(deleteWall.data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function deleteWallSagaRequest(data) {
+  const { accessToken, refreshToken, id, dispatch } =
+    data.payload;
+
+  try {
+    const res = await axiosInStanceJWT.delete(
+      `${api.image}/profile_wallpaper/delete`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      notifyService.showSuccess('Remove Wallpaper Successfully!');
+      dispatch(
+        deleteWallpaperSagaSuccess({ accessToken, refreshToken, id })
+      );
+      return res;
+    } else {
+      notifyService.showError(res.data.message);
+      // dispatch(deleteWallpaperFailed());
+    }
+  } catch (error) {
+    notifyService.showError('Remove Wallpaper Failed!');
+    // dispatch(deleteWallpaperFailed());
   }
 }

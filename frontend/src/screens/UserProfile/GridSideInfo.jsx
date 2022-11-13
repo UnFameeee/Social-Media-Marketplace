@@ -19,8 +19,7 @@ function GridSideInfo(props) {
           </div>
           <ul className="grid grid-cols-3 gap-[0.5rem] ml-0 ">
             {props.type === "photo" &&
-              props.listImg &&
-              props.listImg.map((item, index) => {
+              props.listImg?.map((item, index) => {
                 if (index === 2) {
                   return (
                     <li key={index}>
@@ -75,8 +74,7 @@ function GridSideInfo(props) {
                 }
               })}
             {props.type === "friendPhoto" &&
-              props.listImg &&
-              props.listImg.map((item, index) => {
+              props.listImg?.map((item, index) => {
                 return (
                   <li key={index}>
                     <Avatar

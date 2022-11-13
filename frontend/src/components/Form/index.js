@@ -20,6 +20,7 @@ export function ValidateForm(props) {
     onSubmit,
     children,
     style = {},
+    className,
     handleValid = () => {},
     ...other
   } = props;
@@ -35,7 +36,11 @@ export function ValidateForm(props) {
     >
       {(props) => {
         handleValid(props);
-        return <Form style={style}>{children}</Form>;
+        return (
+          <Form style={style} className={className}>
+            {children}
+          </Form>
+        );
       }}
     </Formik>
   );
