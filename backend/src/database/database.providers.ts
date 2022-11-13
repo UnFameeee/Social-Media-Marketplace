@@ -58,7 +58,7 @@ export const databaseProviders = [
 
             // sequelize.options
             sequelize.addModels([
-                Profile, Friendship, Post, PostLike, PostComment, ParentChildComment, ProfileAvatarImage, ProfilePostImage, ProfileWallpaperImage, Description, 
+                Profile, Friendship, Post, PostLike, PostComment, ParentChildComment, ProfileAvatarImage, ProfilePostImage, ProfileWallpaperImage, Description,
 
                 ShippingAddress, ShopOrder, ShoppingCart, ShoppingCartItem, PaymentMethod, OrderLine, Product, ProductImage, Category, SubCategory,
 
@@ -158,27 +158,34 @@ export const databaseProviders = [
             Product.belongsTo(Category, { foreignKey: { name: "sub_category_id", field: "sub_category_id" } });
 
             //initiate database  
-            const connection = mysql.createConnection({
-                host: configService.get('MYSQL_HOST'),
-                user: configService.get('MYSQL_USER'),
-                password: configService.get('MYSQL_PASSWORD'),
-            });
-            connection.query(
-                `CREATE DATABASE IF NOT EXISTS \`${configService.get('MYSQL_DB')}\`;`,
-                async (err, results) => {
-                    results ? console.log(`Connect to Database ${configService.get('MYSQL_DB')} complete!`) : console.log(err);
-                    try {
-                        await sequelize.sync({ alter: false, force: false })
-                        await sequelize.authenticate();
-                    } catch (err) {
-                        // throw err;
-                        Logger.error(
-                            `${err.parent.sqlMessage}`, JSON.stringify(err.parent) || null, 'Database Sync Exception Filter',
-                        );
+            try {
+                const connection = mysql.createConnection({
+                    host: configService.get('MYSQL_HOST'),
+                    user: configService.get('MYSQL_USER'),
+                    password: configService.get('MYSQL_PASSWORD'),
+                });
+                connection.query(
+                    `CREATE DATABASE IF NOT EXISTS \`${configService.get('MYSQL_DB')}\`;`,
+                    async (err, results) => {
+                        results ? console.log(`Connect to Database ${configService.get('MYSQL_DB')} complete!`) : console.log(err);
+                        try {
+                            await sequelize.sync({ alter: false, force: false })
+                            await sequelize.authenticate();
+                        } catch (err) {
+                            // throw err;
+                            Logger.error(
+                                `${err.parent.sqlMessage}`, JSON.stringify(err.parent) || null, 'Database Sync Exception Filter',
+                            );
+                        }
                     }
-                }
-            );
-            connection.end();
+                );
+                connection.end();
+            }
+            catch (err) {
+                Logger.error(
+                    `${err.parent.sqlMessage}`, JSON.stringify(err.parent) || null, 'mysql2 - connection error',
+                );
+            }
             return sequelize;
         },
     },
