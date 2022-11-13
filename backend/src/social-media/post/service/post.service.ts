@@ -13,14 +13,14 @@ import { PostRepository } from '../repository/post.repository';
 export class PostService {
     constructor(private readonly postRepository: PostRepository) {}
 
-    async getAllPost(page: Page): Promise<ResponseData<PagingData<Post[]>>> {
+    async getAllPost(profile: Profile, page: Page): Promise<ResponseData<PagingData<Post[]>>> {
         try{
             var response = new ResponseData<PagingData<Post[]>>();
-            response.results = await this.postRepository.getAllPost(page);
+            response.results = await this.postRepository.getAllPost(profile.profile_id, page);
             return response;
         }catch(err){
             ExceptionResponse(err);
-        }
+        } 
     }
 
     async getPostByProfileId(profile_id: number, data: Page): Promise<ResponseData<PagingData<Post[]>>> {
@@ -33,10 +33,10 @@ export class PostService {
         }
     }
 
-    async getSinglePostDetailByPostId(post_id: number): Promise<ResponseData<Post>>{
+    async getSinglePostDetailByPostId(profile_id:number, post_id: number): Promise<ResponseData<Post>>{
         try{
             var response = new ResponseData<Post>();
-            response.results = await this.postRepository.getSinglePostDetailByPostId(post_id);
+            response.results = await this.postRepository.getSinglePostDetailByPostId(profile_id, post_id);
             return response;
         }catch (err) {
             ExceptionResponse(err);
@@ -48,7 +48,7 @@ export class PostService {
         try{
             const response = new ResponseData<Post>();
             newPost.profile_id = profile.profile_id;
-            response.results = await this.postRepository.createNewPost(newPost);
+            response.results = await this.postRepository.createNewPost(newPost, profile.profile_id);
             return response;
         }catch(err){
             ExceptionResponse(err);
@@ -61,7 +61,7 @@ export class PostService {
             var tempPostDetail= await this.postRepository.getSinglePostDetailByPostId(postData.post_id);
             if(tempPostDetail){
                 if(tempPostDetail["profile_id"] == profile.profile_id){
-                    response.results = await this.postRepository.updatePost(postData);
+                    response.results = await this.postRepository.updatePost(postData, profile.profile_id);
                 }
                 else{
                     response.message = "You only can modify your post"
