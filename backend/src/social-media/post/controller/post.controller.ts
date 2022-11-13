@@ -36,8 +36,9 @@ export class PostController {
         }
     })
     @Post('/all')
-    async getAllPost(@Body() page: Page){
-        return await this.postService.getAllPost(page);
+    async getAllPost(@Request() request: any, @Body() page: Page){
+        const profile = <Profile>request.user;
+        return await this.postService.getAllPost(profile, page);
     }
 
     @ApiBody({
@@ -70,8 +71,9 @@ export class PostController {
     }
 
     @Get('/:post_id')
-    async getSinglePostDetailByPostId(@Param('post_id') post_id: number) {
-        return await this.postService.getSinglePostDetailByPostId(post_id);
+    async getSinglePostDetailByPostId(@Request() request: any, @Param('post_id') post_id: number) {
+        const profile = <Profile>request.user;
+        return await this.postService.getSinglePostDetailByPostId(profile.profile_id, post_id);
     }
 
 
