@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Box,
   Avatar,
@@ -7,13 +7,13 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-} from "@mui/material";
-import { makeStyles } from "tss-react/mui";
-import { Link } from "react-router-dom";
-import { Helper } from "../../../utils/Helper";
-import MiddleHr from "../../FullWidthHr/MiddleHr";
-import "../Layout.css";
-import styled from "styled-components";
+} from '@mui/material';
+import { makeStyles } from 'tss-react/mui';
+import { Link } from 'react-router-dom';
+import { Helper } from '../../../utils/Helper';
+import MiddleHr from '../../FullWidthHr/MiddleHr';
+import '../Layout.css';
+import styled from 'styled-components';
 const ResponSiveDiv = styled.div`
   @media screen and (max-width: 940px) {
     .left-bar {
@@ -26,16 +26,16 @@ const ResponSiveDiv = styled.div`
 `;
 const useStyles = makeStyles()(() => ({
   scroll: {
-    "&::-webkit-scrollbar": {
-      width: "1rem",
+    '&::-webkit-scrollbar': {
+      width: '1rem',
     },
-    "&::-webkit-scrollbar-track": {
-      boxShadow: "inset 0 0 6px rgba(0, 0, 0, 0)",
-      borderRadius: "8px",
+    '&::-webkit-scrollbar-track': {
+      boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0)',
+      borderRadius: '8px',
     },
-    "&::-webkit-scrollbar-thumb": {
-      backgroundColor: "rgba(0, 0, 0, 0.1)",
-      borderRadius: "8px",
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      borderRadius: '8px',
     },
   },
 }));
@@ -51,35 +51,12 @@ export default function LeftBar(props) {
     leftBarColor,
   } = props;
 
-  const { listWrapper, listClassname } = classNameConfig;
+  const { listWrapper = '', listClassname = '' } = classNameConfig;
 
   return (
-    // #region oldCode
-    // <>
-    //   <div className="w-full flex justify-center">
-    //     <button className="w-[80%] px-[4rem] py-[1.5rem] bg-blue8f3 text-white rounded-md my-[5%]">
-    //       Create New
-    //     </button>
-    //   </div>
-    //   <div className="listFunction flex ">
-    //     <ul className="flex flex-col justify-center w-full gap-[0.5rem]">
-    //       {props.listFeature.map((feature, index) => {
-    //         return (
-    //           <li key={index} className="leftHomeSideBarLi ">
-    //             <div className={classes.root}>{feature.iconName}</div>
-    //             <div>
-    //               <span className="text-[2rem]">{feature.text}</span>
-    //             </div>
-    //           </li>
-    //         );
-    //       })}
-    //     </ul>
-    //   </div>
-    // </>
-    // #endregion
     <Box
       className={`left-bar ${
-        leftBarColor ? "drop-shadow-md" : ""
+        leftBarColor ? 'drop-shadow-md' : ''
       } ${listWrapper}`}
       style={
         leftBarColor
@@ -92,7 +69,12 @@ export default function LeftBar(props) {
     >
       {before}
 
-      <List className={cx(classes.scroll, `left-bar-list ${listClassname}`)}>
+      <List
+        className={cx(
+          classes.scroll,
+          `left-bar-list ${listClassname}`
+        )}
+      >
         {Helper.isArrayList(leftBarList)
           ? leftBarList.map((list, index) => {
               return (
@@ -119,29 +101,34 @@ function LeftBarList({ leftBarList, multiList }) {
         return (
           <div key={index}>
             {item.title && (
-              <div className={`left-bar-title ${multiList ? "second" : ""}`}>
+              <div
+                className={`left-bar-title ${
+                  multiList ? 'second' : ''
+                }`}
+              >
                 {item.title}
               </div>
             )}
 
             {Helper.checkPropsInObject(
               item,
-              ["left", "middle", "right"],
+              ['left', 'middle', 'right'],
               false
             ) && (
               <ListItem className="list">
                 {item.navigate ? (
                   <Link
                     to={item.navigate}
-                    style={{ width: "100%" }}
+                    style={{ width: '100%' }}
                     disabled={item.disabled}
                   >
                     <LeftBarListItem
                       item={item}
                       classNameConfig={`${
-                        index === leftBarList.length - 1 && multiList >= 0
-                          ? "multi"
-                          : ""
+                        index === leftBarList.length - 1 &&
+                        multiList >= 0
+                          ? 'multi'
+                          : ''
                       }`}
                     />
                   </Link>
@@ -149,9 +136,10 @@ function LeftBarList({ leftBarList, multiList }) {
                   <LeftBarListItem
                     item={item}
                     classNameConfig={`${
-                      index === leftBarList.length - 1 && multiList >= 0
-                        ? "multi"
-                        : ""
+                      index === leftBarList.length - 1 &&
+                      multiList >= 0
+                        ? 'multi'
+                        : ''
                     }`}
                   />
                 )}
@@ -173,10 +161,20 @@ function LeftBarListItem({ item, classNameConfig }) {
       className={`left-bar-button ${classNameConfig}`}
     >
       {item.left && (
-        <ListItemIcon className={`left ${item.selected ? "selected" : ""}`}>
-          {Helper.checkPropsInObject(item.left, ["iconButton"], false) ? (
+        <ListItemIcon
+          className={`left ${item.selected ? 'selected' : ''}`}
+        >
+          {Helper.checkPropsInObject(
+            item.left,
+            ['iconButton'],
+            false
+          ) ? (
             <Avatar className="rounded">{item.left.icon}</Avatar>
-          ) : Helper.checkPropsInObject(item.left, ["url", "name"], false) ? (
+          ) : Helper.checkPropsInObject(
+              item.left,
+              ['url', 'name'],
+              false
+            ) ? (
             <Avatar alt={item.left.name} src={item.left.url}>
               {item.left.name?.at(0)}
             </Avatar>
@@ -186,7 +184,9 @@ function LeftBarListItem({ item, classNameConfig }) {
         </ListItemIcon>
       )}
 
-      <ListItemText className="left-bar-text">{item.middle}</ListItemText>
+      <ListItemText className="left-bar-text">
+        {item.middle}
+      </ListItemText>
 
       {item.right && (
         <ListItemIcon className="right">{item.right}</ListItemIcon>

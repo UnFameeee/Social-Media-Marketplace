@@ -1,7 +1,14 @@
-import { TextField, MenuItem } from '@mui/material';
+import { TextField, MenuItem, Autocomplete } from '@mui/material';
 import { useField, useFormikContext } from 'formik';
 
-export default function SelectForm({ name, options, ...props }) {
+export default function SelectForm({
+  search = false,
+  name,
+  label,
+  noneOption = false,
+  options = [],
+  ...props
+}) {
   const { setFieldValue } = useFormikContext();
   const [field, mata] = useField(name);
 
@@ -13,9 +20,7 @@ export default function SelectForm({ name, options, ...props }) {
   const selectProps = {
     ...field,
     ...props,
-    select: true,
-    variant: 'outlined',
-    onChange: handleChange,
+    variant: 'standard',
   };
 
   if (mata && mata.touched && mata.error) {
@@ -24,20 +29,47 @@ export default function SelectForm({ name, options, ...props }) {
   }
 
   return (
-    <TextField
-      {...selectProps}
-      sx={{
-        width: '80%',
-        margin: '12px',
-      }}
-    >
-      {Object.keys(options).map((item, index) => {
-        return (
-          <MenuItem key={index} value={item}>
-            {options[item]}
-          </MenuItem>
-        );
-      })}
-    </TextField>
+    <>
+      {!search ? (
+        <TextField
+          {...selectProps}
+          label={label}
+          select
+          onChange={handleChange}
+          sx={{
+            width: '80%',
+            margin: '12px',
+          }}
+        >
+          {noneOption && <MenuItem value="">None</MenuItem>}
+          {options?.map((item, index) => {
+            return (
+              <MenuItem key={index} value={item}>
+                {item}
+              </MenuItem>
+            );
+          })}
+        </TextField>
+      ) : (
+        <Autocomplete
+          sx={{
+            width: '80%',
+            margin: '12px',
+            '& .MuiSvgIcon-root': {
+              fontSize: '2rem',
+            },
+          }}
+          {...selectProps}
+          disablePortal
+          autoHighlight
+          openOnFocus
+          options={options}
+          onChange={(event, value) => setFieldValue(name, value)}
+          renderInput={(params) => (
+            <TextField label={label} variant="standard" {...params} />
+          )}
+        />
+      )}
+    </>
   );
 }

@@ -86,6 +86,8 @@ body {
 .MuiTypography-root,
 .MuiCalendarPicker-root .MuiPickersDay-root,
 .PrivatePickersYear-root button,
-.PrivatePickersFadeTransitionGroup-root {
+.PrivatePickersFadeTransitionGroup-root,
+.MuiAutocomplete-option,
+.MuiAutocomplete-noOptions  {
   font-size: 1.6rem !important;
 }

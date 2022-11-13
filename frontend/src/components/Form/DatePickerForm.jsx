@@ -7,7 +7,7 @@ import {
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 
-export default function DatePickerForm({ name, ...props }) {
+export default function DatePickerForm({ name, required=false, ...props }) {
   const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(name);
 
@@ -45,6 +45,7 @@ export default function DatePickerForm({ name, ...props }) {
               margin: '12px',
               svg: { transform: 'scale(1.3)' },
             }}
+            required={required}
           />
         )}
       />

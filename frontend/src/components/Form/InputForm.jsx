@@ -32,10 +32,6 @@ export default function InputForm({
   return (
     <TextField
       {...inputProps}
-      sx={{
-        width: '80%',
-        margin: '12px',
-      }}
       {...(type == 'number' && {
         InputProps: { inputProps: { min: min, max: max } },
       })}
@@ -62,6 +58,10 @@ export default function InputForm({
           ),
         },
       })}
+      sx={{
+        width: '80%',
+        margin: '12px',
+      }}
     />
   );
 }

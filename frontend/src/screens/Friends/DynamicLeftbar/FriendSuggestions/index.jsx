@@ -16,10 +16,10 @@ import '../index.css';
 export default function FriendSuggestions() {
   const dispatch = useDispatch();
   const accessToken = useSelector(
-    (state) => state.auth.login.currentUser.access
+    (state) => state.auth?.login?.currentUser?.access
   );
   const refreshToken = useSelector(
-    (state) => state.auth.login.currentUser.refresh
+    (state) => state.auth?.login?.currentUser?.refresh
   );
   const allFriendSuggestions = useSelector(
     (state) => state.friends?.getSuggestion?.data

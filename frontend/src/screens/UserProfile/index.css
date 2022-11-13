@@ -90,3 +90,8 @@
   font-size: 16rem;
   cursor: pointer;
 }
+
+.rightSidePosts .post-status-wrapper,
+.rightSidePosts .cardPost {
+  width: 100%;
+}

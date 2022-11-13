@@ -2,7 +2,8 @@ import { Avatar } from '@mui/material';
 import MUI from '../../../../components/MUI';
 
 export default function FriendCard(props) {
-  const { profileDetails, firstButtonConfig, secondButtonConfig } = props;
+  const { profileDetails, firstButtonConfig, secondButtonConfig } =
+    props;
 
   return (
     <div className="friend-card">
@@ -16,18 +17,23 @@ export default function FriendCard(props) {
       <div className="bottom">
         <span>{profileDetails.profile_name}</span>
 
-        <MUI.Button
-          style={{ marginTop: '12px' }}
-          {...firstButtonConfig}
-        >
-          Confirm
-        </MUI.Button>
-        <MUI.Button
-          style={{ marginTop: '12px' }}
-          {...secondButtonConfig}
-        >
-          Deny
-        </MUI.Button>
+        {firstButtonConfig && (
+          <MUI.Button
+            style={{ marginTop: '12px' }}
+            {...firstButtonConfig}
+          >
+            Confirm
+          </MUI.Button>
+        )}
+        
+        {secondButtonConfig && (
+          <MUI.Button
+            style={{ marginTop: '12px' }}
+            {...secondButtonConfig}
+          >
+            Deny
+          </MUI.Button>
+        )}
       </div>
     </div>
   );
