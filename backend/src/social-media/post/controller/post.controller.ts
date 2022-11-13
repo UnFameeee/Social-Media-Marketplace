@@ -36,8 +36,9 @@ export class PostController {
         }
     })
     @Post('/all')
-    async getAllPost(@Body() page: Page){
-        return await this.postService.getAllPost(page);
+    async getAllPost(@Request() request: any, @Body() page: Page){
+        const profile = <Profile>request.user;
+        return await this.postService.getAllPost(profile, page);
     }
 
     @ApiBody({

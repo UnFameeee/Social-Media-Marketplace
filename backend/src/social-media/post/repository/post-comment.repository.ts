@@ -13,6 +13,7 @@ import { Page } from "src/database/view-model/page-model";
 import { PagingData } from "src/database/view-model/paging.model";
 import { Profile } from "src/database/model/profile.model";
 import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
+import { Helper } from "src/common/utils/helper.utils";
 
 @Injectable()
 export class PostCommentRepository {
@@ -258,11 +259,8 @@ export class PostCommentRepository {
                 ...paginate({ page })
             })
 
-            async function SQLobjectToObject(data: any): Promise<any> {
-                return await JSON.parse(JSON.stringify(data));
-            }
 
-            const post_comment = await SQLobjectToObject(queryData.rows);
+            const post_comment = await Helper.SQLobjectToObject(queryData.rows);
             for (const comment of post_comment) {
                 comment["profile_name"] = comment["comment_profile"]["profile_name"];
                 //check if that profile doesnt have avatar
