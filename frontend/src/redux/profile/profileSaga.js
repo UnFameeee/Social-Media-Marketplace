@@ -7,6 +7,8 @@ import {
   deleteWallpaperSaga,
   deleteWallpaperSagaSuccess,
   getProfileDetailSuccess,
+  getProfileSaga,
+  getProfileSagaSuccess,
   updateAvtFailed,
   updateAvtSaga,
   updateAvtSagaSuccess,
@@ -28,20 +30,27 @@ export function* refreshProfile() {
       updateDetailSagaSuccess.type,
       deleteAvtSagaSuccess.type,
       deleteWallpaperSagaSuccess.type,
+      getProfileSaga.type,
     ],
     handleRefreshProfileSaga
   );
 }
 function* handleRefreshProfileSaga(data) {
   try {
-    const getAll = yield call(getProfileDetailsSaga, data);
+    const getAll = yield call(getProfileDetailSaga, data);
     yield put(getProfileDetailSuccess(getAll.data.results));
   } catch (error) {
     console.log(error);
   }
 }
-async function getProfileDetailsSaga(data) {
-  const { accessToken, refreshToken, id } = data.payload;
+async function getProfileDetailSaga(data) {
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    mainId = '',
+    dispatch,
+  } = data.payload;
   try {
     const res = await axiosInStanceJWT.get(
       `${api.profile}/getProfileDetailById/${id}`,
@@ -54,6 +63,15 @@ async function getProfileDetailsSaga(data) {
       }
     );
     if (!res.data.message) {
+      dispatch(
+        getProfileSagaSuccess({
+          accessToken,
+          refreshToken,
+          id,
+          mainId,
+          dispatch,
+        })
+      );
       return res;
     } else {
     }
@@ -94,7 +112,12 @@ async function updateAvtSagaRequest(data) {
     if (!res.data.message) {
       notifyService.showSuccess('Update Avatar Successfully!');
       dispatch(
-        updateAvtSagaSuccess({ accessToken, refreshToken, id })
+        updateAvtSagaSuccess({
+          accessToken,
+          refreshToken,
+          id,
+          dispatch,
+        })
       );
       return res;
     } else {
@@ -140,7 +163,12 @@ async function updateWallSagaRequest(data) {
     if (!res.data.message) {
       notifyService.showSuccess('Update Wallpaper Successfully!');
       dispatch(
-        updateWallpaperSagaSuccess({ accessToken, refreshToken, id })
+        updateWallpaperSagaSuccess({
+          accessToken,
+          refreshToken,
+          id,
+          dispatch,
+        })
       );
       return res;
     } else {
@@ -183,7 +211,12 @@ async function updateDetailSagaRequest(data) {
     if (!res.data.message) {
       notifyService.showSuccess('Update Profile Successfully!');
       dispatch(
-        updateDetailSagaSuccess({ accessToken, refreshToken, id })
+        updateDetailSagaSuccess({
+          accessToken,
+          refreshToken,
+          id,
+          dispatch,
+        })
       );
       return res;
     } else {
@@ -208,8 +241,7 @@ function* handleDeleteAvt(data) {
   }
 }
 async function deleteAvtSagaRequest(data) {
-  const { accessToken, refreshToken, id, dispatch } =
-    data.payload;
+  const { accessToken, refreshToken, id, dispatch } = data.payload;
 
   try {
     const res = await axiosInStanceJWT.delete(
@@ -225,7 +257,12 @@ async function deleteAvtSagaRequest(data) {
     if (!res.data.message) {
       notifyService.showSuccess('Remove Avatar Successfully!');
       dispatch(
-        deleteAvtSagaSuccess({ accessToken, refreshToken, id })
+        deleteAvtSagaSuccess({
+          accessToken,
+          refreshToken,
+          id,
+          dispatch,
+        })
       );
       return res;
     } else {
@@ -250,8 +287,7 @@ function* handleDeleteWall(data) {
   }
 }
 async function deleteWallSagaRequest(data) {
-  const { accessToken, refreshToken, id, dispatch } =
-    data.payload;
+  const { accessToken, refreshToken, id, dispatch } = data.payload;
 
   try {
     const res = await axiosInStanceJWT.delete(
@@ -267,7 +303,12 @@ async function deleteWallSagaRequest(data) {
     if (!res.data.message) {
       notifyService.showSuccess('Remove Wallpaper Successfully!');
       dispatch(
-        deleteWallpaperSagaSuccess({ accessToken, refreshToken, id })
+        deleteWallpaperSagaSuccess({
+          accessToken,
+          refreshToken,
+          id,
+          dispatch,
+        })
       );
       return res;
     } else {

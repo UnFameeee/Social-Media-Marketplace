@@ -1,17 +1,13 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAllFriends,
-  getFriendSuggestion,
-  getPostByProfile,
-  getProfile,
-} from '../../../../redux/apiRequest';
+import { getFriendSuggestion } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { addFriendSaga } from '../../../../redux/friend/friendSlice';
 import '../index.css';
+import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 
 export default function FriendSuggestions() {
   const dispatch = useDispatch();
@@ -21,11 +17,14 @@ export default function FriendSuggestions() {
   const refreshToken = useSelector(
     (state) => state.auth?.login?.currentUser?.refresh
   );
-  const allFriendSuggestions = useSelector(
+  const friendSuggestions = useSelector(
     (state) => state.friends?.getSuggestion?.data
   );
-  const userData = useSelector(
+  const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
+  );
+  const userData = useSelector(
+    (state) => state.auth?.user?.userData?.profile
   );
 
   const [profileClicked, setProfileClicked] = useState(false);
@@ -51,7 +50,7 @@ export default function FriendSuggestions() {
             subTitle="People You May Know"
           />
         ),
-        leftBarList: allFriendSuggestions?.data?.map((x) => {
+        leftBarList: friendSuggestions?.data?.map((x) => {
           return {
             left: {
               url: x.avatar,
@@ -61,44 +60,48 @@ export default function FriendSuggestions() {
               <LeftbarMiddleItem
                 profileName={x.profile_name}
                 firstButtonConfig={{
-                  name: x.isSentFriendRequest != "REQUEST" ? 'Add Friend' : 'Cancel Your Request',
+                  name:
+                    x.isSentFriendRequest != 'REQUEST'
+                      ? 'Add Friend'
+                      : 'Cancel Your Request',
                   onClick: (e) => {
                     e.stopPropagation();
                     let id = x.profile_id;
-                    dispatch(addFriendSaga({ accessToken, refreshToken, id, dispatch }));
+                    dispatch(
+                      addFriendSaga({
+                        accessToken,
+                        refreshToken,
+                        id,
+                        dispatch,
+                      })
+                    );
                     setProfileClicked(false);
                   },
                 }}
               />
             ),
             onClick: () => {
-              getProfile(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch
-              );
-              getPostByProfile(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch
-              );
-              getAllFriends(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch,
-                false
+              let id = x.profile_id;
+              let mainId = userData.profile_id;
+              dispatch(
+                getProfileSaga({
+                  accessToken,
+                  refreshToken,
+                  id,
+                  mainId,
+                  dispatch,
+                })
               );
               if (profileClicked == false) {
                 setProfileClicked(true);
               }
             },
             selected:
-              profileClicked && x.profile_id === userData?.profile_id,
+              profileClicked &&
+              x.profile_id === profileData?.profile_id,
             disabled:
-              profileClicked && x.profile_id === userData?.profile_id,
+              profileClicked &&
+              x.profile_id === profileData?.profile_id,
           };
         }),
         leftBarColor: 'white',

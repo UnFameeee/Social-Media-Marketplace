@@ -19,6 +19,7 @@ import {
   denyStart,
   denySuccess,
   getAllFriendForMainUserSuccess,
+  getAllFriendSuccess,
   getRequestSuccess,
   getSuggestionSuccess,
   unfriendFailed,
@@ -28,6 +29,7 @@ import {
   unfriendSuccess,
 } from './friendSlice';
 import { notifyService } from '../../services/notifyService';
+import { getProfileSagaSuccess } from '../profile/profileSlice';
 
 // #region friend requests
 export function* refreshFriendRequest() {
@@ -152,21 +154,29 @@ async function denySagaRequest(data) {
 
 // #region get all friends
 export function* refreshAllFriend() {
-  yield takeLatest([unfriendSagaSuccess.type], handleRefreshAllSaga);
+  yield takeLatest(
+    [unfriendSagaSuccess.type, getProfileSagaSuccess.type],
+    handleRefreshAllSaga
+  );
 }
 function* handleRefreshAllSaga(data) {
   try {
     const getAll = yield call(getAllSaga, data);
-    yield put(getAllFriendForMainUserSuccess(getAll.data.results));
+    if (data.payload.id == data.payload.mainId) {
+      yield put(getAllFriendForMainUserSuccess(getAll.data.results));
+    }
+    else {
+      yield put(getAllFriendSuccess(getAll.data.results));
+    }
   } catch (error) {
     console.log(error);
   }
 }
 async function getAllSaga(data) {
-  const { accessToken, refreshToken, mainId } = data.payload;
+  const { accessToken, refreshToken, id = '', mainId } = data.payload;
   try {
     const res = await axiosInStanceJWT.post(
-      `${api.friend}/all/${mainId}`,
+      `${api.friend}/all/${id ?? mainId}`,
       paging,
       {
         headers: {
@@ -197,7 +207,8 @@ function* handleUnfriend(data) {
   }
 }
 async function unfriendSagaRequest(data) {
-  const { accessToken, refreshToken, id, mainId, dispatch } = data.payload;
+  const { accessToken, refreshToken, id, mainId, dispatch } =
+    data.payload;
   //   dispatch(unfriendStart());
   try {
     const res = await axiosInStanceJWT.post(
@@ -231,7 +242,7 @@ async function unfriendSagaRequest(data) {
 // #region friend suggestions
 export function* refreshFriendSuggestion() {
   yield takeLatest(
-    [addFriendSagaSuccess.type],
+    [addFriendSagaSuccess.type, denySagaSuccess.type],
     handleRefreshSuggestionSaga
   );
 }
@@ -296,7 +307,9 @@ async function addFriendSagaRequest(data) {
       if (res.data.results) {
         notifyService.showSuccess('Add Friend Successfully!');
       } else {
-        notifyService.showSuccess('Cancel Friend Request Successfully!');
+        notifyService.showSuccess(
+          'Cancel Friend Request Successfully!'
+        );
       }
       dispatch(
         addFriendSagaSuccess({ accessToken, refreshToken, id })

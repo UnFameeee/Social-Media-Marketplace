@@ -10,6 +10,7 @@ import LeftbarTitle from '../LeftbarTitle';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
 import '../index.css';
+import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 
 export default function AllFriends() {
   const dispatch = useDispatch();
@@ -69,24 +70,16 @@ export default function AllFriends() {
             },
             middle: x.profile_name,
             onClick: () => {
-              getProfile(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch
-              );
-              getPostByProfile(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch
-              );
-              getAllFriends(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch,
-                false
+              let id = x.profile_id;
+              let mainId = userData.profile_id;
+              dispatch(
+                getProfileSaga({
+                  accessToken,
+                  refreshToken,
+                  id,
+                  mainId,
+                  dispatch,
+                })
               );
               if (profileClicked == false) {
                 setProfileClicked(true);
