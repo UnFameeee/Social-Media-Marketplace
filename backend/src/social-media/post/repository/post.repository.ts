@@ -26,24 +26,25 @@ export class PostRepository {
             var queryData = await this.postRepository.findAndCountAll({
                 attributes: [
                     "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
-                    [Sequelize.col("post_profile.profile_name"), "profile_name"],
-                    [Sequelize.col("post_profile->profile_avatar.link"), "avatar"]
+                    // [Sequelize.col("post_profile.profile_name"), "profile_name"],
+                    // [Sequelize.col("post_profile->profile_avatar.link"), "avatar"]
                 ],
                 include: [
                     {
                         model: Profile,
                         as: "post_profile",
                         attributes: [
-                            [Sequelize.col("profile_id"), "profile_id"],
-                            [Sequelize.col("profile_name"), "profile_name"],
+                            // [Sequelize.col("profile_id"), "profile_id"],
+                            // [Sequelize.col("profile_name"), "profile_name"],
+                            "profile_name"
                         ],
-                        required: true,
+                        // required: true,
                         include: [
                             {
                                 model: ProfileAvatarImage,
                                 as: "profile_avatar",
-                                attributes: [],
-                                required: true
+                                attributes: ["link"],
+                                // required: true
                             },
                         ]
                     },
@@ -70,6 +71,12 @@ export class PostRepository {
 
                 element["totalLike"] = totalLike;
                 element["isLiked"] = isLiked;
+                element["profile_name"] = element["post_profile"]["profile_name"];
+                if(element["post_profile"]["profile_avatar"]){
+                    element["avatar"] = element["post_profile"]["profile_avatar"]["link"]
+                } else {
+                    element["avatar"] = null;
+                }
                 delete element["post_profile"];
             }
 
@@ -89,7 +96,7 @@ export class PostRepository {
                 attributes: [
                     "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
                     [Sequelize.col("post_profile.profile_name"), "profile_name"],
-                    [Sequelize.col("post_profile->profile_avatar.link"), "avatar"]
+                    // [Sequelize.col("post_profile->profile_avatar.link"), "avatar"]
                 ],
                 include: [
                     {
@@ -97,16 +104,17 @@ export class PostRepository {
                         as: "post_profile",
                         where: { profile_id: profile_id },
                         attributes: [
-                            [Sequelize.col("profile_id"), "profile_id"],
-                            [Sequelize.col("profile_name"), "profile_name"],
+                            // [Sequelize.col("profile_id"), "profile_id"],
+                            // [Sequelize.col("profile_name"), "profile_name"],
+                            "profile_name"
                         ],
-                        required: true,
+                        // required: true,
                         include: [
                             {
                                 model: ProfileAvatarImage,
                                 as: "profile_avatar",
-                                attributes: [],
-                                required: true
+                                attributes: ["link"],
+                                // required: true
                             },
                         ]
                     },
@@ -130,6 +138,11 @@ export class PostRepository {
 
                 element["totalLike"] = totalLike;
                 element["isLiked"] = isLiked;
+                if(element["post_profile"]["profile_avatar"]){
+                    element["avatar"] = element["post_profile"]["profile_avatar"]["link"]
+                } else {
+                    element["avatar"] = null;
+                }
                 delete element["post_profile"];
             }
 
@@ -143,29 +156,25 @@ export class PostRepository {
     }
 
     async getSinglePostDetailByPostId(post_id: number, profile_id?: number): Promise<Post> {
+        console.log(profile_id);
         try {
             const queryData = await this.postRepository.findOne({
                 where: { post_id: post_id },
                 attributes: [
                     "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
-                    [Sequelize.col("post_profile.profile_name"), "profile_name"],
-                    [Sequelize.col("post_profile->profile_avatar.link"), "avatar"]
                 ],
                 include: [
                     {
                         model: Profile,
                         as: "post_profile",
                         attributes: [
-                            [Sequelize.col("profile_id"), "profile_id"],
-                            [Sequelize.col("profile_name"), "profile_name"],
+                            "profile_id", "profile_name"
                         ],
-                        required: true,
                         include: [
                             {
                                 model: ProfileAvatarImage,
                                 as: "profile_avatar",
-                                attributes: [],
-                                required: true
+                                attributes: ["link"],
                             },
                         ]
                     },
@@ -183,10 +192,17 @@ export class PostRepository {
 
             if (profile_id) {
                 const objectQueryData = await Helper.SQLobjectToObject(queryData);
-                var totalLike = await this.postLikeRepository.allLikeOfPost(queryData["profile_id"], post_id);
+                var totalLike = await this.postLikeRepository.allLikeOfPost(objectQueryData["profile_id"], post_id);
                 var isLiked = await this.postLikeRepository.isLikedPost(profile_id, post_id);
-                queryData.setDataValue("totalLike", totalLike);
-                queryData.setDataValue("isLiked", isLiked);
+
+                objectQueryData["totalLike"] = totalLike;
+                objectQueryData["isLiked"] = isLiked;
+                if(objectQueryData["post_profile"]["profile_avatar"]){
+                    objectQueryData["avatar"] = objectQueryData["post_profile"]["profile_avatar"]["link"]
+                } else {
+                    objectQueryData["avatar"] = null;
+                }
+                delete objectQueryData["post_profile"];
                 return objectQueryData;
             }
 
@@ -200,6 +216,9 @@ export class PostRepository {
     async createNewPost(newPost: PostData, profile_id: number): Promise<Post> {
         try {
             const res = await this.postRepository.create(newPost);
+
+            console.log("res:", res);
+
             return await this.getSinglePostDetailByPostId(res.post_id, profile_id);
         } catch (err) {
             throw new InternalServerErrorException(err.message);

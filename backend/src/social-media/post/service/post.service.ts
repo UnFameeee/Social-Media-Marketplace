@@ -36,7 +36,7 @@ export class PostService {
     async getSinglePostDetailByPostId(profile_id:number, post_id: number): Promise<ResponseData<Post>>{
         try{
             var response = new ResponseData<Post>();
-            response.results = await this.postRepository.getSinglePostDetailByPostId(profile_id, post_id);
+            response.results = await this.postRepository.getSinglePostDetailByPostId(post_id, profile_id);
             return response;
         }catch (err) {
             ExceptionResponse(err);
