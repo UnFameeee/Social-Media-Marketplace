@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, UseGuards, Request } from '@nestjs/common';
-import { Delete, Patch, Put } from '@nestjs/common/decorators';
+import { Delete, Patch, Put, Query } from '@nestjs/common/decorators';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UpdateProfileDto } from 'src/database/dtos/update-profile.dto';
@@ -92,4 +92,11 @@ export class ProfileController {
     async getProfileGalleryImageById(@Param("profile_id") profile_id: number, @Body() page: Page){
         return await this.profileService.getProfileGalleryById(profile_id, page);
     }
+
+    @Get("search")
+    async searchProfile(@Query("name") profile_name: string, @Body() page: Page) {
+        return await this.profileService.searchProfile(profile_name, page);
+    }
+
+
 }

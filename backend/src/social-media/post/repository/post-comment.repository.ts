@@ -255,7 +255,6 @@ export class PostCommentRepository {
                 order: [
                     ['createdAt', 'ASC']
                 ],
-                // plain: true,
                 ...paginate({ page })
             })
 
