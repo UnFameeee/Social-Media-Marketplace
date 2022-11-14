@@ -156,31 +156,25 @@ export class PostRepository {
     }
 
     async getSinglePostDetailByPostId(post_id: number, profile_id?: number): Promise<Post> {
+        console.log(profile_id);
         try {
             const queryData = await this.postRepository.findOne({
                 where: { post_id: post_id },
                 attributes: [
                     "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
-                    // [Sequelize.col("post_profile.profile_name"), "profile_name"],
-                    // [Sequelize.col("post_profile->profile_avatar.link"), "avatar"]
                 ],
                 include: [
                     {
                         model: Profile,
                         as: "post_profile",
                         attributes: [
-                            // [Sequelize.col("profile_id"), "profile_id"],
-                            // [Sequelize.col("profile_name"), "profile_name"],
-                            "profile_id",
-                            "profile_name"
+                            "profile_id", "profile_name"
                         ],
-                        // required: true,
                         include: [
                             {
                                 model: ProfileAvatarImage,
                                 as: "profile_avatar",
                                 attributes: ["link"],
-                                // required: true
                             },
                         ]
                     },
@@ -200,9 +194,6 @@ export class PostRepository {
                 const objectQueryData = await Helper.SQLobjectToObject(queryData);
                 var totalLike = await this.postLikeRepository.allLikeOfPost(objectQueryData["profile_id"], post_id);
                 var isLiked = await this.postLikeRepository.isLikedPost(profile_id, post_id);
-                // queryData.setDataValue("totalLike", totalLike);
-                // queryData.setDataValue("isLiked", isLiked);
-
 
                 objectQueryData["totalLike"] = totalLike;
                 objectQueryData["isLiked"] = isLiked;

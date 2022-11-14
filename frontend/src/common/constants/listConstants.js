@@ -1,4 +1,5 @@
 export const cities = [
+  '',
   'Bac Lieu',
   'Ben Thuy',
   'Ben Tre',

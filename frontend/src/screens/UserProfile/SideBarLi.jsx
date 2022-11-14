@@ -1,32 +1,20 @@
-import {
-  School,
-  Home,
-  Work,
-  // Favorite,
-  // AccessTimeFilled,
-  // RssFeed,
-} from '@mui/icons-material';
 function SideBarLi(props) {
-
   const template = [
     {
       descriptionProps: 'school',
-      descriptionDisplay: 'Educated at ',
-      icon: <School />,
+      descriptionDisplay: 'Educates at ',
+      icon: props.icon.school,
     },
     {
       descriptionProps: 'location',
       descriptionDisplay: 'Lives in ',
-      icon: <Home />,
+      icon: props.icon.location,
     },
     {
       descriptionProps: 'career',
-      descriptionDisplay: 'Work at ',
-      icon: <Work />,
+      descriptionDisplay: 'Works at ',
+      icon: props.icon.career,
     },
-    // { descriptionDisplay: 'Single', icon: <Favorite /> },
-    // { descriptionDisplay: 'Joined on October 2014', icon: <AccessTimeFilled /> },
-    // { descriptionDisplay: 'Followed by 52 people', icon: <RssFeed /> },
   ];
 
   var matched = template
@@ -38,7 +26,7 @@ function SideBarLi(props) {
   return (
     <>
       {matched && props.description[1] && (
-        <li className="flex items-center gap-[1rem] [&>svg]:text-[3rem]">
+        <li id="sideBarLi">
           {matched?.icon}
           <span>
             {matched?.descriptionDisplay + props.description[1]}

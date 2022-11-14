@@ -60,6 +60,13 @@ export default function SelectForm({
             },
           }}
           {...selectProps}
+          filterOptions={(options, state) =>
+            options.filter(
+              (opt) =>
+                opt !== '' &&
+                opt.toLowerCase().includes(state.inputValue.toLowerCase())
+            )
+          }
           disablePortal
           autoHighlight
           openOnFocus
