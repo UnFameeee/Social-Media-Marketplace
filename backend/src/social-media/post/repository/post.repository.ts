@@ -37,13 +37,13 @@ export class PostRepository {
                             [Sequelize.col("profile_id"), "profile_id"],
                             [Sequelize.col("profile_name"), "profile_name"],
                         ],
-                        required: true,
+                        // required: true,
                         include: [
                             {
                                 model: ProfileAvatarImage,
                                 as: "profile_avatar",
                                 attributes: [],
-                                required: true
+                                // required: true
                             },
                         ]
                     },
@@ -100,13 +100,13 @@ export class PostRepository {
                             [Sequelize.col("profile_id"), "profile_id"],
                             [Sequelize.col("profile_name"), "profile_name"],
                         ],
-                        required: true,
+                        // required: true,
                         include: [
                             {
                                 model: ProfileAvatarImage,
                                 as: "profile_avatar",
                                 attributes: [],
-                                required: true
+                                // required: true
                             },
                         ]
                     },
@@ -159,13 +159,13 @@ export class PostRepository {
                             [Sequelize.col("profile_id"), "profile_id"],
                             [Sequelize.col("profile_name"), "profile_name"],
                         ],
-                        required: true,
+                        // required: true,
                         include: [
                             {
                                 model: ProfileAvatarImage,
                                 as: "profile_avatar",
                                 attributes: [],
-                                required: true
+                                // required: true
                             },
                         ]
                     },
@@ -200,6 +200,9 @@ export class PostRepository {
     async createNewPost(newPost: PostData, profile_id: number): Promise<Post> {
         try {
             const res = await this.postRepository.create(newPost);
+
+            console.log("res:", res);
+
             return await this.getSinglePostDetailByPostId(res.post_id, profile_id);
         } catch (err) {
             throw new InternalServerErrorException(err.message);
