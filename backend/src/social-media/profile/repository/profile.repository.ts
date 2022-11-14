@@ -406,4 +406,45 @@ export class ProfileRepository {
             throw new InternalServerErrorException(err.message);
         }
     }
+
+    async searchProfile(profile_name: string, page: Page): Promise<PagingData<Profile[]>> {
+        try {
+            var result = new PagingData<Profile[]>();
+
+            var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findAndCountAll({
+                where: {
+                    profile_name: { [Op.substring]: profile_name }
+                },
+                attributes: ["profile_id", "profile_name", "email", "birth",
+                    [Sequelize.col("profile_avatar.link"), "avatar"],
+                    [Sequelize.col("profile_wallpaper.link"), "wallpaper"],
+                    "isActivate", "role", "createdAt", "updatedAt"
+                ],
+                include: [
+                    {
+                        model: ProfileAvatarImage,
+                        as: "profile_avatar",
+                        attributes: []
+                    },
+                    {
+                        model: ProfileWallpaperImage,
+                        as: "profile_wallpaper",
+                        attributes: []
+                    }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                raw: false,
+                ...paginate({ page })
+            });
+
+            result.data = queryData.rows;
+            page.totalElement = queryData.count;
+            result.page = page;
+            return result;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
 }

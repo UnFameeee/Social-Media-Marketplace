@@ -130,4 +130,15 @@ export class ProfileService {
         }
     }
 
+
+    async searchProfile(profile_name: string, page: Page): Promise<ResponseData<PagingData<Profile[]>>> {
+        try {
+            var response = new ResponseData<PagingData<Profile[]>>();
+            const res = await this.profileRepository.searchProfile(profile_name, page);
+            response.results = res;
+            return response;
+        } catch (err) {
+            ExceptionResponse(err)
+        }
+    }
 }
