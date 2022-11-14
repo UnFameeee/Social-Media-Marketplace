@@ -24,7 +24,6 @@ import {
 import Error from '../../screens/Error/Error';
 import Marketplace from '../../screens/Marketplace/Marketplace';
 import CheckOut from '../../screens/Marketplace/CheckOut';
-
 export default function RootRoutes() {
   return (
     <BrowserRouter>
@@ -56,7 +55,6 @@ export default function RootRoutes() {
             <Route path="marketplace" element={<Marketplace />}>
             </Route> 
             <Route path="checkout" element={<CheckOut />} />
-
             <Route path="/messenger" element={<Messenger />} />
           </Route>
         </Route>
