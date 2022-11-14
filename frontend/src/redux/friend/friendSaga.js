@@ -162,7 +162,7 @@ export function* refreshAllFriend() {
 function* handleRefreshAllSaga(data) {
   try {
     const getAll = yield call(getAllSaga, data);
-    if (data.payload.id == data.payload.mainId) {
+    if (data.payload?.id == data.payload?.mainId) {
       yield put(getAllFriendForMainUserSuccess(getAll.data.results));
     }
     else {
