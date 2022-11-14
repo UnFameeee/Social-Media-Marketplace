@@ -41,29 +41,29 @@ export class PostController {
         return await this.postService.getAllPost(profile, page);
     }
 
-    @ApiBody({
-        type: Posts,
-        description: `
-        Get all post by Profile_Id with paging
-        path: /api/post/profile`,
-        examples: {
-            ex1: {
-                summary: "Empty Data",
-                description: `{ page: 0, pageSize: 10 }`,
-                value: {}
-            },
-            ex2: {
-                summary: "Sample Data",
-                description: "Sample input for this API",
-                value: { page: 0, pageSize: 10 }
-            }
-        }
-    })
-    @Post('/getOwnPost')
-    async getOwnPost(@Request() request: any, @Body() page: Page) {
-        const profile = <Profile>request.user;
-        return await this.postService.getPostByProfileId(profile.profile_id, page);
-    }
+    // @ApiBody({
+    //     type: Posts,
+    //     description: `
+    //     Get all post by Profile_Id with paging
+    //     path: /api/post/profile`,
+    //     examples: {
+    //         ex1: {
+    //             summary: "Empty Data",
+    //             description: `{ page: 0, pageSize: 10 }`,
+    //             value: {}
+    //         },
+    //         ex2: {
+    //             summary: "Sample Data",
+    //             description: "Sample input for this API",
+    //             value: { page: 0, pageSize: 10 }
+    //         }
+    //     }
+    // })
+    // @Post('/getOwnPost')
+    // async getOwnPost(@Request() request: any, @Body() page: Page) {
+    //     const profile = <Profile>request.user;
+    //     return await this.postService.getPostByProfileId(profile.profile_id, page);
+    // }
 
     @Post('/getPost/:profile_id')
     async getPostByProfileId(@Param("profile_id") profile_id: number, @Body() page: Page) {
