@@ -5,8 +5,14 @@ import {
   PhotoCamera,
   Edit,
   AddCircle,
-  MoreHoriz,
+  // MoreHoriz,
   CloseOutlined,
+  School,
+  Home,
+  Work,
+  // Favorite,
+  // AccessTimeFilled,
+  // RssFeed,
 } from '@mui/icons-material';
 import { BiMessageRoundedDetail } from 'react-icons/bi';
 import {
@@ -46,6 +52,7 @@ import {
 import {
   deleteAvtSaga,
   deleteWallpaperSaga,
+  getProfileSaga,
   updateAvtSaga,
   updateDetailSaga,
   updateWallpaperSaga,
@@ -129,24 +136,14 @@ function UserProfile(props) {
     let onDestroy = false;
     if (!onDestroy) {
       if (Helper.checkURL('profile', {}, true)) {
-        getProfile(
-          accessToken,
-          refreshToken,
-          queryParams.id || id,
-          dispatch
-        );
-        getPostByProfile(
-          accessToken,
-          refreshToken,
-          queryParams.id || id,
-          dispatch
-        );
-        getAllFriends(
-          accessToken,
-          refreshToken,
-          queryParams.id || id,
-          dispatch,
-          false
+        var id = queryParams.id ?? id;
+        dispatch(
+          getProfileSaga({
+            accessToken,
+            refreshToken,
+            id,
+            dispatch,
+          })
         );
       }
     }
@@ -246,7 +243,7 @@ function UserProfile(props) {
                       width: 'auto',
                       zIndex: 1,
                       right: '1rem',
-                      bottom: '2.4rem',
+                      bottom: '2rem',
                     }}
                     list={[
                       {
@@ -294,7 +291,7 @@ function UserProfile(props) {
             </ClickAwayListener>
           )}
 
-          <div className="">
+          <div>
             <div className="bigRoundAvt absolute left-[3.5rem] top-[26rem]">
               {/* avatar */}
               <Avatar
@@ -340,7 +337,7 @@ function UserProfile(props) {
             </div>
 
             <div className="flex pl-[24rem] pr-[4rem] items-center justify-center py-[3.6rem]">
-              {/* profile nam and its friend count */}
+              {/* profile name and its friend count */}
               <div className="flex-1 flex flex-col gap-[0.3rem] ">
                 <span className=" font-semibold text-[3rem]">
                   {profileData?.profile_name}
@@ -375,60 +372,6 @@ function UserProfile(props) {
               </div>
             </div>
 
-            {/* handle when you visit someone profile and they had already send you a friend request */}
-            {profileData?.isSentFriendRequest == 'TARGET' && (
-              <div className="text-[2rem] flex pl-[24rem] pr-[4rem] py-[2rem] mt-[3.5rem] items-center justify-end bg-[#f7f8fa] rounded-[0.75rem]">
-                <span className="flex-1 font-medium">
-                  {profileData?.profile_name} sent you a friend
-                  request
-                </span>
-                <div className="flex items-end gap-[1rem]">
-                  <MUI.Button
-                    className="gap-[0.8rem]"
-                    style={{ minWidth: '14rem' }}
-                    onClick={() => {
-                      handleActions(
-                        dispatch(
-                          acceptSaga({
-                            accessToken,
-                            refreshToken,
-                            id,
-                            dispatch,
-                          })
-                        )
-                      );
-                    }}
-                  >
-                    <FaUserPlus style={{ fontSize: '2.2rem' }} />
-                    <span className=" text-[1.6rem] font-semibold">
-                      Confirm
-                    </span>
-                  </MUI.Button>
-                  <MUI.Button
-                    className="gap-[0.8rem]"
-                    style={{ minWidth: '14rem' }}
-                    onClick={() => {
-                      handleActions(() => {
-                        dispatch(
-                          denySaga({
-                            accessToken,
-                            refreshToken,
-                            id,
-                            dispatch,
-                          })
-                        );
-                      });
-                    }}
-                  >
-                    <FaUserMinus style={{ fontSize: '2.2rem' }} />
-                    <span className=" text-[1.6rem] font-semibold">
-                      Deny
-                    </span>
-                  </MUI.Button>
-                </div>
-              </div>
-            )}
-
             {/* tab in profile - dont delete 
             <hr className="mt-[1.5rem] h-[0.15rem] border-0 bg-slate-300 rounded-sm  w-full " />
             <div className="flex items-center py-[1.5rem] px-[1rem]">
@@ -451,6 +394,59 @@ function UserProfile(props) {
           </div>
         </div>
       </div>
+
+      {/* handle when you visit someone profile and they had already send you a friend request */}
+      {profileData?.isSentFriendRequest == 'TARGET' && (
+        <div id="friendRequest">
+          <span className="flex-1 font-medium">
+            {profileData?.profile_name} sent you a friend request
+          </span>
+          <div className="flex items-end gap-[1rem]">
+            <MUI.Button
+              className="gap-[0.8rem]"
+              style={{ minWidth: '14rem' }}
+              onClick={() => {
+                handleActions(
+                  dispatch(
+                    acceptSaga({
+                      accessToken,
+                      refreshToken,
+                      id,
+                      dispatch,
+                    })
+                  )
+                );
+              }}
+            >
+              <FaUserPlus style={{ fontSize: '2.2rem' }} />
+              <span className=" text-[1.6rem] font-semibold">
+                Confirm
+              </span>
+            </MUI.Button>
+            <MUI.Button
+              className="gap-[0.8rem]"
+              style={{ minWidth: '14rem' }}
+              onClick={() => {
+                handleActions(() => {
+                  dispatch(
+                    denySaga({
+                      accessToken,
+                      refreshToken,
+                      id,
+                      dispatch,
+                    })
+                  );
+                });
+              }}
+            >
+              <FaUserMinus style={{ fontSize: '2.2rem' }} />
+              <span className=" text-[1.6rem] font-semibold">
+                Deny
+              </span>
+            </MUI.Button>
+          </div>
+        </div>
+      )}
 
       <div className="mt-[2rem] flex mx-auto w-[120rem] gap-[2rem]">
         <div className="leftSideInfo w-[45%]  flex flex-col relative">
@@ -533,7 +529,15 @@ function UserProfile(props) {
                       {Object.entries(descriptionWithoutBio)?.map(
                         (x, index) => {
                           return (
-                            <SideBarLi key={index} description={x} />
+                            <SideBarLi
+                              key={index}
+                              description={x}
+                              icon={{
+                                school: <School />,
+                                location: <Home />,
+                                career: <Work />,
+                              }}
+                            />
                           );
                         }
                       )}
@@ -992,7 +996,7 @@ function EditDetails({
       );
 
   const handleClose = () => {
-    if (Helper.isDataChange(ref.current.values, descriptions)) {
+    if (Helper.isDataChange(ref.current?.values, descriptions)) {
       setOpenConfirm(true);
     } else {
       modalProps[1](false);
@@ -1032,7 +1036,7 @@ function EditDetails({
                 dispatch,
               })
             );
-            handleClose();
+            modalProps[1](false);
           }}
           style={{
             width: '52rem',

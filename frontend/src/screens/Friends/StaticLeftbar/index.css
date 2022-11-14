@@ -9,7 +9,7 @@
   border-radius: 0;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
-  min-width: 23.8rem;
+  min-width: 100%;
   min-height: 23.8rem;
   /* background: var(--primary-color); */
   font-size: 14rem;

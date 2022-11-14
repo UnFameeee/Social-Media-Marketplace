@@ -2,7 +2,10 @@ import { Grid } from '@mui/material';
 import { useLayoutEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllFriendRequests, getFriendSuggestion } from '../../../../redux/apiRequest';
+import {
+  getAllFriendRequests,
+  getFriendSuggestion,
+} from '../../../../redux/apiRequest';
 import FriendCard from './FriendCard';
 import {
   acceptSaga,
@@ -24,7 +27,7 @@ const FriendHome = () => {
     (state) => state.friends?.getRequests?.data?.data
   );
   const friendSuggestions = useSelector(
-    (state) => state.friends?.getSuggestion?.data.data
+    (state) => state.friends?.getSuggestion?.data?.data
   );
 
   useLayoutEffect(() => {
@@ -90,9 +93,13 @@ const FriendHome = () => {
           {friendSuggestions?.map((item, index) => (
             <Grid key={index} item xs className="friend-home-grid">
               <FriendCard
+                type="suggestions"
                 profileDetails={item}
                 firstButtonConfig={{
-                  name: item.isSentFriendRequest != "REQUEST" ? 'Add Friend' : 'Cancel Your Request',
+                  name:
+                    item.isSentFriendRequest != 'REQUEST'
+                      ? 'Add Friend'
+                      : 'Cancel',
                   onClick: () => {
                     let id = item.profile_id;
                     dispatch(
@@ -111,7 +118,7 @@ const FriendHome = () => {
         </Grid>
       ) : (
         <h3 className="text-[8rem] text-center pt-[10rem]">
-          You have no friend requests
+          No one here
         </h3>
       )}
     </>

@@ -1,6 +1,6 @@
-import { put, takeLatest, call, fork } from "redux-saga/effects";
-import api from "../../common/environment/environment";
-import { axiosInStanceJWT } from "../axiosJWT";
+import { put, takeLatest, call, fork } from 'redux-saga/effects';
+import api from '../../common/environment/environment';
+import { axiosInStanceJWT } from '../axiosJWT';
 import {
   createPostFailed,
   createPostSaga,
@@ -12,6 +12,7 @@ import {
   deletePostSagaSuccess,
   deletePostStart,
   deletePostSuccess,
+  getPostByProfileSuccess,
   getPostFailed,
   getPostStart,
   getPostSuccess,
@@ -25,9 +26,11 @@ import {
   updatePostSagaSuccess,
   updatePostStart,
   updatePostSuccess,
-} from "./postSlice";
-import { notifyService } from "../../services/notifyService";
-import { removeUploadImages, uploadImages } from "../apiRequest";
+} from './postSlice';
+import { notifyService } from '../../services/notifyService';
+import { removeUploadImages, uploadImages } from '../apiRequest';
+import { getProfileSagaSuccess } from '../profile/profileSlice';
+
 //#region reFreshPosts
 export function* reFreshPosts() {
   yield takeLatest(
@@ -36,6 +39,7 @@ export function* reFreshPosts() {
       deletePostSagaSuccess.type,
       updatePostSagaSuccess.type,
       likePostSagaSuccess.type,
+      getProfileSagaSuccess.type,
     ],
     handleReFreshPostSaga
   );
@@ -43,13 +47,18 @@ export function* reFreshPosts() {
 function* handleReFreshPostSaga(data) {
   try {
     const getAll = yield call(getAllPostSagaRequest, data);
-    yield put(getPostSuccess(getAll.data));
+    if (data.payload?.id || data.payload?.mainId) {
+      yield put(getPostByProfileSuccess(getAll.data));
+    } else {
+      yield put(getPostSuccess(getAll.data));
+    }
   } catch (error) {
     console.log(error);
   }
 }
 const getAllPostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, dispatch } = data.payload;
+  const { accessToken, refreshToken, id, mainId, dispatch } =
+    data.payload;
   // dispatch(getPostStart());
   try {
     const config = {
@@ -59,7 +68,12 @@ const getAllPostSagaRequest = async (data) => {
       page: 0,
       pageSize: 5,
     };
-    const res = await axiosInStanceJWT.post(`${api.post}/all`, paging, {
+    var url =
+      id || mainId
+        ? `${api.post}/getPost/${id ?? mainId}`
+        : `${api.post}/all`;
+
+    const res = await axiosInStanceJWT.post(url, paging, {
       headers: config,
       ACCESS_PARAM: accessToken,
       REFRESH_PARAM: refreshToken,
@@ -126,15 +140,15 @@ const createPostSagaRequest = async (data) => {
         console.log(resImages);
       }
       dispatch(createPostSagaSuccess({ accessToken, refreshToken }));
-      notifyService.showSuccess("Create Post Successfully");
+      notifyService.showSuccess('Create Post Successfully');
       return res;
     } else {
       dispatch(createPostFailed());
-      notifyService.showError("Create Post Failed");
+      notifyService.showError('Create Post Failed');
     }
   } catch (error) {
     console.log(error);
-    notifyService.showError("Create Post Failed");
+    notifyService.showError('Create Post Failed');
     dispatch(createPostFailed());
   }
 };
@@ -153,7 +167,8 @@ function* handleDeletePost(data) {
   }
 }
 export const deletePostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, postId, dispatch } = data.payload;
+  const { accessToken, refreshToken, postId, dispatch } =
+    data.payload;
   dispatch(deletePostStart());
   try {
     const config = {
@@ -161,19 +176,23 @@ export const deletePostSagaRequest = async (data) => {
     };
     const res = await axiosInStanceJWT.delete(
       `${api.post}/delete/${postId}`,
-      { headers:config, ACCESS_PARAM: accessToken, REFRESH_PARAM: refreshToken }
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
     );
     if (!res.data.message) {
       dispatch(deletePostSagaSuccess({ accessToken, refreshToken }));
-      notifyService.showSuccess("Delete Post Successfully");
+      notifyService.showSuccess('Delete Post Successfully');
       return res;
     } else {
       dispatch(deletePostFailed());
-      notifyService.showError("Delete Post Failed");
+      notifyService.showError('Delete Post Failed');
     }
   } catch (error) {
     console.log(error);
-    notifyService.showError("Delete Post Failed");
+    notifyService.showError('Delete Post Failed');
     dispatch(deletePostFailed());
   }
 };
@@ -223,7 +242,7 @@ const updatePostSagaRequest = async (data) => {
           updatePost.post_id,
           dispatch
         );
-        console.log("resRemoveImage", resRemoveImage);
+        console.log('resRemoveImage', resRemoveImage);
       }
       if (uploadImage.length > 0) {
         const resImages = await uploadImages(
@@ -236,15 +255,15 @@ const updatePostSagaRequest = async (data) => {
         console.log(resImages);
       }
       dispatch(updatePostSagaSuccess({ accessToken, refreshToken }));
-      notifyService.showSuccess("Update Post Successfully");
+      notifyService.showSuccess('Update Post Successfully');
       return res;
     } else {
       dispatch(updatePostFailed());
-      notifyService.showError("Update Post Failed");
+      notifyService.showError('Update Post Failed');
     }
   } catch (error) {
     console.log(error);
-    notifyService.showError("Update Post Failed");
+    notifyService.showError('Update Post Failed');
     dispatch(updatePostFailed());
   }
 };
@@ -263,7 +282,8 @@ function* handleLikePost(data) {
   }
 }
 const likePostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, postId, dispatch } = data.payload;
+  const { accessToken, refreshToken, postId, dispatch } =
+    data.payload;
   dispatch(likePostStart());
   try {
     const config = {

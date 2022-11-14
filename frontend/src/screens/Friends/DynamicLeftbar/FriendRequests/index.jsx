@@ -1,18 +1,18 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAllFriendRequests,
-  getProfile,
-  getPostByProfile,
-  getAllFriends,
-} from '../../../../redux/apiRequest';
+import { useSearchParams } from 'react-router-dom';
+import { getAllFriendRequests } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
-import { acceptSaga, denySaga } from '../../../../redux/friend/friendSlice';
+import {
+  acceptSaga,
+  denySaga,
+} from '../../../../redux/friend/friendSlice';
 import '../index.css';
+import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 
 export default function FriendRequests() {
   const dispatch = useDispatch();
@@ -25,9 +25,15 @@ export default function FriendRequests() {
   const friendRequests = useSelector(
     (state) => state.friends?.getRequests?.data
   );
-  const userData = useSelector(
+  const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
+  const userData = useSelector(
+    (state) => state.auth?.user?.userData?.profile
+  );
+
+  const [searchParams] = useSearchParams();
+  const queryParams = Object.fromEntries([...searchParams]);
 
   const [profileClicked, setProfileClicked] = useState(false);
   useLayoutEffect(() => {
@@ -69,7 +75,14 @@ export default function FriendRequests() {
                   onClick: (e) => {
                     e.stopPropagation();
                     let id = x.profile_id;
-                    dispatch(acceptSaga({ accessToken, refreshToken, id, dispatch }));
+                    dispatch(
+                      acceptSaga({
+                        accessToken,
+                        refreshToken,
+                        id,
+                        dispatch,
+                      })
+                    );
                     setProfileClicked(false);
                   },
                 }}
@@ -77,46 +90,47 @@ export default function FriendRequests() {
                   onClick: (e) => {
                     e.stopPropagation();
                     let id = x.profile_id;
-                    dispatch(denySaga({ accessToken, refreshToken, id, dispatch }));
+                    dispatch(
+                      denySaga({
+                        accessToken,
+                        refreshToken,
+                        id,
+                        dispatch,
+                      })
+                    );
                     setProfileClicked(false);
                   },
                 }}
               />
             ),
             onClick: () => {
-              getProfile(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch
-              );
-              getPostByProfile(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch
-              );
-              getAllFriends(
-                accessToken,
-                refreshToken,
-                x.profile_id,
-                dispatch,
-                false
+              let id = x.profile_id;
+              let mainId = userData.profile_id;
+              dispatch(
+                getProfileSaga({
+                  accessToken,
+                  refreshToken,
+                  id,
+                  mainId,
+                  dispatch,
+                })
               );
               if (profileClicked == false) {
                 setProfileClicked(true);
               }
             },
             selected:
-              profileClicked && x.profile_id === userData?.profile_id,
+              profileClicked &&
+              x.profile_id === profileData?.profile_id,
             disabled:
-              profileClicked && x.profile_id === userData?.profile_id,
+              profileClicked &&
+              x.profile_id === profileData?.profile_id,
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && (
+      {(profileClicked || !Helper.isEmptyObject(queryParams)) && (
         <UserProfile setReRender={setProfileClicked} />
       )}
     </TwoColumns>
