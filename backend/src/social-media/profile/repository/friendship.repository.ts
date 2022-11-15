@@ -373,21 +373,24 @@ export class FriendshipRepository {
 
     //Only get ID
     async getAllProfileSentRequest(profile_id: number): Promise<number[]> {
-        var queryData = await this.friendshipRepository.findOne({
+        var queryData = await this.friendshipRepository.findAll({
             where: {
+                // [Op.and]: {
+
+                // }
                 status: FRIENDSHIP_STATUS.PENDING,
                 [Op.or]: [{ "$profile_request_id.profile_id$": profile_id }, { "$profile_target_id.profile_id$": profile_id }],
             },
-            attributes: ["id", "status", "createdAt", "profile_target",
-                [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"],
-                "profile_request",
-                [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"],
+            attributes: ["id", "status", "createdAt", "profile_target", "profile_request",
+                // [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"],
+                // [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"],
             ],
             include: [
                 {
                     model: Profile,
                     as: "profile_request_id",
-                    attributes: []
+                    attributes: [],
+                    // require: 
                 },
                 {
                     model: Profile,
@@ -397,12 +400,18 @@ export class FriendshipRepository {
             ],
             raw: true,
         })
+
+        console.log(queryData);
+
         var resultArr: number[] = [];
+
         if (queryData) {
-            if (queryData["profile_request"] == profile_id) {
-                resultArr.push(queryData["profile_target"])
-            } else {
-                resultArr.push(queryData["profile_request"])
+            for(const element of queryData){
+                if (element["profile_request"] == profile_id) {
+                    resultArr.push(element["profile_target"])
+                } else {
+                    resultArr.push(element["profile_request"])
+                }
             }
         }
         return resultArr;
