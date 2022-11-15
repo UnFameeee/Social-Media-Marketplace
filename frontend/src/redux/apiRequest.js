@@ -77,6 +77,7 @@ import {
   getProfileDetailSuccess,
   getProfileDetailFailed,
 } from './profile/profileSlice';
+import { notifyService } from '../services/notifyService';
 import { axiosInStanceJWT } from './axiosJWT';
 
 const notify = (message, type) => {
@@ -108,9 +109,11 @@ export const register = async (model, dispatch, navigate) => {
 
       navigate('/login');
     } else {
+      notifyService.showError("Register Failed!")
       dispatch(registerFailed());
     }
   } catch (error) {
+    notifyService.showError("Register Failed!")
     dispatch(registerFailed());
   }
 };
@@ -125,9 +128,11 @@ export const login = async (model, dispatch, navigate, from) => {
       dispatch(userDataAssign(decoded));
       navigate(from, { replace: true });
     } else {
+      notifyService.showError("Login Failed!")
       dispatch(loginFailed());
     }
   } catch (error) {
+    notifyService.showError("Login Failed!")
     dispatch(loginFailed());
   }
 };
