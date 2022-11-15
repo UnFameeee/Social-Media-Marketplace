@@ -97,7 +97,7 @@ function UserProfile(props) {
   const handleGetPostUpdateData = (data) => {
     setPostUpdateData(data);
   };
-  const handleActions = (action) => {
+  const handleActions = async (action) => {
     action();
     if (Helper.checkURL('profile', {}, true)) {
       setReRender(!reRender);
@@ -125,7 +125,7 @@ function UserProfile(props) {
     let onDestroy = false;
     if (!onDestroy) {
       if (Helper.checkURL('profile', {}, true)) {
-        var id = queryParams.id ?? id;
+        var id = queryParams.id ?? profileData?.profile_id ?? userData?.profile_id;
         dispatch(
           getProfileSaga({
             accessToken,
@@ -621,8 +621,6 @@ function ProfileAction({
   actionProps,
   action,
 }) {
-  
-  console.log(isSentFriendReq);
   const { accessToken, refreshToken, id, mainId, dispatch } =
     actionProps;
   const navigate = useNavigate();
