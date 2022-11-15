@@ -1,6 +1,6 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { getAllFriendRequests } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -11,11 +11,15 @@ import {
   acceptSaga,
   denySaga,
 } from '../../../../redux/friend/friendSlice';
-import '../index.css';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
+import '../index.css';
 
 export default function FriendRequests() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
+
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -31,11 +35,9 @@ export default function FriendRequests() {
   const userData = useSelector(
     (state) => state.auth?.user?.userData?.profile
   );
+  var mainId = userData?.profile_id;
 
-  const [searchParams] = useSearchParams();
-  const queryParams = Object.fromEntries([...searchParams]);
-
-  const [profileClicked, setProfileClicked] = useState(false);
+  // call get all friend requests once
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -45,6 +47,29 @@ export default function FriendRequests() {
       onDestroy = true;
     };
   }, []);
+
+  // view profile details
+  useLayoutEffect(() => {
+    let onDestroy = false;
+    if (!onDestroy) {
+      window.scroll(0, 0);
+      if (!Helper.isNullOrEmpty(queryParams)) {
+        var id = queryParams;
+        dispatch(
+          getProfileSaga({
+            accessToken,
+            refreshToken,
+            id,
+            mainId,
+            dispatch,
+          })
+        );
+      }
+    }
+    return () => {
+      onDestroy = true;
+    };
+  }, [location]);
 
   return (
     <TwoColumns
@@ -63,6 +88,7 @@ export default function FriendRequests() {
           />
         ),
         leftBarList: friendRequests?.data?.map((x) => {
+          let id = x.profile_id;
           return {
             left: {
               url: x.avatar,
@@ -74,7 +100,6 @@ export default function FriendRequests() {
                 firstButtonConfig={{
                   onClick: (e) => {
                     e.stopPropagation();
-                    let id = x.profile_id;
                     dispatch(
                       acceptSaga({
                         accessToken,
@@ -83,13 +108,12 @@ export default function FriendRequests() {
                         dispatch,
                       })
                     );
-                    setProfileClicked(false);
+                    navigate('');
                   },
                 }}
                 secondButtonConfig={{
                   onClick: (e) => {
                     e.stopPropagation();
-                    let id = x.profile_id;
                     dispatch(
                       denySaga({
                         accessToken,
@@ -98,40 +122,27 @@ export default function FriendRequests() {
                         dispatch,
                       })
                     );
-                    setProfileClicked(false);
+                    navigate('');
                   },
                 }}
               />
             ),
             onClick: () => {
-              let id = x.profile_id;
-              let mainId = userData.profile_id;
-              dispatch(
-                getProfileSaga({
-                  accessToken,
-                  refreshToken,
-                  id,
-                  mainId,
-                  dispatch,
-                })
-              );
-              if (profileClicked == false) {
-                setProfileClicked(true);
-              }
+              navigate(`?id=${id}`);
             },
             selected:
-              profileClicked &&
-              x.profile_id === profileData?.profile_id,
+              !Helper.isNullOrEmpty(queryParams) &&
+              id === profileData?.profile_id,
             disabled:
-              profileClicked &&
-              x.profile_id === profileData?.profile_id,
+              !Helper.isNullOrEmpty(queryParams) &&
+              id === profileData?.profile_id,
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      {(profileClicked || !Helper.isEmptyObject(queryParams)) && (
-        <UserProfile setReRender={setProfileClicked} />
+      {!Helper.isNullOrEmpty(queryParams) && (
+        <UserProfile setReRender={navigate} />
       )}
     </TwoColumns>
   );
