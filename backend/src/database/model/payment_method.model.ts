@@ -1,6 +1,6 @@
 import {AllowNull, AutoIncrement, Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
 @Table({
-    tableName: "Payment_Method",
+    tableName: "payment_method",
     timestamps: true,
     paranoid: true,
 })

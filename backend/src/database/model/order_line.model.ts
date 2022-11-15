@@ -1,6 +1,6 @@
 import {AllowNull, AutoIncrement, Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
 @Table({
-    tableName: "Order_Line",
+    tableName: "order_line",
     timestamps: true,
     paranoid: true,
 })
