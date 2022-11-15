@@ -1,15 +1,15 @@
 import {AllowNull, AutoIncrement, Column, Model, PrimaryKey, Table } from "sequelize-typescript";
 @Table({
-    tableName: "shipping_address",
+    tableName: "shop_address",
     timestamps: true,
     paranoid: true,
 })
-export class ShippingAddress extends Model<ShippingAddress> {
+export class ShopAddress extends Model<ShopAddress> {
     @AutoIncrement
     @PrimaryKey
     @AllowNull(false)
     @Column
-    shipping_address_id: number
+    shop_address_id: number
  
     @Column
     address_line: number
