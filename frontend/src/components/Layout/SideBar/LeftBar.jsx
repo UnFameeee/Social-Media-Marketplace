@@ -121,6 +121,7 @@ function LeftBarList({ leftBarList, multiList }) {
                     to={item.navigate}
                     style={{ width: '100%' }}
                     disabled={item.disabled}
+                    // state={{ params: item.params }} //hide query params
                   >
                     <LeftBarListItem
                       item={item}

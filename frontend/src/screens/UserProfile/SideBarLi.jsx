@@ -1,19 +1,28 @@
+import {
+  School,
+  Home,
+  Work,
+  // Favorite,
+  // AccessTimeFilled,
+  // RssFeed,
+} from '@mui/icons-material';
+
 function SideBarLi(props) {
   const template = [
     {
       descriptionProps: 'school',
       descriptionDisplay: 'Educates at ',
-      icon: props.icon.school,
+      icon: <School />,
     },
     {
       descriptionProps: 'location',
       descriptionDisplay: 'Lives in ',
-      icon: props.icon.location,
+      icon: <Home />,
     },
     {
       descriptionProps: 'career',
       descriptionDisplay: 'Works at ',
-      icon: props.icon.career,
+      icon: <Work />,
     },
   ];
 

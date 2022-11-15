@@ -49,6 +49,7 @@ async function getProfileDetailSaga(data) {
     refreshToken,
     id,
     mainId = '',
+    callRefresh = true,
     dispatch,
   } = data.payload;
   try {
@@ -69,6 +70,7 @@ async function getProfileDetailSaga(data) {
           refreshToken,
           id,
           mainId,
+          callRefresh,
           dispatch,
         })
       );
