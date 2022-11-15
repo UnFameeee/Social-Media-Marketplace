@@ -1,6 +1,6 @@
 import {AllowNull, AutoIncrement, Column, Model, PrimaryKey, Table } from "sequelize-typescript";
 @Table({
-    tableName: "ShippingAddress",
+    tableName: "shipping_address",
     timestamps: true,
     paranoid: true,
 })
@@ -23,6 +23,6 @@ export class ShippingAddress extends Model<ShippingAddress> {
     @Column
     country: number
 
-    @Column
-    postal_code: number
+    // @Column
+    // postal_code: number
 }
