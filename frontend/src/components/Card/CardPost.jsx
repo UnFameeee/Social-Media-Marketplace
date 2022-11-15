@@ -45,19 +45,19 @@ function CardPost(props) {
     {
       id: 0,
       message: "            Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse excepturi a ratione hic rerum. Repellat enim iure eveniet officia minima sunt consectetur eos beatae dolores explicabo, alias rerum nostrum? Eveniet nisi cum ab incidunt repellat labore reprehenderit minus aspernatur voluptas, molestias, sequi doloribus? Quidem adipisci minus magnam, autem cumque architecto?",
-      user: 1,
+      user: "Dang nhat tien",
       createdAt: 2022,
     },
     {
       id: 1,
       message: "test2",
-      user: 2,
+      user: "Quan minh duc",
       createdAt: 2022,
     },
     {
       id: 2,
       message: "test3",
-      user: 3,
+      user: "Nguyen phuoc dang",
       createdAt: 2022,
     },
   ];
@@ -238,8 +238,10 @@ function CardPost(props) {
               <ArrowDropDown style={{ fontSize: "2.5rem" }} />
             </div>
             <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem]">
+
               <CommentForm formWidth={'100%'} placeholder={'write a comment....'} />
               <CommentList comments={rootComments} />
+
               <div className="flex">
                 <span className="flex-1 hover:cursor-pointer">
                   See more comments
