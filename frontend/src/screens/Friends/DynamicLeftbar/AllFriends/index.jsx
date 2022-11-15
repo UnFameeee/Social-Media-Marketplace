@@ -1,19 +1,20 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAllFriends,
-  getPostByProfile,
-  getProfile,
-} from '../../../../redux/apiRequest';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { getAllFriends } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
-import '../index.css';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
+import '../index.css';
 
 export default function AllFriends() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
+
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -29,22 +30,42 @@ export default function AllFriends() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
+  var mainId = userData?.profile_id;
 
-  const [profileClicked, setProfileClicked] = useState(false);
+  // call get all friend requests once
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriends(
-        accessToken,
-        refreshToken,
-        userData?.profile_id,
-        dispatch
-      );
+      getAllFriends(accessToken, refreshToken, mainId, dispatch);
     }
     return () => {
       onDestroy = true;
     };
   }, []);
+
+  // view profile details
+  useLayoutEffect(() => {
+    let onDestroy = false;
+    if (!onDestroy) {
+      window.scroll(0, 0);
+      if (!Helper.isNullOrEmpty(queryParams)) {
+        var id = queryParams;
+        dispatch(
+          getProfileSaga({
+            accessToken,
+            refreshToken,
+            id,
+            mainId,
+            forMainUser: true,
+            dispatch,
+          })
+        );
+      }
+    }
+    return () => {
+      onDestroy = true;
+    };
+  }, [location]);
 
   return (
     <TwoColumns
@@ -63,6 +84,7 @@ export default function AllFriends() {
           />
         ),
         leftBarList: allFriends?.data?.map((x) => {
+          let id = x.profile_id;
           return {
             left: {
               url: x.avatar,
@@ -70,34 +92,21 @@ export default function AllFriends() {
             },
             middle: x.profile_name,
             onClick: () => {
-              let id = x.profile_id;
-              let mainId = userData.profile_id;
-              dispatch(
-                getProfileSaga({
-                  accessToken,
-                  refreshToken,
-                  id,
-                  mainId,
-                  dispatch,
-                })
-              );
-              if (profileClicked == false) {
-                setProfileClicked(true);
-              }
+              navigate(`?id=${id}`);
             },
             selected:
-              profileClicked &&
-              x.profile_id === profileData?.profile_id,
+              !Helper.isNullOrEmpty(queryParams) &&
+              id === profileData?.profile_id,
             disabled:
-              profileClicked &&
-              x.profile_id === profileData?.profile_id,
+              !Helper.isNullOrEmpty(queryParams) &&
+              id === profileData?.profile_id,
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      {profileClicked && (
-        <UserProfile setReRender={setProfileClicked} />
+      {!Helper.isNullOrEmpty(queryParams) && (
+        <UserProfile setReRender={navigate} />
       )}
     </TwoColumns>
   );
