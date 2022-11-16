@@ -5,7 +5,8 @@
   margin-top: 0.8rem;
   width: 100%;
   border-radius: 8px;
-  box-shadow: 0 12px 28px 0 var(--shadow-2), 0 2px 4px 0 var(--shadow-1);
+  box-shadow: 0 12px 28px 0 var(--shadow-2),
+    0 2px 4px 0 var(--shadow-1);
 }
 .MuiMenuItem-root.menu-item {
   display: flex;
@@ -18,11 +19,13 @@
 
 /* #region recent search in navbar */
 .MuiList-root.menu.navbar-search {
+  overflow-y: scroll;
+  max-height: 43rem;
   left: -5.4rem;
   width: 121%;
   border-radius: 0;
-  border-bottom-left-radius: 8px; 
-  border-bottom-right-radius: 8px; 
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
   box-shadow: 4px 10px 8px var(--shadow-1);
 }
 .MuiMenuItem-root .middle-menu.navbar-search {
@@ -35,14 +38,14 @@
   height: 3.5rem;
   margin-right: 0.8rem;
 }
-.MuiMenuItem-root .middle-menu {  
+.MuiMenuItem-root .middle-menu {
   width: 16.5rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-transform: none;
 }
-.MuiMenuItem-root .right-menu {  
+.MuiMenuItem-root .right-menu {
   width: 3.5rem;
   height: 3.5rem;
   padding: 0.4rem;

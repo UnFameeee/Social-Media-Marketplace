@@ -1,43 +1,45 @@
 import {
   ClickAwayListener,
   TextField,
-  IconButton,
   InputAdornment,
 } from '@mui/material';
 import { Search } from '@mui/icons-material';
-import { useState } from 'react';
 import Menu from './Menu';
-import { Helper } from '../../utils/Helper'
+import { Helper } from '../../utils/Helper';
+import { BetterIconButton } from './Button/IconButton';
 
 export default function SearchBar(props) {
-  const [open, setOpen] = useState(false);
-
   const {
     placeHolder,
     getData,
     handleSearch,
     menuConfig,
+    toggleProps,
     ...others
   } = props;
 
   return (
     <ClickAwayListener
       onClickAway={() => {
-        setOpen(false);
+        toggleProps[1](false);
       }}
     >
       <div style={{ position: 'relative' }}>
         <TextField
+          id="searchBar"
           placeholder={placeHolder}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <IconButton
+                <BetterIconButton
                   sx={{ padding: '0.4rem' }}
-                  onClick={handleSearch}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSearch();
+                  }}
                 >
                   <Search sx={{ fontSize: '2.2rem' }} />
-                </IconButton>
+                </BetterIconButton>
               </InputAdornment>
             ),
           }}
@@ -53,12 +55,14 @@ export default function SearchBar(props) {
             },
           }}
           onChange={(event) => getData(event.target.value)}
-          onKeyDown={(event) => Helper.handleEnterKeyPress(event, handleSearch)}
-          onClick={() =>  setOpen(true) }
+          onKeyDown={(event) =>
+            Helper.handleEnterKeyPress(event, handleSearch)
+          }
+          onClick={() => toggleProps[1](true)}
           {...others}
         />
 
-        {open && menuConfig.list.length ? (
+        {toggleProps[0] && menuConfig?.list?.length ? (
           <Menu {...menuConfig} />
         ) : null}
       </div>
