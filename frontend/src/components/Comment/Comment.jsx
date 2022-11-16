@@ -1,4 +1,4 @@
-import {useMemo} from "react";
+import { useMemo } from "react";
 import { Avatar } from "@mui/material";
 import { useSelector } from "react-redux";
 import CommentList from "./CommentList";
@@ -9,27 +9,39 @@ import { useState } from "react";
 import CommentForm from "./CommentForm";
 import NodeComment from "./NodeComment";
 import { useEffect } from "react";
-function Comment({ id, message, user, createdAt, isShowChildComment,post_id, ...props }) {
-  let childComments =useMemo(() =>{
+function Comment({
+  post_comment_id,
+  comment_text,
+  profile_name,
+  createdAt,
+  isShowChildComment,
+  post_id,
+  ...props
+}) {
+  let childComments = useMemo(() => {
     const result = [
       {
-        id: 4,
-        message: "childComment",
-        user: "Nguyen hoang vu",
+        post_comment_id: 4,
+        comment_text: "childComment",
+        profile_name: "Nguyen hoang vu",
         createdAt: 2022,
       },
       {
-        id: 5,
-        message: "childComment2",
-        user: "Nguyen pham quoc thang",
+        post_comment_id: 5,
+        comment_text: "childComment2",
+        profile_name: "Nguyen pham quoc thang",
         createdAt: 2022,
       },
     ];
-    return result
-  },[]) 
+    return result;
+  }, []);
 
   const userData = useSelector((state) => state.auth.user.userData);
-  const [formReply, setFormReply] = useState({ isShow: false, text: "",parent_comment_id:null  });
+  const [formReply, setFormReply] = useState({
+    isShow: false,
+    text: "",
+    parent_comment_id: null,
+  });
   const [showChildComment, setShowChildComment] = useState(true);
   const [replyQuantity, setReplyQuantity] = useState(childComments.length);
   function randomNumberInRange(min, max) {
@@ -40,7 +52,7 @@ function Comment({ id, message, user, createdAt, isShowChildComment,post_id, ...
     setRandomNum(randomNumberInRange(0, 1));
   }, []);
   useEffect(() => {
-    if(childComments.length > 1){
+    if (childComments.length > 1) {
       setShowChildComment(false);
     }
   }, []);
@@ -64,8 +76,8 @@ function Comment({ id, message, user, createdAt, isShowChildComment,post_id, ...
           </Avatar>
           <div className="name-and-message flex flex-col ">
             <div className="bg-greyf1 rounded-xl p-[1rem]">
-              <span className="line-clamp-1">{user}</span>
-              <div className="message">{message}</div>
+              <span className="line-clamp-1">{profile_name}</span>
+              <div className="message">{comment_text}</div>
             </div>
             <div className="footer flex gap-[0.2rem] items-center">
               <MUI.BetterIconButton>
@@ -73,7 +85,11 @@ function Comment({ id, message, user, createdAt, isShowChildComment,post_id, ...
               </MUI.BetterIconButton>
               <MUI.BetterIconButton
                 onClick={() => {
-                  setFormReply({ isShow: true, text: user,parent_comment_id:id });
+                  setFormReply({
+                    isShow: true,
+                    text: profile_name,
+                    parent_comment_id: post_comment_id,
+                  });
                 }}
               >
                 <ReplyIcon />
@@ -88,10 +104,13 @@ function Comment({ id, message, user, createdAt, isShowChildComment,post_id, ...
           randomNum ? (
             childComments &&
             childComments.map((comment) => (
-              <div key={comment.id} className="node-comment-wrapper ml-[4rem]">
+              <div
+                key={comment.post_comment_id}
+                className="node-comment-wrapper ml-[4rem]"
+              >
                 <NodeComment
                   {...comment}
-                  parent_comment_id={id}
+                  parent_comment_id={post_comment_id}
                   setFormReply={setFormReply}
                   isShowChildComment={isShowChildComment}
                 />

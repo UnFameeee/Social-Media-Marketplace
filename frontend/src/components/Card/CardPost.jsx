@@ -23,6 +23,8 @@ import styled from "styled-components";
 import CommentList from "../Comment/CommentList";
 import CommentForm from "../Comment/CommentForm";
 import PostModal from "../../screens/Home/PostModal";
+import { getCommentPostSaga } from "../../redux/comment/commentSlice";
+import { useEffect } from "react";
 function CardPost(props) {
   //#region Declare variables
   const dispatch = useDispatch();
@@ -47,30 +49,7 @@ function CardPost(props) {
   );
   const userData = useSelector((state) => state.auth?.user?.userData.profile);
 
-  let rootComments = useMemo(() => {
-    const result = [
-      {
-        id: 0,
-        message:
-          "            Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse excepturi a ratione hic rerum. Repellat enim iure eveniet officia minima sunt consectetur eos beatae dolores explicabo, alias rerum nostrum? Eveniet nisi cum ab incidunt repellat labore reprehenderit minus aspernatur voluptas, molestias, sequi doloribus? Quidem adipisci minus magnam, autem cumque architecto?",
-        user: "Dang nhat tien",
-        createdAt: 2022,
-      },
-      {
-        id: 1,
-        message: "test2",
-        user: "Quan minh duc",
-        createdAt: 2022,
-      },
-      {
-        id: 2,
-        message: "test3",
-        user: "Nguyen phuoc dang",
-        createdAt: 2022,
-      },
-    ];
-    return result;
-  }, []);
+ 
   //#endregion
 
   //#region Function
@@ -89,7 +68,24 @@ function CardPost(props) {
     dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
     props.setReRender(prev => !prev)
   };
-  const handleShowComment = () => {};
+  const comments = useSelector((state) => state.comment?.get?.data?.results?.data)
+  const handleShowComment = () => {
+    dispatch(getCommentPostSaga({accessToken,refreshToken,dispatch,post_id}))
+  };
+  console.log("comments",comments);
+ 
+  let rootComments = useMemo(() => {
+    var result =[]
+    comments.map((comment) =>{
+      if(comment.post_id === post_id){
+        debugger
+        console.log("post_id",post_id);
+         result.push(comment);
+      }
+    })
+    return result;
+  }, []);
+  console.log("rootComments",rootComments);
   //#endregion
 
   return (

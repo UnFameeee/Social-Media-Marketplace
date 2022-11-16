@@ -14,6 +14,7 @@ function CommentForm({ formWidth, placeholder, formReply,post_id, ...props }) {
   const refreshToken = useSelector(
     (state) => state.auth.login.currentUser.refresh
   );
+
   const [replyInput, setReplyInput] = useState("");
   const handleOnChangeReplyInput = (e) => {
     setReplyInput(e.target.value);

@@ -30,7 +30,7 @@ import {
 import { notifyService } from '../../services/notifyService';
 import { removeUploadImages, uploadImages } from '../apiRequest';
 import { getProfileSagaSuccess } from '../profile/profileSlice';
-import { commentPostSagaSuccess } from '../comment/commentSlice';
+import { commentPostSagaSuccess, getCommentPostSagaSuccess } from '../comment/commentSlice';
 
 //#region reFreshPosts
 export function* reFreshPosts() {
@@ -42,6 +42,7 @@ export function* reFreshPosts() {
       likePostSagaSuccess.type,
       getProfileSagaSuccess.type,
       commentPostSagaSuccess.type,
+      getCommentPostSagaSuccess.type,
     ],
     handleReFreshPostSaga
   );
@@ -85,6 +86,7 @@ const getAllPostSagaRequest = async (data) => {
     });
     if (!res.data.message) {
       // dispatch(getPostSuccess(res.data));
+      debugger
       return res;
     } else {
       //  dispatch(getPostFailed());

@@ -6,7 +6,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { useState } from "react";
 import { useEffect } from "react";
-function NodeComment({ id, message, user, createdAt, isShowChildComment,setReplyQuantity,setFormReply,parent_comment_id, ...props }) {
+function NodeComment({ post_comment_id, comment_text, profile_name, createdAt, isShowChildComment,setReplyQuantity,setFormReply,parent_comment_id, ...props }) {
   const userData = useSelector((state) => state.auth.user.userData);
   function randomNumberInRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -30,8 +30,8 @@ function NodeComment({ id, message, user, createdAt, isShowChildComment,setReply
           </Avatar>
           <div className="name-and-message flex flex-col ">
             <div className="bg-greyf1 rounded-xl p-[1rem]">
-              <span className="line-clamp-1">{user}</span>
-              <div className="message">{message}</div>
+              <span className="line-clamp-1">{profile_name}</span>
+              <div className="message">{comment_text}</div>
             </div>
             <div className="footer flex gap-[0.2rem] items-center">
               <MUI.BetterIconButton>
@@ -39,7 +39,7 @@ function NodeComment({ id, message, user, createdAt, isShowChildComment,setReply
               </MUI.BetterIconButton>
               <MUI.BetterIconButton
                 onClick={() =>{
-                   setFormReply({isShow:true,text:user,parent_comment_id:parent_comment_id})
+                   setFormReply({isShow:true,text:profile_name,parent_comment_id:parent_comment_id})
                 }}
               >
                 <ReplyIcon />
