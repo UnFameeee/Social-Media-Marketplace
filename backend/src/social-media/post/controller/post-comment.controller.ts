@@ -22,7 +22,7 @@ export class PostCommentController {
     }
 
     //See all comment of post
-    @Get("/:post_id")
+    @Post("/:post_id")
     async getAllCommentOfPost(@Param("post_id") post_id: number, @Body() page: Page) {
         return await this.postCommentService.getAllCommentOfPost(post_id, page);
     }
