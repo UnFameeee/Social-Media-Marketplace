@@ -245,9 +245,6 @@ export class ProfileRepository {
             fullPage.pageSize = FRIENDSHIP_LIMIT.MAX_FRIEND_REQUEST;
 
             const friendRequestList = await this.friendshipRepository.getAllProfileSentRequest(profile_id);
-
-            console.log(friendRequestList);
-
             // tempArr.
             tempArr = [...tempArr, ...friendRequestList];
             // for (const element of friendRequestList) {
