@@ -12,16 +12,19 @@ export class ShopAddress extends Model<ShopAddress> {
     shop_address_id: number
  
     @Column
-    address_line: number
+    address_line: string
 
     @Column
-    city: number
+    city: string
 
     @Column
-    region: number
+    region: string
 
     @Column
-    country: number
+    country: string
+
+    @Column
+    detail_address: string
 
     // @Column
     // postal_code: number
