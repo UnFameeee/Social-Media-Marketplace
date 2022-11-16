@@ -10,6 +10,7 @@ import { join } from 'path';
 import { FriendshipModule } from './social-media/profile/module/friendship.module';
 import { PostCommentModule } from './social-media/post/module/post-comment.module';
 import { ProductModule } from './marketplace/product/module/product.module';
+import { ProductImageModule } from './marketplace/image/module/product_image.module';
 
 
 @Module({
@@ -26,9 +27,10 @@ import { ProductModule } from './marketplace/product/module/product.module';
 
     //marketplace
     ProductModule,
+    ProductImageModule,
 
 
-
+    //GET the image
     ServeStaticModule.forRoot({
       serveRoot: '/uploads/images',
       rootPath: join(__dirname, '../uploads/images'),

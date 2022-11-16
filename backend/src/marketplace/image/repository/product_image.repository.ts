@@ -8,9 +8,6 @@ import { Op } from "sequelize";
 
 @Injectable()
 export class ProductImageRepository {
-    deleteProfilePostImage(product_id: number, linkArray: string[]): boolean | PromiseLike<boolean> {
-        throw new Error('Method not implemented.');
-    }
     constructor(
         @Inject(PROVIDER.ProductImage) private readonly productImageRepository: typeof ProductImage
     ) { }

@@ -178,7 +178,7 @@ export const databaseProviders = [
                     async (err, results) => {
                         results ? console.log(`Connect to Database ${configService.get('MYSQL_DB')} complete!`) : console.log(err);
                         try {
-                            await sequelize.sync({ alter: true, force: false })
+                            await sequelize.sync({ alter: false, force: false })
                             await sequelize.authenticate();
                         } catch (err) {
                             // throw err;

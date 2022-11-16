@@ -36,7 +36,6 @@ export class ProfileService {
     async getProfileDetailById(profile: Profile, profile_target_id: number): Promise<ResponseData<Profile>> {
         try {
             var response = new ResponseData<Profile>();
-            console.log()
             var queryResult = await this.profileRepository.getProfileDetailById(profile.profile_id, profile_target_id);
             if (queryResult) {
                 response.results = queryResult;

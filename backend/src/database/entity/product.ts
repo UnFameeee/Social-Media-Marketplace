@@ -4,5 +4,5 @@ export class ProductEntity{
     description: string;
     price: number;
     quatity_in_stock: number;
-    ownerId: number;
+    profile_id: number;
 }

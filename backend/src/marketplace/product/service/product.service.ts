@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 import { ProductFullDetailDto } from 'src/database/dtos/product-full-detail.dto';
 import { Product } from 'src/database/model/product.model';
+import { Page } from 'src/database/view-model/page-model';
+import { PagingData } from 'src/database/view-model/paging.model';
 import { ResponseData } from 'src/database/view-model/success-message.model';
 import { ShopAddressRepository } from 'src/marketplace/shop_address/repository/shop_address.repository';
 import { VariationRepository } from 'src/marketplace/variation/repository/variation.repository';
@@ -15,9 +17,9 @@ export class ProductService {
         private readonly shopAddressRepository: ShopAddressRepository,
     ) { }
 
-    async createProduct(profile_id: number, data: ProductFullDetailDto): Promise<ResponseData<any>> {
+    async createProduct(profile_id: number, data: ProductFullDetailDto): Promise<ResponseData<Product>> {
         try {
-            var response = new ResponseData<any>();
+            var response = new ResponseData<Product>();
             var productCreated = await this.productRepository.createProduct(profile_id, data);
             await this.variationRepository.createVariation(productCreated.product_id, data.variation);
             await this.shopAddressRepository.createShopAddress(productCreated.product_id, data.shop_address);
@@ -32,6 +34,49 @@ export class ProductService {
         try {
             var response = new ResponseData<Product>();
             response.results = await this.productRepository.getProductDetail(profile_id, product_id);
+            return response;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
+
+    async getAllProduct(page: Page): Promise<ResponseData<PagingData<Product[]>>> {
+        try {
+            var response = new ResponseData<PagingData<Product[]>>();
+            response.results = await this.productRepository.getAllProduct(page);
+            return response;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
+
+
+    async updateProduct(profile_id: number, product_id: number, data: ProductFullDetailDto): Promise<ResponseData<any>> {
+        try {
+            var response = new ResponseData<Product>();
+            await this.productRepository.updateProduct(product_id, data);
+            await this.variationRepository.updateVariation(product_id, data.variation);
+            await this.shopAddressRepository.updateShopAddress(product_id, data.shop_address);
+            response.results = await this.productRepository.getProductDetail(profile_id, product_id);
+
+            return response;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
+
+    async deleteProduct(product_id: number): Promise<ResponseData<boolean>> {
+        try {
+            var response = new ResponseData<boolean>();
+            const isVariationDeleted = await this.variationRepository.deleteVariation(product_id);
+            const isShopAddressDeleted = await this.shopAddressRepository.deleteShopAddress(product_id);
+            const isProductDeleted = await this.productRepository.deleteProduct(product_id);
+
+            if (isVariationDeleted == true && isShopAddressDeleted == true && isProductDeleted == true) {
+                response.results = true;
+            } else {
+                response.results = false;
+            }
             return response;
         } catch (err) {
             ExceptionResponse(err);

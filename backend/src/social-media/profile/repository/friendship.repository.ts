@@ -240,7 +240,6 @@ export class FriendshipRepository {
 
                 if (!queryData) {
                     model.status = FRIENDSHIP_STATUS.PENDING;
-                    console.log(model);
                     var res = await this.friendshipRepository.create(model);
                     recentModified = await this.friendshipRepository.findOne({
                         where: {
@@ -311,7 +310,6 @@ export class FriendshipRepository {
             if (queryData) {
                 queryData.status = FRIENDSHIP_STATUS.REMOVED;
                 await queryData.save();
-                console.log(queryData)
                 await this.friendshipRepository.destroy({
                     where: {
                         id: queryData.id
@@ -400,13 +398,10 @@ export class FriendshipRepository {
             ],
             raw: true,
         })
-
-        console.log(queryData);
-
         var resultArr: number[] = [];
 
         if (queryData) {
-            for(const element of queryData){
+            for (const element of queryData) {
                 if (element["profile_request"] == profile_id) {
                     resultArr.push(element["profile_target"])
                 } else {

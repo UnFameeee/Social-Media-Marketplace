@@ -20,7 +20,7 @@ export class ProductImageService {
     async deleteProductImage(product_id: number, linkArray: string[]): Promise<ResponseData<boolean>> {
         try {
             var response = new ResponseData<boolean>();
-            response.results = await this.productImageRepository.deleteProfilePostImage(product_id, linkArray);
+            response.results = await this.productImageRepository.deleteProductImage(product_id, linkArray);
             return response;
         } catch (err) {
             ExceptionResponse(err);
