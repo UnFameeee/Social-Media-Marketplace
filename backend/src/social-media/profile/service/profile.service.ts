@@ -36,7 +36,6 @@ export class ProfileService {
     async getProfileDetailById(profile: Profile, profile_target_id: number): Promise<ResponseData<Profile>> {
         try {
             var response = new ResponseData<Profile>();
-            console.log()
             var queryResult = await this.profileRepository.getProfileDetailById(profile.profile_id, profile_target_id);
             if (queryResult) {
                 response.results = queryResult;
@@ -131,10 +130,10 @@ export class ProfileService {
     }
 
 
-    async searchProfile(profile_name: string, page: Page): Promise<ResponseData<PagingData<Profile[]>>> {
+    async searchProfile(profile_id: number, profile_name: string, page: Page): Promise<ResponseData<PagingData<Profile[]>>> {
         try {
             var response = new ResponseData<PagingData<Profile[]>>();
-            const res = await this.profileRepository.searchProfile(profile_name, page);
+            const res = await this.profileRepository.searchProfile(profile_id, profile_name, page);
             response.results = res;
             return response;
         } catch (err) {
