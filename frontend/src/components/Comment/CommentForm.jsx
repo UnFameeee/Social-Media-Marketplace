@@ -1,18 +1,32 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Avatar, TextareaAutosize, Button } from "@mui/material";
 import { useState } from "react";
 import MUI from "../MUI";
 import { useEffect } from "react";
-function CommentForm({ formWidth, placeholder, formReply, ...props }) {
+import { commentPostSaga } from "../../redux/comment/commentSlice";
+function CommentForm({ formWidth, placeholder, formReply,post_id, ...props }) {
   const userData = useSelector((state) => state.auth.user.userData);
+  const dispatch = useDispatch();
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const [replyInput, setReplyInput] = useState("");
   const handleOnChangeReplyInput = (e) => {
     setReplyInput(e.target.value);
   };
+  const handleCreateComment = () =>{
+    console.log("comment: ",replyInput," + ", "post id: ",post_id, " + ", " parent comment ",formReply?.parent_comment_id);
+    let comment_text = replyInput;
+    let parent_comment_id = formReply?.parent_comment_id ? formReply?.parent_comment_id : null;
+    dispatch(commentPostSaga({accessToken,refreshToken,dispatch,comment_text,parent_comment_id,post_id}))
+  }
   useEffect(() => {
     if (formReply?.text) setReplyInput("Reply to " + formReply?.text + " ");
-  }, [formReply?.text]);
+  }, [formReply]);
   return (
     <form
       className={`flex gap-[1rem]  ${
@@ -46,7 +60,7 @@ function CommentForm({ formWidth, placeholder, formReply, ...props }) {
         }
         className="w-full p-[1rem] resize-none outline-none rounded-3xl bg-gray-100 px-[1rem]"
       ></TextareaAutosize>
-      <MUI.Button>Post</MUI.Button>
+      <MUI.Button onClick={() =>handleCreateComment()} >Post</MUI.Button>
     </form>
   );
 }

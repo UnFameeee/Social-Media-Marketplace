@@ -1,4 +1,4 @@
-import React from "react";
+import {useMemo} from "react";
 import { Avatar } from "@mui/material";
 import { useSelector } from "react-redux";
 import CommentList from "./CommentList";
@@ -9,32 +9,40 @@ import { useState } from "react";
 import CommentForm from "./CommentForm";
 import NodeComment from "./NodeComment";
 import { useEffect } from "react";
-function Comment({ id, message, user, createdAt, isShowChildComment }) {
-  let childComments = [
-    {
-      id: 4,
-      message: "childComment",
-      user: "Nguyen hoang vu",
-      createdAt: 2022,
-    },
-    {
-      id: 5,
-      message: "childComment2",
-      user: "Nguyen pham quoc thang",
-      createdAt: 2022,
-    },
-  ];
+function Comment({ id, message, user, createdAt, isShowChildComment,post_id, ...props }) {
+  let childComments =useMemo(() =>{
+    const result = [
+      {
+        id: 4,
+        message: "childComment",
+        user: "Nguyen hoang vu",
+        createdAt: 2022,
+      },
+      {
+        id: 5,
+        message: "childComment2",
+        user: "Nguyen pham quoc thang",
+        createdAt: 2022,
+      },
+    ];
+    return result
+  },[]) 
 
   const userData = useSelector((state) => state.auth.user.userData);
-  const [showFormComment, setShowFormComment] = useState(false);
-  const [formReply, setFormReply] = useState({ isShow: false, text: "" });
-  const [showChildComment, setShowChildComment] = useState(false);
+  const [formReply, setFormReply] = useState({ isShow: false, text: "",parent_comment_id:null  });
+  const [showChildComment, setShowChildComment] = useState(true);
+  const [replyQuantity, setReplyQuantity] = useState(childComments.length);
   function randomNumberInRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
   const [randomNum, setRandomNum] = useState(0);
   useEffect(() => {
     setRandomNum(randomNumberInRange(0, 1));
+  }, []);
+  useEffect(() => {
+    if(childComments.length > 1){
+      setShowChildComment(false);
+    }
   }, []);
   // console.log("showChildComment", isShowChildComment);
   return (
@@ -65,7 +73,7 @@ function Comment({ id, message, user, createdAt, isShowChildComment }) {
               </MUI.BetterIconButton>
               <MUI.BetterIconButton
                 onClick={() => {
-                  setFormReply({ isShow: true, text: user });
+                  setFormReply({ isShow: true, text: user,parent_comment_id:id });
                 }}
               >
                 <ReplyIcon />
@@ -83,6 +91,7 @@ function Comment({ id, message, user, createdAt, isShowChildComment }) {
               <div key={comment.id} className="node-comment-wrapper ml-[4rem]">
                 <NodeComment
                   {...comment}
+                  parent_comment_id={id}
                   setFormReply={setFormReply}
                   isShowChildComment={isShowChildComment}
                 />
@@ -90,14 +99,17 @@ function Comment({ id, message, user, createdAt, isShowChildComment }) {
             ))
           ) : null
         ) : randomNum ? (
-          <MUI.Button onClick={() => setShowChildComment((prev) => !prev)}>
-            Show more reply comment
-          </MUI.Button>
+          <a
+            className="ml-[4rem] cursor-pointer underline"
+            onClick={() => setShowChildComment((prev) => !prev)}
+          >
+            Show {replyQuantity} more replies
+          </a>
         ) : null}
       </div>
       {formReply.isShow ? (
         <div className="ml-[4rem] mb-[1rem]">
-          <CommentForm formReply={formReply} />
+          <CommentForm formReply={formReply} post_id={post_id} />
         </div>
       ) : null}
     </>

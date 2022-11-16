@@ -1,18 +1,8 @@
-import React, { useState, useRef } from "react";
-import { useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef, memo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FullWidthHr from "../../components/FullWidthHr/FullWidthHr";
-import { uploadImages } from "../../redux/apiRequest";
-import {
-  Avatar,
-  TextareaAutosize,
-  Button,
-  Modal,
-} from "@mui/material";
+import { Avatar, TextareaAutosize, Button, Modal } from "@mui/material";
 import { Close, PhotoLibrary } from "@mui/icons-material";
-import {
-  resetUploadImagePostState,
-} from "../../redux/uploadImage/uploadImageSlice";
 import { createPostSaga, updatePostSaga } from "../../redux/post/postSlice";
 import notFoundImage from "../../assets/noimage_1.png";
 import ImageUploading from "react-images-uploading";
@@ -27,46 +17,29 @@ const ResponSiveDiv = styled.div`
 function PostModal(props) {
   //#region Declare variables
   const dispatch = useDispatch();
-  let flagAction = "post";
   const [postData, setPostData] = useState({
-    written_text: props.postUpdateData?.written_text
-      ? props.postUpdateData.written_text
-      : "",
-    post_image: props.postUpdateData?.post_image
-      ? props.postUpdateData.post_image
-      : "",
+    written_text: "",
+    post_image: [],
   });
-  let uploadImageLinkLst = useSelector(
-    (state) => state.uploadImage?.uploadImagePost?.data
-  );
-  if (props.postUpdateData) {
-    flagAction = "update";
-  }
   const { written_text, post_image } = postData;
-  console.log("post_image", post_image);
-  const imgElement = useRef(null);
-  const [imgArray, setImgArray] = useState([]);
-  const [uploadFlag, setUpLoadFlag] = useState(false);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
   const refreshToken = useSelector(
     (state) => state.auth.login.currentUser.refresh
   );
-  const isPosting = useSelector((state) => state.post.create.isFetching);
   const [images, setImages] = useState([]);
   const [removeImages, setRemoveImages] = useState([]);
-  const maxNumber = 69;
+  const maxNumber = useMemo(() => {
+    const result = 69;
+    return result;
+  }, []);
   //#endregion
 
   //#region Function
   const closeModal = () => {
-    props.setShowModal(false);
-    props.setPostUpdateData(null);
-    setPostData({ written_text: "", post_image: [] });
-    dispatch(resetUploadImagePostState());
-    setImgArray([]);
-    props.setReRender((prev) => !prev);
+    props.setShowPostModal(false);
+    // setImgArray([]);
   };
   const handlePost = (e) => {
     e.preventDefault();
@@ -87,7 +60,6 @@ function PostModal(props) {
     closeModal();
   };
   const handleUpdatePost = (e) => {
-    debugger;
     var updatePost = {
       post_id: props.postUpdateData.post_id,
       written_text: written_text,
@@ -114,17 +86,6 @@ function PostModal(props) {
       [event.target.name]: event.target.value,
     });
   };
-
-  const handlePreviewUploadImage = async (e) => {
-    const files = e.target.files;
-    var temp = [];
-    for (let i = 0; i < files.length; i++) {
-      temp.push({ files: files[i] });
-    }
-    await uploadImages(accessToken, refreshToken, temp, dispatch);
-    setUpLoadFlag((prev) => !prev);
-    e.target.value = null;
-  };
   const handleRemoveUploadedImage = (imageKey) => {
     let filter_post_image = post_image.filter((x) => x.link !== imageKey);
     setPostData({
@@ -132,30 +93,25 @@ function PostModal(props) {
       post_image: [...filter_post_image],
     });
     setRemoveImages([...removeImages, imageKey]);
-    let post_id = props.postUpdateData.post_id;
-    console.log("uploadImagesRemoveLink", removeImages);
   };
-  const addToUploadImgArray = (height, width, url) => {
-    setImgArray([...imgArray, { height: height, width: width, url: url }]);
-  };
-
   const onChange = (imageList) => {
     setImages(imageList);
   };
-  console.log("imageList", images, "post_image", post_image);
+
   //#endregion
 
   //#region UseEffect
   useEffect(() => {
-    // console.log("imgArray", imgArray);
-  }, [imgArray]);
-
-  // useEffect(() => {
-  //  if(post_image){
-  //   setImages(post_image)
-  //  }
-  // }, []);
-
+    setRemoveImages([]);
+    setPostData({
+      written_text: props.postUpdateData?.written_text
+        ? props.postUpdateData.written_text
+        : "",
+      post_image: props.postUpdateData?.post_image
+        ? props.postUpdateData.post_image
+        : "",
+    });
+  }, [props.showModal]);
   //#endregion
   return (
     <Modal className="modal" open={props.showModal} onClose={closeModal}>
@@ -187,16 +143,16 @@ function PostModal(props) {
                 style={{
                   fontSize: "2rem",
                 }}
-                alt={props.profile.profile_name}
+                alt={props.profile?.profile_name}
                 src={
                   props.profile?.picture
                     ? JSON.parse(props.profile?.picture)
                     : null
                 }
               >
-                {props.profile.profile_name?.at(0)}
+                {props.profile?.profile_name?.at(0)}
               </Avatar>
-              <span className="font-bold">{props.profile.profile_name}</span>
+              <span className="font-bold">{props.profile?.profile_name}</span>
             </div>
             <TextareaAutosize
               onChange={handleOnChangePostData}
@@ -206,7 +162,7 @@ function PostModal(props) {
               placeholder={
                 props.postUpdateData
                   ? ""
-                  : `What's on your mind, ${props.profile.profile_name}?`
+                  : `What's on your mind, ${props.profile?.profile_name}?`
               }
               value={written_text}
             ></TextareaAutosize>
@@ -220,11 +176,7 @@ function PostModal(props) {
               {({
                 imageList,
                 onImageUpload,
-                onImageRemoveAll,
-                onImageUpdate,
                 onImageRemove,
-                isDragging,
-                dragProps,
               }) => (
                 // write your building UI
                 <div className="upload__image-wrapper">

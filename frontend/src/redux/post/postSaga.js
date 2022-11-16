@@ -30,6 +30,7 @@ import {
 import { notifyService } from '../../services/notifyService';
 import { removeUploadImages, uploadImages } from '../apiRequest';
 import { getProfileSagaSuccess } from '../profile/profileSlice';
+import { commentPostSagaSuccess } from '../comment/commentSlice';
 
 //#region reFreshPosts
 export function* reFreshPosts() {
@@ -40,6 +41,7 @@ export function* reFreshPosts() {
       updatePostSagaSuccess.type,
       likePostSagaSuccess.type,
       getProfileSagaSuccess.type,
+      commentPostSagaSuccess.type,
     ],
     handleReFreshPostSaga
   );
@@ -111,7 +113,6 @@ const createPostSagaRequest = async (data) => {
     uploadImage,
     dispatch,
   } = data.payload;
-  debugger;
   dispatch(createPostStart());
   try {
     const config = {

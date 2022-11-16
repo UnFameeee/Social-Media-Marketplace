@@ -89,14 +89,6 @@ function UserProfile(props) {
       profile_description;
   }
 
-  const [openCreatePost, setOpenCreatePost] = useState(false);
-  const [postUpdateData, setPostUpdateData] = useState();
-  const handleOpenPostModel = () => {
-    setOpenCreatePost((prev) => !prev);
-  };
-  const handleGetPostUpdateData = (data) => {
-    setPostUpdateData(data);
-  };
   const handleActions = async (action) => {
     action();
     if (Helper.checkURL('profile', {}, true)) {
@@ -143,17 +135,6 @@ function UserProfile(props) {
 
   return (
     <>
-      {openCreatePost && (
-        <PostModal
-          showModal={openCreatePost}
-          postUpdateData={postUpdateData}
-          setPostUpdateData={setPostUpdateData}
-          setShowModal={setOpenCreatePost}
-          setReRender={setReRender}
-          profile={profileData}
-        />
-      )}
-
       {/* save wallpaper or not */}
       {wallpaper && wallpaperURL && (
         <div id="updateWallpaper">
@@ -595,7 +576,6 @@ function UserProfile(props) {
           {profileData?.profile_id == userData?.profile_id && (
             <PostStatus
               profile={profileData}
-              onClick={handleOpenPostModel}
             />
           )}
           {posts?.map((post) => (
@@ -603,9 +583,7 @@ function UserProfile(props) {
               postData={post}
               key={post.post_id}
               profile={profileData}
-              setReRender={setReRender}
-              handleOpenPostModel={handleOpenPostModel}
-              handleGetPostUpdateData={handleGetPostUpdateData}
+              // setReRender={setReRender}
             />
           ))}
         </div>
