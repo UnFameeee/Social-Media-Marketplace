@@ -9,10 +9,12 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { FriendshipModule } from './social-media/profile/module/friendship.module';
 import { PostCommentModule } from './social-media/post/module/post-comment.module';
+import { ProductModule } from './marketplace/product/module/product.module';
 
 
 @Module({
   imports: [
+    //social media
     ProfileModule,
     PostModule,
     PostCommentModule,
@@ -21,6 +23,12 @@ import { PostCommentModule } from './social-media/post/module/post-comment.modul
     AuthModule,
     ImageModule,
     FriendshipModule,
+
+    //marketplace
+    ProductModule,
+
+
+
     ServeStaticModule.forRoot({
       serveRoot: '/uploads/images',
       rootPath: join(__dirname, '../uploads/images'),

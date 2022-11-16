@@ -62,7 +62,8 @@ export const databaseProviders = [
             sequelize.addModels([
                 Profile, Friendship, Post, PostLike, PostComment, ParentChildComment, ProfileAvatarImage, ProfilePostImage, ProfileWallpaperImage, Description,
 
-                ShippingAddress, ShopOrder, ShoppingCart, ShoppingCartItem, PaymentMethod, OrderLine, Product, ProductImage, Category, SubCategory, ShopAddress, Variation
+                ShippingAddress, ShopOrder, ShoppingCart, ShoppingCartItem, PaymentMethod, OrderLine, Product, ProductImage, Category, ShopAddress, Variation
+                // SubCategory,
 
                 // ChatRoom, ChatConnectedProfile, ChatJoinedRoom, ChatMessage, RoomImage
             ]);
@@ -129,14 +130,11 @@ export const databaseProviders = [
             // ChatRoom.hasMany(ChatConnectedProfile, { foreignKey: { name: "room_id", field: "room_id" } });
             // ChatConnectedProfile.belongsToMany(ChatRoom, { through: ChatJoinedRoom });
 
-            Profile.hasOne(ShopAddress, { foreignKey: { name: "profile_id", field: "profile_id" } });
-            ShopAddress.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
-            
-            Profile.hasOne(ShippingAddress, { foreignKey: { name: "profile_id", field: "profile_id" } });
-            ShippingAddress.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            Product.hasOne(ShopAddress, { foreignKey: { name: "product_id", field: "product_id" } });
+            ShopAddress.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
-            ShippingAddress.hasMany(ShopOrder, { foreignKey: { name: "shipping_address_id", field: "shipping_address_id" } });
-            ShopOrder.belongsTo(ShippingAddress, { foreignKey: { name: "shipping_address_id", field: "shipping_address_id" } });
+            ShopOrder.hasOne(ShippingAddress, { foreignKey: { name: "shipping_address_id", field: "shipping_address_id" } });
+            ShippingAddress.belongsTo(ShopOrder, { foreignKey: { name: "shipping_address_id", field: "shipping_address_id" } });
 
             Profile.hasMany(ShoppingCart, { foreignKey: { name: "profile_id", field: "profile_id" } });
             ShoppingCart.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
@@ -150,8 +148,8 @@ export const databaseProviders = [
             ShopOrder.hasMany(OrderLine, { foreignKey: { name: "order_id", field: "order_id" } });
             OrderLine.belongsTo(ShopOrder, { foreignKey: { name: "order_id", field: "order_id" } });
 
-            Profile.hasMany(Product, { foreignKey: { name: "profile_id", field: "owner_id" } });
-            Product.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "owner_id" } });
+            Profile.hasMany(Product, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            Product.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
 
             Product.hasMany(OrderLine, { foreignKey: { name: "product_id", field: "product_id" } });
             OrderLine.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
@@ -162,11 +160,11 @@ export const databaseProviders = [
             Product.hasMany(ProductImage, { foreignKey: { name: "product_id", field: "product_id" } });
             ProductImage.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
-            Category.hasMany(SubCategory, { foreignKey: { name: "category_id", field: "category_id" } });
-            SubCategory.belongsTo(Category, { foreignKey: { name: "category_id", field: "category_id" } });
+            // Category.hasMany(SubCategory, { foreignKey: { name: "category_id", field: "category_id" } });
+            // SubCategory.belongsTo(Category, { foreignKey: { name: "category_id", field: "category_id" } });
 
-            Category.hasMany(Product, { foreignKey: { name: "sub_category_id", field: "sub_category_id" } });
-            Product.belongsTo(Category, { foreignKey: { name: "sub_category_id", field: "sub_category_id" } });
+            Category.hasMany(Product, { foreignKey: { name: "category_id", field: "category_id" } });
+            Product.belongsTo(Category, { foreignKey: { name: "category_id", field: "category_id" } });
 
             //initiate database  
             try {
@@ -180,7 +178,7 @@ export const databaseProviders = [
                     async (err, results) => {
                         results ? console.log(`Connect to Database ${configService.get('MYSQL_DB')} complete!`) : console.log(err);
                         try {
-                            await sequelize.sync({ alter: false, force: false })
+                            await sequelize.sync({ alter: true, force: false })
                             await sequelize.authenticate();
                         } catch (err) {
                             // throw err;
