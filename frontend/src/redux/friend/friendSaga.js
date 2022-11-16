@@ -40,8 +40,10 @@ export function* refreshFriendRequest() {
 }
 function* handleRefreshRequestSaga(data) {
   try {
-    const getAll = yield call(getAllRequestSaga, data);
-    yield put(getRequestSuccess(getAll.data.results));
+    if (data.payload?.callRefresh) {
+      const getAll = yield call(getAllRequestSaga, data);
+      yield put(getRequestSuccess(getAll.data.results));
+    }
   } catch (error) {
     console.log(error);
   }
@@ -81,7 +83,13 @@ function* handleAcceptFriend(data) {
   }
 }
 async function acceptSagaRequest(data) {
-  const { accessToken, refreshToken, id, dispatch } = data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    callRefresh = true,
+    dispatch,
+  } = data.payload;
   //   dispatch(acceptStart());
   try {
     const res = await axiosInStanceJWT.post(
@@ -99,7 +107,9 @@ async function acceptSagaRequest(data) {
       notifyService.showSuccess(
         'Accept Friend Request Successfully!'
       );
-      dispatch(acceptSagaSuccess({ accessToken, refreshToken }));
+      dispatch(
+        acceptSagaSuccess({ accessToken, refreshToken, callRefresh })
+      );
       return res;
     } else {
       notifyService.showError(res.data.message);
@@ -123,7 +133,13 @@ function* handleDenyFriend(data) {
   }
 }
 async function denySagaRequest(data) {
-  const { accessToken, refreshToken, id, dispatch } = data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    callRefresh = true,
+    dispatch,
+  } = data.payload;
   // dispatch(denyStart());
   try {
     const res = await axiosInStanceJWT.post(
@@ -139,7 +155,9 @@ async function denySagaRequest(data) {
     );
     if (!res.data.message) {
       notifyService.showSuccess('Deny Friend Request Successfully!');
-      dispatch(denySagaSuccess({ accessToken, refreshToken }));
+      dispatch(
+        denySagaSuccess({ accessToken, refreshToken, callRefresh })
+      );
       return res;
     } else {
       notifyService.showError(res.data.message);
@@ -161,22 +179,35 @@ export function* refreshAllFriend() {
 }
 function* handleRefreshAllSaga(data) {
   try {
-    const getAll = yield call(getAllSaga, data);
-    if (data.payload?.id == data.payload?.mainId) {
-      yield put(getAllFriendForMainUserSuccess(getAll.data.results));
-    }
-    else {
-      yield put(getAllFriendSuccess(getAll.data.results));
+    if (data.payload?.callRefresh) {
+      const getAll = yield call(getAllSaga, data);
+      if (
+        data.payload?.id == data.payload?.mainId ||
+        data.payload?.forMainUser
+      ) {
+        yield put(
+          getAllFriendForMainUserSuccess(getAll.data.results)
+        );
+      } else {
+        yield put(getAllFriendSuccess(getAll.data.results));
+      }
     }
   } catch (error) {
     console.log(error);
   }
 }
 async function getAllSaga(data) {
-  const { accessToken, refreshToken, id = '', mainId } = data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    id = '',
+    mainId,
+    forMainUser,
+  } = data.payload;
   try {
+    let finalId = forMainUser ? mainId ?? id : id ?? mainId;
     const res = await axiosInStanceJWT.post(
-      `${api.friend}/all/${id ?? mainId}`,
+      `${api.friend}/all/${finalId}`,
       paging,
       {
         headers: {
@@ -207,8 +238,15 @@ function* handleUnfriend(data) {
   }
 }
 async function unfriendSagaRequest(data) {
-  const { accessToken, refreshToken, id, mainId, dispatch } =
-    data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    mainId,
+    forMainUser = false,
+    callRefresh = true,
+    dispatch,
+  } = data.payload;
   //   dispatch(unfriendStart());
   try {
     const res = await axiosInStanceJWT.post(
@@ -225,7 +263,14 @@ async function unfriendSagaRequest(data) {
     if (!res.data.message) {
       notifyService.showSuccess('Unfriend Successfully!');
       dispatch(
-        unfriendSagaSuccess({ accessToken, refreshToken, mainId })
+        unfriendSagaSuccess({
+          accessToken,
+          refreshToken,
+          id,
+          mainId,
+          callRefresh,
+          forMainUser,
+        })
       );
       return res;
     } else {
@@ -242,14 +287,19 @@ async function unfriendSagaRequest(data) {
 // #region friend suggestions
 export function* refreshFriendSuggestion() {
   yield takeLatest(
-    [addFriendSagaSuccess.type, denySagaSuccess.type],
+    [
+      addFriendSagaSuccess.type,
+      // denySagaSuccess.type
+    ],
     handleRefreshSuggestionSaga
   );
 }
 function* handleRefreshSuggestionSaga(data) {
   try {
-    const getAll = yield call(getAllSuggestionSaga, data);
-    yield put(getSuggestionSuccess(getAll.data.results));
+    if (data.payload?.callRefresh) {
+      const getAll = yield call(getAllSuggestionSaga, data);
+      yield put(getSuggestionSuccess(getAll.data.results));
+    }
   } catch (error) {
     console.log(error);
   }
@@ -289,7 +339,13 @@ function* handleAddFriend(data) {
   }
 }
 async function addFriendSagaRequest(data) {
-  const { accessToken, refreshToken, id, dispatch } = data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    callRefresh = true,
+    dispatch,
+  } = data.payload;
   // dispatch(addFriendStart());
   try {
     const res = await axiosInStanceJWT.post(
@@ -312,7 +368,12 @@ async function addFriendSagaRequest(data) {
         );
       }
       dispatch(
-        addFriendSagaSuccess({ accessToken, refreshToken, id })
+        addFriendSagaSuccess({
+          accessToken,
+          refreshToken,
+          id,
+          callRefresh,
+        })
       );
       return res;
     } else {

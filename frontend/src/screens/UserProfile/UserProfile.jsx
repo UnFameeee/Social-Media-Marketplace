@@ -7,12 +7,6 @@ import {
   AddCircle,
   // MoreHoriz,
   CloseOutlined,
-  School,
-  Home,
-  Work,
-  // Favorite,
-  // AccessTimeFilled,
-  // RssFeed,
 } from '@mui/icons-material';
 import { BiMessageRoundedDetail } from 'react-icons/bi';
 import {
@@ -36,11 +30,6 @@ import HoverButton from './HoverButton';
 import CardPost from '../../components/Card/CardPost';
 import GridSideInfo from './GridSideInfo';
 import PostModal from '../Home/PostModal';
-import {
-  getAllFriends,
-  getPostByProfile,
-  getProfile,
-} from '../../redux/apiRequest';
 import { Helper } from '../../utils/Helper';
 import MUI from '../../components/MUI';
 import {
@@ -108,12 +97,12 @@ function UserProfile(props) {
   const handleGetPostUpdateData = (data) => {
     setPostUpdateData(data);
   };
-  const handleActions = (action) => {
+  const handleActions = async (action) => {
     action();
     if (Helper.checkURL('profile', {}, true)) {
       setReRender(!reRender);
     } else {
-      props.setReRender(false);
+      props.setReRender('');
     }
   };
 
@@ -136,7 +125,7 @@ function UserProfile(props) {
     let onDestroy = false;
     if (!onDestroy) {
       if (Helper.checkURL('profile', {}, true)) {
-        var id = queryParams.id ?? id;
+        var id = queryParams.id ?? profileData?.profile_id ?? userData?.profile_id;
         dispatch(
           getProfileSaga({
             accessToken,
@@ -406,16 +395,17 @@ function UserProfile(props) {
               className="gap-[0.8rem]"
               style={{ minWidth: '14rem' }}
               onClick={() => {
-                handleActions(
+                handleActions(() => {
                   dispatch(
                     acceptSaga({
                       accessToken,
                       refreshToken,
                       id,
+                      callRefresh: false,
                       dispatch,
                     })
-                  )
-                );
+                  );
+                });
               }}
             >
               <FaUserPlus style={{ fontSize: '2.2rem' }} />
@@ -433,6 +423,7 @@ function UserProfile(props) {
                       accessToken,
                       refreshToken,
                       id,
+                      callRefresh: false,
                       dispatch,
                     })
                   );
@@ -529,15 +520,7 @@ function UserProfile(props) {
                       {Object.entries(descriptionWithoutBio)?.map(
                         (x, index) => {
                           return (
-                            <SideBarLi
-                              key={index}
-                              description={x}
-                              icon={{
-                                school: <School />,
-                                location: <Home />,
-                                career: <Work />,
-                              }}
-                            />
+                            <SideBarLi key={index} description={x} />
                           );
                         }
                       )}
@@ -656,6 +639,7 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
+                callRefresh: false,
                 dispatch,
               })
             );
@@ -667,6 +651,7 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
+                callRefresh: false,
                 dispatch,
               })
             );
@@ -698,10 +683,13 @@ function ProfileAction({
                 refreshToken,
                 id,
                 mainId,
+                forMainUser: Helper.checkURL('friends'),
+                callRefresh: Helper.checkURL('friends'),
                 dispatch,
               })
             );
           });
+          setMenuClicked(false);
         },
       },
     ];
@@ -717,10 +705,12 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
+                callRefresh: false,
                 dispatch,
               })
             );
           });
+          setMenuClicked(false);
         },
       },
       {
@@ -732,10 +722,12 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
+                callRefresh: false,
                 dispatch,
               })
             );
           });
+          setMenuClicked(false);
         },
       },
     ];

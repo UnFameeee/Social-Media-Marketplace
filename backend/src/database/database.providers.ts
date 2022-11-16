@@ -8,6 +8,7 @@ import { ChatRoom } from '../social-media/message/model/room.model';
 import { ChatJoinedRoom } from 'src/social-media/message/model/joined_room.model';
 import { ChatMessage } from 'src/social-media/message/model/message.model';
 import { ChatConnectedProfile } from './../social-media/message/model/connected.model';
+import { RoomImage } from './model/room_image';
 import { Profile } from './model/profile.model';
 import { Friendship } from './model/friendship.model';
 import { Post } from './model/post.model';
@@ -18,7 +19,6 @@ import { ProfileAvatarImage } from './model/profile_avatar_image.model';
 import { ProfilePostImage } from './model/profile_post_image.model';
 import { ProfileWallpaperImage } from './model/profile_wallpaper_image.mode';
 import { Description } from './model/description.model';
-import { RoomImage } from './model/room_image';
 import { ShippingAddress } from './model/shipping_address.model';
 import { ShopOrder } from './model/shop_order.model';
 import { ShoppingCart } from './model/shopping_cart.model';
@@ -29,6 +29,8 @@ import { Product } from './model/product.model';
 import { ProductImage } from './model/product_image.model';
 import { Category } from './model/category.model';
 import { SubCategory } from './model/sub_category.model';
+import { ShopAddress } from './model/shop_address.model';
+import { Variation } from './model/variation.model';
 
 export const databaseProviders = [
     {
@@ -60,7 +62,7 @@ export const databaseProviders = [
             sequelize.addModels([
                 Profile, Friendship, Post, PostLike, PostComment, ParentChildComment, ProfileAvatarImage, ProfilePostImage, ProfileWallpaperImage, Description,
 
-                ShippingAddress, ShopOrder, ShoppingCart, ShoppingCartItem, PaymentMethod, OrderLine, Product, ProductImage, Category, SubCategory,
+                ShippingAddress, ShopOrder, ShoppingCart, ShoppingCartItem, PaymentMethod, OrderLine, Product, ProductImage, Category, SubCategory, ShopAddress, Variation
 
                 // ChatRoom, ChatConnectedProfile, ChatJoinedRoom, ChatMessage, RoomImage
             ]);
@@ -127,6 +129,9 @@ export const databaseProviders = [
             // ChatRoom.hasMany(ChatConnectedProfile, { foreignKey: { name: "room_id", field: "room_id" } });
             // ChatConnectedProfile.belongsToMany(ChatRoom, { through: ChatJoinedRoom });
 
+            Profile.hasOne(ShopAddress, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            ShopAddress.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            
             Profile.hasOne(ShippingAddress, { foreignKey: { name: "profile_id", field: "profile_id" } });
             ShippingAddress.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
 
@@ -145,8 +150,14 @@ export const databaseProviders = [
             ShopOrder.hasMany(OrderLine, { foreignKey: { name: "order_id", field: "order_id" } });
             OrderLine.belongsTo(ShopOrder, { foreignKey: { name: "order_id", field: "order_id" } });
 
+            Profile.hasMany(Product, { foreignKey: { name: "profile_id", field: "owner_id" } });
+            Product.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "owner_id" } });
+
             Product.hasMany(OrderLine, { foreignKey: { name: "product_id", field: "product_id" } });
             OrderLine.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
+
+            Product.hasOne(Variation, { foreignKey: { name: "product_id", field: "product_id" } });
+            Variation.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
             Product.hasMany(ProductImage, { foreignKey: { name: "product_id", field: "product_id" } });
             ProductImage.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
