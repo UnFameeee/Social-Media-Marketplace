@@ -94,7 +94,8 @@ export class ProfileController {
     }
 
     @Post("search")
-    async searchProfile(@Query("name") profile_name: string, @Body() page: Page) {
-        return await this.profileService.searchProfile(profile_name, page);
+    async searchProfile(@Request() request: any, @Query("name") profile_name: string, @Body() page: Page) {
+        const profile = <Profile>request.user;
+        return await this.profileService.searchProfile(profile.profile_id, profile_name, page);
     }
 }
