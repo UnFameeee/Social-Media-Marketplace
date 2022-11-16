@@ -26,10 +26,25 @@ import notFoundImage from "../../assets/noimage_1.png";
 import styled from "styled-components";
 import CommentList from "../Comment/CommentList";
 import CommentForm from "../Comment/CommentForm";
+import PostModal from "../../screens/Home/PostModal";
 function CardPost(props) {
   //#region Declare variables
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState(false);
+  const [showPostModal, setShowPostModal] = useState(false);
+  const { postData } = props;
+  const { post_id, profile_id, written_text, post_image, isLiked, totalLike } =
+    postData;
+  const { profile } = props;
+  const postUpdateData = useMemo(() => {
+    const result = {
+      post_id: post_id,
+      profile_id: profile_id,
+      written_text: written_text,
+      post_image: post_image,
+    };
+    return result;
+  }, []);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -37,69 +52,59 @@ function CardPost(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const userData = useSelector((state) => state.auth?.user?.userData.profile);
-  const { postData } = props;
-  const { post_id, profile_id, written_text, post_image, isLiked, totalLike } =
-    postData;
-  const { profile } = props;
-  console.log('re render');
-  let rootComments = useMemo(() =>{
-  const result = [
-    {
-      id: 0,
-      message: "            Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse excepturi a ratione hic rerum. Repellat enim iure eveniet officia minima sunt consectetur eos beatae dolores explicabo, alias rerum nostrum? Eveniet nisi cum ab incidunt repellat labore reprehenderit minus aspernatur voluptas, molestias, sequi doloribus? Quidem adipisci minus magnam, autem cumque architecto?",
-      user: "Dang nhat tien",
-      createdAt: 2022,
-    },
-    {
-      id: 1,
-      message: "test2",
-      user: "Quan minh duc",
-      createdAt: 2022,
-    },
-    {
-      id: 2,
-      message: "test3",
-      user: "Nguyen phuoc dang",
-      createdAt: 2022,
-    },
-  ];
-  return result
-  },[])  
+
+  console.log("re render");
+  let rootComments = useMemo(() => {
+    const result = [
+      {
+        id: 0,
+        message:
+          "            Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse excepturi a ratione hic rerum. Repellat enim iure eveniet officia minima sunt consectetur eos beatae dolores explicabo, alias rerum nostrum? Eveniet nisi cum ab incidunt repellat labore reprehenderit minus aspernatur voluptas, molestias, sequi doloribus? Quidem adipisci minus magnam, autem cumque architecto?",
+        user: "Dang nhat tien",
+        createdAt: 2022,
+      },
+      {
+        id: 1,
+        message: "test2",
+        user: "Quan minh duc",
+        createdAt: 2022,
+      },
+      {
+        id: 2,
+        message: "test3",
+        user: "Nguyen phuoc dang",
+        createdAt: 2022,
+      },
+    ];
+    return result;
+  }, []);
   //#endregion
 
   //#region Function
-  const handleOnClickShowAction = () => {
-    setShowAction(!showAction);
-  };
   const handleShowModal = () => {
-    let tempPostData = {
-      post_id: post_id,
-      profile_id: profile_id,
-      written_text: written_text,
-      post_image: post_image,
-    };
-    props.handleGetPostUpdateData(tempPostData);
-    props.handleOpenPostModel();
-    handleOnClickShowAction();
+    setShowPostModal(true);
+    setShowAction(false)
   };
   const handleDeletePost = () => {
-    var postId = post_id;
+    let postId = post_id;
     dispatch(deletePostSaga({ accessToken, refreshToken, postId, dispatch }));
-    props.setReRender((prev) => !prev);
-    handleOnClickShowAction();
+    setShowAction(!showAction);
   };
   const handleLikePost = () => {
     let postId = post_id;
     dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
-    props.setReRender((prev) => !prev);
   };
-  const handleShowComment = () =>{
-
-  }
+  const handleShowComment = () => {};
   //#endregion
 
   return (
     <>
+      <PostModal
+        showModal={showPostModal}
+        setShowPostModal={setShowPostModal}
+        postUpdateData={postUpdateData}
+        profile={userData}
+      />
       {/* {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && ( */}
       <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-[70rem]">
         <div className="w-full bg">
@@ -124,7 +129,7 @@ function CardPost(props) {
                 <MoreHoriz
                   className=" right-[2rem] Icon"
                   style={{ fontSize: "2.5rem" }}
-                  onClick={handleOnClickShowAction}
+                  onClick={() => setShowAction(prev => !prev)}
                 />
                 {showAction && (
                   <ClickAwayListener onClickAway={(e) => setShowAction(false)}>
@@ -160,7 +165,7 @@ function CardPost(props) {
             )}
           </div>
         </div>
-        <div >
+        <div>
           <div
             className="card-paragraph px-[2rem] mb-[1rem] "
             style={{ overflowWrap: "anywhere" }}
@@ -223,7 +228,10 @@ function CardPost(props) {
               )}
               <span className=" leading-[1.3rem]">Like</span>
             </MUI.ButtonWithIcon>
-            <MUI.ButtonWithIcon onClick={() => handleShowComment()} className="button-with-icon flex gap-[0.5rem] w-full">
+            <MUI.ButtonWithIcon
+              onClick={() => handleShowComment()}
+              className="button-with-icon flex gap-[0.5rem] w-full"
+            >
               <ChatBubbleOutline
                 className=" outline-none"
                 style={{ fontSize: "2.5rem", marginRight: "0.5rem" }}
@@ -245,8 +253,11 @@ function CardPost(props) {
               <ArrowDropDown style={{ fontSize: "2.5rem" }} />
             </div>
             <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem]">
-
-              <CommentForm formWidth={'100%'} placeholder={'write a comment....'} post_id={post_id} />
+              <CommentForm
+                formWidth={"100%"}
+                placeholder={"write a comment...."}
+                post_id={post_id}
+              />
               <CommentList comments={rootComments} post_id={post_id} />
 
               <div className="flex">

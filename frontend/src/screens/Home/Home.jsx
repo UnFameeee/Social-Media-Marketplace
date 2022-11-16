@@ -86,9 +86,6 @@ const ResponSiveDiv = styled.div`
 function Home() {
   //#region Declare variables
   const dispatch = useDispatch();
-  const [openCreatePost, setOpenCreatePost] = useState(false);
-  const [postUpdateData, setPostUpdateData] = useState();
-  const [reRender, setReRender] = useState(false);
   const posts = useSelector((state) => state.post.get.posts?.results?.data);
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
@@ -103,12 +100,7 @@ function Home() {
   //#endregion
 
   //#region Function
-  const handleOpenPostModel = () => {
-    setOpenCreatePost((prev) => !prev);
-  };
-  const handleGetPostUpdateData = (data) => {
-    setPostUpdateData(data);
-  };
+
   //#endregion
 
   //#region UseEffect
@@ -124,16 +116,6 @@ function Home() {
   //#endregion
   return (
     <>
-      {openCreatePost && (
-        <PostModal
-          showModal={openCreatePost}
-          postUpdateData={postUpdateData}
-          setPostUpdateData={setPostUpdateData}
-          setShowModal={setOpenCreatePost}
-          setReRender={setReRender}
-          profile={userData.profile}
-        />
-      )}
       <ResponSiveDiv>
         <ThreeColumns
           className="threeColumn-wrapper px-[30%] pt-6"
@@ -169,7 +151,6 @@ function Home() {
                 ? profileData
                 : userData.profile
             }
-            onClick={handleOpenPostModel}
           />
           {posts &&
             posts.map((post) => (
@@ -177,9 +158,6 @@ function Home() {
                 postData={post}
                 key={post.post_id}
                 profile={userData.profile}
-                setReRender={setReRender}
-                handleOpenPostModel={handleOpenPostModel}
-                handleGetPostUpdateData={handleGetPostUpdateData}
               />
             ))}
         </ThreeColumns>

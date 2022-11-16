@@ -10,8 +10,6 @@ import CommentForm from "./CommentForm";
 import NodeComment from "./NodeComment";
 import { useEffect } from "react";
 function Comment({ id, message, user, createdAt, isShowChildComment,post_id, ...props }) {
-
-  console.log('re render');
   let childComments =useMemo(() =>{
     const result = [
       {

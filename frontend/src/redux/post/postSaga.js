@@ -113,7 +113,6 @@ const createPostSagaRequest = async (data) => {
     uploadImage,
     dispatch,
   } = data.payload;
-  debugger;
   dispatch(createPostStart());
   try {
     const config = {
