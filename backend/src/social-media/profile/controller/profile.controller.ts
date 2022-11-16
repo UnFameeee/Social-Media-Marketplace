@@ -97,6 +97,4 @@ export class ProfileController {
     async searchProfile(@Query("name") profile_name: string, @Body() page: Page) {
         return await this.profileService.searchProfile(profile_name, page);
     }
-
-
 }
