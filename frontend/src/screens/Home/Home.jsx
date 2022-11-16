@@ -97,6 +97,7 @@ function Home() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
+  const [reRender, setReRender] = useState(false);
   //#endregion
 
   //#region Function
@@ -106,6 +107,7 @@ function Home() {
   //#region UseEffect
   useEffect(() => {
     let onDestroy = false;
+    
     if (!onDestroy) {
       getAllPost(accessToken, refreshToken, dispatch);
     }
@@ -151,6 +153,7 @@ function Home() {
                 ? profileData
                 : userData.profile
             }
+            setReRender={setReRender}
           />
           {posts &&
             posts.map((post) => (
@@ -158,6 +161,7 @@ function Home() {
                 postData={post}
                 key={post.post_id}
                 profile={userData.profile}
+                setReRender={setReRender}
               />
             ))}
         </ThreeColumns>
