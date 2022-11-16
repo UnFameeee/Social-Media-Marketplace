@@ -26,6 +26,7 @@ function PostStatus(props) {
     <>
       <PostModal
         showModal={showPostModal}
+        setReRender={props.setReRender}
         setShowPostModal={setShowPostModal}
         profile={userData}
       />

@@ -50,9 +50,12 @@ function* handleReFreshPostSaga(data) {
   try {
     const getAll = yield call(getAllPostSagaRequest, data);
     if (data.payload?.id || data.payload?.mainId) {
+      console.log("get post for profile");
       yield put(getPostByProfileSuccess(getAll.data));
     } else {
       yield put(getPostSuccess(getAll.data));
+      console.log("get post all");
+
     }
   } catch (error) {
     console.log(error);

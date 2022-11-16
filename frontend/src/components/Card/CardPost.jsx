@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo, memo } from "react";
+import { useState, useMemo } from "react";
 import {
   ThumbUpOutlined,
   ThumbUpAlt,
@@ -11,13 +11,9 @@ import {
   Avatar,
   Button,
   ClickAwayListener,
-  Modal,
-  Typography,
-  Box,
 } from "@mui/material";
 import MUI from "../MUI";
 import "react-toastify/dist/ReactToastify.css";
-import AvatarWithText from "../Avatar/AvatarWithText";
 import { useDispatch, useSelector } from "react-redux";
 import { format } from "timeago.js";
 import ShowMoreText from "react-show-more-text";
@@ -36,15 +32,13 @@ function CardPost(props) {
   const { post_id, profile_id, written_text, post_image, isLiked, totalLike } =
     postData;
   const { profile } = props;
-  const postUpdateData = useMemo(() => {
-    const result = {
+  const postUpdateData = {
       post_id: post_id,
       profile_id: profile_id,
       written_text: written_text,
       post_image: post_image,
-    };
-    return result;
-  }, []);
+    }
+
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -53,7 +47,6 @@ function CardPost(props) {
   );
   const userData = useSelector((state) => state.auth?.user?.userData.profile);
 
-  console.log("re render");
   let rootComments = useMemo(() => {
     const result = [
       {
@@ -89,10 +82,12 @@ function CardPost(props) {
     let postId = post_id;
     dispatch(deletePostSaga({ accessToken, refreshToken, postId, dispatch }));
     setShowAction(!showAction);
+    props.setReRender(prev => !prev)
   };
   const handleLikePost = () => {
     let postId = post_id;
     dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
+    props.setReRender(prev => !prev)
   };
   const handleShowComment = () => {};
   //#endregion
@@ -103,6 +98,7 @@ function CardPost(props) {
         showModal={showPostModal}
         setShowPostModal={setShowPostModal}
         postUpdateData={postUpdateData}
+        setReRender={props.setReRender}
         profile={userData}
       />
       {/* {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && ( */}

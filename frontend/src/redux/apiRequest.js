@@ -436,7 +436,6 @@ export const removeUploadImages = async (
   post_id,
   dispatch
 ) => {
-  debugger;
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
