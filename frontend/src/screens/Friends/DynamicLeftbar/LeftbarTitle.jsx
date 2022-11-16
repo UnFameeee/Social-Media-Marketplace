@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import MiddleHr from '../../../components/FullWidthHr/MiddleHr';
 import MUI from '../../../components/MUI';
 
-export default function LeftbarTitle({ title, subTitle }) {
+export default function LeftbarTitle({
+  title,
+  subTitle,
+  backTo = '/friends',
+}) {
   let navigate = useNavigate();
 
   return (
@@ -11,7 +15,7 @@ export default function LeftbarTitle({ title, subTitle }) {
       <div className="friend-left-bar-title">
         <MUI.BetterIconButton
           sx={{ padding: '0.6rem', marginRight: '0.8rem' }}
-          onClick={() => navigate('/friends')}
+          onClick={() => navigate(backTo)}
         >
           <KeyboardBackspace sx={{ fontSize: '2.4rem' }} />
         </MUI.BetterIconButton>

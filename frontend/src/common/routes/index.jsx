@@ -24,7 +24,8 @@ import {
 import Error from '../../screens/Error/Error';
 import Marketplace from '../../screens/Marketplace/Marketplace';
 import CheckOut from '../../screens/Marketplace/CheckOut';
-import Search from '../../screens/Home/Search';
+import SearchPage from '../../screens/Home/SearchPage';
+
 export default function RootRoutes() {
   return (
     <BrowserRouter>
@@ -61,7 +62,7 @@ export default function RootRoutes() {
             <Route path="checkout" element={<CheckOut />} />
 
 
-            <Route path="/search" element={<Search />} />
+            <Route path="/search" element={<SearchPage />} />
 
 
             <Route path="/messenger" element={<Messenger />} />

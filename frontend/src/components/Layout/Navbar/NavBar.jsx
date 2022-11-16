@@ -21,15 +21,17 @@ import {
 import { revertAll } from '../../../redux/resetStore';
 import { Helper } from '../../../utils/Helper';
 import { logOut } from '../../../redux/apiRequest';
+import { localStorageService } from '../../../services/localStorageService';
 import '../Layout.css';
 
 export default function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [avatarMenu, setAvatarMenu] = useState(false);
   const [value, setValue] = useState('');
   const [rightGroup, setRightGroup] = useState('');
+  const [avatarMenu, setAvatarMenu] = useState(false);
+  const [openSearch, setOpenSearch] = useState(false);
 
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
@@ -40,10 +42,11 @@ export default function NavBar() {
   const userData = useSelector(
     (state) => state.auth?.user?.userData?.profile
   );
-
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
+
+  var recentSearch = localStorageService.getItem('recentSearch');
 
   const handleLogOut = () => {
     logOut(dispatch, accessToken, refreshToken);
@@ -51,7 +54,11 @@ export default function NavBar() {
   };
 
   function handleSearch() {
-    navigate(`/search?value=${value}`)
+    if (value) {
+      navigate(`/search?value=${value}`);
+      document.getElementById('searchBar').blur();
+    }
+    setOpenSearch(false);
   }
 
   return (
@@ -74,44 +81,41 @@ export default function NavBar() {
             placeHolder="Search FB"
             getData={(input) => setValue(input)}
             handleSearch={handleSearch}
+            toggleProps={[openSearch, setOpenSearch]}
             menuConfig={{
               classNameConfig: {
                 menuClass: 'navbar-search',
                 middleClass: 'navbar-search',
               },
-              list: [
-                {
-                  left: {
-                    url: 'https://source.unsplash.com/random/300×300',
-                    name: 'Duy',
-                  },
-                  middle: 'Thạch Dương Duy',
-                },
-                {
-                  left: {
-                    url: 'https://source.unsplash.com/random/300×300',
-                    name: 'Vũ',
-                  },
-                  middle: 'Nguyễn Hoàng Vũ',
-                },
-                {
-                  left: {
-                    url: 'https://source.unsplash.com/random/300×300',
-                    name: 'Thắng',
-                  },
-                  middle: 'Nguyễn Phạm Quốc Thắng',
-                },
-              ],
               before: (
                 <Typography sx={{ marginLeft: '1.6rem' }}>
                   Recent Searchs
                 </Typography>
               ),
-              right: (
-                <IconButton className="right-menu">
-                  <Close sx={{ fontSize: '1.6rem' }} />
-                </IconButton>
-              ),
+              list: recentSearch?.map((x) => {
+                return {
+                  left: {
+                    url: x.avatar,
+                    name: x.profile_name,
+                  },
+                  middle: x.profile_name,
+                  right: (
+                    <MUI.BetterIconButton
+                      className="right-menu"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        localStorageService.deleteFromArray("recentSearch", x);
+                        navigate('#')
+                      }}
+                    >
+                      <Close sx={{ fontSize: '1.6rem' }} />
+                    </MUI.BetterIconButton>
+                  ),
+                  onClick: () => {
+                    navigate(`/profile?id=${x.profile_id}`);
+                  },
+                };
+              }),
             }}
           />
         </Grid>
@@ -186,6 +190,7 @@ export default function NavBar() {
                   position: 'relative',
                   border: 0,
                   padding: '4px',
+                  backgroundColor: 'white',
                 }}
                 value={item.tooltip}
                 sx={{ textTransform: 'none' }}

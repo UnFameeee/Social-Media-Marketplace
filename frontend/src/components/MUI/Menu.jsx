@@ -6,11 +6,29 @@ import {
   Tooltip,
 } from '@mui/material';
 import React from 'react';
+import { makeStyles } from 'tss-react/mui';
 import { BetterIconButton } from './Button/IconButton';
 import './MUI.css';
 import { Helper } from '../../utils/Helper';
 
+const useStyles = makeStyles()(() => ({
+  scroll: {
+    '&::-webkit-scrollbar': {
+      width: '1rem',
+    },
+    '&::-webkit-scrollbar-track': {
+      boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0)',
+      borderRadius: '8px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      borderRadius: '8px',
+    },
+  },
+}));
+
 export default function Menu(props) {
+  const { classes, cx } = useStyles();
   const {
     list,
     before,
@@ -31,7 +49,10 @@ export default function Menu(props) {
   } = classNameConfig;
 
   return (
-    <MenuList className={`menu ${menuClass}`} {...other}>
+    <MenuList
+      className={cx(classes.scroll, `menu ${menuClass}`)}
+      {...other}
+    >
       {before}
 
       {list?.map((item, index) => (
