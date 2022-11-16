@@ -93,7 +93,7 @@ export class ProfileController {
         return await this.profileService.getProfileGalleryById(profile_id, page);
     }
 
-    @Get("search")
+    @Post("search")
     async searchProfile(@Query("name") profile_name: string, @Body() page: Page) {
         return await this.profileService.searchProfile(profile_name, page);
     }

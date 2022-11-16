@@ -35,10 +35,10 @@ function PostModal(props) {
     return result;
   }, []);
   //#endregion
-
   //#region Function
   const closeModal = () => {
     props.setShowPostModal(false);
+    props.setReRender(prev => !prev)
     // setImgArray([]);
   };
   const handlePost = (e) => {

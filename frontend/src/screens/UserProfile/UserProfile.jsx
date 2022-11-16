@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useLayoutEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import {
+import { 
   PhotoCamera,
   Edit,
   AddCircle,
@@ -25,11 +25,8 @@ import {
 } from '@mui/material';
 import SideBarButton from './SideBarButton';
 import SideBarLi from './SideBarLi';
-import FullWidthHr from '../../components/FullWidthHr/FullWidthHr';
-import HoverButton from './HoverButton';
 import CardPost from '../../components/Card/CardPost';
 import GridSideInfo from './GridSideInfo';
-import PostModal from '../Home/PostModal';
 import { Helper } from '../../utils/Helper';
 import MUI from '../../components/MUI';
 import {
@@ -573,9 +570,10 @@ function UserProfile(props) {
         </div>
 
         <div className="rightSidePosts w-[55%]">
-          {profileData?.profile_id == userData?.profile_id && (
+          {profileData?.profile_id === userData?.profile_id && (
             <PostStatus
               profile={profileData}
+              setReRender={setReRender}
             />
           )}
           {posts?.map((post) => (
@@ -583,7 +581,7 @@ function UserProfile(props) {
               postData={post}
               key={post.post_id}
               profile={profileData}
-              // setReRender={setReRender}
+              setReRender={setReRender}
             />
           ))}
         </div>
