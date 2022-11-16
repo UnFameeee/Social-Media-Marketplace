@@ -410,7 +410,7 @@ export class ProfileRepository {
         }
     }
 
-    async searchProfile(profile_name: string, page: Page): Promise<PagingData<Profile[]>> {
+    async searchProfile(profile_id: number, profile_name: string, page: Page): Promise<PagingData<Profile[]>> {
         try {
             var result = new PagingData<Profile[]>();
 
@@ -442,10 +442,20 @@ export class ProfileRepository {
                 ...paginate({ page })
             });
 
-            result.data = queryData.rows;
-            page.totalElement = queryData.count;
-            result.page = page;
-            return result;
+
+
+            if (queryData) {
+                for (const element of queryData.rows) {
+                    const isFriend = await this.friendshipRepository.isFriend(profile_id, element["profile_id"]);
+                    element.setDataValue("isFriend", isFriend);
+                    const isSentFriendRequest = await this.friendshipRepository.isSentFriendRequest(profile_id, element["profile_id"]);
+                    element.setDataValue("isSentFriendRequest", isSentFriendRequest);
+                }
+                result.data = queryData.rows;
+                page.totalElement = queryData.count;
+                result.page = page;
+                return result;
+            }
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
