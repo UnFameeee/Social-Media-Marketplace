@@ -16,6 +16,11 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  profileSearch: {
+    data: null,
+    isFetching: false,
+    error: false,
+  },
 };
 export const profileSlice = createSlice({
   name: 'profile',
@@ -31,6 +36,11 @@ export const profileSlice = createSlice({
       error: false,
     },
     updateWallpaper: {
+      data: null,
+      isFetching: false,
+      error: false,
+    },
+    profileSearch: {
       data: null,
       isFetching: false,
       error: false,
@@ -86,6 +96,18 @@ export const profileSlice = createSlice({
     updateWallpaperSagaSuccess() {},
     deleteWallpaperSaga() {},
     deleteWallpaperSagaSuccess() {},
+
+    searchProfileStart: (state) => {
+      state.profileSearch.isFetching = true;
+    },
+    searchProfileSuccess: (state, action) => {
+      state.profileSearch.isFetching = false;
+      state.profileSearch.data = action.payload;
+    },
+    searchProfileFailed: (state) => {
+      state.profileSearch.isFetching = false;
+      state.profileSearch.error = true;
+    },
   },
 });
 
@@ -114,5 +136,9 @@ export const {
     deleteWallpaperSagaSuccess,
     updateDetailSaga,
     updateDetailSagaSuccess,
+
+    searchProfileStart,
+    searchProfileSuccess,
+    searchProfileFailed,
 } = profileSlice.actions;
 export default profileSlice.reducer;

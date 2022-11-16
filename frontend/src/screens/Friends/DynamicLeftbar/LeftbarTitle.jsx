@@ -1,7 +1,7 @@
 import { KeyboardBackspace } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import MiddleHr from '../../../components/FullWidthHr/MiddleHr';
+import MUI from '../../../components/MUI';
 
 export default function LeftbarTitle({ title, subTitle }) {
   let navigate = useNavigate();
@@ -9,12 +9,12 @@ export default function LeftbarTitle({ title, subTitle }) {
   return (
     <div className="friend-left-bar-title-wrapper">
       <div className="friend-left-bar-title">
-        <IconButton
+        <MUI.BetterIconButton
           sx={{ padding: '0.6rem', marginRight: '0.8rem' }}
           onClick={() => navigate('/friends')}
         >
           <KeyboardBackspace sx={{ fontSize: '2.4rem' }} />
-        </IconButton>
+        </MUI.BetterIconButton>
         <span style={{ fontSize: '2.2rem', fontWeight: '600' }}>
           {title}
         </span>

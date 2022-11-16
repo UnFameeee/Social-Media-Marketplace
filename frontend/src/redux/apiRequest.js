@@ -76,6 +76,9 @@ import {
   getProfileDetailStart,
   getProfileDetailSuccess,
   getProfileDetailFailed,
+  searchProfileStart,
+  searchProfileSuccess,
+  searchProfileFailed,
 } from './profile/profileSlice';
 import { notifyService } from '../services/notifyService';
 import { axiosInStanceJWT } from './axiosJWT';
@@ -109,11 +112,11 @@ export const register = async (model, dispatch, navigate) => {
 
       navigate('/login');
     } else {
-      notifyService.showError("Register Failed!")
+      notifyService.showError('Register Failed!');
       dispatch(registerFailed());
     }
   } catch (error) {
-    notifyService.showError("Register Failed!")
+    notifyService.showError('Register Failed!');
     dispatch(registerFailed());
   }
 };
@@ -128,11 +131,11 @@ export const login = async (model, dispatch, navigate, from) => {
       dispatch(userDataAssign(decoded));
       navigate(from, { replace: true });
     } else {
-      notifyService.showError("Login Failed!")
+      notifyService.showError('Login Failed!');
       dispatch(loginFailed());
     }
   } catch (error) {
-    notifyService.showError("Login Failed!")
+    notifyService.showError('Login Failed!');
     dispatch(loginFailed());
   }
 };
@@ -790,5 +793,39 @@ export const getFriendSuggestion = async (
   } catch (error) {
     console.log(error);
     dispatch(getSuggestionFailed());
+  }
+};
+
+export const searchProfile = async (
+  accessToken,
+  refreshToken,
+  value,
+  dispatch
+) => {
+  dispatch(searchProfileStart());
+  try {
+    const paging = {
+      page: 0,
+      pageSize: 7,
+    };
+    const res = await axiosInStanceJWT.post(
+      `${api.profile}/search?name=${value}`,
+      paging,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(searchProfileSuccess(res.data.results));
+    } else {
+      dispatch(searchProfileFailed());
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(searchProfileFailed());
   }
 };

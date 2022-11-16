@@ -20,8 +20,8 @@ import {
 } from '../../../common/layoutConfigs/navbar';
 import { revertAll } from '../../../redux/resetStore';
 import { Helper } from '../../../utils/Helper';
-import '../Layout.css';
 import { logOut } from '../../../redux/apiRequest';
+import '../Layout.css';
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -30,27 +30,35 @@ export default function NavBar() {
   const [avatarMenu, setAvatarMenu] = useState(false);
   const [value, setValue] = useState('');
   const [rightGroup, setRightGroup] = useState('');
-  const userData = useSelector((state) => state.auth.user.userData);
+
+  const accessToken = useSelector(
+    (state) => state.auth?.login?.currentUser?.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth?.login?.currentUser?.refresh
+  );
+  const userData = useSelector(
+    (state) => state.auth?.user?.userData?.profile
+  );
+
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
-  const auth = useSelector((state) => state.auth.login);
 
-  function handleSearch() {}
   const handleLogOut = () => {
-    logOut(
-      dispatch,
-      auth.currentUser.access,
-      auth.currentUser.refresh
-    );
+    logOut(dispatch, accessToken, refreshToken);
     dispatch(revertAll());
   };
+
+  function handleSearch() {
+    navigate(`/search?value=${value}`)
+  }
 
   return (
     <Paper className="nav-bar drop-shadow-md">
       <Grid container className="nav-bar-wrapper">
         <Grid item xs sx={{ display: 'flex' }}>
-          <IconButton
+          <MUI.BetterIconButton
             sx={{ padding: 0 }}
             onClick={() => navigate('/')}
           >
@@ -60,7 +68,7 @@ export default function NavBar() {
                 color: 'var(--primary-color)',
               }}
             />
-          </IconButton>
+          </MUI.BetterIconButton>
 
           <MUI.SearchBar
             placeHolder="Search FB"
@@ -195,21 +203,21 @@ export default function NavBar() {
                     {item.icon}
                   </MUI.BetterIconButton>
                 ) : (
-                  <div>
+                  <div onClick={() => setAvatarMenu(!avatarMenu)}>
                     <Avatar
-                      onClick={() => setAvatarMenu(!avatarMenu)}
                       className="relative"
                       style={{
                         fontSize: '1.5rem',
                       }}
-                      alt={userData.profile.profile_name}
+                      alt={userData.profile_name}
                       src={
-                        userData.profile?.profile_id == profileData?.profile_id
+                        userData?.profile_id ==
+                        profileData?.profile_id
                           ? profileData?.avatar
-                          : userData.profile?.avatar
+                          : userData?.avatar
                       }
                     >
-                      {userData.profile.profile_name?.at(0)}
+                      {userData?.profile_name?.at(0)}
                     </Avatar>
 
                     {avatarMenu && (
