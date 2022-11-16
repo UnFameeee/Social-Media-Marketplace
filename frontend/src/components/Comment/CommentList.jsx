@@ -1,12 +1,15 @@
-import React from "react";
+import {memo} from "react";
 import Comment from "./Comment";
-function CommentList({ comments, isShowChildComment, ...props }) {
-
+function CommentList({ comments, isShowChildComment, post_id, ...props }) {
   return comments.map((comment) => (
     <div key={comment.message}>
-      <Comment {...comment} isShowChildComment={isShowChildComment} />
+      <Comment
+        {...comment}
+        post_id={post_id}
+        isShowChildComment={isShowChildComment}
+      />
     </div>
   ));
 }
 
-export default CommentList;
+export default memo(CommentList);

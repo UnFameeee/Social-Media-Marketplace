@@ -6,7 +6,7 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { useState } from "react";
 import { useEffect } from "react";
-function NodeComment({ id, message, user, createdAt, isShowChildComment,setShowFormComment,setFormReply, ...props }) {
+function NodeComment({ id, message, user, createdAt, isShowChildComment,setReplyQuantity,setFormReply,parent_comment_id, ...props }) {
   const userData = useSelector((state) => state.auth.user.userData);
   function randomNumberInRange(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -39,7 +39,7 @@ function NodeComment({ id, message, user, createdAt, isShowChildComment,setShowF
               </MUI.BetterIconButton>
               <MUI.BetterIconButton
                 onClick={() =>{
-                   setFormReply({isShow:true,text:user})
+                   setFormReply({isShow:true,text:user,parent_comment_id:parent_comment_id})
                 }}
               >
                 <ReplyIcon />

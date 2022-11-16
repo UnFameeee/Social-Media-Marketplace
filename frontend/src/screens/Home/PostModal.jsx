@@ -43,7 +43,7 @@ function PostModal(props) {
     flagAction = "update";
   }
   const { written_text, post_image } = postData;
-  console.log("post_image", post_image);
+  // console.log("post_image", post_image);
   const imgElement = useRef(null);
   const [imgArray, setImgArray] = useState([]);
   const [uploadFlag, setUpLoadFlag] = useState(false);
@@ -66,7 +66,7 @@ function PostModal(props) {
     setPostData({ written_text: "", post_image: [] });
     dispatch(resetUploadImagePostState());
     setImgArray([]);
-    props.setReRender((prev) => !prev);
+    // props.setReRender((prev) => !prev);
   };
   const handlePost = (e) => {
     e.preventDefault();
@@ -142,7 +142,7 @@ function PostModal(props) {
   const onChange = (imageList) => {
     setImages(imageList);
   };
-  console.log("imageList", images, "post_image", post_image);
+  // console.log("imageList", images, "post_image", post_image);
   //#endregion
 
   //#region UseEffect

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo, memo } from "react";
 import {
   ThumbUpOutlined,
   ThumbUpAlt,
@@ -41,7 +41,9 @@ function CardPost(props) {
   const { post_id, profile_id, written_text, post_image, isLiked, totalLike } =
     postData;
   const { profile } = props;
-  let rootComments = [
+  console.log('re render');
+  let rootComments = useMemo(() =>{
+  const result = [
     {
       id: 0,
       message: "            Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse excepturi a ratione hic rerum. Repellat enim iure eveniet officia minima sunt consectetur eos beatae dolores explicabo, alias rerum nostrum? Eveniet nisi cum ab incidunt repellat labore reprehenderit minus aspernatur voluptas, molestias, sequi doloribus? Quidem adipisci minus magnam, autem cumque architecto?",
@@ -61,6 +63,8 @@ function CardPost(props) {
       createdAt: 2022,
     },
   ];
+  return result
+  },[])  
   //#endregion
 
   //#region Function
@@ -89,6 +93,9 @@ function CardPost(props) {
     dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
     props.setReRender((prev) => !prev);
   };
+  const handleShowComment = () =>{
+
+  }
   //#endregion
 
   return (
@@ -153,7 +160,7 @@ function CardPost(props) {
             )}
           </div>
         </div>
-        <div className="">
+        <div >
           <div
             className="card-paragraph px-[2rem] mb-[1rem] "
             style={{ overflowWrap: "anywhere" }}
@@ -216,7 +223,7 @@ function CardPost(props) {
               )}
               <span className=" leading-[1.3rem]">Like</span>
             </MUI.ButtonWithIcon>
-            <MUI.ButtonWithIcon className="button-with-icon flex gap-[0.5rem] w-full">
+            <MUI.ButtonWithIcon onClick={() => handleShowComment()} className="button-with-icon flex gap-[0.5rem] w-full">
               <ChatBubbleOutline
                 className=" outline-none"
                 style={{ fontSize: "2.5rem", marginRight: "0.5rem" }}
@@ -239,8 +246,8 @@ function CardPost(props) {
             </div>
             <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem]">
 
-              <CommentForm formWidth={'100%'} placeholder={'write a comment....'} />
-              <CommentList comments={rootComments} />
+              <CommentForm formWidth={'100%'} placeholder={'write a comment....'} post_id={post_id} />
+              <CommentList comments={rootComments} post_id={post_id} />
 
               <div className="flex">
                 <span className="flex-1 hover:cursor-pointer">
