@@ -18,7 +18,7 @@
   text-align: center;
 }
 .suggestions .action button {
-  width: 90%;
+  width: 92%;
 }
 .left-bar-button .MuiAvatar-root {
   width: 6rem;
@@ -27,7 +27,7 @@
 }
 .left-bar-list.friend-list {
   overflow-y: scroll;
-  height: calc(100vh - var(--navbar-height) * 2);
+  height: calc(100vh - var(--navbar-height) * 2.8);
 }
 .friend-left-bar-title-wrapper {
   box-shadow: 0 1px 0 0 var(--shadow-1);

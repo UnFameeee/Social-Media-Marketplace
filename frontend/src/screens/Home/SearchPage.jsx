@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchProfile } from '../../redux/apiRequest';
@@ -9,6 +9,12 @@ import LeftbarMiddleItem from '../Friends/DynamicLeftbar/LeftbarMiddleItem';
 import UserProfile from '../UserProfile/UserProfile';
 import { getProfileSaga } from '../../redux/profile/profileSlice';
 import { localStorageService } from '../../services/localStorageService';
+import {
+  acceptSaga,
+  denySaga,
+  addFriendSaga,
+  unfriendSaga,
+} from '../../redux/friend/friendSlice';
 
 export default function SearchPage() {
   const dispatch = useDispatch();
@@ -16,6 +22,7 @@ export default function SearchPage() {
 
   const [searchParams] = useSearchParams();
   const queryParams = Object.fromEntries([...searchParams]);
+  const [reRender, setReRender] = useState(false);
 
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
@@ -34,6 +41,45 @@ export default function SearchPage() {
   );
   var mainId = userData?.profile_id;
 
+  async function handleAction(isFriend, requestType, id) {
+    if (isFriend) {
+      await dispatch(
+        unfriendSaga({
+          accessToken,
+          refreshToken,
+          id,
+          mainId,
+          forMainUser: false,
+          callRefresh: false,
+          dispatch,
+        })
+      );
+    } else {
+      if (requestType == 'TARGET') {
+        await dispatch(
+          acceptSaga({
+            accessToken,
+            refreshToken,
+            id,
+            callRefresh: false,
+            dispatch,
+          })
+        );
+      } else {
+        await dispatch(
+          addFriendSaga({
+            accessToken,
+            refreshToken,
+            id,
+            callRefresh: false,
+            dispatch,
+          })
+        );
+      }
+    }
+    await setReRender(!reRender);
+  }
+
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -50,7 +96,7 @@ export default function SearchPage() {
     return () => {
       onDestroy = true;
     };
-  }, [queryParams.value]);
+  }, [queryParams.value, reRender]);
 
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -77,7 +123,9 @@ export default function SearchPage() {
   return (
     <TwoColumns
       leftBarConfig={{
-        classNameConfig: {},
+        classNameConfig: {
+          listClassname: 'friend-list',
+        },
         before: (
           <LeftbarTitle
             title="Search results"
@@ -104,21 +152,52 @@ export default function SearchPage() {
                 middle: (
                   <LeftbarMiddleItem
                     profileName={x.profile_name}
-                    // firstButtonConfig={{
-                    //   onClick: (e) => {
-                    //     e.stopPropagation();
-                    //   },
-                    // }}
-                    // secondButtonConfig={{
-                    //   onClick: (e) => {
-                    //     e.stopPropagation();
-                    //   },
-                    // }}
+                    firstButtonConfig={{
+                      name: x.isFriend
+                        ? 'Unfriend'
+                        : x.isSentFriendRequest == 'NONE'
+                        ? 'Add Friend'
+                        : x.isSentFriendRequest == 'REQUEST'
+                        ? 'Cancel'
+                        : '',
+                      onClick: async (e) => {
+                        e.stopPropagation();
+                        await handleAction(
+                          x.isFriend,
+                          x.isSentFriendRequest,
+                          id
+                        );
+                      },
+                      style:
+                        x.isSentFriendRequest != 'TARGET'
+                          ? { width: '92%' }
+                          : {},
+                    }}
+                    secondButtonConfig={
+                      !x.isFriend && x.isSentFriendRequest == 'TARGET'
+                        ? {
+                            name: '',
+                            onClick: async (e) => {
+                              e.stopPropagation();
+                              await dispatch(
+                                denySaga({
+                                  accessToken,
+                                  refreshToken,
+                                  id,
+                                  callRefresh: false,
+                                  dispatch,
+                                })
+                              );
+                              await setReRender(!reRender);
+                            },
+                          }
+                        : null
+                    }
                   />
                 ),
                 onClick: () => {
-                  localStorageService.addToArray("recentSearch", x);
-                  navigate(`?value=${queryParams.value}&id=${id}`);                  
+                  localStorageService.addToArray('recentSearch', x);
+                  navigate(`?value=${queryParams.value}&id=${id}`);
                 },
                 selected:
                   !Helper.isNullOrEmpty(queryParams.id) &&
@@ -133,7 +212,7 @@ export default function SearchPage() {
       }}
     >
       {!Helper.isNullOrEmpty(queryParams.id) && (
-        <UserProfile setReRender={navigate} />
+        <UserProfile setReRender={setReRender} />
       )}
     </TwoColumns>
   );

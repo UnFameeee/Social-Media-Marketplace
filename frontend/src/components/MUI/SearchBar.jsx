@@ -27,6 +27,7 @@ export default function SearchBar(props) {
       <div style={{ position: 'relative' }}>
         <TextField
           id="searchBar"
+          autoComplete="off"
           placeholder={placeHolder}
           InputProps={{
             startAdornment: (
