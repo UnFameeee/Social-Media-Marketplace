@@ -31,11 +31,16 @@
 .MuiMenuItem-root .middle-menu.navbar-search {
   width: auto;
 }
+#searchBar.MuiOutlinedInput-input:-webkit-autofill {
+  padding: 0;
+  /* height: 4.4rem; */
+
+}
 /* #endregion */
 
 .MuiMenuItem-root .left-menu {
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 4rem;
+  height: 4rem;
   margin-right: 0.8rem;
 }
 .MuiMenuItem-root .middle-menu {
