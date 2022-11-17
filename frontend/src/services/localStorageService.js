@@ -29,7 +29,7 @@ function clear(key) {
 }
 
 function setValue(key, value) {
-  if (!isEmpyKeyOrValue(key, value)) {
+  if (isEmpyKeyOrValue(key, value)) {
     return 'No key or value';
   } else {
     return localStorage.setItem(key, JSON.stringify(value));
@@ -41,8 +41,9 @@ function getArray(key) {
   return item ? item : [];
 }
 
+// add to first, if exist push it to top
 function addToArray(key, value) {
-  if (!isEmpyKeyOrValue(key, value)) {
+  if (isEmpyKeyOrValue(key, value)) {
     return 'No key or value';
   } else {
     var list = getArray(key);
@@ -50,16 +51,26 @@ function addToArray(key, value) {
       (x) => x.profile_id === value.profile_id
     );
 
+    // if don't have add new
     if (Helper.isNullOrEmpty(existItem)) {
       list.unshift(value);
+      setValue(key, list);
+    } 
+    // if already had make it top
+    else {
+      // remove it from the list
+      const remove = list.filter(
+        (x) => x.profile_id !== value.profile_id
+      );
+      // add to top
+      remove.unshift(value);
+      setValue(key, remove);
     }
-
-    setValue(key, list);
   }
 }
 
 function deleteFromArray(key, value) {
-  if (!isEmpyKeyOrValue(key, value)) {
+  if (isEmpyKeyOrValue(key, value)) {
     return 'No key or value';
   } else {
     var list = getArray(key);

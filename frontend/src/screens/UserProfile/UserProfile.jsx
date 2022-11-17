@@ -128,7 +128,7 @@ function UserProfile(props) {
     return () => {
       onDestroy = true;
     };
-  }, [reRender]);
+  }, [reRender, queryParams.id]);
 
   return (
     <>

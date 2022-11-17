@@ -112,7 +112,9 @@ export default function NavBar() {
                     </MUI.BetterIconButton>
                   ),
                   onClick: () => {
+                    localStorageService.addToArray("recentSearch", x);
                     navigate(`/profile?id=${x.profile_id}`);
+                    setOpenSearch(false);
                   },
                 };
               }),
