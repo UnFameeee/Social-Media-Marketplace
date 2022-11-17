@@ -416,7 +416,12 @@ export class ProfileRepository {
 
             var queryData = await this.profileRepository.scope(SCOPE.WITHOUT_PASSWORD).findAndCountAll({
                 where: {
-                    profile_name: { [Op.substring]: profile_name }
+                    profile_name: {
+                        [Op.substring]: profile_name,
+                    },
+                    profile_id: {
+                        [Op.ne]: profile_id
+                    },
                 },
                 attributes: ["profile_id", "profile_name", "email", "birth",
                     [Sequelize.col("profile_avatar.link"), "avatar"],
