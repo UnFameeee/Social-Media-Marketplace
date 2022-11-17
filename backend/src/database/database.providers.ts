@@ -136,8 +136,11 @@ export const databaseProviders = [
             ShopOrder.hasOne(ShippingAddress, { foreignKey: { name: "shipping_address_id", field: "shipping_address_id" } });
             ShippingAddress.belongsTo(ShopOrder, { foreignKey: { name: "shipping_address_id", field: "shipping_address_id" } });
 
-            Profile.hasMany(ShoppingCart, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            Profile.hasOne(ShoppingCart, { foreignKey: { name: "profile_id", field: "profile_id" } });
             ShoppingCart.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
+
+            Product.hasMany(ShoppingCartItem, { foreignKey: { name: "product_id", field: "product_id" } });
+            ShoppingCartItem.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
             ShoppingCart.hasMany(ShoppingCartItem, { foreignKey: { name: "shopping_cart_id", field: "shopping_cart_id" } });
             ShoppingCartItem.belongsTo(ShoppingCart, { foreignKey: { name: "shopping_cart_id", field: "shopping_cart_id" } });
