@@ -28,7 +28,6 @@ export default function FriendSuggestions() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
-  var callRefreshFriend = true;
 
   // call get all friend suggestions once
   useLayoutEffect(() => {
@@ -38,7 +37,7 @@ export default function FriendSuggestions() {
         getFriendSuggestionSaga({
           accessToken,
           refreshToken,
-          callRefreshFriend,
+          callRefreshFriendSuggestion: true,
           dispatch,
         })
       );
@@ -103,7 +102,6 @@ export default function FriendSuggestions() {
                         accessToken,
                         refreshToken,
                         id: x.profile_id,
-                        callRefreshFriend,
                         dispatch,
                       })
                     );

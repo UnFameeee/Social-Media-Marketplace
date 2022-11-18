@@ -631,7 +631,7 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefreshFriend,
+                callRefreshFriendSuggestion: false,
                 callRefreshProfile,
                 dispatch,
               })

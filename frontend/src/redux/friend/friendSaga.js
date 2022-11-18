@@ -156,6 +156,7 @@ async function denySagaRequest(data) {
     refreshToken,
     id,
     callRefreshFriend = true,
+    callRefreshFriendSuggestion = false,
     callRefreshProfile = false,
     callRefreshPost = false,
     dispatch,
@@ -181,6 +182,7 @@ async function denySagaRequest(data) {
           refreshToken,
           id,
           callRefreshFriend,
+          callRefreshFriendSuggestion,
           callRefreshProfile,
           callRefreshPost,
           dispatch
@@ -342,7 +344,7 @@ export function* refreshFriendSuggestion() {
   yield takeLatest(
     [
       addFriendSagaSuccess.type,
-      // denySagaSuccess.type,
+      denySagaSuccess.type,
       getFriendSuggestionSaga.type,
     ],
     handleRefreshSuggestionSaga
@@ -350,7 +352,7 @@ export function* refreshFriendSuggestion() {
 }
 function* handleRefreshSuggestionSaga(data) {
   try {
-    if (data?.payload?.callRefreshFriend) {
+    if (data?.payload?.callRefreshFriendSuggestion) {
       const getAll = yield call(getAllSuggestionSaga, data);
       yield put(getSuggestionSuccess(getAll.data.results));
     }
@@ -397,7 +399,7 @@ async function addFriendSagaRequest(data) {
     accessToken,
     refreshToken,
     id,
-    callRefreshFriend = true,
+    callRefreshFriendSuggestion = true,
     callRefreshProfile = false,
     callRefreshPost = false,
     dispatch,
@@ -428,7 +430,7 @@ async function addFriendSagaRequest(data) {
           accessToken,
           refreshToken,
           id,
-          callRefreshFriend,
+          callRefreshFriendSuggestion,
           callRefreshProfile,
           callRefreshPost,
           dispatch
