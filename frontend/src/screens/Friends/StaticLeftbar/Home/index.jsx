@@ -53,12 +53,11 @@ const FriendHome = () => {
                 profileDetails={item}
                 firstButtonConfig={{
                   onClick: () => {
-                    let id = item.profile_id;
                     dispatch(
                       acceptSaga({
                         accessToken,
                         refreshToken,
-                        id,
+                        id: item.profile_id,
                         dispatch,
                       })
                     );
@@ -66,12 +65,11 @@ const FriendHome = () => {
                 }}
                 secondButtonConfig={{
                   onClick: () => {
-                    let id = item.profile_id;
                     dispatch(
                       denySaga({
                         accessToken,
                         refreshToken,
-                        id,
+                        id: item.profile_id,
                         dispatch,
                       })
                     );
@@ -101,12 +99,11 @@ const FriendHome = () => {
                       ? 'Add Friend'
                       : 'Cancel',
                   onClick: () => {
-                    let id = item.profile_id;
                     dispatch(
                       addFriendSaga({
                         accessToken,
                         refreshToken,
-                        id,
+                        id: item.profile_id,
                         dispatch,
                       })
                     );

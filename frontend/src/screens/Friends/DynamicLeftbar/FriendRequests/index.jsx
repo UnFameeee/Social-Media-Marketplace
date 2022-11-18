@@ -1,7 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getAllFriendRequests } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
@@ -10,6 +9,7 @@ import { Helper } from '../../../../utils/Helper';
 import {
   acceptSaga,
   denySaga,
+  getFriendRequestSaga,
 } from '../../../../redux/friend/friendSlice';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 import '../index.css';
@@ -32,16 +32,20 @@ export default function FriendRequests() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
-  const userData = useSelector(
-    (state) => state.auth?.user?.userData?.profile
-  );
-  var mainId = userData?.profile_id;
+  var callRefreshFriend = true;
 
   // call get all friend requests once
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriendRequests(accessToken, refreshToken, dispatch);
+      dispatch(
+        getFriendRequestSaga({
+          accessToken,
+          refreshToken,
+          callRefreshFriend,
+          dispatch,
+        })
+      );
     }
     return () => {
       onDestroy = true;
@@ -54,13 +58,13 @@ export default function FriendRequests() {
     if (!onDestroy) {
       window.scroll(0, 0);
       if (!Helper.isNullOrEmpty(queryParams)) {
-        var id = queryParams;
         dispatch(
           getProfileSaga({
             accessToken,
             refreshToken,
-            id,
-            mainId,
+            id: queryParams,
+            callRefreshProfile: true,
+            callRefreshFriend,
             dispatch,
           })
         );
@@ -88,7 +92,6 @@ export default function FriendRequests() {
           />
         ),
         leftBarList: friendRequests?.data?.map((x) => {
-          let id = x.profile_id;
           return {
             left: {
               url: x.avatar,
@@ -104,7 +107,7 @@ export default function FriendRequests() {
                       acceptSaga({
                         accessToken,
                         refreshToken,
-                        id,
+                        id: x.profile_id,
                         dispatch,
                       })
                     );
@@ -118,7 +121,7 @@ export default function FriendRequests() {
                       denySaga({
                         accessToken,
                         refreshToken,
-                        id,
+                        id: x.profile_id,
                         dispatch,
                       })
                     );
@@ -128,14 +131,14 @@ export default function FriendRequests() {
               />
             ),
             onClick: () => {
-              navigate(`?id=${id}`);
+              navigate(`?id=${x.profile_id}`);
             },
             selected:
               !Helper.isNullOrEmpty(queryParams) &&
-              id === profileData?.profile_id,
+              x.profile_id === profileData?.profile_id,
             disabled:
               !Helper.isNullOrEmpty(queryParams) &&
-              id === profileData?.profile_id,
+              x.profile_id === profileData?.profile_id,
           };
         }),
         leftBarColor: 'white',
