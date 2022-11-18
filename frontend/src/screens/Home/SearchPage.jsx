@@ -71,7 +71,7 @@ export default function SearchPage() {
             accessToken,
             refreshToken,
             id,
-            callRefreshFriend,
+            callRefreshFriendSuggestion: false,
             dispatch,
           })
         );
@@ -163,7 +163,7 @@ export default function SearchPage() {
                         await handleAction(
                           x.isFriend,
                           x.isSentFriendRequest,
-                          x.profile_id,
+                          x.profile_id
                         );
                       },
                       style:
@@ -177,16 +177,14 @@ export default function SearchPage() {
                             name: '',
                             onClick: async (e) => {
                               e.stopPropagation();
-                              await dispatch(
+                              dispatch(
                                 denySaga({
                                   accessToken,
                                   refreshToken,
                                   id: x.profile_id,
-                                  callRefreshFriend,
                                   dispatch,
                                 })
                               );
-                              await setReRender(!reRender);
                             },
                           }
                         : null
@@ -195,7 +193,9 @@ export default function SearchPage() {
                 ),
                 onClick: () => {
                   localStorageService.addToArray('recentSearch', x);
-                  navigate(`?value=${queryParams.value}&id=${x.profile_id}`);
+                  navigate(
+                    `?value=${queryParams.value}&id=${x.profile_id}`
+                  );
                 },
                 selected:
                   !Helper.isNullOrEmpty(queryParams.id) &&
