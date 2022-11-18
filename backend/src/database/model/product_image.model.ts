@@ -12,7 +12,10 @@ export class ProductImage extends Model<ProductImage> {
     @Column
     product_image_id: number;
 
-    //profile_id
+    //product_id
+
+    @Column
+    profile_id: number;
  
     @Column(DataType.TEXT)
     link: string;

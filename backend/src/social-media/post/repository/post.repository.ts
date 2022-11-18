@@ -156,7 +156,6 @@ export class PostRepository {
     }
 
     async getSinglePostDetailByPostId(post_id: number, profile_id?: number): Promise<Post> {
-        console.log(profile_id);
         try {
             const queryData = await this.postRepository.findOne({
                 where: { post_id: post_id },
@@ -216,9 +215,6 @@ export class PostRepository {
     async createNewPost(newPost: PostData, profile_id: number): Promise<Post> {
         try {
             const res = await this.postRepository.create(newPost);
-
-            console.log("res:", res);
-
             return await this.getSinglePostDetailByPostId(res.post_id, profile_id);
         } catch (err) {
             throw new InternalServerErrorException(err.message);

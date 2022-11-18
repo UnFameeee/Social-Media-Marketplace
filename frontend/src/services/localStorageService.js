@@ -3,20 +3,24 @@ import { Helper } from '../utils/Helper';
 function getItem(key) {
   //if there is no key, it will return the first item
   return key
-    ? localStorage.getItem(key)
+    ? JSON.parse(localStorage.getItem(key))
     : isEmpty
-    ? localStorage.getItem(localStorage.key(0))
-    : 'No items in local storage';
+    ? JSON.parse(localStorage.getItem(localStorage.key(0)))
+    : '';
 }
 
 function getLastItem() {
   return isEmpty
-    ? localStorage.getItem(localStorage.key(localStorage.length))
-    : 'No items in local storage';
+    ? JSON.parse(
+        localStorage.getItem(localStorage.key(localStorage.length))
+      )
+    : '';
 }
 
 function getValueAt(index) {
-  return localStorage.getItem(localStorage.key(index));
+  return isEmpty
+    ? JSON.parse(localStorage.getItem(localStorage.key(index)))
+    : '';
 }
 
 function clear(key) {
@@ -24,16 +28,73 @@ function clear(key) {
   return key ? localStorage.removeItem(key) : localStorage.clear();
 }
 
-function setValue({ key, value }) {
-  if (Helper.isNullOrEmpty(key) || Helper.isNullOrEmpty(value)) {
+function setValue(key, value) {
+  if (isEmpyKeyOrValue(key, value)) {
     return 'No key or value';
   } else {
-    return localStorage.setItem(key, value);
+    return localStorage.setItem(key, JSON.stringify(value));
+  }
+}
+
+function getArray(key) {
+  var item = getItem(key);
+  return item ? item : [];
+}
+
+// add to first, if exist push it to top
+function addToArray(key, value) {
+  if (isEmpyKeyOrValue(key, value)) {
+    return 'No key or value';
+  } else {
+    var list = getArray(key);
+    var existItem = list.filter(
+      (x) => x.profile_id === value.profile_id
+    );
+
+    // if don't have add new
+    if (Helper.isNullOrEmpty(existItem)) {
+      list.unshift(value);
+      setValue(key, list);
+    } 
+    // if already had make it top
+    else {
+      // remove it from the list
+      const remove = list.filter(
+        (x) => x.profile_id !== value.profile_id
+      );
+      // add to top
+      remove.unshift(value);
+      setValue(key, remove);
+    }
+  }
+}
+
+function deleteFromArray(key, value) {
+  if (isEmpyKeyOrValue(key, value)) {
+    return 'No key or value';
+  } else {
+    var list = getArray(key);
+    if (list.length > 1) {
+      var existItem = list.filter(
+        (x) => x.profile_id !== value.profile_id
+      );
+      setValue(key, existItem);
+    } else {
+      clear(key);
+    }
   }
 }
 
 function isEmpty() {
   return localStorage.length > 0;
+}
+
+function isEmpyKeyOrValue(key, value) {
+  if (Helper.isNullOrEmpty(key) || Helper.isNullOrEmpty(value)) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 export const localStorageService = {
@@ -43,4 +104,8 @@ export const localStorageService = {
   setValue,
   clear,
   isEmpty,
+  getArray,
+  addToArray,
+  deleteFromArray,
+  isEmpyKeyOrValue,
 };

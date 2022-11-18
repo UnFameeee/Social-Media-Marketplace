@@ -20,37 +20,52 @@ import {
 } from '../../../common/layoutConfigs/navbar';
 import { revertAll } from '../../../redux/resetStore';
 import { Helper } from '../../../utils/Helper';
-import '../Layout.css';
 import { logOut } from '../../../redux/apiRequest';
+import { localStorageService } from '../../../services/localStorageService';
+import '../Layout.css';
 
 export default function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [avatarMenu, setAvatarMenu] = useState(false);
   const [value, setValue] = useState('');
   const [rightGroup, setRightGroup] = useState('');
-  const userData = useSelector((state) => state.auth.user.userData);
+  const [avatarMenu, setAvatarMenu] = useState(false);
+  const [openSearch, setOpenSearch] = useState(false);
+
+  const accessToken = useSelector(
+    (state) => state.auth?.login?.currentUser?.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth?.login?.currentUser?.refresh
+  );
+  const userData = useSelector(
+    (state) => state.auth?.user?.userData?.profile
+  );
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
-  const auth = useSelector((state) => state.auth.login);
 
-  function handleSearch() {}
+  var recentSearch = localStorageService.getItem('recentSearch');
+
   const handleLogOut = () => {
-    logOut(
-      dispatch,
-      auth.currentUser.access,
-      auth.currentUser.refresh
-    );
+    logOut(dispatch, accessToken, refreshToken);
     dispatch(revertAll());
   };
+
+  function handleSearch() {
+    if (value) {
+      navigate(`/search?value=${value}`);
+      document.getElementById('searchBar').blur();
+    }
+    setOpenSearch(false);
+  }
 
   return (
     <Paper className="nav-bar drop-shadow-md">
       <Grid container className="nav-bar-wrapper">
         <Grid item xs sx={{ display: 'flex' }}>
-          <IconButton
+          <MUI.BetterIconButton
             sx={{ padding: 0 }}
             onClick={() => navigate('/')}
           >
@@ -60,50 +75,49 @@ export default function NavBar() {
                 color: 'var(--primary-color)',
               }}
             />
-          </IconButton>
+          </MUI.BetterIconButton>
 
           <MUI.SearchBar
             placeHolder="Search FB"
             getData={(input) => setValue(input)}
             handleSearch={handleSearch}
+            toggleProps={[openSearch, setOpenSearch]}
             menuConfig={{
               classNameConfig: {
                 menuClass: 'navbar-search',
                 middleClass: 'navbar-search',
               },
-              list: [
-                {
-                  left: {
-                    url: 'https://source.unsplash.com/random/300×300',
-                    name: 'Duy',
-                  },
-                  middle: 'Thạch Dương Duy',
-                },
-                {
-                  left: {
-                    url: 'https://source.unsplash.com/random/300×300',
-                    name: 'Vũ',
-                  },
-                  middle: 'Nguyễn Hoàng Vũ',
-                },
-                {
-                  left: {
-                    url: 'https://source.unsplash.com/random/300×300',
-                    name: 'Thắng',
-                  },
-                  middle: 'Nguyễn Phạm Quốc Thắng',
-                },
-              ],
               before: (
                 <Typography sx={{ marginLeft: '1.6rem' }}>
                   Recent Searchs
                 </Typography>
               ),
-              right: (
-                <IconButton className="right-menu">
-                  <Close sx={{ fontSize: '1.6rem' }} />
-                </IconButton>
-              ),
+              list: recentSearch?.map((x) => {
+                return {
+                  left: {
+                    url: x.avatar,
+                    name: x.profile_name,
+                  },
+                  middle: x.profile_name,
+                  right: (
+                    <MUI.BetterIconButton
+                      className="right-menu"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        localStorageService.deleteFromArray("recentSearch", x);
+                        navigate('#')
+                      }}
+                    >
+                      <Close sx={{ fontSize: '1.6rem' }} />
+                    </MUI.BetterIconButton>
+                  ),
+                  onClick: () => {
+                    localStorageService.addToArray("recentSearch", x);
+                    navigate(`/profile?id=${x.profile_id}`);
+                    setOpenSearch(false);
+                  },
+                };
+              }),
             }}
           />
         </Grid>
@@ -178,6 +192,7 @@ export default function NavBar() {
                   position: 'relative',
                   border: 0,
                   padding: '4px',
+                  backgroundColor: 'white',
                 }}
                 value={item.tooltip}
                 sx={{ textTransform: 'none' }}
@@ -195,21 +210,21 @@ export default function NavBar() {
                     {item.icon}
                   </MUI.BetterIconButton>
                 ) : (
-                  <div>
+                  <div onClick={() => setAvatarMenu(!avatarMenu)}>
                     <Avatar
-                      onClick={() => setAvatarMenu(!avatarMenu)}
                       className="relative"
                       style={{
                         fontSize: '1.5rem',
                       }}
-                      alt={userData.profile.profile_name}
+                      alt={userData.profile_name}
                       src={
-                        userData.profile?.profile_id == profileData?.profile_id
+                        userData?.profile_id ==
+                        profileData?.profile_id
                           ? profileData?.avatar
-                          : userData.profile?.avatar
+                          : userData?.avatar
                       }
                     >
-                      {userData.profile.profile_name?.at(0)}
+                      {userData?.profile_name?.at(0)}
                     </Avatar>
 
                     {avatarMenu && (

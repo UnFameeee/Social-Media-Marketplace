@@ -10,7 +10,7 @@ export class Variation extends Model<Variation> {
     @PrimaryKey
     @AllowNull(false)
     @Column
-    category_id: number;
+    variation_id: number;
     
     @Column
     brand: string;

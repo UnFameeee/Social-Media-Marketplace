@@ -24,6 +24,8 @@ import {
 import Error from '../../screens/Error/Error';
 import Marketplace from '../../screens/Marketplace/Marketplace';
 import CheckOut from '../../screens/Marketplace/CheckOut';
+import SearchPage from '../../screens/Home/SearchPage';
+
 export default function RootRoutes() {
   return (
     <BrowserRouter>
@@ -39,6 +41,8 @@ export default function RootRoutes() {
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/settings" element={<Settings />} />
             
+
+            {/* friend screens */}
             <Route path="friends" element={<StaticLeftbarLayout />}>
               <Route path="" element={<FriendHome />} />
               <Route path="birthdays" element={<Birthday />} />
@@ -52,13 +56,20 @@ export default function RootRoutes() {
               />
               <Route path="all" element={<AllFriends />} />
             </Route>
-            <Route path="marketplace" element={<Marketplace />}>
-            </Route> 
+
+            {/* marketplace screens */}
+            <Route path="marketplace" element={<Marketplace />} /> 
             <Route path="checkout" element={<CheckOut />} />
+
+
+            <Route path="/search" element={<SearchPage />} />
+
+
             <Route path="/messenger" element={<Messenger />} />
           </Route>
         </Route>
-
+        
+        {/* error screens */}
         <Route path="*" element={<Error />} />
         <Route path="forbidden" element={<Error status="403" />} />
       </Routes>

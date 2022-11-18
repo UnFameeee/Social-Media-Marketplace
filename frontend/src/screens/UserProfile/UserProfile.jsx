@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useLayoutEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { 
+import {
   PhotoCamera,
   Edit,
   AddCircle,
@@ -114,7 +114,10 @@ function UserProfile(props) {
     let onDestroy = false;
     if (!onDestroy) {
       if (Helper.checkURL('profile', {}, true)) {
-        var id = queryParams.id ?? profileData?.profile_id ?? userData?.profile_id;
+        var id =
+          queryParams.id ??
+          profileData?.profile_id ??
+          userData?.profile_id;
         dispatch(
           getProfileSaga({
             accessToken,
@@ -128,7 +131,7 @@ function UserProfile(props) {
     return () => {
       onDestroy = true;
     };
-  }, [reRender]);
+  }, [reRender, queryParams.id]);
 
   return (
     <>
@@ -608,32 +611,20 @@ function ProfileAction({
       if (isFriend) {
         setMenuClicked(!menuClicked);
       } else {
-        if (isSentFriendReq == 'NONE') {
-          action(() => {
-            dispatch(
-              addFriendSaga({
-                accessToken,
-                refreshToken,
-                id,
-                callRefresh: false,
-                dispatch,
-              })
-            );
-          });
-        } else if (isSentFriendReq == 'REQUEST') {
-          action(() => {
-            dispatch(
-              addFriendSaga({
-                accessToken,
-                refreshToken,
-                id,
-                callRefresh: false,
-                dispatch,
-              })
-            );
-          });
-        } else if (isSentFriendReq == 'TARGET') {
+        if (isSentFriendReq == 'TARGET') {
           setMenuClicked(!menuClicked);
+        } else {
+          action(() => {
+            dispatch(
+              addFriendSaga({
+                accessToken,
+                refreshToken,
+                id,
+                callRefresh: false,
+                dispatch,
+              })
+            );
+          });
         }
       }
     }

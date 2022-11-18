@@ -12,7 +12,7 @@ const prefixURL = process.env.PREFIX_URL || 'api'
 var notify = async () => {
   console.log(`
     Backend host at port ${port}
-    Swagger URL: ${apiURL}:${port}/${prefixURL};
+    Swagger URL: ${apiURL}:${port}/${prefixURL}
   `)
 }
 async function bootstrap() {
