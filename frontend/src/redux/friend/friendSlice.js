@@ -130,6 +130,7 @@ export const friendSlice = createSlice({
       state.getRequests.isFetching = false;
       state.getRequests.error = true;
     },
+    getFriendRequestSaga() {},
 
     getAllFriendStart: (state) => {
       state.getAll.isFetching = true;
@@ -142,6 +143,7 @@ export const friendSlice = createSlice({
       state.getAll.isFetching = false;
       state.getAll.error = true;
     },
+    getAllFriendSaga() {},
 
     getAllFriendForMainUserStart: (state) => {
       state.getAllForMainUser.isFetching = true;
@@ -154,6 +156,7 @@ export const friendSlice = createSlice({
       state.getAllForMainUser.isFetching = false;
       state.getAllForMainUser.error = true;
     },
+    getAllFriendForMainUserSaga() {},
 
     getSuggestionStart: (state) => {
       state.getSuggestion.isFetching = true;
@@ -166,6 +169,7 @@ export const friendSlice = createSlice({
       state.getSuggestion.isFetching = false;
       state.getSuggestion.error = true;
     },
+    getFriendSuggestionSaga() {},
 
     getMutualFriendStart: (state) => {
       state.getMutualFriends.isFetching = true;
@@ -305,7 +309,11 @@ export const {
   isSentRequestStart,
   isSentRequestSuccess,
   isSentRequestFailed,
-
+  
+  getFriendRequestSaga,
+  getFriendSuggestionSaga,
+  getAllFriendSaga,
+  getAllFriendForMainUserSaga,
   addFriendSaga,
   addFriendSagaSuccess,
   acceptSaga,

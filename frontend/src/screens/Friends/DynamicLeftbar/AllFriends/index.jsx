@@ -1,12 +1,12 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getAllFriends } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
+import { getAllFriendForMainUserSaga } from '../../../../redux/friend/friendSlice';
 import '../index.css';
 
 export default function AllFriends() {
@@ -31,12 +31,21 @@ export default function AllFriends() {
     (state) => state.profile?.profileDetails?.data
   );
   var mainId = userData?.profile_id;
+  var callRefreshFriend = true;
 
-  // call get all friend requests once
+  // call get all friend once
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getAllFriends(accessToken, refreshToken, mainId, dispatch);
+      dispatch(
+        getAllFriendForMainUserSaga({
+          accessToken,
+          refreshToken,
+          mainId,
+          callRefreshFriend,
+          dispatch,
+        })
+      );
     }
     return () => {
       onDestroy = true;
@@ -55,8 +64,8 @@ export default function AllFriends() {
             accessToken,
             refreshToken,
             id,
-            mainId,
-            forMainUser: true,
+            callRefreshFriend,
+            callRefreshProfile: true,
             dispatch,
           })
         );
@@ -84,7 +93,6 @@ export default function AllFriends() {
           />
         ),
         leftBarList: allFriends?.data?.map((x) => {
-          let id = x.profile_id;
           return {
             left: {
               url: x.avatar,
@@ -92,14 +100,14 @@ export default function AllFriends() {
             },
             middle: x.profile_name,
             onClick: () => {
-              navigate(`?id=${id}`);
+              navigate(`?id=${x.profile_id}`);
             },
             selected:
               !Helper.isNullOrEmpty(queryParams) &&
-              id === profileData?.profile_id,
+              x.profile_id === profileData?.profile_id,
             disabled:
               !Helper.isNullOrEmpty(queryParams) &&
-              id === profileData?.profile_id,
+              x.profile_id === profileData?.profile_id,
           };
         }),
         leftBarColor: 'white',

@@ -40,44 +40,44 @@ export default function SearchPage() {
     (state) => state.auth?.user?.userData?.profile
   );
   var mainId = userData?.profile_id;
+  var callRefreshFriend = false;
 
-  async function handleAction(isFriend, requestType, id) {
+  function handleAction(isFriend, requestType, id) {
     if (isFriend) {
-      await dispatch(
+      dispatch(
         unfriendSaga({
           accessToken,
           refreshToken,
           id,
           mainId,
-          forMainUser: false,
-          callRefresh: false,
+          callRefreshFriend,
           dispatch,
         })
       );
     } else {
       if (requestType == 'TARGET') {
-        await dispatch(
+        dispatch(
           acceptSaga({
             accessToken,
             refreshToken,
             id,
-            callRefresh: false,
+            callRefreshFriend,
             dispatch,
           })
         );
       } else {
-        await dispatch(
+        dispatch(
           addFriendSaga({
             accessToken,
             refreshToken,
             id,
-            callRefresh: false,
+            callRefreshFriend,
             dispatch,
           })
         );
       }
     }
-    await setReRender(!reRender);
+    setReRender(!reRender);
   }
 
   useLayoutEffect(() => {
@@ -103,12 +103,11 @@ export default function SearchPage() {
     if (!onDestroy) {
       window.scroll(0, 0);
       if (!Helper.isNullOrEmpty(queryParams.id)) {
-        var id = queryParams.id;
         dispatch(
           getProfileSaga({
             accessToken,
             refreshToken,
-            id,
+            id: queryParams.id,
             mainId,
             dispatch,
           })
@@ -143,7 +142,6 @@ export default function SearchPage() {
         ),
         leftBarList: !Helper.isEmptyObject(queryParams, true)
           ? profiles?.data?.map((x) => {
-              let id = x.profile_id;
               return {
                 left: {
                   url: x.avatar,
@@ -165,7 +163,7 @@ export default function SearchPage() {
                         await handleAction(
                           x.isFriend,
                           x.isSentFriendRequest,
-                          id
+                          x.profile_id,
                         );
                       },
                       style:
@@ -183,8 +181,8 @@ export default function SearchPage() {
                                 denySaga({
                                   accessToken,
                                   refreshToken,
-                                  id,
-                                  callRefresh: false,
+                                  id: x.profile_id,
+                                  callRefreshFriend,
                                   dispatch,
                                 })
                               );
@@ -197,14 +195,14 @@ export default function SearchPage() {
                 ),
                 onClick: () => {
                   localStorageService.addToArray('recentSearch', x);
-                  navigate(`?value=${queryParams.value}&id=${id}`);
+                  navigate(`?value=${queryParams.value}&id=${x.profile_id}`);
                 },
                 selected:
                   !Helper.isNullOrEmpty(queryParams.id) &&
-                  id === profileData?.profile_id,
+                  x.profile_id === profileData?.profile_id,
                 disabled:
                   !Helper.isNullOrEmpty(queryParams.id) &&
-                  id === profileData?.profile_id,
+                  x.profile_id === profileData?.profile_id,
               };
             })
           : null,
