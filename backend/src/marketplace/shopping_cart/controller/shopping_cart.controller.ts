@@ -12,7 +12,7 @@ import { ShoppingCartService } from '../service/shopping_cart.service';
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @ApiTags('Cart')
-@Controller('/api/shopping-cart')
+@Controller('/api/shopping_cart')
 export class ShoppingCartController {
     constructor(private readonly shoppingCartService: ShoppingCartService) { }
 
