@@ -35,7 +35,8 @@ export class PostCommentController {
     
     //Delete comment of a post
     @Delete("/delete/:post_comment_id")
-    async deleteComment(@Param("post_comment_id") post_comment_id: number) {
-        return await this.postCommentService.deleteComment(post_comment_id);
+    async deleteComment(@Request() request: any, @Param("post_comment_id") post_comment_id: number) {
+        const profile = <Profile>request.user;
+        return await this.postCommentService.deleteComment(profile.profile_id, post_comment_id);
     }
 }

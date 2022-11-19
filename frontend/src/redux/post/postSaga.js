@@ -36,11 +36,12 @@ import { commentPostSagaSuccess } from '../comment/commentSlice';
 export function* reFreshPosts() {
   yield takeLatest(
     [
+      getProfileSagaSuccess.type,
+
       createPostSagaSuccess.type,
       deletePostSagaSuccess.type,
       updatePostSagaSuccess.type,
       likePostSagaSuccess.type,
-      getProfileSagaSuccess.type,
       commentPostSagaSuccess.type,
     ],
     handleReFreshPostSaga
@@ -48,14 +49,13 @@ export function* reFreshPosts() {
 }
 function* handleReFreshPostSaga(data) {
   try {
-    const getAll = yield call(getAllPostSagaRequest, data);
-    if (data.payload?.id || data.payload?.mainId) {
-      console.log("get post for profile");
-      yield put(getPostByProfileSuccess(getAll.data));
-    } else {
-      yield put(getPostSuccess(getAll.data));
-      console.log("get post all");
-
+    if (data.payload?.callRefreshPost) {
+      const getAll = yield call(getAllPostSagaRequest, data);
+      if (data.payload?.id || data.payload?.mainId) {
+        yield put(getPostByProfileSuccess(getAll.data));
+      } else {
+        yield put(getPostSuccess(getAll.data));
+      }
     }
   } catch (error) {
     console.log(error);
@@ -114,6 +114,7 @@ const createPostSagaRequest = async (data) => {
     refreshToken,
     postData_written_text,
     uploadImage,
+    callRefreshPost = true,
     dispatch,
   } = data.payload;
   dispatch(createPostStart());
@@ -143,7 +144,13 @@ const createPostSagaRequest = async (data) => {
         );
         console.log(resImages);
       }
-      dispatch(createPostSagaSuccess({ accessToken, refreshToken }));
+      dispatch(
+        createPostSagaSuccess({
+          accessToken,
+          refreshToken,
+          callRefreshPost,
+        })
+      );
       notifyService.showSuccess('Create Post Successfully');
       return res;
     } else {
@@ -171,8 +178,13 @@ function* handleDeletePost(data) {
   }
 }
 export const deletePostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, postId, dispatch } =
-    data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    postId,
+    callRefreshPost = true,
+    dispatch,
+  } = data.payload;
   dispatch(deletePostStart());
   try {
     const config = {
@@ -187,7 +199,13 @@ export const deletePostSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
-      dispatch(deletePostSagaSuccess({ accessToken, refreshToken }));
+      dispatch(
+        deletePostSagaSuccess({
+          accessToken,
+          refreshToken,
+          callRefreshPost,
+        })
+      );
       notifyService.showSuccess('Delete Post Successfully');
       return res;
     } else {
@@ -221,6 +239,7 @@ const updatePostSagaRequest = async (data) => {
     updatePost,
     uploadImage,
     removeImages,
+    callRefreshPost = true,
     dispatch,
   } = data.payload;
   dispatch(updatePostStart());
@@ -258,7 +277,13 @@ const updatePostSagaRequest = async (data) => {
         );
         console.log(resImages);
       }
-      dispatch(updatePostSagaSuccess({ accessToken, refreshToken }));
+      dispatch(
+        updatePostSagaSuccess({
+          accessToken,
+          refreshToken,
+          callRefreshPost,
+        })
+      );
       notifyService.showSuccess('Update Post Successfully');
       return res;
     } else {
@@ -286,8 +311,13 @@ function* handleLikePost(data) {
   }
 }
 const likePostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, postId, dispatch } =
-    data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    postId,
+    callRefreshPost = true,
+    dispatch,
+  } = data.payload;
   dispatch(likePostStart());
   try {
     const config = {
@@ -304,7 +334,13 @@ const likePostSagaRequest = async (data) => {
     );
     if (!res.data.message) {
       // dispatch(likePostSuccess());
-      dispatch(likePostSagaSuccess({ accessToken, refreshToken }));
+      dispatch(
+        likePostSagaSuccess({
+          accessToken,
+          refreshToken,
+          callRefreshPost,
+        })
+      );
       return res;
     } else {
       dispatch(likePostFailed());

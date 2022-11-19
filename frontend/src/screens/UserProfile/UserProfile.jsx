@@ -50,6 +50,7 @@ import './index.css';
 
 function UserProfile(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [reRender, setReRender] = useState(false);
   const [openAvatarModal, setOpenAvatarModal] = useState(false); //toggle update avatar modal
   const [openDetailsModal, setOpenDetailsModal] = useState(false); //toggle update details modal
@@ -77,7 +78,8 @@ function UserProfile(props) {
     (state) => state.friends.getAll?.data
   );
 
-  var id = profileData?.profile_id ?? userData?.profile_id;
+  var id =
+    queryParams.id ?? profileData?.profile_id ?? userData?.profile_id;
   var profile_description =
     profileData?.profile_description ?? userData?.profile_description;
   var descriptionWithoutBio = {};
@@ -110,28 +112,29 @@ function UserProfile(props) {
     setWallpaper('');
   };
 
+  var callRefreshFriend = Helper.checkURL('friends');
+  var callRefreshProfile = Helper.checkURL('profile');
+  var callRefreshSentRequest = Helper.checkURL('sent');
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
       if (Helper.checkURL('profile', {}, true)) {
-        var id =
-          queryParams.id ??
-          profileData?.profile_id ??
-          userData?.profile_id;
         dispatch(
           getProfileSaga({
             accessToken,
             refreshToken,
             id,
+            callRefreshProfile,
             dispatch,
           })
         );
       }
+      // window.scroll(0,0);
     }
     return () => {
       onDestroy = true;
     };
-  }, [reRender, queryParams.id]);
+  }, [id]);
 
   return (
     <>
@@ -193,7 +196,7 @@ function UserProfile(props) {
                   id="editWallpaper"
                   className="shadow-inner"
                   onClick={() => {
-                    setMenuClicked(true);
+                    setMenuClicked(!menuClicked);
                   }}
                 >
                   <PhotoCamera style={{ fontSize: '2.5rem' }} />
@@ -205,6 +208,7 @@ function UserProfile(props) {
                   className="hidden"
                   type="file"
                   onChange={onImageChange}
+                  accept="image/*"
                   id="wallpaperRef"
                 />
                 {menuClicked && (
@@ -335,7 +339,11 @@ function UserProfile(props) {
                     refreshToken: refreshToken,
                     id: profileData?.profile_id,
                     mainId: userData?.profile_id,
+                    callRefreshFriend: callRefreshFriend,
+                    callRefreshProfile: callRefreshProfile,
+                    callRefreshSentRequest: callRefreshSentRequest,
                     dispatch: dispatch,
+                    navigate: navigate,
                   }}
                   action={handleActions}
                 />
@@ -382,7 +390,8 @@ function UserProfile(props) {
                       accessToken,
                       refreshToken,
                       id,
-                      callRefresh: false,
+                      callRefreshFriend,
+                      callRefreshProfile,
                       dispatch,
                     })
                   );
@@ -404,7 +413,8 @@ function UserProfile(props) {
                       accessToken,
                       refreshToken,
                       id,
-                      callRefresh: false,
+                      callRefreshFriend,
+                      callRefreshProfile,
                       dispatch,
                     })
                   );
@@ -559,14 +569,24 @@ function UserProfile(props) {
               <GridSideInfo
                 type="friendPhoto"
                 leftLabel="Friends"
-                rightLabel={{ text: 'See all Friends' }}
+                rightLabel={{
+                  text: 'See all Friends',
+                  onClick: () => {
+                    navigate('/friends/all');
+                  },
+                }}
                 listImg={allFriends?.data?.map((x) => {
                   return {
+                    id: x.profile_id,
                     url: x.avatar,
                     name: x.profile_name,
                   };
                 })}
-                total={allFriends?.page?.totalElement}
+                totalFriends={Helper.isMultiple(
+                  'friend',
+                  allFriends?.page?.totalElement
+                )}
+                navigate={navigate}
               />
             )}
           </div>
@@ -600,9 +620,17 @@ function ProfileAction({
   actionProps,
   action,
 }) {
-  const { accessToken, refreshToken, id, mainId, dispatch } =
-    actionProps;
-  const navigate = useNavigate();
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    mainId,
+    callRefreshFriend,
+    callRefreshSentRequest,
+    callRefreshProfile,
+    dispatch,
+    navigate,
+  } = actionProps;
   const [menuClicked, setMenuClicked] = useState(false);
 
   function handleFirstAction() {
@@ -620,7 +648,9 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefresh: false,
+                callRefreshFriendSuggestion: false,
+                callRefreshSentRequest,
+                callRefreshProfile,
                 dispatch,
               })
             );
@@ -650,8 +680,8 @@ function ProfileAction({
                 refreshToken,
                 id,
                 mainId,
-                forMainUser: Helper.checkURL('friends'),
-                callRefresh: Helper.checkURL('friends'),
+                callRefreshFriend,
+                callRefreshProfile,
                 dispatch,
               })
             );
@@ -672,7 +702,8 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefresh: false,
+                callRefreshFriend,
+                callRefreshProfile,
                 dispatch,
               })
             );
@@ -689,7 +720,8 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefresh: false,
+                callRefreshFriend,
+                callRefreshProfile,
                 dispatch,
               })
             );
@@ -840,19 +872,22 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
             >
               Upload photo
             </MUI.Button>
-            <MUI.Button
-              className="w-[100%]"
-              style={{ marginTop: '2rem' }}
-              onClick={() => {
-                setOpenConfirmRemove(true);
-              }}
-            >
-              Remove
-            </MUI.Button>
+            {profileData?.avatar && (
+              <MUI.Button
+                className="w-[100%]"
+                style={{ marginTop: '2rem' }}
+                onClick={() => {
+                  setOpenConfirmRemove(true);
+                }}
+              >
+                Remove
+              </MUI.Button>
+            )}
             <input
               className="hidden"
               type="file"
               onChange={onImageChange}
+              accept="image/*"
               id="avatarRef"
             />
           </div>

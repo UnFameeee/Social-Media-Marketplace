@@ -1,13 +1,12 @@
 import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getFriendSuggestion } from '../../../../redux/apiRequest';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
-import { addFriendSaga } from '../../../../redux/friend/friendSlice';
+import { addFriendSaga, getFriendSuggestionSaga } from '../../../../redux/friend/friendSlice';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 import '../index.css';
 
@@ -29,16 +28,19 @@ export default function FriendSuggestions() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
-  const userData = useSelector(
-    (state) => state.auth?.user?.userData?.profile
-  );
-  var mainId = userData?.profile_id;
 
-  // call get all friend requests once
+  // call get all friend suggestions once
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      getFriendSuggestion(accessToken, refreshToken, dispatch);
+      dispatch(
+        getFriendSuggestionSaga({
+          accessToken,
+          refreshToken,
+          callRefreshFriendSuggestion: true,
+          dispatch,
+        })
+      );
     }
     return () => {
       onDestroy = true;
@@ -51,13 +53,12 @@ export default function FriendSuggestions() {
     if (!onDestroy) {
       window.scroll(0, 0);
       if (!Helper.isNullOrEmpty(queryParams)) {
-        var id = queryParams;
         dispatch(
           getProfileSaga({
             accessToken,
             refreshToken,
-            id,
-            mainId,
+            id: queryParams,
+            callRefreshProfile: true,
             dispatch,
           })
         );
@@ -81,7 +82,6 @@ export default function FriendSuggestions() {
           />
         ),
         leftBarList: friendSuggestions?.data?.map((x) => {
-          let id = x.profile_id;
           return {
             left: {
               url: x.avatar,
@@ -101,7 +101,7 @@ export default function FriendSuggestions() {
                       addFriendSaga({
                         accessToken,
                         refreshToken,
-                        id,
+                        id: x.profile_id,
                         dispatch,
                       })
                     );
@@ -111,7 +111,7 @@ export default function FriendSuggestions() {
               />
             ),
             onClick: () => {
-              navigate(`?id=${id}`);
+              navigate(`?id=${x.profile_id}`);
             },
             selected:
               !Helper.isNullOrEmpty(queryParams) &&

@@ -48,7 +48,7 @@ export class PostCommentRepository {
     async updateComment(post_comment_id: number, comment_text: string): Promise<boolean> {
         try {
             const queryUpdateData = await this.postCommentRepository.findOne({
-                where: {post_comment_id: post_comment_id}
+                where: { post_comment_id: post_comment_id }
             })
             queryUpdateData.comment_text = comment_text;
             const res = await queryUpdateData.save();
@@ -59,12 +59,85 @@ export class PostCommentRepository {
         }
     }
 
-    async deleteComment(post_comment_id: number): Promise<boolean> {
+    async deleteComment(profile_id: number, post_comment_id: number): Promise<any> {
         try {
-            const res = await this.postCommentRepository.destroy({
-                where: {post_comment_id: post_comment_id}
+            const queryData = await this.postCommentRepository.findOne({
+                where: {
+                    post_comment_id: post_comment_id,
+                },
+                include: [
+                    {
+                        model: Profile,
+                        as: "comment_profile",
+                        attributes: [],
+                        where: {
+                            profile_id: profile_id
+                        }
+                    }
+                ]
             })
-            return res ? true : false;
+            if (queryData) {
+
+                const queryChildCommentData = await this.parentChildCommentRepository.findAll({
+                    where: {
+                        [Op.or]: [
+                            { "$parent_comment.post_comment_id$": post_comment_id },
+                            { "$child_comment.post_comment_id$": post_comment_id }
+                        ],
+                    },
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt", "deletedAt"]
+                    },
+                    include: [
+                        {
+                            model: PostComment,
+                            as: "parent_comment",
+                            attributes: [],
+                        },
+                        {
+                            model: PostComment,
+                            as: "child_comment",
+                            attributes: []
+                        }
+                    ]
+                })
+
+                // return queryChildCommentData;
+
+                var idCommentDelete: number[] = [];
+
+                if (queryChildCommentData.length > 0) {
+                    var idAssociationDelete: number[] = [];
+                    //if delete parent cmt
+                    if (queryChildCommentData[0]["parent_comment_id"] == post_comment_id) {
+                        for (const element of queryChildCommentData) {
+                            idCommentDelete.push(element["child_comment_id"]);
+                            idAssociationDelete.push(element.parent_child_comment_id);
+                        }
+                    } else {
+                        idAssociationDelete.push(queryChildCommentData[0].parent_child_comment_id);
+                    }
+
+                    
+
+                    await this.parentChildCommentRepository.destroy({
+                        where: {
+                            parent_child_comment_id: { [Op.in]: idAssociationDelete },
+                        },
+                    })
+                }
+
+                idCommentDelete.push(queryData.post_comment_id);
+
+                const res = await this.postCommentRepository.destroy({
+                    where: {
+                        post_comment_id: { [Op.in]: idCommentDelete },
+                    },
+                })
+
+                return res ? true : false;
+            } else return false;
+
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
@@ -253,7 +326,7 @@ export class PostCommentRepository {
                     },
                 ],
                 order: [
-                    ['createdAt', 'ASC']
+                    ['createdAt', 'DESC']
                 ],
                 ...paginate({ page })
             })

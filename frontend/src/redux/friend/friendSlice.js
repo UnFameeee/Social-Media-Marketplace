@@ -6,6 +6,11 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  getSentRequests: {
+    data: null,
+    isFetching: false,
+    error: false,
+  },
   getAllForMainUser: {
     data: null,
     isFetching: false,
@@ -61,6 +66,11 @@ export const friendSlice = createSlice({
   name: 'friends',
   initialState: {
     getRequests: {
+      data: null,
+      isFetching: false,
+      error: false,
+    },
+    getSentRequests: {
       data: null,
       isFetching: false,
       error: false,
@@ -130,6 +140,20 @@ export const friendSlice = createSlice({
       state.getRequests.isFetching = false;
       state.getRequests.error = true;
     },
+    getFriendRequestSaga() {},
+    
+    getSentRequestStart: (state) => {
+      state.getSentRequests.isFetching = true;
+    },
+    getSentRequestSuccess: (state, action) => {
+      state.getSentRequests.isFetching = false;
+      state.getSentRequests.data = action.payload;
+    },
+    getSentRequestFailed: (state) => {
+      state.getSentRequests.isFetching = false;
+      state.getSentRequests.error = true;
+    },
+    getSentRequestSaga() {},
 
     getAllFriendStart: (state) => {
       state.getAll.isFetching = true;
@@ -142,6 +166,7 @@ export const friendSlice = createSlice({
       state.getAll.isFetching = false;
       state.getAll.error = true;
     },
+    getAllFriendSaga() {},
 
     getAllFriendForMainUserStart: (state) => {
       state.getAllForMainUser.isFetching = true;
@@ -154,6 +179,7 @@ export const friendSlice = createSlice({
       state.getAllForMainUser.isFetching = false;
       state.getAllForMainUser.error = true;
     },
+    getAllFriendForMainUserSaga() {},
 
     getSuggestionStart: (state) => {
       state.getSuggestion.isFetching = true;
@@ -166,6 +192,7 @@ export const friendSlice = createSlice({
       state.getSuggestion.isFetching = false;
       state.getSuggestion.error = true;
     },
+    getFriendSuggestionSaga() {},
 
     getMutualFriendStart: (state) => {
       state.getMutualFriends.isFetching = true;
@@ -265,6 +292,10 @@ export const {
   getRequestStart,
   getRequestSuccess,
   getRequestFailed,
+  
+  getSentRequestStart,
+  getSentRequestSuccess,
+  getSentRequestFailed,
 
   getAllFriendStart,
   getAllFriendSuccess,
@@ -305,7 +336,12 @@ export const {
   isSentRequestStart,
   isSentRequestSuccess,
   isSentRequestFailed,
-
+  
+  getSentRequestSaga,
+  getFriendRequestSaga,
+  getFriendSuggestionSaga,
+  getAllFriendSaga,
+  getAllFriendForMainUserSaga,
   addFriendSaga,
   addFriendSagaSuccess,
   acceptSaga,

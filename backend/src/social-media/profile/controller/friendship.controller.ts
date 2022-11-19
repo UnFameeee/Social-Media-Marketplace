@@ -73,4 +73,11 @@ export class FriendshipController {
         const profile = <Profile>request.user;
         return await this.friendshipService.isFriend(profile, profile_target_id);
     }
+
+    //Is friend ?
+    @Post("/getAllSentFriendRequest")
+    async getAllProfileSentRequest(@Request() request: any, @Body() page: Page) {
+        const profile = <Profile>request.user;
+        return await this.friendshipService.getAllProfileSentRequest(profile.profile_id, page);
+    }
 }
