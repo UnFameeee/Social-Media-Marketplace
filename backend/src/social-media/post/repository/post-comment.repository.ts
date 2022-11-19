@@ -59,12 +59,33 @@ export class PostCommentRepository {
         }
     }
 
-    async deleteComment(post_comment_id: number): Promise<boolean> {
+    async deleteComment(profile_id: number, post_comment_id: number): Promise<boolean> {
         try {
-            const res = await this.postCommentRepository.destroy({
-                where: {post_comment_id: post_comment_id}
+            const queryData = await this.postCommentRepository.findOne({
+                where: {
+                    post_comment_id: post_comment_id,
+                },
+                include: [
+                    {
+                        model: Profile,
+                        as: "comment_profile",
+                        attributes: [], 
+                        where: {
+                            profile_id: profile_id
+                        }
+                    }
+                ]
             })
-            return res ? true : false;
+
+            if(queryData){
+                const res = await this.postCommentRepository.destroy({
+                    where: {
+                        post_comment_id: queryData.post_comment_id,
+                    },
+                })
+                return res ? true : false;
+            } else return false;
+
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
