@@ -31,7 +31,6 @@ export default function AllFriends() {
     (state) => state.profile?.profileDetails?.data
   );
   var mainId = userData?.profile_id;
-  var callRefreshFriend = true;
 
   // call get all friend once
   useLayoutEffect(() => {
@@ -42,7 +41,7 @@ export default function AllFriends() {
           accessToken,
           refreshToken,
           mainId,
-          callRefreshFriend,
+          callRefreshFriend: true,
           dispatch,
         })
       );
@@ -64,7 +63,6 @@ export default function AllFriends() {
             accessToken,
             refreshToken,
             id,
-            callRefreshFriend,
             callRefreshProfile: true,
             dispatch,
           })
