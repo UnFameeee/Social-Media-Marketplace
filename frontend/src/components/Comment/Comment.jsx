@@ -9,6 +9,7 @@ import { useState } from "react";
 import CommentForm from "./CommentForm";
 import NodeComment from "./NodeComment";
 import { useEffect } from "react";
+import { format } from "timeago.js";
 function Comment({
   post_comment_id,
   comment_text,
@@ -94,7 +95,7 @@ function Comment({
               >
                 <ReplyIcon />
               </MUI.BetterIconButton>
-              <span> 1 hour</span>
+              <span>{format(createdAt)}</span>
             </div>
           </div>
         </div>

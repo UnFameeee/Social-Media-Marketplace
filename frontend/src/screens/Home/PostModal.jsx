@@ -38,7 +38,6 @@ function PostModal(props) {
   //#region Function
   const closeModal = () => {
     props.setShowPostModal(false);
-    props.setReRender(prev => !prev)
     // setImgArray([]);
   };
   const handlePost = (e) => {

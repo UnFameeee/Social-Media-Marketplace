@@ -51,7 +51,9 @@ const commentPostSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
-      dispatch(commentPostSagaSuccess({ accessToken, refreshToken }));
+      dispatch(commentPostSagaSuccess({ accessToken, refreshToken,dispatch,post_id }));
+      notifyService.showSuccess("Comment Post Success");
+      debugger
       return res;
     } else {
       notifyService.showError("Comment Post Failed");
@@ -63,7 +65,7 @@ const commentPostSagaRequest = async (data) => {
 };
 
 export function* getCommentPost() {
-  yield takeLatest(getCommentPostSaga.type, handleGetCommentPost);
+  yield takeLatest([getCommentPostSaga.type,commentPostSagaSuccess.type], handleGetCommentPost);
 }
 function* handleGetCommentPost(data) {
   try {

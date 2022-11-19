@@ -20,10 +20,12 @@ function CommentForm({ formWidth, placeholder, formReply,post_id, ...props }) {
     setReplyInput(e.target.value);
   };
   const handleCreateComment = () =>{
+    debugger
     console.log("comment: ",replyInput," + ", "post id: ",post_id, " + ", " parent comment ",formReply?.parent_comment_id);
     let comment_text = replyInput;
     let parent_comment_id = formReply?.parent_comment_id ? formReply?.parent_comment_id : null;
     dispatch(commentPostSaga({accessToken,refreshToken,dispatch,comment_text,parent_comment_id,post_id}))
+    setReplyInput('')
   }
   useEffect(() => {
     if (formReply?.text) setReplyInput("Reply to " + formReply?.text + " ");

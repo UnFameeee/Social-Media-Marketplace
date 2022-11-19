@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   ThumbUpOutlined,
   ThumbUpAlt,
@@ -7,14 +7,10 @@ import {
   ArrowDropDown,
   MoreHoriz,
 } from "@mui/icons-material";
-import {
-  Avatar,
-  Button,
-  ClickAwayListener,
-} from "@mui/material";
+import { Avatar, Button, ClickAwayListener } from "@mui/material";
 import MUI from "../MUI";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { format } from "timeago.js";
 import ShowMoreText from "react-show-more-text";
 import { deletePostSaga, likePostSaga } from "../../redux/post/postSlice";
@@ -24,22 +20,22 @@ import CommentList from "../Comment/CommentList";
 import CommentForm from "../Comment/CommentForm";
 import PostModal from "../../screens/Home/PostModal";
 import { getCommentPostSaga } from "../../redux/comment/commentSlice";
-import { useEffect } from "react";
 function CardPost(props) {
   //#region Declare variables
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
+  const [showComment, setShowComment] = useState(false);
   const { postData } = props;
   const { post_id, profile_id, written_text, post_image, isLiked, totalLike } =
     postData;
   const { profile } = props;
   const postUpdateData = {
-      post_id: post_id,
-      profile_id: profile_id,
-      written_text: written_text,
-      post_image: post_image,
-    }
+    post_id: post_id,
+    profile_id: profile_id,
+    written_text: written_text,
+    post_image: post_image,
+  };
 
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
@@ -48,53 +44,51 @@ function CardPost(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const userData = useSelector((state) => state.auth?.user?.userData.profile);
+  const comments = useSelector(
+    (state) => state.comment?.get?.data,
+    shallowEqual
+  );
 
- 
   //#endregion
 
   //#region Function
   const handleShowModal = () => {
     setShowPostModal(true);
-    setShowAction(false)
+    setShowAction(false);
   };
   const handleDeletePost = () => {
     let postId = post_id;
     dispatch(deletePostSaga({ accessToken, refreshToken, postId, dispatch }));
     setShowAction(!showAction);
-    props.setReRender(prev => !prev)
   };
   const handleLikePost = () => {
     let postId = post_id;
     dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
-    props.setReRender(prev => !prev)
   };
-  const comments = useSelector((state) => state.comment?.get?.data?.results?.data)
   const handleShowComment = () => {
-    dispatch(getCommentPostSaga({accessToken,refreshToken,dispatch,post_id}))
+    dispatch(
+      getCommentPostSaga({ accessToken, refreshToken, dispatch, post_id })
+    );
+    setShowComment(true)
   };
-  console.log("comments",comments);
- 
   let rootComments = useMemo(() => {
-    var result =[]
-    comments.map((comment) =>{
-      if(comment.post_id === post_id){
-        debugger
-        console.log("post_id",post_id);
-         result.push(comment);
-      }
-    })
+    var result = [];
+    if (comments) {
+      comments.map((comment) => {
+        if (comment.post_id === post_id) {
+          result = comment.list_comment;
+        }
+      });
+    }
     return result;
-  }, []);
-  console.log("rootComments",rootComments);
+  }, [comments]);
   //#endregion
-
   return (
     <>
       <PostModal
         showModal={showPostModal}
         setShowPostModal={setShowPostModal}
         postUpdateData={postUpdateData}
-        setReRender={props.setReRender}
         profile={userData}
       />
       {/* {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && ( */}
@@ -121,7 +115,7 @@ function CardPost(props) {
                 <MoreHoriz
                   className=" right-[2rem] Icon"
                   style={{ fontSize: "2.5rem" }}
-                  onClick={() => setShowAction(prev => !prev)}
+                  onClick={() => setShowAction((prev) => !prev)}
                 />
                 {showAction && (
                   <ClickAwayListener onClickAway={(e) => setShowAction(false)}>
@@ -239,27 +233,29 @@ function CardPost(props) {
             </MUI.ButtonWithIcon>
           </div>
           <hr className="mb-[0.5rem] " />
-          <div className="card-comment-section">
-            <div className="flex justify-end mb-[0.5rem] items-center px-[2rem]">
-              <span>Most relate comment</span>
-              <ArrowDropDown style={{ fontSize: "2.5rem" }} />
-            </div>
-            <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem]">
-              <CommentForm
-                formWidth={"100%"}
-                placeholder={"write a comment...."}
-                post_id={post_id}
-              />
-              <CommentList comments={rootComments} post_id={post_id} />
+          {showComment && (
+            <div className="card-comment-section">
+              <div className="flex justify-end mb-[0.5rem] items-center px-[2rem]">
+                <span>Most relate comment</span>
+                <ArrowDropDown style={{ fontSize: "2.5rem" }} />
+              </div>
+              <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem] ">
+                <CommentForm
+                  formWidth={"100%"}
+                  placeholder={"write a comment...."}
+                  post_id={post_id}
+                />
+                <CommentList comments={rootComments} post_id={post_id} />
 
-              <div className="flex">
-                <span className="flex-1 hover:cursor-pointer">
-                  See more comments
-                </span>
-                <span>4/50</span>
+                <div className="flex">
+                  <span className="flex-1 hover:cursor-pointer">
+                    See more comments
+                  </span>
+                  <span>4/50</span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

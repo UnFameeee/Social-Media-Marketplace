@@ -41,7 +41,6 @@ export function* reFreshPosts() {
       updatePostSagaSuccess.type,
       likePostSagaSuccess.type,
       getProfileSagaSuccess.type,
-      commentPostSagaSuccess.type,
       getCommentPostSagaSuccess.type,
     ],
     handleReFreshPostSaga
@@ -86,7 +85,6 @@ const getAllPostSagaRequest = async (data) => {
     });
     if (!res.data.message) {
       // dispatch(getPostSuccess(res.data));
-      debugger
       return res;
     } else {
       //  dispatch(getPostFailed());
