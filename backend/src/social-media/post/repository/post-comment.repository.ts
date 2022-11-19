@@ -128,7 +128,7 @@ export class PostCommentRepository {
                 }
 
                 idCommentDelete.push(queryData.post_comment_id);
-                
+
                 const res = await this.postCommentRepository.destroy({
                     where: {
                         post_comment_id: { [Op.in]: idCommentDelete },
@@ -326,7 +326,7 @@ export class PostCommentRepository {
                     },
                 ],
                 order: [
-                    ['createdAt', 'ASC']
+                    ['createdAt', 'DESC']
                 ],
                 ...paginate({ page })
             })
