@@ -48,7 +48,7 @@ export class PostCommentRepository {
     async updateComment(post_comment_id: number, comment_text: string): Promise<boolean> {
         try {
             const queryUpdateData = await this.postCommentRepository.findOne({
-                where: {post_comment_id: post_comment_id}
+                where: { post_comment_id: post_comment_id }
             })
             queryUpdateData.comment_text = comment_text;
             const res = await queryUpdateData.save();
@@ -59,7 +59,7 @@ export class PostCommentRepository {
         }
     }
 
-    async deleteComment(profile_id: number, post_comment_id: number): Promise<boolean> {
+    async deleteComment(profile_id: number, post_comment_id: number): Promise<any> {
         try {
             const queryData = await this.postCommentRepository.findOne({
                 where: {
@@ -69,20 +69,60 @@ export class PostCommentRepository {
                     {
                         model: Profile,
                         as: "comment_profile",
-                        attributes: [], 
+                        attributes: [],
                         where: {
                             profile_id: profile_id
                         }
                     }
                 ]
             })
+            console.log(queryData);
+            if (queryData) {
 
-            if(queryData){
+                const queryChildCommentData = await this.parentChildCommentRepository.findAll({
+                    where: {
+                        [Op.or]: [
+                            { "$parent_comment.post_comment_id$": post_comment_id },
+                            { "$child_comment.post_comment_id$": post_comment_id }
+                        ],
+                    },
+                    attributes: {
+                        exclude: ["createdAt", "updatedAt", "deletedAt"]
+                    },
+                    include: [
+                        {
+                            model: PostComment,
+                            as: "parent_comment",
+                            attributes: [],
+                        },
+                        {
+                            model: PostComment,
+                            as: "child_comment",
+                            attributes: []
+                        }
+                    ]
+                })
+
+                if (queryChildCommentData.length > 0) {
+                    var idDelete: number[] = [];
+
+                    for (const element of queryChildCommentData) {
+                        idDelete.push(element.parent_child_comment_id);
+                    }
+
+                    await this.parentChildCommentRepository.destroy({
+                        where: {
+                            parent_child_comment_id: { [Op.in]: idDelete },
+                        },
+                    })
+                }
+
                 const res = await this.postCommentRepository.destroy({
                     where: {
                         post_comment_id: queryData.post_comment_id,
                     },
                 })
+
                 return res ? true : false;
             } else return false;
 

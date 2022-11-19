@@ -45,7 +45,7 @@ export class PostCommentService {
 
     async deleteComment(profile_id: number,post_comment_id: number){
         try{
-            const response = new ResponseData<boolean>();
+            const response = new ResponseData<any>();
             var res = await this.postCommentRepository.deleteComment(profile_id, post_comment_id);
             response.results = res;
             return response; 
