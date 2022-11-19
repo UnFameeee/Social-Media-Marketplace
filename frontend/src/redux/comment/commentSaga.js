@@ -17,7 +17,6 @@ export function* getCommentPost() {
 }
 function* handleGetCommentPost(data) {
   try {
-    debugger
     const getComments = yield call(getCommentPostSagaRequest, data);
     yield put(getCommentPostSuccess(getComments))
   } catch (error) {
@@ -25,7 +24,6 @@ function* handleGetCommentPost(data) {
   }
 }
 const getCommentPostSagaRequest = async (data) => {
-  debugger
   const { accessToken, refreshToken, dispatch, post_id } = data.payload;
   try {
     const config = {

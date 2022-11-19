@@ -80,14 +80,27 @@ function CardPost(props) {
         }
       });
     }
-    let sortArray = [...result]
+    let sortArray = [...result];
     sortArray.sort(function (a, b) {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
-    result = [...sortArray]
+    result = [...sortArray];
     return result;
   }, [comments]);
-
+  let totalComment = useMemo(() => {
+    var result;
+    if (comments) {
+      comments.map((comment) => {
+        if (comment.post_id === post_id) {
+          result = {
+            pageSize: comment?.page?.pageSize ? comment?.page?.pageSize : null,
+            totalElement: comment?.page?.totalElement ? comment?.page?.totalElement : null,
+          };
+        }
+      });
+    }
+    return result;
+  },[comments]);
   //#endregion
   return (
     <>
@@ -248,13 +261,16 @@ function CardPost(props) {
                   post_id={post_id}
                 />
                 <CommentList comments={rootComments} post_id={post_id} />
-
-                <div className="flex">
-                  <span className="flex-1 hover:cursor-pointer">
-                    See more comments
-                  </span>
-                  <span>4/50</span>
-                </div>
+                {totalComment && totalComment?.totalElement > totalComment?.pageSize && (
+                  <div className="flex">
+                    <span className="flex-1 hover:cursor-pointer">
+                      See more comments
+                    </span>
+                    <span>
+                      {totalComment?.totalElement}/{totalComment?.pageSize}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           )}
