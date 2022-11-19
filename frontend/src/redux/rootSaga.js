@@ -8,6 +8,7 @@ import {
   refreshAllFriendForMainUser,
   refreshFriendRequest,
   refreshFriendSuggestion,
+  refreshSentRequests,
   unfriend,
 } from './friend/friendSaga';
 import {
@@ -18,7 +19,7 @@ import {
   updateOnePost,
 } from './post/postSaga';
 import {
-    deleteAvtReq,
+  deleteAvtReq,
   deleteWallReq,
   refreshProfile,
   updateAvtReq,
@@ -38,6 +39,7 @@ export default function* rootSaga() {
     fork(refreshAllFriendForMainUser),
     fork(refreshAllFriend),
     fork(refreshFriendRequest),
+    fork(refreshSentRequests),
     fork(refreshFriendSuggestion),
     fork(acceptFriendReq),
     fork(denyFriendReq),
@@ -52,7 +54,5 @@ export default function* rootSaga() {
     fork(deleteWallReq),
     fork(updateDetailReq),
   ]);
-  yield all ([
-    fork(commentPost)
-  ])
+  yield all([fork(commentPost)]);
 }

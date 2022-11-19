@@ -25,6 +25,8 @@ import {
   getFriendRequestSaga,
   getFriendSuggestionSaga,
   getRequestSuccess,
+  getSentRequestSaga,
+  getSentRequestSuccess,
   getSuggestionSuccess,
   unfriendFailed,
   unfriendSaga,
@@ -125,7 +127,7 @@ async function acceptSagaRequest(data) {
           callRefreshFriend,
           callRefreshProfile,
           callRefreshPost,
-          dispatch
+          dispatch,
         })
       );
       return res;
@@ -185,7 +187,7 @@ async function denySagaRequest(data) {
           callRefreshFriendSuggestion,
           callRefreshProfile,
           callRefreshPost,
-          dispatch
+          dispatch,
         })
       );
       return res;
@@ -324,7 +326,7 @@ async function unfriendSagaRequest(data) {
           callRefreshFriend,
           callRefreshProfile,
           callRefreshPost,
-          dispatch
+          dispatch,
         })
       );
       return res;
@@ -400,6 +402,8 @@ async function addFriendSagaRequest(data) {
     refreshToken,
     id,
     callRefreshFriendSuggestion = true,
+    callRefreshSentRequest = false,
+    callRefreshFriend = false,
     callRefreshProfile = false,
     callRefreshPost = false,
     dispatch,
@@ -431,9 +435,11 @@ async function addFriendSagaRequest(data) {
           refreshToken,
           id,
           callRefreshFriendSuggestion,
+          callRefreshFriend,
+          callRefreshSentRequest,
           callRefreshProfile,
           callRefreshPost,
-          dispatch
+          dispatch,
         })
       );
       return res;
@@ -444,6 +450,47 @@ async function addFriendSagaRequest(data) {
   } catch (error) {
     notifyService.showError('Add Friend Failed!');
     dispatch(addFriendFailed());
+  }
+}
+// #endregion
+
+// #region sent requests
+export function* refreshSentRequests() {
+  yield takeLatest(
+    [getSentRequestSaga.type, addFriendSagaSuccess.type],
+    handleRefreshSentRequestSaga
+  );
+}
+function* handleRefreshSentRequestSaga(data) {
+  try {
+    if (data?.payload?.callRefreshSentRequest) {
+      const getAll = yield call(getAllSentRequestSaga, data);
+      yield put(getSentRequestSuccess(getAll.data.results));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function getAllSentRequestSaga(data) {
+  const { accessToken, refreshToken } = data.payload;
+  try {
+    const res = await axiosInStanceJWT.post(
+      `${api.friend}/sentRequests`,
+      paging,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      return res;
+    } else {
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 // #endregion

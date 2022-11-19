@@ -7,14 +7,13 @@ import LeftbarMiddleItem from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
 import {
-  acceptSaga,
-  denySaga,
-  getFriendRequestSaga,
+  addFriendSaga,
+  getSentRequestSaga,
 } from '../../../../redux/friend/friendSlice';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 import '../index.css';
 
-export default function FriendRequests() {
+export default function YourSentRequests() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,22 +25,22 @@ export default function FriendRequests() {
   const refreshToken = useSelector(
     (state) => state.auth?.login?.currentUser?.refresh
   );
-  const friendRequests = useSelector(
-    (state) => state.friends?.getRequests?.data
+  const sentRequests = useSelector(
+    (state) => state.friends?.getSentRequests?.data
   );
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
 
-  // call get all friend requests once
+  // call get all sent requests once
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
       dispatch(
-        getFriendRequestSaga({
+        getSentRequestSaga({
           accessToken,
           refreshToken,
-          callRefreshFriend: true,
+          callRefreshSentRequest,
           dispatch,
         })
       );
@@ -81,15 +80,15 @@ export default function FriendRequests() {
         },
         before: (
           <LeftbarTitle
-            title="Friend Requests"
+            title="Sent Requests"
             subTitle={Helper.isMultiple(
-              'Friend Request',
-              friendRequests?.page?.totalElement,
-              'You Have No Friend Requests'
+              'Sent Request',
+              sentRequests?.page?.totalElement,
+              'You Have Not Sent Any Request'
             )}
           />
         ),
-        leftBarList: friendRequests?.data?.map((x) => {
+        leftBarList: sentRequests?.data?.map((x) => {
           return {
             left: {
               url: x.avatar,
@@ -102,24 +101,12 @@ export default function FriendRequests() {
                   onClick: (e) => {
                     e.stopPropagation();
                     dispatch(
-                      acceptSaga({
+                      addFriendSaga({
                         accessToken,
                         refreshToken,
                         id: x.profile_id,
-                        dispatch,
-                      })
-                    );
-                    navigate('');
-                  },
-                }}
-                secondButtonConfig={{
-                  onClick: (e) => {
-                    e.stopPropagation();
-                    dispatch(
-                      denySaga({
-                        accessToken,
-                        refreshToken,
-                        id: x.profile_id,
+                        callRefreshFriendSuggestion: false,
+                        callRefreshSentRequest: true,
                         dispatch,
                       })
                     );

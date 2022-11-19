@@ -6,6 +6,11 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  getSentRequests: {
+    data: null,
+    isFetching: false,
+    error: false,
+  },
   getAllForMainUser: {
     data: null,
     isFetching: false,
@@ -61,6 +66,11 @@ export const friendSlice = createSlice({
   name: 'friends',
   initialState: {
     getRequests: {
+      data: null,
+      isFetching: false,
+      error: false,
+    },
+    getSentRequests: {
       data: null,
       isFetching: false,
       error: false,
@@ -131,6 +141,19 @@ export const friendSlice = createSlice({
       state.getRequests.error = true;
     },
     getFriendRequestSaga() {},
+    
+    getSentRequestStart: (state) => {
+      state.getSentRequests.isFetching = true;
+    },
+    getSentRequestSuccess: (state, action) => {
+      state.getSentRequests.isFetching = false;
+      state.getSentRequests.data = action.payload;
+    },
+    getSentRequestFailed: (state) => {
+      state.getSentRequests.isFetching = false;
+      state.getSentRequests.error = true;
+    },
+    getSentRequestSaga() {},
 
     getAllFriendStart: (state) => {
       state.getAll.isFetching = true;
@@ -269,6 +292,10 @@ export const {
   getRequestStart,
   getRequestSuccess,
   getRequestFailed,
+  
+  getSentRequestStart,
+  getSentRequestSuccess,
+  getSentRequestFailed,
 
   getAllFriendStart,
   getAllFriendSuccess,
@@ -310,6 +337,7 @@ export const {
   isSentRequestSuccess,
   isSentRequestFailed,
   
+  getSentRequestSaga,
   getFriendRequestSaga,
   getFriendSuggestionSaga,
   getAllFriendSaga,

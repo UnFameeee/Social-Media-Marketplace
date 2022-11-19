@@ -20,6 +20,7 @@ import {
   AllFriends,
   FriendRequests,
   FriendSuggestions,
+  YourSentRequests,
 } from '../../screens/Friends/DynamicLeftbar';
 import Error from '../../screens/Error/Error';
 import Marketplace from '../../screens/Marketplace/Marketplace';
@@ -50,6 +51,7 @@ export default function RootRoutes() {
 
             <Route path="friends" element={<DynamicLeftbarLayout />}>
               <Route path="requests" element={<FriendRequests />} />
+              <Route path="sent" element={<YourSentRequests />} />
               <Route
                 path="suggestions"
                 element={<FriendSuggestions />}
