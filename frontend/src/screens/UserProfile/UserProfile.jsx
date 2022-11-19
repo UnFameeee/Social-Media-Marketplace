@@ -50,6 +50,7 @@ import './index.css';
 
 function UserProfile(props) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [reRender, setReRender] = useState(false);
   const [openAvatarModal, setOpenAvatarModal] = useState(false); //toggle update avatar modal
   const [openDetailsModal, setOpenDetailsModal] = useState(false); //toggle update details modal
@@ -128,11 +129,12 @@ function UserProfile(props) {
           })
         );
       }
+      // window.scroll(0,0);
     }
     return () => {
       onDestroy = true;
     };
-  }, []);
+  }, [id]);
 
   return (
     <>
@@ -194,7 +196,7 @@ function UserProfile(props) {
                   id="editWallpaper"
                   className="shadow-inner"
                   onClick={() => {
-                    setMenuClicked(true);
+                    setMenuClicked(!menuClicked);
                   }}
                 >
                   <PhotoCamera style={{ fontSize: '2.5rem' }} />
@@ -206,6 +208,7 @@ function UserProfile(props) {
                   className="hidden"
                   type="file"
                   onChange={onImageChange}
+                  accept="image/*"
                   id="wallpaperRef"
                 />
                 {menuClicked && (
@@ -336,10 +339,11 @@ function UserProfile(props) {
                     refreshToken: refreshToken,
                     id: profileData?.profile_id,
                     mainId: userData?.profile_id,
-                    dispatch: dispatch,
                     callRefreshFriend: callRefreshFriend,
                     callRefreshProfile: callRefreshProfile,
                     callRefreshSentRequest: callRefreshSentRequest,
+                    dispatch: dispatch,
+                    navigate: navigate,
                   }}
                   action={handleActions}
                 />
@@ -565,14 +569,24 @@ function UserProfile(props) {
               <GridSideInfo
                 type="friendPhoto"
                 leftLabel="Friends"
-                rightLabel={{ text: 'See all Friends' }}
+                rightLabel={{
+                  text: 'See all Friends',
+                  onClick: () => {
+                    navigate('/friends/all');
+                  },
+                }}
                 listImg={allFriends?.data?.map((x) => {
                   return {
+                    id: x.profile_id,
                     url: x.avatar,
                     name: x.profile_name,
                   };
                 })}
-                total={allFriends?.page?.totalElement}
+                totalFriends={Helper.isMultiple(
+                  'friend',
+                  allFriends?.page?.totalElement
+                )}
+                navigate={navigate}
               />
             )}
           </div>
@@ -615,8 +629,8 @@ function ProfileAction({
     callRefreshSentRequest,
     callRefreshProfile,
     dispatch,
+    navigate,
   } = actionProps;
-  const navigate = useNavigate();
   const [menuClicked, setMenuClicked] = useState(false);
 
   function handleFirstAction() {
@@ -858,19 +872,22 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
             >
               Upload photo
             </MUI.Button>
-            <MUI.Button
-              className="w-[100%]"
-              style={{ marginTop: '2rem' }}
-              onClick={() => {
-                setOpenConfirmRemove(true);
-              }}
-            >
-              Remove
-            </MUI.Button>
+            {profileData?.avatar && (
+              <MUI.Button
+                className="w-[100%]"
+                style={{ marginTop: '2rem' }}
+                onClick={() => {
+                  setOpenConfirmRemove(true);
+                }}
+              >
+                Remove
+              </MUI.Button>
+            )}
             <input
               className="hidden"
               type="file"
               onChange={onImageChange}
+              accept="image/*"
               id="avatarRef"
             />
           </div>
