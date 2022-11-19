@@ -76,7 +76,6 @@ export class PostCommentRepository {
                     }
                 ]
             })
-            console.log(queryData);
             if (queryData) {
 
                 const queryChildCommentData = await this.parentChildCommentRepository.findAll({
@@ -103,23 +102,36 @@ export class PostCommentRepository {
                     ]
                 })
 
-                if (queryChildCommentData.length > 0) {
-                    var idDelete: number[] = [];
+                // return queryChildCommentData;
 
-                    for (const element of queryChildCommentData) {
-                        idDelete.push(element.parent_child_comment_id);
+                var idCommentDelete: number[] = [];
+
+                if (queryChildCommentData.length > 0) {
+                    var idAssociationDelete: number[] = [];
+                    //if delete parent cmt
+                    if (queryChildCommentData[0]["parent_comment_id"] == post_comment_id) {
+                        for (const element of queryChildCommentData) {
+                            idCommentDelete.push(element["child_comment_id"]);
+                            idAssociationDelete.push(element.parent_child_comment_id);
+                        }
+                    } else {
+                        idAssociationDelete.push(queryChildCommentData[0].parent_child_comment_id);
                     }
+
+                    
 
                     await this.parentChildCommentRepository.destroy({
                         where: {
-                            parent_child_comment_id: { [Op.in]: idDelete },
+                            parent_child_comment_id: { [Op.in]: idAssociationDelete },
                         },
                     })
                 }
 
+                idCommentDelete.push(queryData.post_comment_id);
+                
                 const res = await this.postCommentRepository.destroy({
                     where: {
-                        post_comment_id: queryData.post_comment_id,
+                        post_comment_id: { [Op.in]: idCommentDelete },
                     },
                 })
 
