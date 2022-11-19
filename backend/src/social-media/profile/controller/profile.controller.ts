@@ -88,7 +88,7 @@ export class ProfileController {
         return await this.profileService.getProfileDetailById(profile, profile_target_id);
     }
 
-    @Get("galleryImage/:profile_id")
+    @Post("galleryImage/:profile_id")
     async getProfileGalleryImageById(@Param("profile_id") profile_id: number, @Body() page: Page){
         return await this.profileService.getProfileGalleryById(profile_id, page);
     }
