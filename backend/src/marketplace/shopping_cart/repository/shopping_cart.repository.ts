@@ -157,8 +157,6 @@ export class ShoppingCartRepository {
                 ],
             });
 
-            console.log(queryData);
-
             if (queryData) {
                 queryData.quantity = quantity;
                 const querySaveData = await queryData.save();

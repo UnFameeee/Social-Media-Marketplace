@@ -26,7 +26,7 @@ export class ShoppingCartService {
     async removeProductFromCart(profile_id: number, product_id: number): Promise<ResponseData<boolean>> {
         try {
             var response = new ResponseData<boolean>();
-            response.results = null;
+            response.results = await this.shoppingCartRepository.removeProductFromCart(profile_id, product_id);
             return response;
         } catch (err) {
             ExceptionResponse(err);
@@ -37,7 +37,7 @@ export class ShoppingCartService {
     async changeQuantityOfProductInCart(profile_id: number, product_id: number, quantity: number): Promise<ResponseData<boolean>> {
         try {
             var response = new ResponseData<boolean>();
-            response.results = null;
+            response.results = await this.shoppingCartRepository.changeQuantityOfProductInCart(profile_id, product_id, quantity);
             return response;
         } catch (err) {
             ExceptionResponse(err);
