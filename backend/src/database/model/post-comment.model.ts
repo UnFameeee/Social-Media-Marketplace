@@ -1,4 +1,4 @@
-import { AllowNull, AutoIncrement, Column, Model, PrimaryKey, Table } from "sequelize-typescript";
+import { AllowNull, AutoIncrement, Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
 @Table({
     tableName: "Posts_Comment",
     timestamps: true,
@@ -13,6 +13,6 @@ export class PostComment extends Model<PostComment> {
     @Column
     post_comment_id: number;
 
-    @Column
+    @Column(DataType.TEXT)
     comment_text: string;
 }
