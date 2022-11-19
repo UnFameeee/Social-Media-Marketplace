@@ -113,6 +113,7 @@ function UserProfile(props) {
 
   var callRefreshFriend = Helper.checkURL('friends');
   var callRefreshProfile = Helper.checkURL('profile');
+  var callRefreshSentRequest = Helper.checkURL('sent');
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -337,7 +338,8 @@ function UserProfile(props) {
                     mainId: userData?.profile_id,
                     dispatch: dispatch,
                     callRefreshFriend: callRefreshFriend,
-                    callRefreshProfile: callRefreshProfile
+                    callRefreshProfile: callRefreshProfile,
+                    callRefreshSentRequest: callRefreshSentRequest,
                   }}
                   action={handleActions}
                 />
@@ -610,6 +612,7 @@ function ProfileAction({
     id,
     mainId,
     callRefreshFriend,
+    callRefreshSentRequest,
     callRefreshProfile,
     dispatch,
   } = actionProps;
@@ -632,6 +635,7 @@ function ProfileAction({
                 refreshToken,
                 id,
                 callRefreshFriendSuggestion: false,
+                callRefreshSentRequest,
                 callRefreshProfile,
                 dispatch,
               })

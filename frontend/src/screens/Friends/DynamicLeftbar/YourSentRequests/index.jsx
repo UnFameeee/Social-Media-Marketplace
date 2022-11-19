@@ -40,7 +40,7 @@ export default function YourSentRequests() {
         getSentRequestSaga({
           accessToken,
           refreshToken,
-          callRefreshSentRequest,
+          callRefreshSentRequest: true,
           dispatch,
         })
       );
@@ -76,7 +76,7 @@ export default function YourSentRequests() {
     <TwoColumns
       leftBarConfig={{
         classNameConfig: {
-          listClassname: 'friend-list',
+          listClassname: 'friend-list suggestions',
         },
         before: (
           <LeftbarTitle
@@ -98,6 +98,7 @@ export default function YourSentRequests() {
               <LeftbarMiddleItem
                 profileName={x.profile_name}
                 firstButtonConfig={{
+                  name: 'Cancel',
                   onClick: (e) => {
                     e.stopPropagation();
                     dispatch(

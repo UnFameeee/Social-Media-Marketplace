@@ -475,7 +475,7 @@ async function getAllSentRequestSaga(data) {
   const { accessToken, refreshToken } = data.payload;
   try {
     const res = await axiosInStanceJWT.post(
-      `${api.friend}/sentRequests`,
+      `${api.friend}/getAllSentFriendRequest`,
       paging,
       {
         headers: {
