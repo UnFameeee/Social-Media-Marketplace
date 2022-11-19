@@ -5,6 +5,7 @@ import {
   Cake,
   PersonSearch,
   KeyboardArrowRight,
+  PersonAdd,
 } from '@mui/icons-material';
 
 export const staticLeftbar = [
@@ -25,6 +26,15 @@ export const staticLeftbar = [
     middle: 'Friend Requests',
     right: <KeyboardArrowRight />,
     navigate: 'requests',
+  },
+  {
+    left: {
+      iconButton: true,
+      icon: <PersonAdd />,
+    },
+    middle: 'Sent Requests',
+    right: <KeyboardArrowRight />,
+    navigate: 'sent',
   },
   {
     left: {

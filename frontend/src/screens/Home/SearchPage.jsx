@@ -158,9 +158,9 @@ export default function SearchPage() {
                         : x.isSentFriendRequest == 'REQUEST'
                         ? 'Cancel'
                         : '',
-                      onClick: async (e) => {
+                      onClick: (e) => {
                         e.stopPropagation();
-                        await handleAction(
+                        handleAction(
                           x.isFriend,
                           x.isSentFriendRequest,
                           x.profile_id
