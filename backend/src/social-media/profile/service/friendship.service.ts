@@ -99,4 +99,14 @@ export class FriendshipService {
             ExceptionResponse(err);
         }
     }
+
+    async getAllProfileSentRequest(profile_id: number, page: Page): Promise<ResponseData<PagingData<Friendship[]>>> {
+        try {
+            var response = new ResponseData<PagingData<Friendship[]>>();
+            response.results = await this.friendshipRepository.getAllProfileSentRequest(profile_id, page);
+            return response;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
 }
