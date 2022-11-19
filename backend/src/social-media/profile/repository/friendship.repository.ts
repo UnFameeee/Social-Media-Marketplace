@@ -370,25 +370,19 @@ export class FriendshipRepository {
     }
 
     //Only get ID
-    async getAllProfileSentRequest(profile_id: number): Promise<number[]> {
+    async getAllProfileIdSentRequest(profile_id: number): Promise<number[]> {
         var queryData = await this.friendshipRepository.findAll({
             where: {
-                // [Op.and]: {
-
-                // }
                 status: FRIENDSHIP_STATUS.PENDING,
                 [Op.or]: [{ "$profile_request_id.profile_id$": profile_id }, { "$profile_target_id.profile_id$": profile_id }],
             },
             attributes: ["id", "status", "createdAt", "profile_target", "profile_request",
-                // [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"],
-                // [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"],
             ],
             include: [
                 {
                     model: Profile,
                     as: "profile_request_id",
                     attributes: [],
-                    // require: 
                 },
                 {
                     model: Profile,
@@ -411,6 +405,88 @@ export class FriendshipRepository {
         }
         return resultArr;
     }
+
+    async getAllProfileSentRequest(profile_id: number, page: Page): Promise<PagingData<Friendship[]>> {
+        try {
+            var result = new PagingData<Friendship[]>();
+            var queryData = await this.friendshipRepository.findAndCountAll({
+                where: {
+                    status: FRIENDSHIP_STATUS.PENDING,
+                    "$profile_request_id.profile_id$": profile_id
+                    // [Op.or]: [
+                    //     {  }, 
+                    //     { "$profile_target_id.profile_id$": profile_id }
+                    // ],
+                },
+                attributes: ["id", "status", "createdAt", "profile_target",
+                    // [Sequelize.col("profile_request_id.profile_name"), "profile_request_name"],
+                    // [Sequelize.col("profile_request_id.profile_avatar.link"), "profile_request_avatar"],
+                    [Sequelize.col("profile_target_id.profile_name"), "profile_target_name"],
+                    [Sequelize.col("profile_target_id.profile_avatar.link"), "profile_target_avatar"],
+                ],
+                include: [
+                    {
+                        model: Profile,
+                        as: "profile_request_id",
+                        attributes: [],
+                        include: [
+                            {
+                                model: ProfileAvatarImage,
+                                as: "profile_avatar",
+                                attributes: ["link"]
+                            },
+                        ]
+                    },
+                    {
+                        model: Profile,
+                        as: "profile_target_id",
+                        attributes: [],
+                        include: [
+                            {
+                                model: ProfileAvatarImage,
+                                as: "profile_avatar",
+                                attributes: ["link"]
+                            },
+                        ]
+                    }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                raw: true,
+                nest: true,
+                ...paginate({ page })
+            })
+
+            if (queryData) {
+                for (const element of queryData.rows) {
+                    const isFriend = await this.isFriend(profile_id, element["profile_target"]);
+                    const isSentFriendRequest = await this.isSentFriendRequest(profile_id, element["profile_target"]);
+                    element["isFriend"] = isFriend;
+                    element["isSentFriendRequest"] = isSentFriendRequest;
+
+                    element["profile_id"] = element["profile_target"];
+                    element["profile_name"] = element["profile_target_name"];
+                    element["avatar"] = element["profile_target_avatar"];
+
+                    delete element["profile_target"];
+                    delete element["profile_target_name"];
+                    delete element["profile_target_avatar"];
+                    delete element["profile_request_id"];
+                    delete element["profile_target_id"];
+                }
+            }
+
+            result.data = queryData.rows;
+            page.totalElement = queryData.count;
+            result.page = page;
+            return result;
+        }
+        catch(err){
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
 
     async acceptFriendRequest(profile_id: number, profile_request_id: number): Promise<boolean> {
         try {

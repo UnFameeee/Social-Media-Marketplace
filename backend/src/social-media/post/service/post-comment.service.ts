@@ -43,21 +43,14 @@ export class PostCommentService {
         }
     }
 
-    async deleteComment(post_comment_id: number){
+    async deleteComment(profile_id: number,post_comment_id: number){
         try{
             const response = new ResponseData<boolean>();
-            var res = await this.postCommentRepository.deleteComment(post_comment_id);
+            var res = await this.postCommentRepository.deleteComment(profile_id, post_comment_id);
             response.results = res;
             return response; 
         }catch(err){
             ExceptionResponse(err);
         }
     }
-
-    //CRUD bình luận
-    //Tổng số bình luận của bài post
-    //Load ra paging bình luận của hệ thống.
-
-    //Phản hồi 1 bình luận
-    //Thích 1 bình luận
 }
