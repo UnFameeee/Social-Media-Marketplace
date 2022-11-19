@@ -1,15 +1,17 @@
 import { useMemo } from "react";
-import { Avatar } from "@mui/material";
-import { useSelector } from "react-redux";
+import { Avatar, Button, ClickAwayListener } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
 import CommentList from "./CommentList";
 import MUI from "../MUI";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { useState } from "react";
 import CommentForm from "./CommentForm";
-import NodeComment from "./NodeComment";
 import { useEffect } from "react";
 import { format } from "timeago.js";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import ShowMoreText from "react-show-more-text";
+import { deleteCommentPostSaga } from "../../redux/comment/commentSlice";
 function Comment({
   post_comment_id,
   comment_text,
@@ -18,100 +20,201 @@ function Comment({
   all_child_comment,
   isShowChildComment,
   post_id,
+  profile_id,
+  parent_comment_id,
+  isNodeComment,
+  setFormReplyFromParent,
   ...props
 }) {
-
   const userData = useSelector((state) => state.auth.user.userData);
+  const dispatch = useDispatch();
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   const [formReply, setFormReply] = useState({
     isShow: false,
     text: "",
     parent_comment_id: null,
   });
   const [showChildComment, setShowChildComment] = useState(true);
+  const [showAction, setShowAction] = useState(false);
+  const handleDeleteComment = () => {
+    debugger;
+    dispatch(
+      deleteCommentPostSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        post_comment_id,
+        post_id,
+      })
+    );
+  };
   useEffect(() => {
     if (all_child_comment && all_child_comment.length > 1) {
       setShowChildComment(false);
     }
   }, []);
-  // console.log("showChildComment", isShowChildComment);
+  console.log(formReply);
   return (
     <>
-      <div className="comment">
-        <div className="comment-info items-baseline flex gap-[0.5rem] mb-[1rem]">
+      <div className="comment flex items-baseline">
+        <div className="comment-info flex gap-[0.5rem]">
           <Avatar
             style={{
               fontSize: "2rem",
             }}
             alt={userData.profile.profile_name}
-            src={
-              userData.profile?.avatar
-                ? userData.profile?.avatar
-                : null
-            }
+            src={userData.profile?.avatar ? userData.profile?.avatar : null}
           >
             {userData.profile.profile_name?.at(0)}
           </Avatar>
-          <div className="name-and-message flex flex-col ">
-            <div className="bg-greyf1 rounded-xl p-[1rem]">
-              <span className="line-clamp-1">{profile_name}</span>
-              <div className="message">{comment_text}</div>
+          <div className="name-and-message flex flex-col">
+            <div className="flex items-center">
+              <div className="bg-greyf1 rounded-xl p-[1rem]">
+                <span className="line-clamp-1 font-[500]">{profile_name}</span>
+                <div className="message">
+                  <ShowMoreText
+                    lines={5}
+                    more="Show more"
+                    less="Show less"
+                    anchorClass="show-more-less-clickable"
+                    expanded={false}
+                    width={0}
+                    truncatedEndingComponent={"... "}
+                  >
+                    {comment_text}
+                  </ShowMoreText>
+                </div>
+              </div>
+              {profile_id === userData.profile?.profile_id && (
+                <MUI.BetterIconButton
+                  onClick={() => setShowAction(true)}
+                  className=" relative"
+                >
+                  <MoreHorizIcon />
+                  {showAction && (
+                    <ClickAwayListener
+                      onClickAway={(e) => setShowAction(false)}
+                    >
+                      <div className="floatingAction bg-white absolute z-10 right-0 shadow-md rounded-xl border-[0.1rem] w-[10rem] left-[3rem] ">
+                        <ul className="flex flex-col ">
+                          <li className="rounded-md p-[0.5rem] cursor-pointer">
+                            <Button
+                              style={{
+                                color: "var(--primary-color)",
+                                border: "1px solid var(--primary-color) ",
+                              }}
+                            >
+                              Update
+                            </Button>
+                          </li>
+                          <li className=" rounded-md p-[0.5rem] cursor-pointer">
+                            <Button
+                              style={{
+                                color: "var(--primary-color)",
+                                border: "1px solid var(--primary-color) ",
+                              }}
+                              onClick={(e) => {
+                                handleDeleteComment();
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          </li>
+                        </ul>
+                      </div>
+                    </ClickAwayListener>
+                  )}
+                </MUI.BetterIconButton>
+              )}
             </div>
             <div className="footer flex gap-[0.2rem] items-center">
               <MUI.BetterIconButton>
                 <ThumbUpIcon />
               </MUI.BetterIconButton>
-              <MUI.BetterIconButton
-                onClick={() => {
-                  setFormReply({
-                    isShow: true,
-                    text: profile_name,
-                    parent_comment_id: post_comment_id,
-                  });
-                  setShowChildComment(true);
-                }}
-              >
-                <ReplyIcon />
-              </MUI.BetterIconButton>
+              {isNodeComment ? (
+                <MUI.BetterIconButton
+                  onClick={() => {
+                    setFormReplyFromParent({
+                      isShow: true,
+                      text: profile_name,
+                      parent_comment_id: parent_comment_id,
+                    });
+                    setShowChildComment(true);
+                  }}
+                >
+                  <ReplyIcon />
+                </MUI.BetterIconButton>
+              ) : (
+                <MUI.BetterIconButton
+                  onClick={() => {
+                    setFormReply({
+                      isShow: true,
+                      text: profile_name,
+                      parent_comment_id: post_comment_id,
+                    });
+                    setShowChildComment(true);
+                  }}
+                >
+                  <ReplyIcon />
+                </MUI.BetterIconButton>
+              )}
               <span>{format(createdAt)}</span>
             </div>
           </div>
         </div>
       </div>
-      {showChildComment && all_child_comment && all_child_comment.length > 1 && (
-        <a
-          className="ml-[4rem] cursor-pointer underline "
-          onClick={() => setShowChildComment(false)}
-        >
-          Hide {all_child_comment.length} replies
-        </a>
-      )}
-      <div className="node-comment mt-[1rem]">
-        {showChildComment ? (
-          all_child_comment &&
-          all_child_comment.map((comment) => (
-            <div
-              key={comment.post_comment_id}
-              className="node-comment-wrapper ml-[4rem]"
-            >
-              <NodeComment
-                {...comment}
-                parent_comment_id={post_comment_id}
-                setFormReply={setFormReply}
-                isShowChildComment={isShowChildComment}
-              />
-            </div>
-          ))
-        ) : all_child_comment && all_child_comment.length > 0 ? (
+      {!isNodeComment &&
+        showChildComment &&
+        all_child_comment &&
+        all_child_comment.length > 1 && (
           <a
-            className="ml-[4rem] cursor-pointer underline"
-            onClick={() => setShowChildComment(true)}
+            className="ml-[4rem] cursor-pointer underline "
+            onClick={() => {
+              setShowChildComment(false);
+              setFormReply({
+                isShow: false,
+                text: "",
+                parent_comment_id: null,
+              });
+            }}
           >
-            Show {all_child_comment.length} more replies
+            Hide {all_child_comment.length} replies
           </a>
-        ) : null}
-      </div>
+        )}
+      {!isNodeComment && (
+        <div className="node-comment mt-[1rem]">
+          {showChildComment ? (
+            all_child_comment &&
+            all_child_comment.map((comment) => (
+              <div
+                key={comment.post_comment_id}
+                className="node-comment-wrapper ml-[4rem]"
+              >
+                <Comment
+                  {...comment}
+                  isNodeComment={true}
+                  parent_comment_id={post_comment_id}
+                  setFormReplyFromParent={setFormReply}
+                />
+              </div>
+            ))
+          ) : all_child_comment && all_child_comment.length > 0 ? (
+            <a
+              className="ml-[4rem] cursor-pointer underline"
+              onClick={() => setShowChildComment(true)}
+            >
+              Show {all_child_comment.length} more replies
+            </a>
+          ) : null}
+        </div>
+      )}
       {formReply.isShow ? (
-        <div className="ml-[4rem] mb-[1rem]">
+        <div className={` ${!isNodeComment ? "ml-[4rem]" : "ml-0"} mb-[1rem]`}>
           <CommentForm formReply={formReply} post_id={post_id} />
         </div>
       ) : null}

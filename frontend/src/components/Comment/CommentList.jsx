@@ -11,5 +11,4 @@ function CommentList({ comments, isShowChildComment, post_id, ...props }) {
     </div>
   ));
 }
-
 export default memo(CommentList);

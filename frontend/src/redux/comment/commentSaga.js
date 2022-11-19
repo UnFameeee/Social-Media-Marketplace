@@ -1,6 +1,8 @@
 import {
   commentPostSaga,
   commentPostSagaSuccess,
+  deleteCommentPostSaga,
+  deleteCommentPostSagaSuccess,
   getCommentPostSaga,
   getCommentPostSagaSuccess,
   getCommentPostSuccess,
@@ -9,6 +11,51 @@ import { put, takeLatest, call, fork } from "redux-saga/effects";
 import api from "../../common/environment/environment";
 import { axiosInStanceJWT } from "../axiosJWT";
 import { notifyService } from "../../services/notifyService";
+
+export function* getCommentPost() {
+  yield takeLatest([getCommentPostSaga.type,commentPostSagaSuccess.type,deleteCommentPostSagaSuccess.type], handleGetCommentPost);
+}
+function* handleGetCommentPost(data) {
+  try {
+    debugger
+    const getComments = yield call(getCommentPostSagaRequest, data);
+    yield put(getCommentPostSuccess(getComments))
+  } catch (error) {
+    console.log(error);
+  }
+}
+const getCommentPostSagaRequest = async (data) => {
+  debugger
+  const { accessToken, refreshToken, dispatch, post_id } = data.payload;
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    let paging = {
+      page: 0,
+      pageSize: 20,
+    };
+    const res = await axiosInStanceJWT.post(
+      `${api.post}/comment/${post_id}`,
+      paging,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(getCommentPostSagaSuccess({ accessToken, refreshToken }));
+      return {...res,post_id};
+    } else {
+      notifyService.showError("Get comment Post Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Get comment Post Failed");
+  }
+};
 
 export function* commentPost() {
   yield takeLatest(commentPostSaga.type, handleCommentPost);
@@ -63,31 +110,33 @@ const commentPostSagaRequest = async (data) => {
   }
 };
 
-export function* getCommentPost() {
-  yield takeLatest([getCommentPostSaga.type,commentPostSagaSuccess.type], handleGetCommentPost);
+export function* deleteCommentPost() {
+  yield takeLatest(deleteCommentPostSaga.type, handleDeleteCommentPost);
 }
-function* handleGetCommentPost(data) {
+function* handleDeleteCommentPost(data) {
   try {
-    const getComments = yield call(getCommentPostSagaRequest, data);
-    yield put(getCommentPostSuccess(getComments.data))
+    yield call(deleteCommentPostSagaRequest, data);
+    // yield put(createPostSuccess(create.data));
   } catch (error) {
     console.log(error);
   }
 }
-const getCommentPostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, dispatch, post_id } = data.payload;
+const deleteCommentPostSagaRequest = async (data) => {
+  const {
+    accessToken,
+    refreshToken,
+    dispatch,
+    post_comment_id,
+    post_id,
+  } = data.payload;
+
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
 
-    let paging = {
-      page: 0,
-      pageSize: 20,
-    };
-    const res = await axiosInStanceJWT.post(
-      `${api.post}/comment/${post_id}`,
-      paging,
+    const res = await axiosInStanceJWT.delete(
+      `${api.post}/comment/delete/${post_comment_id}`, 
       {
         headers: config,
         ACCESS_PARAM: accessToken,
@@ -95,13 +144,14 @@ const getCommentPostSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
-      dispatch(getCommentPostSagaSuccess({ accessToken, refreshToken }));
+      dispatch(deleteCommentPostSagaSuccess({ accessToken, refreshToken,dispatch,post_id }));
+      notifyService.showSuccess("Delete Comment Post Success");
       return res;
     } else {
-      notifyService.showError("Get comment Post Failed");
+      notifyService.showError("Delete Comment Post Failed");
     }
   } catch (error) {
     console.log(error);
-    notifyService.showError("Get comment Post Failed");
+    notifyService.showError("Delete Comment Post Failed");
   }
 };

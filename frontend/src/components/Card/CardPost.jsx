@@ -110,8 +110,8 @@ function CardPost(props) {
                 {props.postData.profile_name?.at(0)}
               </Avatar>
               <div>
-                <p>{props.postData.profile_name}</p>
-                <span className=" font-light text-[1.4rem]">
+                <p className=" font-[500]">{props.postData.profile_name}</p>
+                <span className=" font-light text-[1.4rem] ">
                   {format(props.postData.createdAt)}
                 </span>
               </div>

@@ -39,7 +39,6 @@ function CommentForm({ formWidth, placeholder, formReply, post_id, ...props }) {
   const commentEnterSubmit = (e) => {
     if (e.key === "Enter" && e.shiftKey == false) {
       e.preventDefault();
-      // const data = {content:e.target.value};
       return handleCreateComment();
     }
   };

@@ -17,34 +17,48 @@ export const commentSlice = createSlice({
   reducers: {
     commentPostSaga() {},
     commentPostSagaSuccess() {},
+
+    deleteCommentPostSaga() {},
+    deleteCommentPostSagaSuccess() {},
+
     getCommentPostSaga() {},
     getCommentPostSagaSuccess() {},
     getCommentPostSuccess: (state, action) => {
-      const post_id = action.payload.results.data[0].post_id;
-      // let parent_comment
-      // action.payload.results.data.map(comment =>{
-      //   comment.
-      // })
-      const group_comment = {
-        post_id: post_id,
-        list_comment: [...action.payload.results.data],
-      };
-      const preState = state.get.data;
-
-      if (state.get.data.length > 0) {
-        const pos = state.get.data.map((e) => e.post_id).indexOf(post_id);
-        if (pos > -1) {
-          state.get.data[pos].list_comment = action.payload.results.data;
+      debugger
+      if(action.payload.data.results.data.length >0){
+        const post_id = action.payload.data.results.data[0].post_id;
+        const group_comment = {
+          post_id: post_id,
+          list_comment: [...action.payload.data.results.data],
+        };
+        const preState = state.get.data;
+  
+        if (state.get.data.length > 0) {
+          const pos = state.get.data.map((e) => e.post_id).indexOf(post_id);
+          if (pos > -1) {
+            state.get.data[pos].list_comment = action.payload.data.results.data;
+          } else {
+            state.get.data = [...preState, group_comment];
+          }
         } else {
           state.get.data = [...preState, group_comment];
         }
-      } else {
-        state.get.data = [...preState, group_comment];
+      }
+      else{
+        const post_id = action.payload.post_id;
+        if (state.get.data.length > 0) {
+          const pos = state.get.data.map((e) => e.post_id).indexOf(post_id);
+          if (pos > -1) {
+            state.get.data[pos].list_comment = [];
+          }
+        }
       }
     },
   },
 });
 export const {
+  deleteCommentPostSaga,
+  deleteCommentPostSagaSuccess,
   commentPostSaga,
   commentPostSagaSuccess,
   getCommentPostSaga,
