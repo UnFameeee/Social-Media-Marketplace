@@ -20,8 +20,11 @@ export const commentSlice = createSlice({
     getCommentPostSaga() {},
     getCommentPostSagaSuccess() {},
     getCommentPostSuccess: (state, action) => {
-      debugger;
       const post_id = action.payload.results.data[0].post_id;
+      // let parent_comment
+      // action.payload.results.data.map(comment =>{
+      //   comment.
+      // })
       const group_comment = {
         post_id: post_id,
         list_comment: [...action.payload.results.data],

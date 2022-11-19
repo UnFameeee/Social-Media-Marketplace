@@ -69,7 +69,7 @@ function CardPost(props) {
     dispatch(
       getCommentPostSaga({ accessToken, refreshToken, dispatch, post_id })
     );
-    setShowComment(true)
+    setShowComment(true);
   };
   let rootComments = useMemo(() => {
     var result = [];
@@ -80,8 +80,14 @@ function CardPost(props) {
         }
       });
     }
+    let sortArray = [...result]
+    sortArray.sort(function (a, b) {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+    result = [...sortArray]
     return result;
   }, [comments]);
+
   //#endregion
   return (
     <>
@@ -234,11 +240,7 @@ function CardPost(props) {
           </div>
           <hr className="mb-[0.5rem] " />
           {showComment && (
-            <div className="card-comment-section">
-              <div className="flex justify-end mb-[0.5rem] items-center px-[2rem]">
-                <span>Most relate comment</span>
-                <ArrowDropDown style={{ fontSize: "2.5rem" }} />
-              </div>
+            <div className="card-comment-section mt-[1rem]">
               <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem] ">
                 <CommentForm
                   formWidth={"100%"}

@@ -6,6 +6,8 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { useState } from "react";
 import { useEffect } from "react";
+import { format } from "timeago.js";
+
 function NodeComment({ post_comment_id, comment_text, profile_name, createdAt, isShowChildComment,setReplyQuantity,setFormReply,parent_comment_id, ...props }) {
   const userData = useSelector((state) => state.auth.user.userData);
   function randomNumberInRange(min, max) {
@@ -21,8 +23,8 @@ function NodeComment({ post_comment_id, comment_text, profile_name, createdAt, i
             }}
             alt={userData.profile.profile_name}
             src={
-              userData.profile?.picture
-                ? JSON.parse(userData.profile?.picture)
+              userData.profile?.avatar
+                ? userData.profile?.avatar
                 : null
             }
           >
@@ -44,7 +46,7 @@ function NodeComment({ post_comment_id, comment_text, profile_name, createdAt, i
               >
                 <ReplyIcon />
               </MUI.BetterIconButton>
-              <span> 1 hour</span>
+              <span>{format(createdAt)}</span>
             </div>
           </div>
         </div>

@@ -37,12 +37,10 @@ export function* reFreshPosts() {
   yield takeLatest(
     [
       getProfileSagaSuccess.type,
-
       createPostSagaSuccess.type,
       deletePostSagaSuccess.type,
       updatePostSagaSuccess.type,
       likePostSagaSuccess.type,
-      getProfileSagaSuccess.type,
       getCommentPostSagaSuccess.type,
     ],
     handleReFreshPostSaga

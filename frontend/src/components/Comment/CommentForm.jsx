@@ -5,7 +5,7 @@ import { useState } from "react";
 import MUI from "../MUI";
 import { useEffect } from "react";
 import { commentPostSaga } from "../../redux/comment/commentSlice";
-function CommentForm({ formWidth, placeholder, formReply,post_id, ...props }) {
+function CommentForm({ formWidth, placeholder, formReply, post_id, ...props }) {
   const userData = useSelector((state) => state.auth.user.userData);
   const dispatch = useDispatch();
   const accessToken = useSelector(
@@ -19,20 +19,36 @@ function CommentForm({ formWidth, placeholder, formReply,post_id, ...props }) {
   const handleOnChangeReplyInput = (e) => {
     setReplyInput(e.target.value);
   };
-  const handleCreateComment = () =>{
-    debugger
-    console.log("comment: ",replyInput," + ", "post id: ",post_id, " + ", " parent comment ",formReply?.parent_comment_id);
+  const handleCreateComment = (e) => {
     let comment_text = replyInput;
-    let parent_comment_id = formReply?.parent_comment_id ? formReply?.parent_comment_id : null;
-    dispatch(commentPostSaga({accessToken,refreshToken,dispatch,comment_text,parent_comment_id,post_id}))
-    setReplyInput('')
-  }
+    let parent_comment_id = formReply?.parent_comment_id
+      ? formReply?.parent_comment_id
+      : null;
+    dispatch(
+      commentPostSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        comment_text,
+        parent_comment_id,
+        post_id,
+      })
+    );
+    setReplyInput("");
+  };
+  const commentEnterSubmit = (e) => {
+    if (e.key === "Enter" && e.shiftKey == false) {
+      e.preventDefault();
+      // const data = {content:e.target.value};
+      return handleCreateComment();
+    }
+  };
   useEffect(() => {
     if (formReply?.text) setReplyInput("Reply to " + formReply?.text + " ");
   }, [formReply]);
   return (
     <form
-      className={`flex gap-[1rem]  ${
+      className={`flex gap-[0.5rem]  ${
         formWidth ? `w-[${formWidth}]` : "w-[100%]"
       }    `}
     >
@@ -42,8 +58,8 @@ function CommentForm({ formWidth, placeholder, formReply,post_id, ...props }) {
         }}
         alt={userData.profile.profile_name}
         src={
-          userData.profile?.picture
-            ? JSON.parse(userData.profile?.picture)
+          userData.profile?.avatar
+            ? userData.profile?.avatar
             : null
         }
       >
@@ -52,9 +68,10 @@ function CommentForm({ formWidth, placeholder, formReply,post_id, ...props }) {
       <TextareaAutosize
         autoFocus
         value={replyInput}
-        onChange={handleOnChangeReplyInput}
         maxRows={5}
         placeholder={placeholder ? placeholder : "write a reply..."}
+        onKeyPress={commentEnterSubmit}
+        onChange={handleOnChangeReplyInput}
         onFocus={(e) =>
           e.currentTarget.setSelectionRange(
             e.currentTarget.value.length,
@@ -63,7 +80,6 @@ function CommentForm({ formWidth, placeholder, formReply,post_id, ...props }) {
         }
         className="w-full p-[1rem] resize-none outline-none rounded-3xl bg-gray-100 px-[1rem]"
       ></TextareaAutosize>
-      <MUI.Button onClick={() =>handleCreateComment()} >Post</MUI.Button>
     </form>
   );
 }

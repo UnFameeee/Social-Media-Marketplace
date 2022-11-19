@@ -15,27 +15,11 @@ function Comment({
   comment_text,
   profile_name,
   createdAt,
+  all_child_comment,
   isShowChildComment,
   post_id,
   ...props
 }) {
-  let childComments = useMemo(() => {
-    const result = [
-      {
-        post_comment_id: 4,
-        comment_text: "childComment",
-        profile_name: "Nguyen hoang vu",
-        createdAt: 2022,
-      },
-      {
-        post_comment_id: 5,
-        comment_text: "childComment2",
-        profile_name: "Nguyen pham quoc thang",
-        createdAt: 2022,
-      },
-    ];
-    return result;
-  }, []);
 
   const userData = useSelector((state) => state.auth.user.userData);
   const [formReply, setFormReply] = useState({
@@ -44,16 +28,8 @@ function Comment({
     parent_comment_id: null,
   });
   const [showChildComment, setShowChildComment] = useState(true);
-  const [replyQuantity, setReplyQuantity] = useState(childComments.length);
-  function randomNumberInRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  const [randomNum, setRandomNum] = useState(0);
   useEffect(() => {
-    setRandomNum(randomNumberInRange(0, 1));
-  }, []);
-  useEffect(() => {
-    if (childComments.length > 1) {
+    if (all_child_comment && all_child_comment.length > 1) {
       setShowChildComment(false);
     }
   }, []);
@@ -68,8 +44,8 @@ function Comment({
             }}
             alt={userData.profile.profile_name}
             src={
-              userData.profile?.picture
-                ? JSON.parse(userData.profile?.picture)
+              userData.profile?.avatar
+                ? userData.profile?.avatar
                 : null
             }
           >
@@ -91,6 +67,7 @@ function Comment({
                     text: profile_name,
                     parent_comment_id: post_comment_id,
                   });
+                  setShowChildComment(true);
                 }}
               >
                 <ReplyIcon />
@@ -100,30 +77,36 @@ function Comment({
           </div>
         </div>
       </div>
-      <div className="node-comment">
-        {showChildComment || isShowChildComment ? (
-          randomNum ? (
-            childComments &&
-            childComments.map((comment) => (
-              <div
-                key={comment.post_comment_id}
-                className="node-comment-wrapper ml-[4rem]"
-              >
-                <NodeComment
-                  {...comment}
-                  parent_comment_id={post_comment_id}
-                  setFormReply={setFormReply}
-                  isShowChildComment={isShowChildComment}
-                />
-              </div>
-            ))
-          ) : null
-        ) : randomNum ? (
+      {showChildComment && all_child_comment && all_child_comment.length > 1 && (
+        <a
+          className="ml-[4rem] cursor-pointer underline "
+          onClick={() => setShowChildComment(false)}
+        >
+          Hide {all_child_comment.length} replies
+        </a>
+      )}
+      <div className="node-comment mt-[1rem]">
+        {showChildComment ? (
+          all_child_comment &&
+          all_child_comment.map((comment) => (
+            <div
+              key={comment.post_comment_id}
+              className="node-comment-wrapper ml-[4rem]"
+            >
+              <NodeComment
+                {...comment}
+                parent_comment_id={post_comment_id}
+                setFormReply={setFormReply}
+                isShowChildComment={isShowChildComment}
+              />
+            </div>
+          ))
+        ) : all_child_comment && all_child_comment.length > 0 ? (
           <a
             className="ml-[4rem] cursor-pointer underline"
-            onClick={() => setShowChildComment((prev) => !prev)}
+            onClick={() => setShowChildComment(true)}
           >
-            Show {replyQuantity} more replies
+            Show {all_child_comment.length} more replies
           </a>
         ) : null}
       </div>
