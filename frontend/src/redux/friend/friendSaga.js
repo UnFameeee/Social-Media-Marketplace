@@ -127,6 +127,7 @@ async function acceptSagaRequest(data) {
           callRefreshFriend,
           callRefreshProfile,
           callRefreshPost,
+          callRefreshGallery: false,
           dispatch,
         })
       );
@@ -187,6 +188,7 @@ async function denySagaRequest(data) {
           callRefreshFriendSuggestion,
           callRefreshProfile,
           callRefreshPost,
+          callRefreshGallery: false,
           dispatch,
         })
       );
@@ -326,6 +328,7 @@ async function unfriendSagaRequest(data) {
           callRefreshFriend,
           callRefreshProfile,
           callRefreshPost,
+          callRefreshGallery: false,
           dispatch,
         })
       );
@@ -439,6 +442,7 @@ async function addFriendSagaRequest(data) {
           callRefreshSentRequest,
           callRefreshProfile,
           callRefreshPost,
+          callRefreshGallery: false,
           dispatch,
         })
       );
