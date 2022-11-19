@@ -83,7 +83,6 @@ export default function SearchPage() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      window.scroll(0, 0);
       if (!Helper.isNullOrEmpty(queryParams.value)) {
         searchProfile(
           accessToken,
@@ -101,18 +100,18 @@ export default function SearchPage() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      window.scroll(0, 0);
       if (!Helper.isNullOrEmpty(queryParams.id)) {
         dispatch(
           getProfileSaga({
             accessToken,
             refreshToken,
-            id: queryParams.id,
-            mainId,
+            id: queryParams.id,            
+            callRefreshProfile: true,
             dispatch,
           })
         );
       }
+      // window.scroll(0, 0);
     }
     return () => {
       onDestroy = true;
