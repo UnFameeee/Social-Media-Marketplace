@@ -2,15 +2,13 @@ import { Grid } from '@mui/material';
 import { useLayoutEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAllFriendRequests,
-  getFriendSuggestion,
-} from '../../../../redux/apiRequest';
 import FriendCard from './FriendCard';
 import {
   acceptSaga,
   addFriendSaga,
   denySaga,
+  getFriendRequestSaga,
+  getFriendSuggestionSaga,
 } from '../../../../redux/friend/friendSlice';
 import '../index.css';
 
@@ -34,8 +32,24 @@ const FriendHome = () => {
     let onDestroy = false;
     if (!onDestroy) {
       reRenderLayout(); //re-render the parent layout
-      getAllFriendRequests(accessToken, refreshToken, dispatch);
-      getFriendSuggestion(accessToken, refreshToken, dispatch);
+
+      dispatch(
+        getFriendRequestSaga({
+          accessToken,
+          refreshToken,
+          callRefreshFriend: true,
+          dispatch,
+        })
+      );
+
+      dispatch(
+        getFriendSuggestionSaga({
+          accessToken,
+          refreshToken,
+          callRefreshFriendSuggestion: true,
+          dispatch,
+        })
+      );
     }
     return () => {
       onDestroy = true;
@@ -53,12 +67,11 @@ const FriendHome = () => {
                 profileDetails={item}
                 firstButtonConfig={{
                   onClick: () => {
-                    let id = item.profile_id;
                     dispatch(
                       acceptSaga({
                         accessToken,
                         refreshToken,
-                        id,
+                        id: item.profile_id,
                         dispatch,
                       })
                     );
@@ -66,12 +79,12 @@ const FriendHome = () => {
                 }}
                 secondButtonConfig={{
                   onClick: () => {
-                    let id = item.profile_id;
                     dispatch(
                       denySaga({
                         accessToken,
                         refreshToken,
-                        id,
+                        id: item.profile_id,
+                        callRefreshFriendSuggestion: true,
                         dispatch,
                       })
                     );
@@ -101,12 +114,11 @@ const FriendHome = () => {
                       ? 'Add Friend'
                       : 'Cancel',
                   onClick: () => {
-                    let id = item.profile_id;
                     dispatch(
                       addFriendSaga({
                         accessToken,
                         refreshToken,
-                        id,
+                        id: item.profile_id,
                         dispatch,
                       })
                     );

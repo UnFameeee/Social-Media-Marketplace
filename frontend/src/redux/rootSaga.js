@@ -5,6 +5,7 @@ import {
   addFriend,
   denyFriendReq,
   refreshAllFriend,
+  refreshAllFriendForMainUser,
   refreshFriendRequest,
   refreshFriendSuggestion,
   unfriend,
@@ -34,6 +35,7 @@ export default function* rootSaga() {
     fork(likeOnePost),
   ]);
   yield all([
+    fork(refreshAllFriendForMainUser),
     fork(refreshAllFriend),
     fork(refreshFriendRequest),
     fork(refreshFriendSuggestion),

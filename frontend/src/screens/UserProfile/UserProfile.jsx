@@ -77,7 +77,8 @@ function UserProfile(props) {
     (state) => state.friends.getAll?.data
   );
 
-  var id = profileData?.profile_id ?? userData?.profile_id;
+  var id =
+    queryParams.id ?? profileData?.profile_id ?? userData?.profile_id;
   var profile_description =
     profileData?.profile_description ?? userData?.profile_description;
   var descriptionWithoutBio = {};
@@ -110,19 +111,18 @@ function UserProfile(props) {
     setWallpaper('');
   };
 
+  var callRefreshFriend = Helper.checkURL('friends');
+  var callRefreshProfile = Helper.checkURL('profile');
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
       if (Helper.checkURL('profile', {}, true)) {
-        var id =
-          queryParams.id ??
-          profileData?.profile_id ??
-          userData?.profile_id;
         dispatch(
           getProfileSaga({
             accessToken,
             refreshToken,
             id,
+            callRefreshProfile,
             dispatch,
           })
         );
@@ -131,7 +131,7 @@ function UserProfile(props) {
     return () => {
       onDestroy = true;
     };
-  }, [reRender, queryParams.id]);
+  }, []);
 
   return (
     <>
@@ -336,6 +336,8 @@ function UserProfile(props) {
                     id: profileData?.profile_id,
                     mainId: userData?.profile_id,
                     dispatch: dispatch,
+                    callRefreshFriend: callRefreshFriend,
+                    callRefreshProfile: callRefreshProfile
                   }}
                   action={handleActions}
                 />
@@ -382,7 +384,8 @@ function UserProfile(props) {
                       accessToken,
                       refreshToken,
                       id,
-                      callRefresh: false,
+                      callRefreshFriend,
+                      callRefreshProfile,
                       dispatch,
                     })
                   );
@@ -404,7 +407,8 @@ function UserProfile(props) {
                       accessToken,
                       refreshToken,
                       id,
-                      callRefresh: false,
+                      callRefreshFriend,
+                      callRefreshProfile,
                       dispatch,
                     })
                   );
@@ -600,8 +604,15 @@ function ProfileAction({
   actionProps,
   action,
 }) {
-  const { accessToken, refreshToken, id, mainId, dispatch } =
-    actionProps;
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    mainId,
+    callRefreshFriend,
+    callRefreshProfile,
+    dispatch,
+  } = actionProps;
   const navigate = useNavigate();
   const [menuClicked, setMenuClicked] = useState(false);
 
@@ -620,7 +631,8 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefresh: false,
+                callRefreshFriendSuggestion: false,
+                callRefreshProfile,
                 dispatch,
               })
             );
@@ -650,8 +662,8 @@ function ProfileAction({
                 refreshToken,
                 id,
                 mainId,
-                forMainUser: Helper.checkURL('friends'),
-                callRefresh: Helper.checkURL('friends'),
+                callRefreshFriend,
+                callRefreshProfile,
                 dispatch,
               })
             );
@@ -672,7 +684,8 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefresh: false,
+                callRefreshFriend,
+                callRefreshProfile,
                 dispatch,
               })
             );
@@ -689,7 +702,8 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefresh: false,
+                callRefreshFriend,
+                callRefreshProfile,
                 dispatch,
               })
             );

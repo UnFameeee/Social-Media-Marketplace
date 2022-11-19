@@ -9,6 +9,7 @@ import {
   getProfileDetailSuccess,
   getProfileSaga,
   getProfileSagaSuccess,
+  searchProfileSuccess,
   updateAvtFailed,
   updateAvtSaga,
   updateAvtSagaSuccess,
@@ -21,24 +22,32 @@ import {
   updateWallpaperSuccess,
 } from './profileSlice';
 import { notifyService } from '../../services/notifyService';
+import { acceptSagaSuccess, addFriendSagaSuccess, denySagaSuccess, unfriendSagaSuccess } from '../friend/friendSlice';
 
 export function* refreshProfile() {
   yield takeLatest(
     [
+      getProfileSaga.type,
       updateAvtSagaSuccess.type,
       updateWallpaperSagaSuccess.type,
       updateDetailSagaSuccess.type,
       deleteAvtSagaSuccess.type,
       deleteWallpaperSagaSuccess.type,
-      getProfileSaga.type,
+
+      addFriendSagaSuccess.type,
+      unfriendSagaSuccess.type,
+      acceptSagaSuccess.type,
+      denySagaSuccess.type,
     ],
     handleRefreshProfileSaga
   );
 }
 function* handleRefreshProfileSaga(data) {
   try {
-    const getAll = yield call(getProfileDetailSaga, data);
-    yield put(getProfileDetailSuccess(getAll.data.results));
+    if (data?.payload?.callRefreshProfile) {
+      const getAll = yield call(getProfileDetailSaga, data);
+      yield put(getProfileDetailSuccess(getAll.data.results));
+    }
   } catch (error) {
     console.log(error);
   }
@@ -48,8 +57,8 @@ async function getProfileDetailSaga(data) {
     accessToken,
     refreshToken,
     id,
-    mainId = '',
-    callRefresh = true,
+    callRefreshFriend = true,
+    callRefreshPost = true,
     dispatch,
   } = data.payload;
   try {
@@ -69,8 +78,8 @@ async function getProfileDetailSaga(data) {
           accessToken,
           refreshToken,
           id,
-          mainId,
-          callRefresh,
+          callRefreshFriend,
+          callRefreshPost,
           dispatch,
         })
       );
@@ -82,6 +91,7 @@ async function getProfileDetailSaga(data) {
   }
 }
 
+// #region update profile
 export function* updateAvtReq() {
   yield takeLatest(updateAvtSaga.type, handleUpdateAvt);
 }
@@ -94,8 +104,16 @@ function* handleUpdateAvt(data) {
   }
 }
 async function updateAvtSagaRequest(data) {
-  const { accessToken, refreshToken, avatar, id, dispatch } =
-    data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    avatar,
+    id,
+    callRefreshProfile = true,
+    callRefreshFriend = false,
+    callRefreshPost = false,
+    dispatch,
+  } = data.payload;
   var bodyFormData = new FormData();
   bodyFormData.append('file', avatar);
 
@@ -118,6 +136,9 @@ async function updateAvtSagaRequest(data) {
           accessToken,
           refreshToken,
           id,
+          callRefreshProfile,
+          callRefreshFriend,
+          callRefreshPost,
           dispatch,
         })
       );
@@ -144,8 +165,16 @@ function* handleUpdateWall(data) {
   }
 }
 async function updateWallSagaRequest(data) {
-  const { accessToken, refreshToken, wallpaper, id, dispatch } =
-    data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    wallpaper,
+    id,
+    callRefreshProfile = true,
+    callRefreshFriend = false,
+    callRefreshPost = false,
+    dispatch,
+  } = data.payload;
 
   var bodyFormData = new FormData();
   bodyFormData.append('file', wallpaper);
@@ -169,6 +198,9 @@ async function updateWallSagaRequest(data) {
           accessToken,
           refreshToken,
           id,
+          callRefreshProfile,
+          callRefreshFriend,
+          callRefreshPost,
           dispatch,
         })
       );
@@ -195,8 +227,16 @@ function* handleUpdateDetail(data) {
   }
 }
 async function updateDetailSagaRequest(data) {
-  const { accessToken, refreshToken, description, id, dispatch } =
-    data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    description,
+    id,
+    callRefreshProfile = true,
+    callRefreshFriend = false,
+    callRefreshPost = false,
+    dispatch,
+  } = data.payload;
 
   try {
     const res = await axiosInStanceJWT.put(
@@ -217,6 +257,9 @@ async function updateDetailSagaRequest(data) {
           accessToken,
           refreshToken,
           id,
+          callRefreshProfile,
+          callRefreshFriend,
+          callRefreshPost,
           dispatch,
         })
       );
@@ -230,7 +273,9 @@ async function updateDetailSagaRequest(data) {
     // dispatch(updateWallpaperFailed());
   }
 }
+// #endregion
 
+// #region delete images
 export function* deleteAvtReq() {
   yield takeLatest(deleteAvtSaga.type, handleDeleteAvt);
 }
@@ -243,7 +288,15 @@ function* handleDeleteAvt(data) {
   }
 }
 async function deleteAvtSagaRequest(data) {
-  const { accessToken, refreshToken, id, dispatch } = data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    callRefreshProfile = true,
+    callRefreshFriend = false,
+    callRefreshPost = false,
+    dispatch,
+  } = data.payload;
 
   try {
     const res = await axiosInStanceJWT.delete(
@@ -263,6 +316,9 @@ async function deleteAvtSagaRequest(data) {
           accessToken,
           refreshToken,
           id,
+          callRefreshProfile,
+          callRefreshFriend,
+          callRefreshPost,
           dispatch,
         })
       );
@@ -289,7 +345,15 @@ function* handleDeleteWall(data) {
   }
 }
 async function deleteWallSagaRequest(data) {
-  const { accessToken, refreshToken, id, dispatch } = data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    callRefreshProfile = true,
+    callRefreshFriend = false,
+    callRefreshPost = false,
+    dispatch,
+  } = data.payload;
 
   try {
     const res = await axiosInStanceJWT.delete(
@@ -309,6 +373,9 @@ async function deleteWallSagaRequest(data) {
           accessToken,
           refreshToken,
           id,
+          callRefreshProfile,
+          callRefreshFriend,
+          callRefreshPost,
           dispatch,
         })
       );
@@ -322,3 +389,4 @@ async function deleteWallSagaRequest(data) {
     // dispatch(deleteWallpaperFailed());
   }
 }
+// #endregion
