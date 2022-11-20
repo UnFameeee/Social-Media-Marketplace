@@ -77,6 +77,9 @@ function UserProfile(props) {
   const allFriends = useSelector(
     (state) => state.friends.getAll?.data
   );
+  const galleryImgs = useSelector(
+    (state) => state.profile.galleryImg?.data
+  );
 
   var id =
     queryParams.id ?? profileData?.profile_id ?? userData?.profile_id;
@@ -547,24 +550,19 @@ function UserProfile(props) {
               </div>
             )}
 
-            <GridSideInfo
-              type="photo"
-              leftLabel="Photo"
-              rightLabel={{ text: 'See all Photos' }}
-              listImg={[
-                { url: 'https://source.unsplash.com/random/211×212' },
-                { url: 'https://source.unsplash.com/random/211×211' },
-                { url: 'https://source.unsplash.com/random/211×213' },
-                { url: 'https://source.unsplash.com/random/211×214' },
-                { url: 'https://source.unsplash.com/random/211×215' },
-                { url: 'https://source.unsplash.com/random/211×216' },
-                { url: 'https://source.unsplash.com/random/211×218' },
-                { url: 'https://source.unsplash.com/random/211×217' },
-                { url: 'https://source.unsplash.com/random/211×219' },
-              ]}
-            />
+            {/* gallery images section */}
+            {galleryImgs?.page?.totalElement > 0 && (
+              <GridSideInfo
+                type="photo"
+                leftLabel="Photo"
+                rightLabel={{ text: 'See all Photos' }}
+                listImg={galleryImgs?.data?.map((x) => {
+                  return { url: x.link };
+                })}
+              />
+            )}
 
-            {/* friend sections */}
+            {/* friends section */}
             {allFriends?.page?.totalElement > 0 && (
               <GridSideInfo
                 type="friendPhoto"

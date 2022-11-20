@@ -21,6 +21,7 @@ import {
 import {
   deleteAvtReq,
   deleteWallReq,
+  getGalleryImageReq,
   refreshProfile,
   updateAvtReq,
   updateDetailReq,
@@ -48,6 +49,7 @@ export default function* rootSaga() {
   ]);
   yield all([
     fork(refreshProfile),
+    fork(getGalleryImageReq),
     fork(updateAvtReq),
     fork(deleteAvtReq),
     fork(updateWallReq),

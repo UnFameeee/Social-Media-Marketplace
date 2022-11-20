@@ -42,7 +42,7 @@ function GridSideInfo(props) {
                   <li key={index}>
                     <img
                       src={item.url}
-                      alt=""
+                      alt={item.alt + index}
                       className="photoGridImage rounded-tr-[1rem]"
                     />
                   </li>
@@ -52,7 +52,7 @@ function GridSideInfo(props) {
                   <li key={index}>
                     <img
                       src={item.url}
-                      alt=""
+                      alt={item.alt + index}
                       className="photoGridImage rounded-tl-[1rem] "
                     />
                   </li>
@@ -62,7 +62,7 @@ function GridSideInfo(props) {
                   <li key={index}>
                     <img
                       src={item.url}
-                      alt=""
+                      alt={item.alt + index}
                       className="photoGridImage rounded-bl-[1rem] "
                     />
                   </li>
@@ -72,7 +72,7 @@ function GridSideInfo(props) {
                   <li key={index}>
                     <img
                       src={item.url}
-                      alt=""
+                      alt={item.alt + index}
                       className="photoGridImage rounded-br-[1rem] "
                     />
                   </li>
@@ -82,7 +82,7 @@ function GridSideInfo(props) {
                   <li key={index}>
                     <img
                       src={item.url}
-                      alt=""
+                      alt={item.alt + index}
                       className="photoGridImage"
                     />
                     {type === 'friendPhoto' && <span>Name</span>}

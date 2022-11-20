@@ -6,6 +6,9 @@ import {
   deleteAvtSagaSuccess,
   deleteWallpaperSaga,
   deleteWallpaperSagaSuccess,
+  getGalleryFailed,
+  getGallerySaga,
+  getGallerySuccess,
   getProfileDetailSuccess,
   getProfileSaga,
   getProfileSagaSuccess,
@@ -22,7 +25,18 @@ import {
   updateWallpaperSuccess,
 } from './profileSlice';
 import { notifyService } from '../../services/notifyService';
-import { acceptSagaSuccess, addFriendSagaSuccess, denySagaSuccess, unfriendSagaSuccess } from '../friend/friendSlice';
+import {
+  acceptSagaSuccess,
+  addFriendSagaSuccess,
+  denySagaSuccess,
+  unfriendSagaSuccess,
+} from '../friend/friendSlice';
+import {
+  createPostSagaSuccess,
+  deletePostSagaSuccess,
+  updatePostSagaSuccess,
+} from '../post/postSlice';
+import { paging } from '../../common/constants/apiConfig';
 
 export function* refreshProfile() {
   yield takeLatest(
@@ -59,6 +73,7 @@ async function getProfileDetailSaga(data) {
     id,
     callRefreshFriend = true,
     callRefreshPost = true,
+    callRefreshGallery = true,
     dispatch,
   } = data.payload;
   try {
@@ -80,6 +95,7 @@ async function getProfileDetailSaga(data) {
           id,
           callRefreshFriend,
           callRefreshPost,
+          callRefreshGallery,
           dispatch,
         })
       );
@@ -110,8 +126,6 @@ async function updateAvtSagaRequest(data) {
     avatar,
     id,
     callRefreshProfile = true,
-    callRefreshFriend = false,
-    callRefreshPost = false,
     dispatch,
   } = data.payload;
   var bodyFormData = new FormData();
@@ -137,8 +151,9 @@ async function updateAvtSagaRequest(data) {
           refreshToken,
           id,
           callRefreshProfile,
-          callRefreshFriend,
-          callRefreshPost,
+          callRefreshFriend: false,
+          callRefreshPost: false,
+          callRefreshGallery: false,
           dispatch,
         })
       );
@@ -171,8 +186,6 @@ async function updateWallSagaRequest(data) {
     wallpaper,
     id,
     callRefreshProfile = true,
-    callRefreshFriend = false,
-    callRefreshPost = false,
     dispatch,
   } = data.payload;
 
@@ -199,8 +212,9 @@ async function updateWallSagaRequest(data) {
           refreshToken,
           id,
           callRefreshProfile,
-          callRefreshFriend,
-          callRefreshPost,
+          callRefreshFriend: false,
+          callRefreshPost: false,
+          callRefreshGallery: false,
           dispatch,
         })
       );
@@ -233,8 +247,6 @@ async function updateDetailSagaRequest(data) {
     description,
     id,
     callRefreshProfile = true,
-    callRefreshFriend = false,
-    callRefreshPost = false,
     dispatch,
   } = data.payload;
 
@@ -258,8 +270,9 @@ async function updateDetailSagaRequest(data) {
           refreshToken,
           id,
           callRefreshProfile,
-          callRefreshFriend,
-          callRefreshPost,
+          callRefreshFriend: false,
+          callRefreshPost: false,
+          callRefreshGallery: false,
           dispatch,
         })
       );
@@ -293,8 +306,6 @@ async function deleteAvtSagaRequest(data) {
     refreshToken,
     id,
     callRefreshProfile = true,
-    callRefreshFriend = false,
-    callRefreshPost = false,
     dispatch,
   } = data.payload;
 
@@ -317,8 +328,9 @@ async function deleteAvtSagaRequest(data) {
           refreshToken,
           id,
           callRefreshProfile,
-          callRefreshFriend,
-          callRefreshPost,
+          callRefreshFriend: false,
+          callRefreshPost: false,
+          callRefreshGallery: false,
           dispatch,
         })
       );
@@ -350,8 +362,6 @@ async function deleteWallSagaRequest(data) {
     refreshToken,
     id,
     callRefreshProfile = true,
-    callRefreshFriend = false,
-    callRefreshPost = false,
     dispatch,
   } = data.payload;
 
@@ -374,8 +384,9 @@ async function deleteWallSagaRequest(data) {
           refreshToken,
           id,
           callRefreshProfile,
-          callRefreshFriend,
-          callRefreshPost,
+          callRefreshFriend: false,
+          callRefreshPost: false,
+          callRefreshGallery: false,
           dispatch,
         })
       );
@@ -390,3 +401,51 @@ async function deleteWallSagaRequest(data) {
   }
 }
 // #endregion
+
+export function* getGalleryImageReq() {
+  yield takeLatest(
+    [
+      getGallerySaga.type,
+
+      getProfileSagaSuccess.type,
+      createPostSagaSuccess.type,
+      deletePostSagaSuccess.type,
+      updatePostSagaSuccess.type,
+    ],
+    handleGetGallery
+  );
+}
+function* handleGetGallery(data) {
+  try {
+    if (data.payload?.callRefreshGallery) {
+      const galleryImg = yield call(getGallerySagaRequest, data);
+      yield put(getGallerySuccess(galleryImg.data.results));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function getGallerySagaRequest(data) {
+  const { accessToken, refreshToken, id, dispatch } = data.payload;
+
+  try {
+    const res = await axiosInStanceJWT.post(
+      `${api.profile}/galleryImage/${id}`,
+      paging,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      return res;
+    } else {
+      dispatch(getGalleryFailed());
+    }
+  } catch (error) {
+    dispatch(getGalleryFailed());
+  }
+}
