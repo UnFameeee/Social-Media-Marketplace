@@ -12,6 +12,7 @@ import { PostCommentModule } from './social-media/post/module/post-comment.modul
 import { ProductModule } from './marketplace/product/module/product.module';
 import { ProductImageModule } from './marketplace/image/module/product_image.module';
 import { ShoppingCartModule } from './marketplace/shopping_cart/module/shopping_cart.module';
+import { PostCommentLikeModule } from './social-media/post/module/post-comment-like.module';
 
 
 @Module({
@@ -20,6 +21,7 @@ import { ShoppingCartModule } from './marketplace/shopping_cart/module/shopping_
     ProfileModule,
     PostModule,
     PostCommentModule,
+    PostCommentLikeModule,
     PostLikeModule,
     DatabaseModule,
     AuthModule,

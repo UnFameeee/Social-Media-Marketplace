@@ -5,6 +5,7 @@ import { ChatJoinedRoom } from "src/social-media/message/model/joined_room.model
 import { ChatMessage } from "src/social-media/message/model/message.model";
 import { ChatRoom } from "src/social-media/message/model/room.model";
 import { Category } from "../model/category.model";
+import { PostCommentLike } from "../model/post-comment-like.model";
 import { Description } from "../model/description.model";
 import { Friendship } from "../model/friendship.model";
 import { OrderLine } from "../model/order_line.model";
@@ -55,6 +56,13 @@ export const postCommentProviders = [
     {
         provide: PROVIDER.PostComment,
         useValue: PostComment
+    }
+]
+
+export const postCommentLikeProviders = [
+    {
+        provide: PROVIDER.PostCommentLike,
+        useValue: PostCommentLike
     }
 ]
 

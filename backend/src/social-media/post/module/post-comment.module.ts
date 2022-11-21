@@ -3,9 +3,10 @@ import { parentChildCommentProviders, postCommentProviders, postProviders } from
 import { PostCommentController } from '../controller/post-comment.controller';
 import { PostCommentRepository } from '../repository/post-comment.repository';
 import { PostCommentService } from '../service/post-comment.service';
+import { PostCommentLikeModule } from './post-comment-like.module';
 
 @Module({
-  imports: [],
+  imports: [PostCommentLikeModule],
   controllers: [PostCommentController],
   providers: [
     PostCommentService,
