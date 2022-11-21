@@ -21,10 +21,10 @@ export class PostCommentService {
         }
     }
 
-    async getAllCommentOfPost(post_id: number, page: Page): Promise<ResponseData<any>> {
+    async getAllCommentOfPost(profile_id: number, post_id: number, page: Page): Promise<ResponseData<any>> {
         try {
             const response = new ResponseData<boolean>();
-            var res = await this.postCommentRepository.getAllCommentOfPost(post_id, page);
+            var res = await this.postCommentRepository.getAllCommentOfPost(profile_id, post_id, page);
             response.results = res;
             return response;
         } catch (err) {

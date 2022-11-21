@@ -14,12 +14,15 @@ import { PagingData } from "src/database/view-model/paging.model";
 import { Profile } from "src/database/model/profile.model";
 import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
 import { Helper } from "src/common/utils/helper.utils";
+import { PostCommentLike } from "src/database/model/post-comment-like.model";
+import { PostCommentLikeRepository } from "./post-comment-like.repository";
 
 @Injectable()
 export class PostCommentRepository {
     constructor(
         @Inject(PROVIDER.Post) private postRepository: typeof Post,
         @Inject(PROVIDER.PostComment) private postCommentRepository: typeof PostComment,
+        @Inject(PostCommentLikeRepository) private postCommentLikeRepository: PostCommentLikeRepository,
         @Inject(PROVIDER.ParentChildComment) private parentChildCommentRepository: typeof ParentChildComment,
     ) { };
 
@@ -143,7 +146,7 @@ export class PostCommentRepository {
         }
     }
 
-    async getAllCommentOfPost(post_id: number, page: Page): Promise<any> {
+    async getAllCommentOfPost(profile_id: number, post_id: number, page: Page): Promise<any> {
         try {
             var result = new PagingData<any[]>();
             //query to get exclude array child comment
@@ -334,7 +337,11 @@ export class PostCommentRepository {
 
             const post_comment = await Helper.SQLobjectToObject(queryData.rows);
             for (const comment of post_comment) {
+                comment["isLiked"] = await  this.postCommentLikeRepository.isLikedPostComment(profile_id, comment["post_comment_id"]);
+                comment["totalLike"] = await this.postCommentLikeRepository.allLikeOfPostComment(comment["post_comment_id"]);
+
                 comment["profile_name"] = comment["comment_profile"]["profile_name"];
+
                 //check if that profile doesnt have avatar
                 if (comment["comment_profile"]["profile_avatar"] != null) {
                     comment["avatar"] = comment["comment_profile"]["profile_avatar"]["link"];
@@ -346,8 +353,12 @@ export class PostCommentRepository {
                 //Go to child comment
                 if (comment["all_child_comment"].length != 0) {
                     for (const child_comment of comment["all_child_comment"]) {
-
                         child_comment["post_comment_id"] = child_comment["child_comment"]["post_comment_id"];
+
+                        child_comment["isLiked"] = await this.postCommentLikeRepository.isLikedPostComment(profile_id, child_comment["post_comment_id"]);
+                        child_comment["totalLike"] = await this.postCommentLikeRepository.allLikeOfPostComment(child_comment["post_comment_id"]);
+
+
                         child_comment["comment_text"] = child_comment["child_comment"]["comment_text"];
                         child_comment["profile_id"] = child_comment["child_comment"]["profile_id"];
                         child_comment["post_id"] = child_comment["child_comment"]["post_id"];
