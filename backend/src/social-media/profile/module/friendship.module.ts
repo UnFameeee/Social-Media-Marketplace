@@ -3,7 +3,6 @@ import { friendshipProviders } from 'src/database/providers/all.providers';
 import { FriendshipController } from '../controller/friendship.controller';
 import { FriendshipRepository } from '../repository/friendship.repository';
 import { FriendshipService } from '../service/friendship.service';
-import { ProfileModule } from './profile.module';
 
 @Module({
   imports: [],
