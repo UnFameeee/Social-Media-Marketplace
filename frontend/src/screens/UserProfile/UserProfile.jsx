@@ -106,7 +106,19 @@ function UserProfile(props) {
   var wallpaperURL;
   if (wallpaper) {
     wallpaperURL = URL.createObjectURL(wallpaper);
+  } else {
+    wallpaperURL = '';
   }
+  var listUploadWall = [
+    {
+      middle: 'Upload photo',
+      onClick: () => {
+        document.getElementById('wallpaperRef').click();
+        setMenuClicked(false);
+      },
+    },
+  ];
+
   const onImageChange = (e) => {
     const [file] = e.target.files;
     setWallpaper(file);
@@ -117,6 +129,7 @@ function UserProfile(props) {
 
   var callRefreshFriend = Helper.checkURL('friends');
   var callRefreshProfile = Helper.checkURL('profile');
+  var callRefreshFriendSuggestion = Helper.checkURL('suggestions');
   var callRefreshSentRequest = Helper.checkURL('sent');
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -220,27 +233,21 @@ function UserProfile(props) {
                       width: 'auto',
                       zIndex: 1,
                       right: '1rem',
-                      bottom: '2rem',
+                      bottom: profileData?.wallpaper
+                        ? '2rem'
+                        : '7.6rem',
                     }}
-                    list={[
-                      {
-                        middle: 'Upload photo',
-                        onClick: () => {
-                          document
-                            .getElementById('wallpaperRef')
-                            .click();
-
-                          setMenuClicked(false);
-                        },
-                      },
-                      {
-                        middle: 'Remove',
-                        onClick: () => {
-                          setOpenConfirmRemove(true);
-                          setMenuClicked(false);
-                        },
-                      },
-                    ]}
+                    list={
+                      profileData?.wallpaper
+                        ? listUploadWall.concat({
+                            middle: 'Remove',
+                            onClick: () => {
+                              setOpenConfirmRemove(true);
+                              setMenuClicked(false);
+                            },
+                          })
+                        : listUploadWall
+                    }
                   />
                 )}
 
@@ -345,6 +352,8 @@ function UserProfile(props) {
                     callRefreshFriend: callRefreshFriend,
                     callRefreshProfile: callRefreshProfile,
                     callRefreshSentRequest: callRefreshSentRequest,
+                    callRefreshFriendSuggestion:
+                      callRefreshFriendSuggestion,
                     dispatch: dispatch,
                     navigate: navigate,
                   }}
@@ -551,42 +560,44 @@ function UserProfile(props) {
             )}
 
             {/* gallery images section */}
-            {galleryImgs?.page?.totalElement > 0 && (
-              <GridSideInfo
-                type="photo"
-                leftLabel="Photo"
-                rightLabel={{ text: 'See all Photos' }}
-                listImg={galleryImgs?.data?.map((x) => {
-                  return { url: x.link };
-                })}
-              />
-            )}
+            <GridSideInfo
+              type="photo"
+              leftLabel="Photo"
+              // rightLabel={{ text: 'See all Photos' }}
+              listImg={galleryImgs?.data?.map((x) => {
+                return { url: x.link };
+              })}
+            />
 
             {/* friends section */}
-            {allFriends?.page?.totalElement > 0 && (
-              <GridSideInfo
-                type="friendPhoto"
-                leftLabel="Friends"
-                rightLabel={{
-                  text: 'See all Friends',
-                  onClick: () => {
-                    navigate('/friends/all');
-                  },
-                }}
-                listImg={allFriends?.data?.map((x) => {
-                  return {
-                    id: x.profile_id,
-                    url: x.avatar,
-                    name: x.profile_name,
-                  };
-                })}
-                totalFriends={Helper.isMultiple(
-                  'friend',
-                  allFriends?.page?.totalElement
-                )}
-                navigate={navigate}
-              />
-            )}
+            <GridSideInfo
+              type="friendPhoto"
+              leftLabel="Friends"
+              rightLabel={
+                userData?.profile_id == profileData?.profile_id
+                  ? {
+                      text: 'See all Friends',
+                      onClick: () => {
+                        if (id == userData?.profile_id) {
+                          navigate('/friends/all');
+                        }
+                      },
+                    }
+                  : null
+              }
+              listImg={allFriends?.data?.map((x) => {
+                return {
+                  id: x.profile_id,
+                  url: x.avatar,
+                  name: x.profile_name,
+                };
+              })}
+              totalFriends={Helper.isMultiple(
+                'friend',
+                allFriends?.page?.totalElement
+              )}
+              navigate={navigate}
+            />
           </div>
         </div>
 
@@ -623,6 +634,7 @@ function ProfileAction({
     refreshToken,
     id,
     mainId,
+    callRefreshFriendSuggestion,
     callRefreshFriend,
     callRefreshSentRequest,
     callRefreshProfile,
@@ -646,7 +658,7 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefreshFriendSuggestion: false,
+                callRefreshFriendSuggestion,
                 callRefreshSentRequest,
                 callRefreshProfile,
                 dispatch,
@@ -822,10 +834,12 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
   const { accessToken, refreshToken, id, dispatch } = actionProps;
   const [openConfirmDiscard, setOpenConfirmDiscard] = useState(false);
   const [openConfirmRemove, setOpenConfirmRemove] = useState(false);
-  const [avatar, setAvatar] = useState();
+  const [avatar, setAvatar] = useState('');
   var imageURL;
   if (avatar) {
     imageURL = URL.createObjectURL(avatar);
+  } else {
+    imageURL = '';
   }
 
   const onImageChange = (e) => {
@@ -839,6 +853,11 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
     } else {
       modalProps[1](false);
     }
+  };
+
+  const handleReset = () => {
+    modalProps[1](false);
+    setAvatar('');
   };
 
   return (
@@ -915,6 +934,7 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
             Cancel
           </MUI.Button>
           <MUI.Button
+            disabled={Helper.isNullOrEmpty(imageURL)}
             onClick={() => {
               dispatch(
                 updateAvtSaga({
@@ -925,7 +945,7 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
                   dispatch,
                 })
               );
-              modalProps[1](false);
+              handleReset();
             }}
           >
             Save
@@ -938,8 +958,7 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
           actionName="discard change"
           confirmAction={() => {
             setOpenConfirmDiscard(false);
-            modalProps[1](false);
-            setAvatar('');
+            handleReset();
           }}
         />
 
@@ -957,8 +976,7 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
               })
             );
             setOpenConfirmRemove(false);
-            modalProps[1](false);
-            setAvatar('');
+            handleReset();
           }}
         />
       </Paper>

@@ -1,7 +1,7 @@
 import { put, takeLatest, call } from 'redux-saga/effects';
 import { axiosInStanceJWT } from '../axiosJWT';
 import api from '../../common/environment/environment';
-import { paging } from '../../common/constants/apiConfig';
+import { paging, leftBarPaging } from '../../common/constants/apiConfig';
 import {
   acceptFailed,
   acceptSaga,
@@ -63,7 +63,7 @@ async function getAllRequestSaga(data) {
   try {
     const res = await axiosInStanceJWT.post(
       `${api.friend}/request/all`,
-      paging,
+      leftBarPaging,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -159,7 +159,6 @@ async function denySagaRequest(data) {
     refreshToken,
     id,
     callRefreshFriend = true,
-    callRefreshFriendSuggestion = false,
     callRefreshProfile = false,
     callRefreshPost = false,
     dispatch,
@@ -185,7 +184,6 @@ async function denySagaRequest(data) {
           refreshToken,
           id,
           callRefreshFriend,
-          callRefreshFriendSuggestion,
           callRefreshProfile,
           callRefreshPost,
           callRefreshGallery: false,
@@ -226,7 +224,7 @@ async function getAllSaga(data) {
   try {
     const res = await axiosInStanceJWT.post(
       `${api.friend}/all/${id}`,
-      paging,
+      leftBarPaging,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -264,7 +262,7 @@ async function getAllForMainUserSaga(data) {
   try {
     const res = await axiosInStanceJWT.post(
       `${api.friend}/all/${mainId}`,
-      paging,
+      leftBarPaging,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -349,7 +347,6 @@ export function* refreshFriendSuggestion() {
   yield takeLatest(
     [
       addFriendSagaSuccess.type,
-      denySagaSuccess.type,
       getFriendSuggestionSaga.type,
     ],
     handleRefreshSuggestionSaga
@@ -370,7 +367,7 @@ async function getAllSuggestionSaga(data) {
   try {
     const res = await axiosInStanceJWT.post(
       `${api.profile}/friendSuggestion`,
-      paging,
+      leftBarPaging,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -480,7 +477,7 @@ async function getAllSentRequestSaga(data) {
   try {
     const res = await axiosInStanceJWT.post(
       `${api.friend}/getAllSentFriendRequest`,
-      paging,
+      leftBarPaging,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

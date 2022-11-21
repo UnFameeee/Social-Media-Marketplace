@@ -36,7 +36,7 @@ import {
   deletePostSagaSuccess,
   updatePostSagaSuccess,
 } from '../post/postSlice';
-import { paging } from '../../common/constants/apiConfig';
+import { galleryPaging } from '../../common/constants/apiConfig';
 
 export function* refreshProfile() {
   yield takeLatest(
@@ -431,7 +431,7 @@ async function getGallerySagaRequest(data) {
   try {
     const res = await axiosInStanceJWT.post(
       `${api.profile}/galleryImage/${id}`,
-      paging,
+      galleryPaging,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

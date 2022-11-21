@@ -173,6 +173,19 @@ function isEmptyObject(obj, checkValue = false) {
   }
 }
 
+function isEmptyObjectList(list, checkValueInObject = false) {
+  if (list.length < 0) return true;
+  else {
+    let res = true;
+    list?.forEach((x) => {
+      if (isEmptyObject(x, checkValueInObject)) {
+        res = false;
+      }
+    });
+    return res;
+  }
+}
+
 function convertArrayObjectToObject(arrayObject) {
   return arrayObject.reduce(function (obj, item) {
     var keys = Object.keys(item);
@@ -181,18 +194,26 @@ function convertArrayObjectToObject(arrayObject) {
   }, {});
 }
 
-function sortEntriesByKey(desc = false) {
-  const n = { less: desc ? 1 : -1, more: desc ? -1 : 1 };
-  return (curr, next) =>
-    curr?.[0] < next?.[0] ? n.less : curr?.[0] > next?.[0] ? n.more : 0;
-};
+// function sortEntriesByKey(desc = false) {
+//   const n = { less: desc ? 1 : -1, more: desc ? -1 : 1 };
+//   return (curr, next) =>
+//     curr?.[0] < next?.[0]
+//       ? n.less
+//       : curr?.[0] > next?.[0]
+//       ? n.more
+//       : 0;
+// }
 
-function sortArrayByKey(key = "id", desc = false) {
-  if (!key) return undefined;
-  const n = { less: desc ? 1 : -1, more: desc ? -1 : 1 };
-  return (curr, next) =>
-    curr?.[key] < next?.[key] ? n.less : curr?.[key] > next?.[key] ? n.more : 0;
-};
+// function sortArrayByKey(key = 'id', desc = false) {
+//   if (!key) return undefined;
+//   const n = { less: desc ? 1 : -1, more: desc ? -1 : 1 };
+//   return (curr, next) =>
+//     curr?.[key] < next?.[key]
+//       ? n.less
+//       : curr?.[key] > next?.[key]
+//       ? n.more
+//       : 0;
+// }
 
 export const Helper = {
   generateId,
@@ -213,6 +234,7 @@ export const Helper = {
   isMultiple,
   isEmptyObject,
   convertArrayObjectToObject,
-  sortEntriesByKey,
-  sortArrayByKey,
+  // sortEntriesByKey,
+  // sortArrayByKey,
+  isEmptyObjectList,
 };
