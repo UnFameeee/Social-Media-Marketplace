@@ -160,7 +160,7 @@ export const databaseProviders = [
             Product.hasOne(Variation, { foreignKey: { name: "product_id", field: "product_id" } });
             Variation.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
-            Product.hasMany(ProductImage, { foreignKey: { name: "product_id", field: "product_id" } });
+            Product.hasMany(ProductImage, { foreignKey: { name: "product_id", field: "product_id" }, as: "product_image"});
             ProductImage.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
             // Category.hasMany(SubCategory, { foreignKey: { name: "category_id", field: "category_id" } });

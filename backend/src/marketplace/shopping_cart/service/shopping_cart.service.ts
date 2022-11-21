@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 import { Product } from 'src/database/model/product.model';
+import { ShoppingCartItem } from 'src/database/model/shopping_cart_item.model';
 import { Page } from 'src/database/view-model/page-model';
 import { PagingData } from 'src/database/view-model/paging.model';
 import { ResponseData } from 'src/database/view-model/success-message.model';
@@ -48,7 +49,7 @@ export class ShoppingCartService {
     async getAllProductInCartPaging(profile_id: number, page: Page): Promise<ResponseData<PagingData<Product[]>>> {
         try {
             var response = new ResponseData<PagingData<Product[]>>();
-            response.results = null;
+            response.results = await this.shoppingCartRepository.getAllProductInCartPaging(profile_id, page);
             return response;
         } catch (err) {
             ExceptionResponse(err);
@@ -59,11 +60,10 @@ export class ShoppingCartService {
     async getAllProductInCartWithoutPaging(profile_id: number): Promise<ResponseData<Product[]>> {
         try {
             var response = new ResponseData<Product[]>();
-            response.results = null;
+            response.results = await this.shoppingCartRepository.getAllProductInCartWithoutPaging(profile_id);
             return response;
         } catch (err) {
             ExceptionResponse(err);
         }
     }
-
 }

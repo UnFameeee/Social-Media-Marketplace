@@ -1,11 +1,13 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Sequelize } from "sequelize-typescript";
+import { Helper } from "src/common/utils/helper.utils";
 import { paginate } from "src/common/utils/paginate.utils";
 import { ProductFullDetailDto } from "src/database/dtos/product-full-detail.dto";
 import { ProductEntity } from "src/database/entity/product";
 import { Product } from "src/database/model/product.model";
 import { ProductImage } from "src/database/model/product_image.model";
 import { Profile } from "src/database/model/profile.model";
+import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
 import { ShopAddress } from "src/database/model/shop_address.model";
 import { Variation } from "src/database/model/variation.model";
 import { PROVIDER } from "src/database/providers/provider.constant";
@@ -51,6 +53,8 @@ export class ProductRepository {
                 ]
             })
 
+            // var queryData: any;
+
             if (queryDataCheck) {
                 //owner
                 var queryData = await this.productRepository.findOne({
@@ -61,10 +65,17 @@ export class ProductRepository {
                     include: [
                         {
                             model: Profile,
-                            attributes: [],
+                            attributes: ["profile_name"],
                             where: {
                                 profile_id: profile_id,
-                            }
+                            },
+                            include: [
+                                {
+                                    model: ProfileAvatarImage,
+                                    as: "profile_avatar",
+                                    attributes: ["link"],
+                                }
+                            ]
                         },
                         {
                             model: Variation,
@@ -80,11 +91,11 @@ export class ProductRepository {
                         },
                         {
                             model: ProductImage,
+                            as: "product_image",
                             attributes: ["link"],
                         }
                     ]
                 })
-                return queryData;
             } else {
                 //buyer
                 var queryData = await this.productRepository.findOne({
@@ -95,10 +106,14 @@ export class ProductRepository {
                     include: [
                         {
                             model: Profile,
-                            attributes: [],
-                            where: {
-                                profile_id: profile_id,
-                            }
+                            attributes: ["profile_name"],
+                            include: [
+                                {
+                                    model: ProfileAvatarImage,
+                                    as: "profile_avatar",
+                                    attributes: ["link"],
+                                }
+                            ]
                         },
                         {
                             model: Variation,
@@ -114,12 +129,21 @@ export class ProductRepository {
                         },
                         {
                             model: ProductImage,
+                            as: "product_image",
                             attributes: ["link"],
                         }
                     ]
                 })
-                return queryData;
             }
+
+            const product = await Helper.SQLobjectToObject(queryData);
+            if (product["Profile"]["profile_avatar"] != null) {
+                product["Profile"]["avatar"] = product["Profile"]["profile_avatar"]["link"];
+            }
+            else product["Profile"]["avatar"] = null;
+
+            delete product["Profile"]["profile_avatar"]
+            return product;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
@@ -174,15 +198,19 @@ export class ProductRepository {
                 attributes: {
                     exclude: ["quantity_in_stock", "createdAt", "deletedAt", "updatedAt", "profile_id"],
                 },
-                // attributes: [
-                //     "product_id", "name", "description", "price", "profile_id", "category_id",
-                // ],
                 include: [
                     {
                         model: Profile,
                         attributes: [
                             "profile_id", "profile_name",
                         ],
+                        include: [
+                            {
+                                model: ProfileAvatarImage,
+                                as: "profile_avatar",
+                                attributes: ["link"],
+                            }
+                        ]
                     },
                     {
                         model: Variation,
@@ -198,10 +226,12 @@ export class ProductRepository {
                     },
                     {
                         model: ProductImage,
+                        as: "product_image",
                         attributes: ["link"],
                     }
                 ],
                 order: [
+                    // ['createdAt', 'DESC'],
                     Sequelize.literal('rand()'),
                 ],
                 raw: false,

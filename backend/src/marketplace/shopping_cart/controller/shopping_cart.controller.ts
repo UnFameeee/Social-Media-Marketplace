@@ -3,6 +3,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Product } from 'src/database/model/product.model';
 import { Profile } from 'src/database/model/profile.model';
+import { ShoppingCartItem } from 'src/database/model/shopping_cart_item.model';
 import { Page } from 'src/database/view-model/page-model';
 import { PagingData } from 'src/database/view-model/paging.model';
 import { ResponseData } from 'src/database/view-model/success-message.model';
