@@ -1,4 +1,3 @@
-import { Grid } from '@mui/material';
 import { useLayoutEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
@@ -60,9 +59,9 @@ const FriendHome = () => {
     <>
       <h2 className="friend-home-title">Friend Requests</h2>
       {friendRequests?.length > 0 ? (
-        <Grid container sx={{ padding: '2rem' }}>
+        <div className="friend-home-grid">
           {friendRequests.map((item, index) => (
-            <Grid key={index} item xs className="friend-home-grid">
+            <div key={index}>
               <FriendCard
                 profileDetails={item}
                 firstButtonConfig={{
@@ -84,16 +83,15 @@ const FriendHome = () => {
                         accessToken,
                         refreshToken,
                         id: item.profile_id,
-                        callRefreshFriendSuggestion: true,
                         dispatch,
                       })
                     );
                   },
                 }}
               />
-            </Grid>
+            </div>
           ))}
-        </Grid>
+        </div>
       ) : (
         <h3 className="text-[8rem] text-center pt-[10rem]">
           You have no friend requests
@@ -102,9 +100,9 @@ const FriendHome = () => {
 
       <h2 className="friend-home-title">People you may know</h2>
       {friendSuggestions?.length > 0 ? (
-        <Grid container sx={{ padding: '2rem' }}>
+        <div className="friend-home-grid">
           {friendSuggestions?.map((item, index) => (
-            <Grid key={index} item xs className="friend-home-grid">
+            <div key={index}>
               <FriendCard
                 type="suggestions"
                 profileDetails={item}
@@ -125,9 +123,9 @@ const FriendHome = () => {
                   },
                 }}
               />
-            </Grid>
+            </div>
           ))}
-        </Grid>
+        </div>
       ) : (
         <h3 className="text-[8rem] text-center pt-[10rem]">
           No one here
