@@ -1,5 +1,5 @@
 import { all, fork } from 'redux-saga/effects';
-import { commentPost, deleteCommentPost, getCommentPost } from './comment/commentSaga';
+import { commentPost, deleteCommentPost, getCommentPost, updateCommentPost } from './comment/commentSaga';
 import {
   acceptFriendReq,
   addFriend,
@@ -55,6 +55,6 @@ export default function* rootSaga() {
     fork(updateDetailReq),
   ]);
   yield all ([
-    fork(commentPost),fork(getCommentPost),fork(deleteCommentPost)
+    fork(commentPost),fork(getCommentPost),fork(deleteCommentPost),fork(updateCommentPost)
   ])
 }

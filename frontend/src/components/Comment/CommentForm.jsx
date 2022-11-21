@@ -77,7 +77,7 @@ function CommentForm({ formWidth, placeholder, formReply, post_id, ...props }) {
             e.currentTarget.value.length
           )
         }
-        className="w-full p-[1rem] whitespace-pre-wrap resize-none outline-none rounded-3xl bg-gray-100 px-[1rem]"
+        className="w-full p-[1rem] whitespace-pre-wrap resize-none outline-none rounded-xl bg-gray-100 px-[1rem]"
       ></TextareaAutosize>
     </form>
   );

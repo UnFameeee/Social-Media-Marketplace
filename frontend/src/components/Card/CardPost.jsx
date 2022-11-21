@@ -48,7 +48,7 @@ function CardPost(props) {
     (state) => state.comment?.get?.data,
     shallowEqual
   );
-
+  const [commentPaging, setCommentPaging] = useState({ page: 0, pageSize: 10 });
   //#endregion
 
   //#region Function
@@ -58,18 +58,34 @@ function CardPost(props) {
   };
   const handleDeletePost = () => {
     let postId = post_id;
-    dispatch(deletePostSaga({ accessToken, refreshToken, postId, dispatch }));
+    dispatch(deletePostSaga({ accessToken, refreshToken,dispatch, postId,  }));
     setShowAction(!showAction);
   };
   const handleLikePost = () => {
     let postId = post_id;
-    dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
+    dispatch(likePostSaga({ accessToken, refreshToken,dispatch, postId,  }));
   };
   const handleShowComment = () => {
     dispatch(
       getCommentPostSaga({ accessToken, refreshToken, dispatch, post_id })
     );
     setShowComment(true);
+  };
+  const handleGetMoreComment = () => {
+    setCommentPaging((prev) => prev + 1);
+    let paging = {
+      page: commentPaging.page + 1,
+      pageSize: commentPaging.pageSize,
+    };
+    dispatch(
+      getCommentPostSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        post_id,
+        paging,
+      })
+    );
   };
   let rootComments = useMemo(() => {
     var result = [];
@@ -93,14 +109,16 @@ function CardPost(props) {
       comments.map((comment) => {
         if (comment.post_id === post_id) {
           result = {
-            pageSize: comment?.page?.pageSize ? comment?.page?.pageSize : null,
-            totalElement: comment?.page?.totalElement ? comment?.page?.totalElement : null,
+            totalCurrentShowComment: comment?.page?.totalCurrentShowComment ? comment?.page?.totalCurrentShowComment : null,
+            totalElement: comment?.page?.totalElement
+              ? comment?.page?.totalElement
+              : null,
           };
         }
       });
     }
     return result;
-  },[comments]);
+  }, [comments]);
   //#endregion
   return (
     <>
@@ -261,16 +279,19 @@ function CardPost(props) {
                   post_id={post_id}
                 />
                 <CommentList comments={rootComments} post_id={post_id} />
-                {totalComment && totalComment?.totalElement > totalComment?.pageSize && (
-                  <div className="flex">
-                    <span className="flex-1 hover:cursor-pointer">
-                      See more comments
-                    </span>
-                    <span>
-                      {totalComment?.totalElement}/{totalComment?.pageSize}
-                    </span>
-                  </div>
-                )}
+                {totalComment &&
+                  totalComment?.totalElement > totalComment?.totalCurrentShowComment && (
+                    <div className="flex">
+                      <div
+                        className="flex-1"
+                      >
+                        <span className="flex-1 hover:cursor-pointer underline" onClick={(e) => handleGetMoreComment()}>See more comments</span>
+                      </div>
+                      <span>
+                        {totalComment?.totalCurrentShowComment}/{totalComment?.totalElement}
+                      </span>
+                    </div>
+                  )}
               </div>
             </div>
           )}

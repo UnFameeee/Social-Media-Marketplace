@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { format } from "timeago.js";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ShowMoreText from "react-show-more-text";
-import { deleteCommentPostSaga } from "../../redux/comment/commentSlice";
+import { deleteCommentPostSaga, updateCommentPostSaga } from "../../redux/comment/commentSlice";
 function Comment({
   post_comment_id,
   comment_text,
@@ -41,8 +41,11 @@ function Comment({
   });
   const [showChildComment, setShowChildComment] = useState(true);
   const [showAction, setShowAction] = useState(false);
+  const [showUpdate, setShowUpdate] = useState(false);
+  const [inputUpdate, setInputUpdate] = useState(
+    comment_text ? comment_text : ""
+  );
   const handleDeleteComment = () => {
-    debugger;
     dispatch(
       deleteCommentPostSaga({
         accessToken,
@@ -53,16 +56,32 @@ function Comment({
       })
     );
   };
+  const handleUpdateComment = () => {
+    debugger
+    let comment_text = inputUpdate
+    dispatch(
+      updateCommentPostSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        comment_text,
+        post_comment_id,
+        post_id,
+      })
+    );
+  }
+  const handleOnchangeUpdateInput = (e) => {
+    setInputUpdate(e.target.value);
+  };
   useEffect(() => {
     if (all_child_comment && all_child_comment.length > 1) {
       setShowChildComment(false);
     }
   }, []);
-  console.log(formReply);
   return (
-    <>
-      <div className="comment flex items-baseline">
-        <div className="comment-info flex gap-[0.5rem]">
+    <div className="w-full">
+      <div className="comment flex items-baseline w-full">
+        <div className="comment-info flex gap-[0.5rem] w-full">
           <Avatar
             style={{
               fontSize: "2rem",
@@ -72,100 +91,120 @@ function Comment({
           >
             {userData.profile.profile_name?.at(0)}
           </Avatar>
-          <div className="name-and-message flex flex-col">
-            <div className="flex items-center">
-              <div className="bg-greyf1 rounded-xl p-[1rem]">
-                <span className="line-clamp-1 font-[500]">{profile_name}</span>
-                <div className="message">
-                  <ShowMoreText
-                    lines={5}
-                    more="Show more"
-                    less="Show less"
-                    anchorClass="show-more-less-clickable"
-                    expanded={false}
-                    width={0}
-                    truncatedEndingComponent={"... "}
-                  >
-                    {comment_text}
-                  </ShowMoreText>
-                </div>
-              </div>
-              {profile_id === userData.profile?.profile_id && (
-                <MUI.BetterIconButton
-                  onClick={() => setShowAction(true)}
-                  className=" relative"
-                >
-                  <MoreHorizIcon />
-                  {showAction && (
-                    <ClickAwayListener
-                      onClickAway={(e) => setShowAction(false)}
+          {!showUpdate ? (
+            <div className="name-and-message flex flex-col ">
+              <div className="flex items-center ">
+                <div className="bg-greyf1 rounded-xl p-[1rem] inline-block">
+                  <span className="line-clamp-1 font-[500]">
+                    {profile_name}
+                  </span>
+                  <div className="message ">
+                    <ShowMoreText
+                      lines={8}
+                      more="Show more"
+                      less="Show less"
+                      anchorClass="show-more-less-clickable"
+                      expanded={false}
+                      width={0}
+                      truncatedEndingComponent={"... "}
                     >
-                      <div className="floatingAction bg-white absolute z-10 right-0 shadow-md rounded-xl border-[0.1rem] w-[10rem] left-[3rem] ">
-                        <ul className="flex flex-col ">
-                          <li className="rounded-md p-[0.5rem] cursor-pointer">
-                            <Button
-                              style={{
-                                color: "var(--primary-color)",
-                                border: "1px solid var(--primary-color) ",
-                              }}
-                            >
-                              Update
-                            </Button>
-                          </li>
-                          <li className=" rounded-md p-[0.5rem] cursor-pointer">
-                            <Button
-                              style={{
-                                color: "var(--primary-color)",
-                                border: "1px solid var(--primary-color) ",
-                              }}
-                              onClick={(e) => {
-                                handleDeleteComment();
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </li>
-                        </ul>
-                      </div>
-                    </ClickAwayListener>
-                  )}
+                      {comment_text}
+                    </ShowMoreText>
+                  </div>
+                </div>
+                {profile_id === userData.profile?.profile_id && (
+                  <MUI.BetterIconButton
+                    onClick={() => setShowAction(true)}
+                    className=" relative"
+                  >
+                    <MoreHorizIcon />
+                    {showAction && (
+                      <ClickAwayListener
+                        onClickAway={(e) => setShowAction(false)}
+                      >
+                        <div className="floatingAction bg-white absolute z-10 right-0 shadow-md rounded-xl border-[0.1rem] w-[10rem] left-[3rem] ">
+                          <ul className="flex flex-col ">
+                            <li className="rounded-md p-[0.5rem] cursor-pointer">
+                              <Button
+                                style={{
+                                  color: "var(--primary-color)",
+                                  border: "1px solid var(--primary-color) ",
+                                }}
+                                onClick={(e) => { setShowAction(false); setShowUpdate(true); }}
+                              >
+                                Update
+                              </Button>
+                            </li>
+                            <li className=" rounded-md p-[0.5rem] cursor-pointer">
+                              <Button
+                                style={{
+                                  color: "var(--primary-color)",
+                                  border: "1px solid var(--primary-color) ",
+                                }}
+                                onClick={(e) => {
+                                  {setShowAction(false); handleDeleteComment(); }
+                                }}
+                              >
+                                Delete
+                              </Button>
+                            </li>
+                          </ul>
+                        </div>
+                      </ClickAwayListener>
+                    )}
+                  </MUI.BetterIconButton>
+                )}
+              </div>
+              <div className="footer flex gap-[0.2rem] items-center">
+                <MUI.BetterIconButton>
+                  <ThumbUpIcon />
                 </MUI.BetterIconButton>
-              )}
+                {isNodeComment ? (
+                  <MUI.BetterIconButton
+                    onClick={() => {
+                      setFormReplyFromParent({
+                        isShow: true,
+                        text: profile_name,
+                        parent_comment_id: parent_comment_id,
+                      });
+                      setShowChildComment(true);
+                    }}
+                  >
+                    <ReplyIcon />
+                  </MUI.BetterIconButton>
+                ) : (
+                  <MUI.BetterIconButton
+                    onClick={() => {
+                      setFormReply({
+                        isShow: true,
+                        text: profile_name,
+                        parent_comment_id: post_comment_id,
+                      });
+                      setShowChildComment(true);
+                    }}
+                  >
+                    <ReplyIcon />
+                  </MUI.BetterIconButton>
+                )}
+                <span>{format(createdAt)}</span>
+              </div>
             </div>
-            <div className="footer flex gap-[0.2rem] items-center">
-              <MUI.BetterIconButton>
-                <ThumbUpIcon />
-              </MUI.BetterIconButton>
-              {isNodeComment ? (
-                <MUI.BetterIconButton
-                  onClick={() => {
-                    setFormReplyFromParent({
-                      isShow: true,
-                      text: profile_name,
-                      parent_comment_id: parent_comment_id,
-                    });
-                    setShowChildComment(true);
-                  }}
-                >
-                  <ReplyIcon />
-                </MUI.BetterIconButton>
-              ) : (
-                <MUI.BetterIconButton
-                  onClick={() => {
-                    setFormReply({
-                      isShow: true,
-                      text: profile_name,
-                      parent_comment_id: post_comment_id,
-                    });
-                    setShowChildComment(true);
-                  }}
-                >
-                  <ReplyIcon />
-                </MUI.BetterIconButton>
-              )}
-              <span>{format(createdAt)}</span>
+          ) : (
+            <div className="update-message-section w-full">
+              <div className="input-wrapper bg-gray-100 rounded-xl p-[1rem] ">
+                <input
+                  className=" outline-none bg-transparent w-full"
+                  type="text"
+                  value={inputUpdate}
+                  onChange={(e) => handleOnchangeUpdateInput(e)}
+                />
+              </div>
+              <div className="input-action flex gap-[1rem] cursor-pointer underline">
+                <span onClick={(e) => {setInputUpdate(comment_text); setShowUpdate(false)}}>Cancel</span>
+                <span onClick={(e) =>{handleUpdateComment(); setShowUpdate(false);}}>Update</span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       {!isNodeComment &&
@@ -218,7 +257,7 @@ function Comment({
           <CommentForm formReply={formReply} post_id={post_id} />
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
 
