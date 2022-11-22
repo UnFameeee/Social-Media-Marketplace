@@ -23,16 +23,17 @@ export class PostCommentController {
 
     //See all comment of post
     @Post("/:post_id")
-    async getAllCommentOfPost(@Param("post_id") post_id: number, @Body() page: Page) {
-        return await this.postCommentService.getAllCommentOfPost(post_id, page);
+    async getAllCommentOfPost(@Request() request: any, @Param("post_id") post_id: number, @Body() page: Page) {
+        const profile = <Profile>request.user;
+        return await this.postCommentService.getAllCommentOfPost(profile.profile_id, post_id, page);
     }
 
-    //Update comment of a post
+    //Update comment of a posts
     @Put("/update/:post_comment_id")
     async updateComment(@Param("post_comment_id") post_comment_id: number, @Body() body: any) {
         return await this.postCommentService.updateComment(post_comment_id, body.comment_text);
     }
-    
+
     //Delete comment of a post
     @Delete("/delete/:post_comment_id")
     async deleteComment(@Request() request: any, @Param("post_comment_id") post_comment_id: number) {

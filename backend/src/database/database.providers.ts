@@ -31,6 +31,7 @@ import { Category } from './model/category.model';
 import { SubCategory } from './model/sub_category.model';
 import { ShopAddress } from './model/shop_address.model';
 import { Variation } from './model/variation.model';
+import { PostCommentLike } from './model/post-comment-like.model';
 
 export const databaseProviders = [
     {
@@ -60,7 +61,7 @@ export const databaseProviders = [
 
             // sequelize.options
             sequelize.addModels([
-                Profile, Friendship, Post, PostLike, PostComment, ParentChildComment, ProfileAvatarImage, ProfilePostImage, ProfileWallpaperImage, Description,
+                Profile, Friendship, Post, PostLike, PostComment, ParentChildComment, ProfileAvatarImage, ProfilePostImage, ProfileWallpaperImage, Description, PostCommentLike,
 
                 ShippingAddress, ShopOrder, ShoppingCart, ShoppingCartItem, PaymentMethod, OrderLine, Product, ProductImage, Category, ShopAddress, Variation
                 // SubCategory,
@@ -94,6 +95,11 @@ export const databaseProviders = [
             ParentChildComment.belongsTo(PostComment, { foreignKey: { name: "parent_comment_id", field: "parent_comment_id" }, as: "parent_comment" })
             PostComment.hasMany(ParentChildComment, { foreignKey: { name: "child_comment_id", field: "child_comment_id" }, as: "all_parent_comment" });
             ParentChildComment.belongsTo(PostComment, { foreignKey: { name: "child_comment_id", field: "child_comment_id" }, as: "child_comment" })
+
+            Profile.hasMany(PostCommentLike, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            PostCommentLike.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } })
+            PostComment.hasMany(PostCommentLike, { foreignKey: { name: "post_comment_id", field: "post_comment_id" } });
+            PostCommentLike.belongsTo(PostComment, { foreignKey: { name: "post_comment_id", field: "post_comment_id" } });
 
             Profile.hasOne(ProfileWallpaperImage, { foreignKey: { name: "profile_id", field: "profile_id" }, as: "profile_wallpaper" });
             ProfileWallpaperImage.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
@@ -136,8 +142,11 @@ export const databaseProviders = [
             ShopOrder.hasOne(ShippingAddress, { foreignKey: { name: "shipping_address_id", field: "shipping_address_id" } });
             ShippingAddress.belongsTo(ShopOrder, { foreignKey: { name: "shipping_address_id", field: "shipping_address_id" } });
 
-            Profile.hasMany(ShoppingCart, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            Profile.hasOne(ShoppingCart, { foreignKey: { name: "profile_id", field: "profile_id" } });
             ShoppingCart.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
+
+            Product.hasMany(ShoppingCartItem, { foreignKey: { name: "product_id", field: "product_id" } });
+            ShoppingCartItem.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
             ShoppingCart.hasMany(ShoppingCartItem, { foreignKey: { name: "shopping_cart_id", field: "shopping_cart_id" } });
             ShoppingCartItem.belongsTo(ShoppingCart, { foreignKey: { name: "shopping_cart_id", field: "shopping_cart_id" } });
@@ -157,7 +166,7 @@ export const databaseProviders = [
             Product.hasOne(Variation, { foreignKey: { name: "product_id", field: "product_id" } });
             Variation.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
-            Product.hasMany(ProductImage, { foreignKey: { name: "product_id", field: "product_id" } });
+            Product.hasMany(ProductImage, { foreignKey: { name: "product_id", field: "product_id" }, as: "product_image"});
             ProductImage.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
             // Category.hasMany(SubCategory, { foreignKey: { name: "category_id", field: "category_id" } });

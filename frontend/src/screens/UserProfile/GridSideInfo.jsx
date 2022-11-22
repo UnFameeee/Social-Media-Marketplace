@@ -1,4 +1,5 @@
 import { Avatar } from '@mui/material';
+import notFoundImage from '../../assets/noimage_1.png';
 
 function GridSideInfo(props) {
   const {
@@ -22,9 +23,15 @@ function GridSideInfo(props) {
             <span className="font-bold text-[2.3rem] flex-1">
               {leftLabel}
             </span>
-            <button id="gridSideButton" onClick={rightLabel.onClick}>
-              {rightLabel.text}
-            </button>
+            
+            {rightLabel && (
+              <button
+                id="gridSideButton"
+                onClick={rightLabel.onClick}
+              >
+                {rightLabel.text}
+              </button>
+            )}
           </div>
 
           {type === 'friendPhoto' && (
@@ -37,58 +44,46 @@ function GridSideInfo(props) {
           {/* photos */}
           {type === 'photo' &&
             listImg?.map((item, index) => {
-              if (index === 2) {
-                return (
-                  <li key={index}>
-                    <img
-                      src={item.url}
-                      alt=""
-                      className="photoGridImage rounded-tr-[1rem]"
-                    />
-                  </li>
-                );
-              } else if (index === 0) {
-                return (
-                  <li key={index}>
-                    <img
-                      src={item.url}
-                      alt=""
-                      className="photoGridImage rounded-tl-[1rem] "
-                    />
-                  </li>
-                );
-              } else if (index === 6) {
-                return (
-                  <li key={index}>
-                    <img
-                      src={item.url}
-                      alt=""
-                      className="photoGridImage rounded-bl-[1rem] "
-                    />
-                  </li>
-                );
-              } else if (index === 8) {
-                return (
-                  <li key={index}>
-                    <img
-                      src={item.url}
-                      alt=""
-                      className="photoGridImage rounded-br-[1rem] "
-                    />
-                  </li>
-                );
-              } else {
-                return (
-                  <li key={index}>
-                    <img
-                      src={item.url}
-                      alt=""
-                      className="photoGridImage"
-                    />
-                    {type === 'friendPhoto' && <span>Name</span>}
-                  </li>
-                );
+              var border = '';
+              if (index == 0) {
+                border = 'rounded-tl-[1rem]';
+                if (listImg.length < 4) {
+                  border += 'rounded-bl-[1rem]';
+                }
               }
+              if (index == 2) {
+                border = 'rounded-tr-[1rem]';
+                if (listImg.length == 3) {
+                  border += 'rounded-br-[1rem]';
+                }
+              }
+              if (listImg.length % 3 == 0) {
+                if (
+                  (index == 5 && listImg.length == 6) ||
+                  (index == 8 && listImg.length == 9)
+                ) {
+                  border = 'rounded-br-[1rem]';
+                }
+              }
+              if (
+                (listImg.length < 7 && index == 3) ||
+                (listImg.length > 6 && index == 6)
+              ) {
+                border = 'rounded-bl-[1rem]';
+              }
+              return (
+                <li key={index}>
+                  <img
+                    src={item.url}
+                    alt={`gallery${index}`}
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null; // prevents looping
+                      currentTarget.src = notFoundImage;
+                    }}
+                    className={`photoGridImage ${border}`}
+                  />
+                </li>
+              );
             })}
 
           {/* friends */}

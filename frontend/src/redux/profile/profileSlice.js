@@ -6,6 +6,11 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  galleryImg: {
+    data: null,
+    isFetching: false,
+    error: false,
+  },
   updateAvt: {
     data: null,
     isFetching: false,
@@ -26,6 +31,11 @@ export const profileSlice = createSlice({
   name: 'profile',
   initialState: {
     profileDetails: {
+      data: null,
+      isFetching: false,
+      error: false,
+    },
+    galleryImg: {
       data: null,
       isFetching: false,
       error: false,
@@ -61,9 +71,23 @@ export const profileSlice = createSlice({
       state.profileDetails.error = true;
     },
     updateDetailSaga() {},
-    updateDetailSagaSuccess() {},     
+    updateDetailSagaSuccess() {},
     getProfileSaga() {},
-    getProfileSagaSuccess() {}, 
+    getProfileSagaSuccess() {},
+    
+    getGalleryStart: (state) => {
+      state.galleryImg.isFetching = true;
+    },
+    getGallerySuccess: (state, action) => {
+      state.galleryImg.isFetching = false;
+      state.galleryImg.data = action.payload;
+    },
+    getGalleryFailed: (state) => {
+      state.galleryImg.isFetching = false;
+      state.galleryImg.error = true;
+    },
+    getGallerySaga() {},
+    getGallerySagaSuccess() {}, 
 
     updateAvtStart: (state) => {
       state.updateAvt.isFetching = true;
@@ -117,6 +141,12 @@ export const {
     getProfileDetailFailed,
     getProfileSaga,
     getProfileSagaSuccess,
+
+    getGalleryStart,
+    getGallerySuccess,
+    getGalleryFailed,
+    getGallerySaga,
+    getGallerySagaSuccess,
 
     updateAvtStart,
     updateAvtSuccess,

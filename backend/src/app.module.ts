@@ -11,6 +11,8 @@ import { FriendshipModule } from './social-media/profile/module/friendship.modul
 import { PostCommentModule } from './social-media/post/module/post-comment.module';
 import { ProductModule } from './marketplace/product/module/product.module';
 import { ProductImageModule } from './marketplace/image/module/product_image.module';
+import { ShoppingCartModule } from './marketplace/shopping_cart/module/shopping_cart.module';
+import { PostCommentLikeModule } from './social-media/post/module/post-comment-like.module';
 
 
 @Module({
@@ -19,6 +21,7 @@ import { ProductImageModule } from './marketplace/image/module/product_image.mod
     ProfileModule,
     PostModule,
     PostCommentModule,
+    PostCommentLikeModule,
     PostLikeModule,
     DatabaseModule,
     AuthModule,
@@ -28,6 +31,7 @@ import { ProductImageModule } from './marketplace/image/module/product_image.mod
     //marketplace
     ProductModule,
     ProductImageModule,
+    ShoppingCartModule,
 
 
     //GET the image

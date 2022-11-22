@@ -53,6 +53,7 @@ function PostModal(props) {
         refreshToken,
         postData_written_text,
         uploadImage,
+        callRefreshGallery: uploadImage.length > 0,
         dispatch,
       })
     );
@@ -74,6 +75,7 @@ function PostModal(props) {
         updatePost,
         uploadImage,
         removeImages,
+        callRefreshGallery: uploadImage.length > 0,
         dispatch,
       })
     );

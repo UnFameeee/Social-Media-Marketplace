@@ -17,6 +17,7 @@ import { ProfilePostImage } from "src/database/model/profile_post_image.model";
 import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
 import { ProfileWallpaperImage } from "src/database/model/profile_wallpaper_image.mode";
 import { Description } from "src/database/model/description.model";
+import { ShoppingCartRepository } from "src/marketplace/shopping_cart/repository/shopping_cart.repository";
 
 @Injectable()
 export class ProfileRepository {
@@ -25,6 +26,7 @@ export class ProfileRepository {
         // @Inject(PROVIDER.Friendship) private friendshipModelRepository: typeof Friendship,
         @Inject(FriendshipRepository) private friendshipRepository: FriendshipRepository,
         @Inject(DescriptionRepository) private descriptionRepository: DescriptionRepository,
+        @Inject(ShoppingCartRepository) private shoppingCartRepository: ShoppingCartRepository,
         // @Inject(PROVIDER.ProfileAvatarImage) private profileAvatarImageModelRepository: typeof ProfileAvatarImage,
         @Inject(PROVIDER.ProfilePostImage) private profilePostImageModelRepository: typeof ProfilePostImage,
         // @Inject(PROVIDER.ProfileWallpaperImage) private profileWallpaperImageModelRepository: typeof ProfileWallpaperImage,
@@ -171,6 +173,7 @@ export class ProfileRepository {
             const newUser = await this.profileRepository.create(user);
 
             await this.descriptionRepository.createProfileDescription(newUser.profile_id);
+            await this.shoppingCartRepository.createShoppingCart(newUser.profile_id);
 
             return await this.profileRepository.findOne({ where: { profile_id: newUser.profile_id } });
         } catch (err) {

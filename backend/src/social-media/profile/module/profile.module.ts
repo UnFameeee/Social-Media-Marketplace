@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { friendshipProviders, profileAvatarImageProviders, profilePostImageProviders, profileProviders, profileWallpaperImageProviders } from 'src/database/providers/all.providers';
+import { ShoppingCartModule } from 'src/marketplace/shopping_cart/module/shopping_cart.module';
 import { ProfileController } from '../controller/profile.controller';
 import { ProfileRepository } from '../repository/profile.repository';
 import { ProfileService } from '../service/profile.service';
@@ -9,7 +10,8 @@ import { FriendshipModule } from './friendship.module';
 @Module({
   imports: [
     FriendshipModule,
-    DescriptionModule
+    DescriptionModule,
+    ShoppingCartModule,
   ],
   controllers: [ProfileController],
   providers: [
