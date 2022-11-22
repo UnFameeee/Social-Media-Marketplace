@@ -59,12 +59,14 @@ function CardPost(props) {
   };
   const handleDeletePost = () => {
     let postId = post_id;
-    dispatch(deletePostSaga({ accessToken, refreshToken,dispatch, postId,  }));
+    dispatch(deletePostSaga({ accessToken, refreshToken, dispatch, postId }));
     setShowAction(!showAction);
   };
   const handleLikePost = () => {
     let postId = post_id;
-    dispatch(likePostSaga({ accessToken, refreshToken,dispatch, postId,  }));
+     dispatch(
+        likePostSaga({ accessToken, refreshToken, dispatch, postId })
+      );
   };
   const handleShowComment = () => {
     dispatch(
@@ -75,8 +77,8 @@ function CardPost(props) {
   const handleGetMoreComment = () => {
     // setCommentPaging((prev) => prev + 1);
     let paging = {
-      page:0,// commentPaging.page + 1,
-      pageSize:totalComment.totalElement,// commentPaging.pageSize,
+      page: 0, // commentPaging.page + 1,
+      pageSize: totalComment?.totalElement, // commentPaging.pageSize,
     };
     dispatch(
       getCommentPostSaga({
@@ -110,7 +112,9 @@ function CardPost(props) {
       comments.map((comment) => {
         if (comment.post_id === post_id) {
           result = {
-            totalCurrentShowComment: comment?.page?.totalCurrentShowComment ? comment?.page?.totalCurrentShowComment : null,
+            totalCurrentShowComment: comment?.page?.totalCurrentShowComment
+              ? comment?.page?.totalCurrentShowComment
+              : null,
             totalElement: comment?.page?.totalElement
               ? comment?.page?.totalElement
               : null,
@@ -279,19 +283,26 @@ function CardPost(props) {
                   placeholder={"write a comment...."}
                   post_id={post_id}
                 />
-                <CommentList comments={rootComments} post_id={post_id} />
-                { !seeAllComment && (
-                    <div className="flex">
-                      <div
-                        className="flex-1"
+                <CommentList comments={rootComments} post_id={post_id} seeAllComment={seeAllComment} totalElement={totalComment?.totalElement} />
+                {!seeAllComment && (
+                  <div className="flex">
+                    <div className="flex-1">
+                      <span
+                        className="flex-1 hover:cursor-pointer underline"
+                        onClick={(e) => {
+                          handleGetMoreComment();
+                          setSeeAllComment(true);
+                        }}
                       >
-                        <span className="flex-1 hover:cursor-pointer underline" onClick={(e) => {handleGetMoreComment(); setSeeAllComment(true)}}>See all comments</span>
-                      </div>
-                      <span>
-                        {totalComment?.totalCurrentShowComment}/{totalComment?.totalElement}
+                        See all comments
                       </span>
                     </div>
-                  )}
+                    <span>
+                      {totalComment?.totalCurrentShowComment}/
+                      {totalComment?.totalElement}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           )}

@@ -141,7 +141,7 @@ function* handleDeleteCommentPost(data) {
   }
 }
 const deleteCommentPostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, dispatch, post_comment_id, post_id } =
+  const { accessToken, refreshToken, dispatch, post_comment_id, post_id,paging } =
     data.payload;
 
   try {
@@ -164,6 +164,7 @@ const deleteCommentPostSagaRequest = async (data) => {
           refreshToken,
           dispatch,
           post_id,
+          paging,
         })
       );
       notifyService.showSuccess("Delete Comment Post Success");
@@ -195,6 +196,7 @@ const updateCommentPostSagaRequest = async (data) => {
     dispatch,
     comment_text,
     post_comment_id,
+    paging,
     post_id,
   } = data.payload;
 
@@ -219,6 +221,7 @@ const updateCommentPostSagaRequest = async (data) => {
           refreshToken,
           dispatch,
           post_id,
+          paging,
         })
       );
       notifyService.showSuccess("Update Comment Post Success");
@@ -250,6 +253,7 @@ const likeCommentPostSagaRequest = async (data) => {
     dispatch,
     post_comment_id,
     post_id,
+    paging,
   } = data.payload;
 
   try {
@@ -271,6 +275,7 @@ const likeCommentPostSagaRequest = async (data) => {
           refreshToken,
           dispatch,
           post_id,
+          paging,
         })
       );
       return res;

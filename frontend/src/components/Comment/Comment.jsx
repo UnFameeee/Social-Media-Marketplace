@@ -31,6 +31,8 @@ function Comment({
   setFormReplyFromParent,
   isLiked,
   totalLike,
+  seeAllComment,
+  totalElement,
   ...props
 }) {
   const userData = useSelector((state) => state.auth.user.userData);
@@ -53,28 +55,64 @@ function Comment({
     comment_text ? comment_text : ""
   );
   const handleDeleteComment = () => {
-    dispatch(
-      deleteCommentPostSaga({
-        accessToken,
-        refreshToken,
-        dispatch,
-        post_comment_id,
-        post_id,
-      })
-    );
+    if (seeAllComment) {
+      debugger;
+      let paging = {
+        page: 0, // commentPaging.page + 1,
+        pageSize: totalElement, // commentPaging.pageSize,
+      };
+      dispatch(
+        deleteCommentPostSaga({
+          accessToken,
+          refreshToken,
+          dispatch,
+          post_comment_id,
+          post_id,
+          paging,
+        })
+      );
+    } else {
+      dispatch(
+        deleteCommentPostSaga({
+          accessToken,
+          refreshToken,
+          dispatch,
+          post_comment_id,
+          post_id,
+        })
+      );
+    }
   };
   const handleUpdateComment = () => {
     let comment_text = inputUpdate;
-    dispatch(
-      updateCommentPostSaga({
-        accessToken,
-        refreshToken,
-        dispatch,
-        comment_text,
-        post_comment_id,
-        post_id,
-      })
-    );
+    if (seeAllComment) {
+      let paging = {
+        page: 0, // commentPaging.page + 1,
+        pageSize: totalElement, // commentPaging.pageSize,
+      };
+      dispatch(
+        updateCommentPostSaga({
+          accessToken,
+          refreshToken,
+          dispatch,
+          comment_text,
+          post_comment_id,
+          post_id,
+          paging,
+        })
+      );
+    } else {
+      dispatch(
+        updateCommentPostSaga({
+          accessToken,
+          refreshToken,
+          dispatch,
+          comment_text,
+          post_comment_id,
+          post_id,
+        })
+      );
+    }
     setShowUpdate(false);
   };
   const handleOnchangeUpdateInput = (e) => {
@@ -197,7 +235,7 @@ function Comment({
                     <ThumbUpOutlined />
                   )}
                 </MUI.BetterIconButton>
-                <span>{totalLike >0 ? totalLike :'' }</span>
+                <span>{totalLike > 0 ? totalLike : ""}</span>
                 {isNodeComment ? (
                   <MUI.BetterIconButton
                     onClick={() => {
