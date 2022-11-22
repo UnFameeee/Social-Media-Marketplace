@@ -55,9 +55,9 @@ function Comment({
         post_id,
       })
     );
+    
   };
   const handleUpdateComment = () => {
-    debugger
     let comment_text = inputUpdate
     dispatch(
       updateCommentPostSaga({
@@ -69,9 +69,16 @@ function Comment({
         post_id,
       })
     );
+    setShowUpdate(false);
   }
   const handleOnchangeUpdateInput = (e) => {
     setInputUpdate(e.target.value);
+  };
+  const commentEnterSubmit = (e) => {
+    if (e.key === "Enter" && e.shiftKey == false) {
+      e.preventDefault();
+      return handleUpdateComment();
+    }
   };
   useEffect(() => {
     if (all_child_comment && all_child_comment.length > 1) {
@@ -196,6 +203,7 @@ function Comment({
                   className=" outline-none bg-transparent w-full"
                   type="text"
                   value={inputUpdate}
+                  onKeyPress={commentEnterSubmit}
                   onChange={(e) => handleOnchangeUpdateInput(e)}
                 />
               </div>
