@@ -49,6 +49,7 @@ function CardPost(props) {
     shallowEqual
   );
   const [commentPaging, setCommentPaging] = useState({ page: 0, pageSize: 10 });
+  const [seeAllComment, setSeeAllComment] = useState(false);
   //#endregion
 
   //#region Function
@@ -72,10 +73,10 @@ function CardPost(props) {
     setShowComment(true);
   };
   const handleGetMoreComment = () => {
-    setCommentPaging((prev) => prev + 1);
+    // setCommentPaging((prev) => prev + 1);
     let paging = {
-      page: commentPaging.page + 1,
-      pageSize: commentPaging.pageSize,
+      page:0,// commentPaging.page + 1,
+      pageSize:totalComment.totalElement,// commentPaging.pageSize,
     };
     dispatch(
       getCommentPostSaga({
@@ -279,13 +280,12 @@ function CardPost(props) {
                   post_id={post_id}
                 />
                 <CommentList comments={rootComments} post_id={post_id} />
-                {totalComment &&
-                  totalComment?.totalElement > totalComment?.totalCurrentShowComment && (
+                { !seeAllComment && (
                     <div className="flex">
                       <div
                         className="flex-1"
                       >
-                        <span className="flex-1 hover:cursor-pointer underline" onClick={(e) => handleGetMoreComment()}>See more comments</span>
+                        <span className="flex-1 hover:cursor-pointer underline" onClick={(e) => {handleGetMoreComment(); setSeeAllComment(true)}}>See all comments</span>
                       </div>
                       <span>
                         {totalComment?.totalCurrentShowComment}/{totalComment?.totalElement}
