@@ -125,15 +125,32 @@ function Comment({
     }
   };
   const handleLikeComment = () => {
-    dispatch(
-      likeCommentPostSaga({
-        accessToken,
-        refreshToken,
-        dispatch,
-        post_comment_id,
-        post_id,
-      })
-    );
+    if (seeAllComment) {
+      let paging = {
+        page: 0, // commentPaging.page + 1,
+        pageSize: totalElement, // commentPaging.pageSize,
+      };
+      dispatch(
+        likeCommentPostSaga({
+          accessToken,
+          refreshToken,
+          dispatch,
+          post_comment_id,
+          post_id,
+          paging,
+        })
+      );
+    } else {
+      dispatch(
+        likeCommentPostSaga({
+          accessToken,
+          refreshToken,
+          dispatch,
+          post_comment_id,
+          post_id,
+        })
+      );
+    }
   };
   useEffect(() => {
     if (all_child_comment && all_child_comment.length > 1) {
