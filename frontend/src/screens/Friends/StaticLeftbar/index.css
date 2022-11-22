@@ -10,9 +10,10 @@
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   min-width: 100%;
-  min-height: 23.8rem;
+  min-height: 24rem;
   /* background: var(--primary-color); */
   font-size: 14rem;
+  cursor: pointer;
 }
 .friend-card .bottom {
   padding: 12px;
@@ -25,20 +26,27 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;
 }
 /* #endregion */
 
 /* #region home */
-.friend-home-title {
-  font-size: 2rem;
-  line-height: 2rem;
-  font-weight: 500;
-  padding: 2.4rem 0 0 2.4rem;
-}
 .friend-home-grid {
   padding: 2rem 2.4rem;
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 1rem;
+}
+
+.friend-home-title {
+  padding: 2.4rem 2.4rem 0 2.4rem;
+  display: flex;
+  align-items: center;
+}
+.friend-home-title .type {
+  flex: 1;
+  font-size: 2rem;
+  line-height: 2rem;
+  font-weight: 500;
 }
 /* #endregion */

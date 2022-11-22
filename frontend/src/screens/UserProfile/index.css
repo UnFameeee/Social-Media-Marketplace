@@ -95,11 +95,11 @@
 #gridSideButton {
   color: #216fdb;
   text-align: center;
+  padding: 0.4rem 0.8rem;
 }
 #gridSideButton:hover {
-  background-color: #f1f1f1;
+  background-color: rgba(0, 0, 0, 0.05);
   border-radius: 0.8rem;
-  padding: 0.4rem 0.8rem;
 }
 
 #modal-wrapper {

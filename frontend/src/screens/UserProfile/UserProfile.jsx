@@ -128,9 +128,7 @@ function UserProfile(props) {
   };
 
   var callRefreshFriend = Helper.checkURL('friends');
-  var callRefreshProfile = Helper.checkURL('profile');
-  var callRefreshFriendSuggestion = Helper.checkURL('suggestions');
-  var callRefreshSentRequest = Helper.checkURL('sent');
+  var callRefreshProfile = true;
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -351,9 +349,6 @@ function UserProfile(props) {
                     mainId: userData?.profile_id,
                     callRefreshFriend: callRefreshFriend,
                     callRefreshProfile: callRefreshProfile,
-                    callRefreshSentRequest: callRefreshSentRequest,
-                    callRefreshFriendSuggestion:
-                      callRefreshFriendSuggestion,
                     dispatch: dispatch,
                     navigate: navigate,
                   }}
@@ -402,7 +397,6 @@ function UserProfile(props) {
                       accessToken,
                       refreshToken,
                       id,
-                      callRefreshFriend,
                       callRefreshProfile,
                       dispatch,
                     })
@@ -425,7 +419,6 @@ function UserProfile(props) {
                       accessToken,
                       refreshToken,
                       id,
-                      callRefreshFriend,
                       callRefreshProfile,
                       dispatch,
                     })
@@ -634,7 +627,6 @@ function ProfileAction({
     refreshToken,
     id,
     mainId,
-    callRefreshFriendSuggestion,
     callRefreshFriend,
     callRefreshSentRequest,
     callRefreshProfile,
@@ -658,7 +650,6 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefreshFriendSuggestion,
                 callRefreshSentRequest,
                 callRefreshProfile,
                 dispatch,
@@ -712,7 +703,6 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefreshFriend,
                 callRefreshProfile,
                 dispatch,
               })
@@ -730,7 +720,6 @@ function ProfileAction({
                 accessToken,
                 refreshToken,
                 id,
-                callRefreshFriend,
                 callRefreshProfile,
                 dispatch,
               })
