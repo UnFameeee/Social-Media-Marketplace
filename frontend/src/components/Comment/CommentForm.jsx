@@ -5,7 +5,15 @@ import { useState } from "react";
 import MUI from "../MUI";
 import { useEffect } from "react";
 import { commentPostSaga } from "../../redux/comment/commentSlice";
-function CommentForm({ formWidth, placeholder, formReply, post_id, ...props }) {
+function CommentForm({
+  formWidth,
+  placeholder,
+  formReply,
+  post_id,
+  seeAllComment,
+  totalElement,
+  ...props
+}) {
   const userData = useSelector((state) => state.auth.user.userData);
   const dispatch = useDispatch();
   const accessToken = useSelector(
@@ -24,20 +32,42 @@ function CommentForm({ formWidth, placeholder, formReply, post_id, ...props }) {
     let parent_comment_id = formReply?.parent_comment_id
       ? formReply?.parent_comment_id
       : null;
-    dispatch(
-      commentPostSaga({
-        accessToken,
-        refreshToken,
-        dispatch,
-        comment_text,
-        parent_comment_id,
-        post_id,
-      })
-    );
+    if (seeAllComment) {
+      let paging = {
+        page: 0, // commentPaging.page + 1,
+        pageSize: totalElement +1, // commentPaging.pageSize,
+      };
+      dispatch(
+        commentPostSaga({
+          accessToken,
+          refreshToken,
+          dispatch,
+          comment_text,
+          parent_comment_id,
+          post_id,
+          paging,
+        })
+      );
+    } else {
+      dispatch(
+        commentPostSaga({
+          accessToken,
+          refreshToken,
+          dispatch,
+          comment_text,
+          parent_comment_id,
+          post_id,
+        })
+      );
+    }
     setReplyInput("");
   };
   const commentEnterSubmit = (e) => {
-    if (e.key === "Enter" && e.shiftKey == false && e.target.value.trim() !="") {
+    if (
+      e.key === "Enter" &&
+      e.shiftKey == false &&
+      e.target.value.trim() != ""
+    ) {
       e.preventDefault();
       return handleCreateComment();
     }
@@ -56,11 +86,7 @@ function CommentForm({ formWidth, placeholder, formReply, post_id, ...props }) {
           fontSize: "2rem",
         }}
         alt={userData.profile.profile_name}
-        src={
-          userData.profile?.avatar
-            ? userData.profile?.avatar
-            : null
-        }
+        src={userData.profile?.avatar ? userData.profile?.avatar : null}
       >
         {userData.profile.profile_name?.at(0)}
       </Avatar>

@@ -112,8 +112,8 @@ function CardPost(props) {
       comments.map((comment) => {
         if (comment.post_id === post_id) {
           result = {
-            totalCurrentShowComment: comment?.page?.totalCurrentShowComment
-              ? comment?.page?.totalCurrentShowComment
+            totalCurrentShowComment: comment?.list_comment
+              ? comment?.list_comment?.length
               : null,
             totalElement: comment?.page?.totalElement
               ? comment?.page?.totalElement
@@ -282,9 +282,10 @@ function CardPost(props) {
                   formWidth={"100%"}
                   placeholder={"write a comment...."}
                   post_id={post_id}
+                  seeAllComment={seeAllComment} totalElement={totalComment?.totalElement}
                 />
                 <CommentList comments={rootComments} post_id={post_id} seeAllComment={seeAllComment} totalElement={totalComment?.totalElement} />
-                {!seeAllComment && (
+                {!seeAllComment && totalComment?.totalCurrentShowComment < totalComment?.totalElement  && (
                   <div className="flex">
                     <div className="flex-1">
                       <span

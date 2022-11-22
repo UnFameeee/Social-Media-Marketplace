@@ -93,6 +93,7 @@ const commentPostSagaRequest = async (data) => {
     comment_text,
     parent_comment_id,
     post_id,
+    paging,
   } = data.payload;
 
   try {
@@ -116,7 +117,7 @@ const commentPostSagaRequest = async (data) => {
     );
     if (!res.data.message) {
       dispatch(
-        commentPostSagaSuccess({ accessToken, refreshToken, dispatch, post_id })
+        commentPostSagaSuccess({ accessToken, refreshToken, dispatch, post_id,paging })
       );
       notifyService.showSuccess("Comment Post Success");
       return res;

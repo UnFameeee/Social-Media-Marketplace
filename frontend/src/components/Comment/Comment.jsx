@@ -56,7 +56,6 @@ function Comment({
   );
   const handleDeleteComment = () => {
     if (seeAllComment) {
-      debugger;
       let paging = {
         page: 0, // commentPaging.page + 1,
         pageSize: totalElement, // commentPaging.pageSize,
@@ -348,6 +347,8 @@ function Comment({
                   isNodeComment={true}
                   parent_comment_id={post_comment_id}
                   setFormReplyFromParent={setFormReply}
+                  seeAllComment={seeAllComment}
+                  totalElement={totalElement}
                 />
               </div>
             ))
@@ -363,7 +364,8 @@ function Comment({
       )}
       {formReply.isShow ? (
         <div className={` ${!isNodeComment ? "ml-[4rem]" : "ml-0"} mb-[1rem]`}>
-          <CommentForm formReply={formReply} post_id={post_id} />
+          <CommentForm formReply={formReply} post_id={post_id} seeAllComment={seeAllComment}
+          totalElement={totalElement} />
         </div>
       ) : null}
     </div>
