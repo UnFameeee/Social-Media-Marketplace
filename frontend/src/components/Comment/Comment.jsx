@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CommentList from "./CommentList";
 import MUI from "../MUI";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { ThumbUpOutlined, ThumbUpAlt } from "@mui/icons-material";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { useState } from "react";
 import CommentForm from "./CommentForm";
@@ -11,7 +12,11 @@ import { useEffect } from "react";
 import { format } from "timeago.js";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ShowMoreText from "react-show-more-text";
-import { deleteCommentPostSaga, updateCommentPostSaga } from "../../redux/comment/commentSlice";
+import {
+  deleteCommentPostSaga,
+  likeCommentPostSaga,
+  updateCommentPostSaga,
+} from "../../redux/comment/commentSlice";
 function Comment({
   post_comment_id,
   comment_text,
@@ -24,6 +29,8 @@ function Comment({
   parent_comment_id,
   isNodeComment,
   setFormReplyFromParent,
+  isLiked,
+  totalLike,
   ...props
 }) {
   const userData = useSelector((state) => state.auth.user.userData);
@@ -55,10 +62,9 @@ function Comment({
         post_id,
       })
     );
-    
   };
   const handleUpdateComment = () => {
-    let comment_text = inputUpdate
+    let comment_text = inputUpdate;
     dispatch(
       updateCommentPostSaga({
         accessToken,
@@ -70,7 +76,7 @@ function Comment({
       })
     );
     setShowUpdate(false);
-  }
+  };
   const handleOnchangeUpdateInput = (e) => {
     setInputUpdate(e.target.value);
   };
@@ -79,6 +85,17 @@ function Comment({
       e.preventDefault();
       return handleUpdateComment();
     }
+  };
+  const handleLikeComment = () => {
+    dispatch(
+      likeCommentPostSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        post_comment_id,
+        post_id,
+      })
+    );
   };
   useEffect(() => {
     if (all_child_comment && all_child_comment.length > 1) {
@@ -137,7 +154,10 @@ function Comment({
                                   color: "var(--primary-color)",
                                   border: "1px solid var(--primary-color) ",
                                 }}
-                                onClick={(e) => { setShowAction(false); setShowUpdate(true); }}
+                                onClick={(e) => {
+                                  setShowAction(false);
+                                  setShowUpdate(true);
+                                }}
                               >
                                 Update
                               </Button>
@@ -149,7 +169,10 @@ function Comment({
                                   border: "1px solid var(--primary-color) ",
                                 }}
                                 onClick={(e) => {
-                                  {setShowAction(false); handleDeleteComment(); }
+                                  {
+                                    setShowAction(false);
+                                    handleDeleteComment();
+                                  }
                                 }}
                               >
                                 Delete
@@ -163,9 +186,18 @@ function Comment({
                 )}
               </div>
               <div className="footer flex gap-[0.2rem] items-center">
-                <MUI.BetterIconButton>
-                  <ThumbUpIcon />
+                <MUI.BetterIconButton onClick={handleLikeComment}>
+                  {isLiked ? (
+                    <ThumbUpAlt
+                      style={{
+                        color: "var(--primary-color)",
+                      }}
+                    />
+                  ) : (
+                    <ThumbUpOutlined />
+                  )}
                 </MUI.BetterIconButton>
+                <span>{totalLike >0 ? totalLike :'' }</span>
                 {isNodeComment ? (
                   <MUI.BetterIconButton
                     onClick={() => {
@@ -208,8 +240,22 @@ function Comment({
                 />
               </div>
               <div className="input-action flex gap-[1rem] cursor-pointer underline">
-                <span onClick={(e) => {setInputUpdate(comment_text); setShowUpdate(false)}}>Cancel</span>
-                <span onClick={(e) =>{handleUpdateComment(); setShowUpdate(false);}}>Update</span>
+                <span
+                  onClick={(e) => {
+                    setInputUpdate(comment_text);
+                    setShowUpdate(false);
+                  }}
+                >
+                  Cancel
+                </span>
+                <span
+                  onClick={(e) => {
+                    handleUpdateComment();
+                    setShowUpdate(false);
+                  }}
+                >
+                  Update
+                </span>
               </div>
             </div>
           )}

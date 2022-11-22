@@ -35,13 +35,11 @@ function PostModal(props) {
     const result = 69;
     return result;
   }, []);
-  console.log("post_image",post_image,"images",images );
   //#endregion
   //#region Function
   const closeModal = () => {
     props.setShowPostModal(false);
     setImages([])
-    // setImgArray([]);
   };
   const handlePost = (e) => {
     e.preventDefault();

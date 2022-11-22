@@ -6,6 +6,8 @@ import {
   getCommentPostSaga,
   getCommentPostSagaSuccess,
   getCommentPostSuccess,
+  likeCommentPostSaga,
+  likeCommentPostSagaSuccess,
   updateCommentPostSaga,
   updateCommentPostSagaSuccess,
 } from "./commentSlice";
@@ -21,6 +23,7 @@ export function* getCommentPost() {
       commentPostSagaSuccess.type,
       deleteCommentPostSagaSuccess.type,
       updateCommentPostSagaSuccess.type,
+      likeCommentPostSagaSuccess.type
     ],
     handleGetCommentPost
   );
@@ -228,3 +231,55 @@ const updateCommentPostSagaRequest = async (data) => {
     notifyService.showError("Update Comment Post Failed");
   }
 };
+
+export function* likeCommentPost() {
+  yield takeLatest(likeCommentPostSaga.type, handleLikeCommentPost);
+}
+function* handleLikeCommentPost(data) {
+  try {
+    yield call(likeCommentPostSagaRequest, data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+const likeCommentPostSagaRequest = async (data) => {
+ debugger
+  const {
+    accessToken,
+    refreshToken,
+    dispatch,
+    post_comment_id,
+    post_id,
+  } = data.payload;
+
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const res = await axiosInStanceJWT.post(
+      `${api.post}/comment/like/${post_comment_id}`,{},
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(
+        likeCommentPostSagaSuccess({
+          accessToken,
+          refreshToken,
+          dispatch,
+          post_id,
+        })
+      );
+      return res;
+    } else {
+      notifyService.showError("Like Comment Post Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Like Comment Post Failed");
+  }
+};
+

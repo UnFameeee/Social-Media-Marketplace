@@ -24,6 +24,9 @@ export const commentSlice = createSlice({
     updateCommentPostSaga() {},
     updateCommentPostSagaSuccess() {},
 
+    likeCommentPostSaga() {},
+    likeCommentPostSagaSuccess() {},
+
     getCommentPostSaga() {},
     getCommentPostSagaSuccess() {},
     getCommentPostSuccess: (state, action) => {
@@ -31,7 +34,6 @@ export const commentSlice = createSlice({
       if(action.payload.data.results.data.length >0){
         const post_id = action.payload.data.results.data[0].post_id;
         const totalComment = action.payload.data.results.page;
-        debugger
         const group_comment = {
           post_id: post_id,
           list_comment: [...action.payload.data.results.data],
@@ -73,6 +75,8 @@ export const commentSlice = createSlice({
   },
 });
 export const {
+  likeCommentPostSaga,
+  likeCommentPostSagaSuccess,
   updateCommentPostSaga,
   updateCommentPostSagaSuccess,
   deleteCommentPostSaga,
