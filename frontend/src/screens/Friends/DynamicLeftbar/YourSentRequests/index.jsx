@@ -1,15 +1,13 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
-import LeftbarMiddleItem from '../LeftbarMiddleItem';
+import { LeftbarSentRequest } from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
-import {
-  addFriendSaga,
-  getSentRequestSaga,
-} from '../../../../redux/friend/friendSlice';
+import { addFriendSaga } from '../../../../redux/friend/friendSlice';
+import { getAllSentRequest } from '../../../../redux/friend/friendAPI';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 import '../index.css';
 
@@ -18,6 +16,8 @@ export default function YourSentRequests() {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
+
+  const [listCancel, setListCancel] = useState([]);
 
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
@@ -36,14 +36,7 @@ export default function YourSentRequests() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      dispatch(
-        getSentRequestSaga({
-          accessToken,
-          refreshToken,
-          callRefreshSentRequest: true,
-          dispatch,
-        })
-      );
+      getAllSentRequest(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -89,16 +82,20 @@ export default function YourSentRequests() {
           />
         ),
         leftBarList: sentRequests?.data?.map((x) => {
+          var profileChecked =
+            !Helper.isNullOrEmpty(queryParams) &&
+            x.profile_id === profileData?.profile_id;
+
           return {
             left: {
               url: x.avatar,
               name: x.profile_name,
             },
             middle: (
-              <LeftbarMiddleItem
-                profileName={x.profile_name}
-                firstButtonConfig={{
-                  name: 'Cancel',
+              <LeftbarSentRequest
+                profile={x}
+                listCancel={listCancel}
+                cancelButtonConfig={{
                   onClick: (e) => {
                     e.stopPropagation();
                     dispatch(
@@ -106,12 +103,11 @@ export default function YourSentRequests() {
                         accessToken,
                         refreshToken,
                         id: x.profile_id,
-                        callRefreshFriendSuggestion: false,
-                        callRefreshSentRequest: true,
+                        callRefreshProfile: profileChecked,
                         dispatch,
                       })
                     );
-                    navigate('');
+                    setListCancel(old => [...old, x.profile_id])
                   },
                 }}
               />
@@ -119,20 +115,17 @@ export default function YourSentRequests() {
             onClick: () => {
               navigate(`?id=${x.profile_id}`);
             },
-            selected:
-              !Helper.isNullOrEmpty(queryParams) &&
-              x.profile_id === profileData?.profile_id,
-            disabled:
-              !Helper.isNullOrEmpty(queryParams) &&
-              x.profile_id === profileData?.profile_id,
+            selected: profileChecked,
+            disabled: profileChecked,
           };
         }),
         leftBarColor: 'white',
       }}
     >
-      {!Helper.isNullOrEmpty(queryParams) && (
-        <UserProfile setReRender={navigate} />
-      )}
+      {!Helper.isNullOrEmpty(queryParams) &&
+        sentRequests?.data.some(
+          (e) => e.profile_id.toString() === queryParams.toString()
+        ) && <UserProfile setReRender={navigate} />}
     </TwoColumns>
   );
 }

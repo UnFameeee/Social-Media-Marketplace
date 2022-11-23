@@ -98,7 +98,6 @@ export default function FriendSuggestions() {
                     listAdded={listAdded}
                     profile={x}
                     firstButtonConfig={{
-                      name: 'Add Friend',
                       onClick: (e) => {
                         e.stopPropagation();
                         dispatch(
@@ -114,7 +113,6 @@ export default function FriendSuggestions() {
                       },
                     }}
                     secondButtonConfig={{
-                      name: 'Remove',
                       onClick: (e) => {
                         e.stopPropagation();
                         setListRemoved((old) => [

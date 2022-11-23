@@ -53,8 +53,8 @@ export function LeftbarFriendRequest({
 
       {confirmed || denied ? (
         <div className="friend-left-bar-middle unimportant-text">
-          {confirmed && 'Request confirmed'}
-          {denied && 'Request denied'}
+          {confirmed && 'Request Confirmed'}
+          {denied && 'Request Denied'}
         </div>
       ) : (
         <div className="action">
@@ -62,14 +62,9 @@ export function LeftbarFriendRequest({
             Confirm
           </MUI.Button>
 
-          {secondButtonConfig && (
-            <MUI.Button
-              className="action-btn"
-              {...secondButtonConfig}
-            >
-              Deny
-            </MUI.Button>
-          )}
+          <MUI.Button className="action-btn" {...secondButtonConfig}>
+            Deny
+          </MUI.Button>
         </div>
       )}
     </>
@@ -114,17 +109,43 @@ export function LeftbarFriendSuggest({
       ) && (
         <div className="action">
           <MUI.Button className="action-btn" {...firstButtonConfig}>
-            Confirm
+            Add Friend
           </MUI.Button>
 
-          {secondButtonConfig && (
-            <MUI.Button
-              className="action-btn"
-              {...secondButtonConfig}
-            >
-              Deny
-            </MUI.Button>
-          )}
+          <MUI.Button className="action-btn" {...secondButtonConfig}>
+            Remove
+          </MUI.Button>
+        </div>
+      )}
+    </>
+  );
+}
+
+export function LeftbarSentRequest({
+  listCancel = [],
+  profile,
+  cancelButtonConfig,
+}) {
+  var canceled = Helper.checkValueExistInArray(
+    listCancel,
+    profile?.profile_id
+  );
+
+  return (
+    <>
+      <div className="friend-left-bar-middle title">
+        <span className="flex-1">{profile?.profile_name}</span>
+      </div>
+
+      {canceled ? (
+        <div className="friend-left-bar-middle unimportant-text">
+          Request Canceled
+        </div>
+      ) : (
+        <div className="action">
+          <MUI.Button className="action-btn" {...cancelButtonConfig}>
+            Cancel
+          </MUI.Button>
         </div>
       )}
     </>
