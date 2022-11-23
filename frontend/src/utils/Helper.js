@@ -215,6 +215,10 @@ function convertArrayObjectToObject(arrayObject) {
 //       : 0;
 // }
 
+function checkValueExistInArray(array, value) {
+  return array.length > 0 && array.includes(value);
+}
+
 export const Helper = {
   generateId,
   checkPropsInObject,
@@ -237,4 +241,5 @@ export const Helper = {
   // sortEntriesByKey,
   // sortArrayByKey,
   isEmptyObjectList,
+  checkValueExistInArray,
 };

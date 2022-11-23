@@ -1,5 +1,6 @@
 import { format } from 'timeago.js';
 import MUI from '../../../components/MUI';
+import { Helper } from '../../../utils/Helper';
 
 export default function LeftbarMiddleItem({
   profile,
@@ -32,8 +33,14 @@ export function LeftbarFriendRequest({
   firstButtonConfig,
   secondButtonConfig,
 }) {
-  var confirmed = listAction[0].length > 0 && listAction[0].includes(profile?.profile_id);
-  var denied = listAction[1].length > 0 && listAction[1].includes(profile?.profile_id);
+  var confirmed = Helper.checkValueExistInArray(
+    listAction[0],
+    profile?.profile_id
+  );
+  var denied = Helper.checkValueExistInArray(
+    listAction[1],
+    profile?.profile_id
+  );
 
   return (
     <>
@@ -50,6 +57,61 @@ export function LeftbarFriendRequest({
           {denied && 'Request denied'}
         </div>
       ) : (
+        <div className="action">
+          <MUI.Button className="action-btn" {...firstButtonConfig}>
+            Confirm
+          </MUI.Button>
+
+          {secondButtonConfig && (
+            <MUI.Button
+              className="action-btn"
+              {...secondButtonConfig}
+            >
+              Deny
+            </MUI.Button>
+          )}
+        </div>
+      )}
+    </>
+  );
+}
+
+export function LeftbarFriendSuggest({
+  listAdded = [],
+  profile,
+  firstButtonConfig,
+  secondButtonConfig,
+  hiddenButtonConfig,
+}) {
+  return (
+    <>
+      <div className="friend-left-bar-middle title">
+        <div className="flex-1">
+          <span>{profile?.profile_name}</span>
+
+          {Helper.checkValueExistInArray(
+            listAdded,
+            profile?.profile_id
+          ) && <div className="unimportant-text">Request Sent</div>}
+        </div>
+
+        {Helper.checkValueExistInArray(
+          listAdded,
+          profile?.profile_id
+        ) && (
+          <MUI.Button
+            className="pointer-events-auto"
+            {...hiddenButtonConfig}
+          >
+            Cancel Request
+          </MUI.Button>
+        )}
+      </div>
+
+      {!Helper.checkValueExistInArray(
+        listAdded,
+        profile?.profile_id
+      ) && (
         <div className="action">
           <MUI.Button className="action-btn" {...firstButtonConfig}>
             Confirm

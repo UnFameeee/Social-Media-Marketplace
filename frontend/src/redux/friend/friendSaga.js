@@ -254,7 +254,13 @@ function* handleAddFriend(data) {
   }
 }
 async function addFriendSagaRequest(data) {
-  const { accessToken, refreshToken, id, dispatch } = data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    callRefreshProfile = false,
+    dispatch,
+  } = data.payload;
   // dispatch(addFriendStart());
   try {
     const res = await axiosInStanceJWT.post(
@@ -281,6 +287,9 @@ async function addFriendSagaRequest(data) {
           accessToken,
           refreshToken,
           id,
+          callRefreshProfile,
+          callRefreshFriend: false,
+          callRefreshPost: false,
           dispatch,
         })
       );

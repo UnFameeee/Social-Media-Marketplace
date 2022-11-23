@@ -11,6 +11,7 @@ import {
   getAllRequest,
   getAllSuggestions,
 } from '../../../../redux/friend/friendAPI';
+import { Helper } from '../../../../utils/Helper';
 import '../index.css';
 
 const FriendHome = () => {
@@ -18,8 +19,13 @@ const FriendHome = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // requests
   const [listConfirm, setListConfirm] = useState([]);
   const [listDeny, setListDeny] = useState([]);
+
+  // suggestions
+  const [listAdded, setListAdded] = useState([]);
+  const [listRemoved, setListRemoved] = useState([]);
 
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
@@ -80,7 +86,10 @@ const FriendHome = () => {
                         dispatch,
                       })
                     );
-                    setListConfirm((old) => [...old, item.profile_id]);
+                    setListConfirm((old) => [
+                      ...old,
+                      item.profile_id,
+                    ]);
                   },
                 }}
                 secondButtonConfig={{
@@ -120,31 +129,66 @@ const FriendHome = () => {
       </div>
       {friendSuggestions?.length > 0 ? (
         <div className="friend-home-grid">
-          {friendSuggestions?.map((item, index) => (
-            <div key={index}>
-              <FriendCard
-                profileDetails={item}
-                type="suggestions"
-                navigate={navigate}
-                firstButtonConfig={{
-                  name:
-                    item.isSentFriendRequest != 'REQUEST'
-                      ? 'Add Friend'
-                      : 'Cancel',
-                  onClick: () => {
-                    dispatch(
-                      addFriendSaga({
-                        accessToken,
-                        refreshToken,
-                        id: item.profile_id,
-                        dispatch,
-                      })
-                    );
-                  },
-                }}
-              />
-            </div>
-          ))}
+          {friendSuggestions?.map((item, index) => {
+            return Helper.checkValueExistInArray(
+              listRemoved,
+              item.profile_id
+            ) ? (
+              <></>
+            ) : (
+              <div key={index}>
+                <FriendCard
+                  profileDetails={item}
+                  type="suggestions"
+                  listAction={listAdded}
+                  navigate={navigate}
+                  firstButtonConfig={{
+                    name: 'Add Friend',
+                    onClick: () => {
+                      dispatch(
+                        addFriendSaga({
+                          accessToken,
+                          refreshToken,
+                          id: item.profile_id,
+                          dispatch,
+                        })
+                      );
+                      setListAdded((old) => [
+                        ...old,
+                        item.profile_id,
+                      ]);
+                    },
+                  }}
+                  secondButtonConfig={{
+                    name: 'Remove',
+                    onClick: () => {
+                      setListRemoved((old) => [
+                        ...old,
+                        item.profile_id,
+                      ]);
+                    },
+                  }}
+                  hiddenButtonConfig={{
+                    name: 'Cancel',
+                    onClick: () => {
+                      dispatch(
+                        addFriendSaga({
+                          accessToken,
+                          refreshToken,
+                          id: item.profile_id,
+                          dispatch,
+                        })
+                      );
+                      var filter = listAdded.filter(
+                        (e) => e !== item.profile_id
+                      );
+                      setListAdded(filter);
+                    },
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
       ) : (
         <h3 className="text-[8rem] text-center pt-[10rem]">

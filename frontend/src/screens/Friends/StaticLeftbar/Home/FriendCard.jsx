@@ -1,5 +1,6 @@
 import { Avatar } from '@mui/material';
 import MUI from '../../../../components/MUI';
+import { Helper } from '../../../../utils/Helper';
 
 export default function FriendCard(props) {
   const {
@@ -7,6 +8,7 @@ export default function FriendCard(props) {
     type = 'requests',
     firstButtonConfig,
     secondButtonConfig,
+    hiddenButtonConfig = { disabled: true, className: 'cursor-not-allowed' },
     navigate,
     listAction,
   } = props;
@@ -18,13 +20,19 @@ export default function FriendCard(props) {
   var confirmed;
   var denied;
   if (type === 'requests') {
-    confirmed =
-      listAction[0].length > 0 &&
-      listAction[0].includes(profileDetails?.profile_id);
-
-    denied =
-      listAction[1].length > 0 &&
-      listAction[1].includes(profileDetails?.profile_id);
+    confirmed = Helper.checkValueExistInArray(
+      listAction[0],
+      profileDetails?.profile_id
+    );
+    denied = Helper.checkValueExistInArray(
+      listAction[1],
+      profileDetails?.profile_id
+    );
+  } else {
+    confirmed = Helper.checkValueExistInArray(
+      listAction,
+      profileDetails?.profile_id
+    );
   }
 
   return (
@@ -42,9 +50,17 @@ export default function FriendCard(props) {
         <span className="hover:underline" onClick={goTo}>
           {profileDetails.profile_name}
         </span>
+        {type !== 'requests' && (
+          <div className="unimportant-text spacing">
+            {confirmed && 'Request Sent'}
+          </div>
+        )}
 
         {confirmed || denied ? (
-          <MUI.Button style={{ marginTop: '68px', cursor: 'not-allowed' }} disabled>
+          <MUI.Button
+            style={{ marginTop: '68px' }}
+            {...hiddenButtonConfig}
+          >
             {confirmed && 'Request confirmed'}
             {denied && 'Request denied'}
           </MUI.Button>
