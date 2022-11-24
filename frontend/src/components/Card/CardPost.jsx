@@ -7,7 +7,12 @@ import {
   ArrowDropDown,
   MoreHoriz,
 } from "@mui/icons-material";
-import { Avatar, Button, ClickAwayListener } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  ClickAwayListener,
+  CircularProgress,
+} from "@mui/material";
 import MUI from "../MUI";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -48,6 +53,8 @@ function CardPost(props) {
     (state) => state.comment?.get?.data,
     shallowEqual
   );
+  const isLoadingCreateComment = useSelector((state) => state.comment?.create);
+  const isLoadingGetComment = useSelector((state) => state.comment?.get);
   const [commentPaging, setCommentPaging] = useState({ page: 0, pageSize: 10 });
   const [seeAllComment, setSeeAllComment] = useState(false);
   //#endregion
@@ -64,9 +71,7 @@ function CardPost(props) {
   };
   const handleLikePost = () => {
     let postId = post_id;
-     dispatch(
-        likePostSaga({ accessToken, refreshToken, dispatch, postId })
-      );
+    dispatch(likePostSaga({ accessToken, refreshToken, dispatch, postId }));
   };
   const handleShowComment = () => {
     dispatch(
@@ -90,6 +95,16 @@ function CardPost(props) {
       })
     );
   };
+  let isLoading = useMemo(() => {
+    var result = false;
+    if (isLoadingCreateComment?.isFetching) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isLoadingCreateComment]);
+
   let rootComments = useMemo(() => {
     var result = [];
     if (comments) {
@@ -278,32 +293,40 @@ function CardPost(props) {
           {showComment && (
             <div className="card-comment-section mt-[1rem]">
               <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem] ">
-                <CommentForm
-                  formWidth={"100%"}
-                  placeholder={"write a comment...."}
+                  <CommentForm
+                    formWidth={"100%"}
+                    placeholder={"write a comment...."}
+                    post_id={post_id}
+                    seeAllComment={seeAllComment}
+                    totalElement={totalComment?.totalElement}
+                  />
+                <CommentList
+                  comments={rootComments}
                   post_id={post_id}
-                  seeAllComment={seeAllComment} totalElement={totalComment?.totalElement}
+                  seeAllComment={seeAllComment}
+                  totalElement={totalComment?.totalElement}
                 />
-                <CommentList comments={rootComments} post_id={post_id} seeAllComment={seeAllComment} totalElement={totalComment?.totalElement} />
-                {!seeAllComment && totalComment?.totalCurrentShowComment < totalComment?.totalElement  && (
-                  <div className="flex">
-                    <div className="flex-1">
-                      <span
-                        className="flex-1 hover:cursor-pointer underline"
-                        onClick={(e) => {
-                          handleGetMoreComment();
-                          setSeeAllComment(true);
-                        }}
-                      >
-                        See all comments
+                {!seeAllComment &&
+                  totalComment?.totalCurrentShowComment <
+                    totalComment?.totalElement && (
+                    <div className="flex">
+                      <div className="flex-1">
+                        <span
+                          className="flex-1 hover:cursor-pointer underline"
+                          onClick={(e) => {
+                            handleGetMoreComment();
+                            setSeeAllComment(true);
+                          }}
+                        >
+                          See all comments
+                        </span>
+                      </div>
+                      <span>
+                        {totalComment?.totalCurrentShowComment}/
+                        {totalComment?.totalElement}
                       </span>
                     </div>
-                    <span>
-                      {totalComment?.totalCurrentShowComment}/
-                      {totalComment?.totalElement}
-                    </span>
-                  </div>
-                )}
+                  )}
               </div>
             </div>
           )}

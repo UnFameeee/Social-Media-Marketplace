@@ -12,6 +12,8 @@ import { useEffect } from "react";
 import { format } from "timeago.js";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ShowMoreText from "react-show-more-text";
+
+
 import {
   deleteCommentPostSaga,
   likeCommentPostSaga,
@@ -177,17 +179,17 @@ function Comment({
                     {profile_name}
                   </span>
                   <div className="message ">
-                    <ShowMoreText
-                      lines={8}
-                      more="Show more"
-                      less="Show less"
-                      anchorClass="show-more-less-clickable"
-                      expanded={false}
-                      width={0}
-                      truncatedEndingComponent={"... "}
-                    >
-                      {comment_text}
-                    </ShowMoreText>
+                       <ShowMoreText
+                        lines={8}
+                        more="Show more"
+                        less="Show less"
+                        anchorClass="show-more-less-clickable"
+                        expanded={false}
+                        width={0}
+                        truncatedEndingComponent={"... "}
+                      >
+                        {comment_text}
+                      </ShowMoreText>
                   </div>
                 </div>
                 {profile_id === userData.profile?.profile_id && (
@@ -364,8 +366,12 @@ function Comment({
       )}
       {formReply.isShow ? (
         <div className={` ${!isNodeComment ? "ml-[4rem]" : "ml-0"} mb-[1rem]`}>
-          <CommentForm formReply={formReply} post_id={post_id} seeAllComment={seeAllComment}
-          totalElement={totalElement} />
+          <CommentForm
+            formReply={formReply}
+            post_id={post_id}
+            seeAllComment={seeAllComment}
+            totalElement={totalElement}
+          />
         </div>
       ) : null}
     </div>

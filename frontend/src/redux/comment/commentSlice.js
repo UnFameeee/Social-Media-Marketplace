@@ -1,3 +1,4 @@
+import { TurnSharpLeftRounded } from "@mui/icons-material";
 import { createSlice } from "@reduxjs/toolkit";
 import { refreshToken } from "../apiRequest";
 import { revertAll } from "../resetStore";
@@ -5,6 +6,11 @@ const initialState = {
   get: {
     data: [],
   },
+  create:{
+    isFetching:false,
+    isError:false,
+    isSuccess:false,
+  }
 };
 export const commentSlice = createSlice({
   name: "comment",
@@ -12,11 +18,23 @@ export const commentSlice = createSlice({
     get: {
       data: [],
     },
+    create:{
+      isFetching:false,
+      isError:false,
+      isSuccess:false,
+    }
   },
   extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
-    commentPostSaga() {},
-    commentPostSagaSuccess() {},
+    commentPostSaga(state) {
+      state.create.isFetching = true;
+    },
+    commentPostSagaSuccess(state) {
+      state.create.isSuccess = true;
+    },
+    commentPostSagaFailed(state) {
+      state.create.isError = true;
+    },
 
     deleteCommentPostSaga() {},
     deleteCommentPostSagaSuccess() {},
@@ -27,10 +45,12 @@ export const commentSlice = createSlice({
     likeCommentPostSaga() {},
     likeCommentPostSagaSuccess() {},
 
-    getCommentPostSaga() {},
-    getCommentPostSagaSuccess() {},
+    getCommentPostSaga() {
+    },
+    getCommentPostSagaSuccess(state) {
+      state.create.isFetching = false;
+    },
     getCommentPostSuccess: (state, action) => {
-      debugger
       if(action.payload.data.results.data.length >0){
         const post_id = action.payload.data.results.data[0].post_id;
         const totalComment = action.payload.data.results.page;
@@ -47,7 +67,6 @@ export const commentSlice = createSlice({
           const pos = state.get.data.map((e) => e.post_id).indexOf(post_id);
           if (pos > -1 && !action.payload.paging) {
             state.get.data[pos].list_comment = action.payload.data.results.data;
-            console.log(state.get.data[pos].page);
             state.get.data[pos].page ={...state.get.data[pos].page,...action.payload.data.results.page};
           }
           else if (pos > -1 && action.payload.paging){

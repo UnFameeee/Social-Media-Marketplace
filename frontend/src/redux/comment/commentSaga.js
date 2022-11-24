@@ -37,7 +37,6 @@ function* handleGetCommentPost(data) {
   }
 }
 const getCommentPostSagaRequest = async (data) => {
-  debugger
   const { accessToken, refreshToken, dispatch, post_id, paging } = data.payload;
   try {
     const config = {
@@ -190,7 +189,6 @@ function* handleUpdateCommentPost(data) {
   }
 }
 const updateCommentPostSagaRequest = async (data) => {
-  debugger;
   const {
     accessToken,
     refreshToken,
@@ -247,7 +245,6 @@ function* handleLikeCommentPost(data) {
   }
 }
 const likeCommentPostSagaRequest = async (data) => {
- debugger
   const {
     accessToken,
     refreshToken,
