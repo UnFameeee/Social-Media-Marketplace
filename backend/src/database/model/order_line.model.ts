@@ -19,4 +19,13 @@ export class OrderLine extends Model<OrderLine> {
 
     @Column
     price: number 
+
+    @Column(DataType.DATE(3))
+    createdAt: string;
+    
+    @Column(DataType.DATE(3))
+    updatedAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 }
