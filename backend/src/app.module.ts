@@ -13,6 +13,7 @@ import { ProductModule } from './marketplace/product/module/product.module';
 import { ProductImageModule } from './marketplace/image/module/product_image.module';
 import { ShoppingCartModule } from './marketplace/shopping_cart/module/shopping_cart.module';
 import { PostCommentLikeModule } from './social-media/post/module/post-comment-like.module';
+import { NotificationModule } from './notification/module/notification.module';
 
 
 @Module({
@@ -32,6 +33,9 @@ import { PostCommentLikeModule } from './social-media/post/module/post-comment-l
     ProductModule,
     ProductImageModule,
     ShoppingCartModule,
+
+    //Notification
+    NotificationModule,
 
 
     //GET the image
