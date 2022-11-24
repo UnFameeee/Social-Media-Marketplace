@@ -1,8 +1,77 @@
-import { commentPostSaga, commentPostSagaSuccess } from "./commentSlice";
-import { put, takeLatest, call, fork } from 'redux-saga/effects';
-import api from '../../common/environment/environment';
-import { axiosInStanceJWT } from '../axiosJWT';
-import { notifyService } from '../../services/notifyService';
+import {
+  commentPostSaga,
+  commentPostSagaSuccess,
+  deleteCommentPostSaga,
+  deleteCommentPostSagaSuccess,
+  getCommentPostSaga,
+  getCommentPostSagaSuccess,
+  getCommentPostSuccess,
+  likeCommentPostSaga,
+  likeCommentPostSagaSuccess,
+  updateCommentPostSaga,
+  updateCommentPostSagaSuccess,
+} from "./commentSlice";
+import { put, takeLatest, call, fork } from "redux-saga/effects";
+import api from "../../common/environment/environment";
+import { axiosInStanceJWT } from "../axiosJWT";
+import { notifyService } from "../../services/notifyService";
+
+export function* getCommentPost() {
+  yield takeLatest(
+    [
+      getCommentPostSaga.type,
+      commentPostSagaSuccess.type,
+      deleteCommentPostSagaSuccess.type,
+      updateCommentPostSagaSuccess.type,
+      likeCommentPostSagaSuccess.type
+    ],
+    handleGetCommentPost
+  );
+}
+function* handleGetCommentPost(data) {
+  try {
+    const getComments = yield call(getCommentPostSagaRequest, data);
+    yield put(getCommentPostSuccess(getComments));
+  } catch (error) {
+    console.log(error);
+  }
+}
+const getCommentPostSagaRequest = async (data) => {
+  const { accessToken, refreshToken, dispatch, post_id, paging } = data.payload;
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    let pagingObj;
+    if (paging) pagingObj = paging;
+    else {
+      pagingObj = {
+        page: 0,
+        pageSize: 10,
+      };
+    }
+    const res = await axiosInStanceJWT.post(
+      `${api.post}/comment/${post_id}`,
+      pagingObj,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(getCommentPostSagaSuccess({ accessToken, refreshToken }));
+      // if(paging) return { ...res, post_id,paging };
+      // else return { ...res, post_id };
+      return { ...res, post_id };
+    } else {
+      notifyService.showError("Get comment Post Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Get comment Post Failed");
+  }
+};
 
 export function* commentPost() {
   yield takeLatest(commentPostSaga.type, handleCommentPost);
@@ -23,6 +92,7 @@ const commentPostSagaRequest = async (data) => {
     comment_text,
     parent_comment_id,
     post_id,
+    paging,
   } = data.payload;
 
   try {
@@ -30,11 +100,11 @@ const commentPostSagaRequest = async (data) => {
       Authorization: `Bearer ${accessToken}`,
     };
 
-    let commentOjb= {
-        parent_comment_id:parent_comment_id,
-        post_id:post_id,
-        comment_text:comment_text
-    }
+    let commentOjb = {
+      parent_comment_id: parent_comment_id,
+      post_id: post_id,
+      comment_text: comment_text,
+    };
     const res = await axiosInStanceJWT.post(
       `${api.post}/comment/create`,
       commentOjb,
@@ -45,7 +115,10 @@ const commentPostSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
-      dispatch(commentPostSagaSuccess({ accessToken, refreshToken }));
+      dispatch(
+        commentPostSagaSuccess({ accessToken, refreshToken, dispatch, post_id,paging })
+      );
+      notifyService.showSuccess("Comment Post Success");
       return res;
     } else {
       notifyService.showError("Comment Post Failed");
@@ -55,3 +128,161 @@ const commentPostSagaRequest = async (data) => {
     notifyService.showError("Comment Post Failed");
   }
 };
+
+export function* deleteCommentPost() {
+  yield takeLatest(deleteCommentPostSaga.type, handleDeleteCommentPost);
+}
+function* handleDeleteCommentPost(data) {
+  try {
+    yield call(deleteCommentPostSagaRequest, data);
+    // yield put(createPostSuccess(create.data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+const deleteCommentPostSagaRequest = async (data) => {
+  const { accessToken, refreshToken, dispatch, post_comment_id, post_id,paging } =
+    data.payload;
+
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    const res = await axiosInStanceJWT.delete(
+      `${api.post}/comment/delete/${post_comment_id}`,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(
+        deleteCommentPostSagaSuccess({
+          accessToken,
+          refreshToken,
+          dispatch,
+          post_id,
+          paging,
+        })
+      );
+      notifyService.showSuccess("Delete Comment Post Success");
+      return res;
+    } else {
+      notifyService.showError("Delete Comment Post Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Delete Comment Post Failed");
+  }
+};
+
+export function* updateCommentPost() {
+  yield takeLatest(updateCommentPostSaga.type, handleUpdateCommentPost);
+}
+function* handleUpdateCommentPost(data) {
+  try {
+    yield call(updateCommentPostSagaRequest, data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+const updateCommentPostSagaRequest = async (data) => {
+  const {
+    accessToken,
+    refreshToken,
+    dispatch,
+    comment_text,
+    post_comment_id,
+    paging,
+    post_id,
+  } = data.payload;
+
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const comment_text_obj = { comment_text: comment_text };
+    const res = await axiosInStanceJWT.put(
+      `${api.post}/comment/update/${post_comment_id}`,
+      comment_text_obj,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(
+        updateCommentPostSagaSuccess({
+          accessToken,
+          refreshToken,
+          dispatch,
+          post_id,
+          paging,
+        })
+      );
+      notifyService.showSuccess("Update Comment Post Success");
+      return res;
+    } else {
+      notifyService.showError("Update Comment Post Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Update Comment Post Failed");
+  }
+};
+
+export function* likeCommentPost() {
+  yield takeLatest(likeCommentPostSaga.type, handleLikeCommentPost);
+}
+function* handleLikeCommentPost(data) {
+  try {
+    yield call(likeCommentPostSagaRequest, data);
+  } catch (error) {
+    console.log(error);
+  }
+}
+const likeCommentPostSagaRequest = async (data) => {
+  const {
+    accessToken,
+    refreshToken,
+    dispatch,
+    post_comment_id,
+    post_id,
+    paging,
+  } = data.payload;
+
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const res = await axiosInStanceJWT.post(
+      `${api.post}/comment/like/${post_comment_id}`,{},
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(
+        likeCommentPostSagaSuccess({
+          accessToken,
+          refreshToken,
+          dispatch,
+          post_id,
+          paging,
+        })
+      );
+      return res;
+    } else {
+      notifyService.showError("Like Comment Post Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Like Comment Post Failed");
+  }
+};
+
