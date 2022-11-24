@@ -32,6 +32,7 @@ import { SubCategory } from './model/sub_category.model';
 import { ShopAddress } from './model/shop_address.model';
 import { Variation } from './model/variation.model';
 import { PostCommentLike } from './model/post-comment-like.model';
+import { Notification } from './model/notification.model';
 
 export const databaseProviders = [
     {
@@ -62,6 +63,8 @@ export const databaseProviders = [
             // sequelize.options
             sequelize.addModels([
                 Profile, Friendship, Post, PostLike, PostComment, ParentChildComment, ProfileAvatarImage, ProfilePostImage, ProfileWallpaperImage, Description, PostCommentLike,
+
+                Notification,
 
                 ShippingAddress, ShopOrder, ShoppingCart, ShoppingCartItem, PaymentMethod, OrderLine, Product, ProductImage, Category, ShopAddress, Variation
                 // SubCategory,
@@ -174,6 +177,12 @@ export const databaseProviders = [
 
             Category.hasMany(Product, { foreignKey: { name: "category_id", field: "category_id" } });
             Product.belongsTo(Category, { foreignKey: { name: "category_id", field: "category_id" } });
+
+            Profile.hasMany(Notification, { foreignKey: { name: "profile_sender_id", field: "profile_sender_id" } });
+            Notification.belongsTo(Profile, { foreignKey: { name: "profile_sender_id", field: "profile_sender_id" }, as: "profile_sender" });
+
+            Profile.hasMany(Notification, { foreignKey: { name: "profile_receiver_id", field: "profile_receiver_id" } });
+            Notification.belongsTo(Profile, { foreignKey: { name: "profile_receiver_id", field: "profile_receiver_id" }, as: "profile_receiver" });
 
             //initiate database  
             try {

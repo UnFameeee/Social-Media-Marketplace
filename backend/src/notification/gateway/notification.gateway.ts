@@ -1,6 +1,5 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
-import { Socket } from 'socket.io';
-import { Server } from 'http';
+import { WebSocketGateway, SubscribeMessage, MessageBody, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, ConnectedSocket } from '@nestjs/websockets';
+import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { NotificationService } from '../service/notification.service';
 
@@ -9,13 +8,15 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   @WebSocketServer()
   server: Server;
 
+  //emit -> send
+  //on -> receive
+  //server.emit -> broadcast to all client
+
   constructor(private readonly notificationService: NotificationService) { }
 
   private logger = new Logger('NotificationGateway');
 
-  handleConnection(client: any) {
-    // console.log(client);
-    console.log(client.rooms);
+  handleConnection(client: Socket) {
     this.logger.log('Client connected');
   }
 
@@ -23,19 +24,17 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
     this.logger.log('Client disconnected');
   }
 
-  @SubscribeMessage('message')
-  async test(client: Socket, @MessageBody() createMessageDto: any) {
-    console.log(client);
-    console.log(createMessageDto);
-    // this.server.emit('msgToClient', "test server message");
-    return {event: "msgToClient", data: "test client message"};
+  @SubscribeMessage('join_room')
+  async joinRoom(@ConnectedSocket() client: Socket, @MessageBody() payload: any) {
+    const profileId = payload.profile_id.toString();
+    client.join(profileId);
+    this.server.to(profileId).emit('join_room', `Profile join room ${profileId}`);
   }
 
-  @SubscribeMessage('createMessage')
-  async create(client: any, @MessageBody() createMessageDto: any) {
-    // const message = this.messageService.create(createMessageDto);
-    client.emit('message', "test client message");
-    // return message; 
-    this.server.emit('message', "test server message");
+  @SubscribeMessage('send_notification')
+  async sendNotification(@ConnectedSocket() client: Socket, @MessageBody() payload: any) {
+    //send the notification to the specific profile_id
+    const profileId = payload.profile_id.toString();
+    this.server.to(profileId).emit('receive_notification', payload.notification);
   }
 }
