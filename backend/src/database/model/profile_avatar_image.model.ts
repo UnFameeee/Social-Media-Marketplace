@@ -17,4 +17,10 @@ export class ProfileAvatarImage extends Model<ProfileAvatarImage> {
  
     @Column(DataType.TEXT)
     link: string;
+
+    @Column(DataType.DATE(3))
+    createdAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 } 

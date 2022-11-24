@@ -18,6 +18,15 @@ export class Post extends Model<Post> {
     @Column(DataType.TEXT)
     written_text: string;
 
+    @Column(DataType.DATE(3))
+    createdAt: string;
+    
+    @Column(DataType.DATE(3))
+    updatedAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
+
     // @Column
     // media_type: string;
 

@@ -25,4 +25,13 @@ export class Description extends Model<Description> {
 
     @Column
     career: string;
+
+    @Column(DataType.DATE(3))
+    createdAt: string;
+    
+    @Column(DataType.DATE(3))
+    updatedAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 }

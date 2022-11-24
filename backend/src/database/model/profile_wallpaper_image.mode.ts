@@ -17,4 +17,10 @@ export class ProfileWallpaperImage extends Model<ProfileWallpaperImage> {
 
     @Column(DataType.TEXT)
     link: string;
+
+    @Column(DataType.DATE(3))
+    createdAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 }

@@ -15,4 +15,13 @@ export class PostComment extends Model<PostComment> {
 
     @Column(DataType.TEXT)
     comment_text: string;
+
+    @Column(DataType.DATE(3))
+    createdAt: string;
+    
+    @Column(DataType.DATE(3))
+    updatedAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 }

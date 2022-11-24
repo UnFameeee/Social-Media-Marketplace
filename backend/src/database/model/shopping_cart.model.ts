@@ -11,5 +11,12 @@ export class ShoppingCart extends Model<ShoppingCart> {
     @Column
     shopping_cart_id: number
 
-    //profile_id 
+    @Column(DataType.DATE(3))
+    createdAt: string;
+    
+    @Column(DataType.DATE(3))
+    updatedAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 } 
