@@ -34,7 +34,30 @@
 #searchBar.MuiOutlinedInput-input:-webkit-autofill {
   padding: 0;
   /* height: 4.4rem; */
+}
+/* #endregion */
 
+/* #region options in all friend screen */
+.MuiList-root.menu.all-friend {
+  width: 13rem;
+  top: 5rem;
+  right: 0.8rem;
+  z-index: 1;
+}
+.all-friend .MuiMenuItem-root.menu-item {
+  pointer-events: auto;
+}
+.left-bar .MuiMenuItem-root .middle-menu.all-friend {
+  width: auto;
+  font-size: 1.5rem !important;
+  font-weight: 200;
+  /* color: #8c8c8c; */
+  color: black;
+}
+.all-friend .left-bar-button svg {
+  font-size: 2.4rem;
+  /* color: #8c8c8c; */
+  color: black;
 }
 /* #endregion */
 

@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { RiMore2Fill } from 'react-icons/ri';
+import { BiUserX } from 'react-icons/bi';
 import { format } from 'timeago.js';
 import MUI from '../../../components/MUI';
 import { Helper } from '../../../utils/Helper';
@@ -149,5 +152,123 @@ export function LeftbarSentRequest({
         </div>
       )}
     </>
+  );
+}
+
+export function LeftbarAllFriend({
+  profile,
+  openOptions,
+  handleUnfriend,
+  handleAddFriend,
+  handleCancelRequest,
+  listUnfriend,
+  listAdded,
+}) {
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  return (
+    <div className="flex items-center">
+      <div className="flex-1 flex flex-col justify-center px-[0.8rem]">
+        <span>{profile?.profile_name}</span>
+
+        {Helper.checkValueExistInArray(
+          listAdded,
+          profile?.profile_id
+        ) ? (
+          <span className="unimportant-text text-[1.4rem]">
+            Request Sent
+          </span>
+        ) : (
+          profile?.mutualFriend > 0 && (
+            <span className="unimportant-text text-[1.4rem]">
+              {Helper.isMultiple(
+                'mutual friend',
+                profile?.mutualFriend
+              )}
+            </span>
+          )
+        )}
+      </div>
+
+      {!Helper.checkValueExistInArray(
+        listUnfriend,
+        profile?.profile_id
+      ) ? (
+        <>
+          <MUI.BetterIconButton
+            className="pointer-events-auto mr-[0.8rem] [&>button]:p-[0.4rem]"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (openOptions[0] === profile?.profile_id) {
+                openOptions[1]('');
+              } else {
+                openOptions[1](profile?.profile_id);
+              }
+            }}
+          >
+            <RiMore2Fill
+              style={{
+                margin: 0,
+                fontSize: '2rem',
+                color: '#656565',
+              }}
+            />
+          </MUI.BetterIconButton>
+
+          {openOptions[0] === profile?.profile_id && (
+            <MUI.Menu
+              classNameConfig={{
+                menuClass: 'all-friend',
+                middleClass: 'all-friend',
+              }}
+              list={[
+                {
+                  left: <BiUserX />,
+                  middle: 'Unfriend',
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    setOpenConfirm(true);
+                  },
+                },
+              ]}
+            />
+          )}
+
+          <MUI.ConfirmDialog
+            modalProps={[openConfirm, setOpenConfirm]}
+            clickAwayClose
+            title={`Unfriend ${profile?.profile_name}`}
+            actionName={`remove ${profile?.profile_name} as your friend`}
+            confirmAction={(e) => {
+              e.stopPropagation();
+              handleUnfriend();
+            }}
+          />
+        </>
+      ) : !Helper.checkValueExistInArray(
+          listAdded,
+          profile?.profile_id
+        ) ? (
+        <MUI.Button
+          style={{ pointerEvents: 'auto', marginRight: '0.8rem' }}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleAddFriend();
+          }}
+        >
+          Add Friend
+        </MUI.Button>
+      ) : (
+        <MUI.Button
+          style={{ pointerEvents: 'auto', marginRight: '0.8rem' }}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleCancelRequest();
+          }}
+        >
+          Cancel Request
+        </MUI.Button>
+      )}
+    </div>
   );
 }

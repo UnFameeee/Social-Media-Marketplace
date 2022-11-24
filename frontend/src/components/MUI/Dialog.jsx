@@ -18,7 +18,8 @@ export default function ConfirmDialog(props) {
     confirmAction,
   } = props;
 
-  function handleClose() {
+  function handleClose(e) {
+    e.stopPropagation();    
     modalProps[1](false);
   }
 
@@ -29,7 +30,7 @@ export default function ConfirmDialog(props) {
       aria-describedby="alert-dialog-slide-description"
     >
       <DialogTitle className="flex items-center justify-center" sx={{padding: '16px 12px 16px 24px'}}>
-        <span className="flex-1">{title}</span>
+        <span className="flex-1 text-[2rem]">{title}</span>
         <BetterIconButton className='[&>button>svg]:text-[2rem]' onClick={handleClose}>
           <Close />
         </BetterIconButton>

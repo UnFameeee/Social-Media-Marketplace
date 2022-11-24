@@ -555,7 +555,7 @@ function UserProfile(props) {
             {/* gallery images section */}
             <GridSideInfo
               type="photo"
-              leftLabel="Photo"
+              leftLabel="Photos"
               // rightLabel={{ text: 'See all Photos' }}
               listImg={galleryImgs?.data?.map((x) => {
                 return { url: x.link };
