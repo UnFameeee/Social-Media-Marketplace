@@ -12,11 +12,18 @@ export class ProductImage extends Model<ProductImage> {
     @Column
     product_image_id: number;
 
-    //product_id
-
     @Column
     profile_id: number;
  
     @Column(DataType.TEXT)
     link: string;
+
+    @Column(DataType.DATE(3))
+    createdAt: string;
+    
+    @Column(DataType.DATE(3))
+    updatedAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 } 

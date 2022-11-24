@@ -30,19 +30,18 @@ import {
 import { notifyService } from '../../services/notifyService';
 import { removeUploadImages, uploadImages } from '../apiRequest';
 import { getProfileSagaSuccess } from '../profile/profileSlice';
-import { commentPostSagaSuccess } from '../comment/commentSlice';
+import { commentPostSagaSuccess, getCommentPostSagaSuccess } from '../comment/commentSlice';
 
 //#region reFreshPosts
 export function* reFreshPosts() {
   yield takeLatest(
     [
       getProfileSagaSuccess.type,
-
       createPostSagaSuccess.type,
       deletePostSagaSuccess.type,
       updatePostSagaSuccess.type,
       likePostSagaSuccess.type,
-      commentPostSagaSuccess.type,
+      getCommentPostSagaSuccess.type,
     ],
     handleReFreshPostSaga
   );

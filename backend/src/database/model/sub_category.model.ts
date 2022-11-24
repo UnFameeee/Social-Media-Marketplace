@@ -16,4 +16,13 @@ export class SubCategory extends Model<SubCategory> {
  
     @Column
     sub_category_name: string;
+
+    @Column(DataType.DATE(3))
+    createdAt: string;
+    
+    @Column(DataType.DATE(3))
+    updatedAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 } 

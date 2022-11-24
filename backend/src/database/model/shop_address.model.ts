@@ -1,4 +1,4 @@
-import {AllowNull, AutoIncrement, Column, Model, PrimaryKey, Table } from "sequelize-typescript";
+import {AllowNull, AutoIncrement, Column, DataType, Model, PrimaryKey, Table } from "sequelize-typescript";
 @Table({
     tableName: "shop_address",
     timestamps: true,
@@ -28,4 +28,13 @@ export class ShopAddress extends Model<ShopAddress> {
 
     // @Column
     // postal_code: number
+
+    @Column(DataType.DATE(3))
+    createdAt: string;
+    
+    @Column(DataType.DATE(3))
+    updatedAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 }

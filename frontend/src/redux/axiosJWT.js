@@ -15,10 +15,9 @@ axiosInStanceJWT.interceptors.request.use(
         store.dispatch(refreshTokenSuccess(data));
         store.dispatch(userDataAssign(decoded));
         config.headers["Authorization"] = `Bearer ${data.access}`;
-      }
-      else{
-        store.dispatch(revertAll())
-        window.location.replace("/login")
+      } else {
+        store.dispatch(revertAll());
+        window.location.replace("/login");
       }
     }
     return config;
