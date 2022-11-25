@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLayoutEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -51,7 +51,7 @@ import './index.css';
 function UserProfile(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [reRender, setReRender] = useState(false);
+
   const [openAvatarModal, setOpenAvatarModal] = useState(false); //toggle update avatar modal
   const [openDetailsModal, setOpenDetailsModal] = useState(false); //toggle update details modal
   const [editBio, setEditBio] = useState(false); //toggle edit bio
@@ -59,6 +59,7 @@ function UserProfile(props) {
   const [searchParams] = useSearchParams();
   const queryParams = Object.fromEntries([...searchParams]);
 
+  // #region data from redux
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -66,10 +67,12 @@ function UserProfile(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const posts = useSelector(
-    (state) => state.post.getByProfile?.posts?.results?.data
+    (state) => state.post.getByProfile?.posts?.results?.data,
+    shallowEqual
   );
   const profileData = useSelector(
-    (state) => state.profile?.profileDetails?.data
+    (state) => state.profile?.profileDetails?.data,
+    shallowEqual
   );
   const userData = useSelector(
     (state) => state.auth?.user?.userData?.profile
@@ -80,6 +83,7 @@ function UserProfile(props) {
   const galleryImgs = useSelector(
     (state) => state.profile.galleryImg?.data
   );
+  // #endregion
 
   var id =
     queryParams.id ?? profileData?.profile_id ?? userData?.profile_id;
@@ -91,15 +95,7 @@ function UserProfile(props) {
       profile_description;
   }
 
-  const handleActions = async (action) => {
-    action();
-    if (Helper.checkURL('profile', {}, true)) {
-      setReRender(!reRender);
-    } else {
-      props.setReRender('');
-    }
-  };
-
+  // #region wallpaper section
   const [menuClicked, setMenuClicked] = useState(false);
   const [openConfirmRemove, setOpenConfirmRemove] = useState(false);
   const [wallpaper, setWallpaper] = useState();
@@ -126,11 +122,120 @@ function UserProfile(props) {
   const clearWallpaper = () => {
     setWallpaper('');
   };
+  // #endregion
 
-  var callRefreshFriend = Helper.checkURL('friends');
-  var callRefreshProfile = Helper.checkURL('profile');
-  var callRefreshFriendSuggestion = Helper.checkURL('suggestions');
-  var callRefreshSentRequest = Helper.checkURL('sent');
+  // #region handle friend actions
+  var callRefreshProfile = true;
+  const handleActions = (action) => {
+    // accept friend requests
+    if (action === 'accept') {
+      dispatch(
+        acceptSaga({
+          accessToken,
+          refreshToken,
+          id,
+          callRefreshProfile,
+          dispatch,
+        })
+      );
+      if (Helper.checkURL('requests')) {
+        props.action[0]((old) => [...old, parseInt(id)]);
+      }
+    }
+
+    // deny friend request
+    else if (action === 'deny') {
+      dispatch(
+        denySaga({
+          accessToken,
+          refreshToken,
+          id,
+          callRefreshProfile,
+          dispatch,
+        })
+      );
+      if (Helper.checkURL('requests')) {
+        props.action[1]((old) => [...old, parseInt(id)]);
+      }
+    }
+
+    // add friend/ cancel sent request
+    else if (action === 'add' || action === 'cancel') {
+      dispatch(
+        addFriendSaga({
+          accessToken,
+          refreshToken,
+          id,
+          callRefreshProfile,
+          dispatch,
+        })
+      );
+
+      if (Helper.checkURL('suggestions') || Helper.checkURL('sent')) {
+        // cancel sent request
+        if (
+          Helper.checkValueExistInArray(
+            props.actionList,
+            parseInt(id)
+          )
+        ) {
+          var filterSuggestions = props.actionList.filter(
+            (e) => e !== parseInt(id)
+          );
+          props.action(filterSuggestions);
+        }
+        // add friend
+        else {
+          props.action((old) => [...old, parseInt(id)]);
+        }
+      }
+
+      // screen all friends
+      else if (Helper.checkURL('all')) {
+        if (
+          Helper.checkValueExistInArray(
+            props.actionList[1],
+            parseInt(id)
+          )
+        ) {
+          var filterAllFriend = props.actionList[1].filter(
+            (e) => e !== parseInt(id)
+          );
+          props.action[1](filterAllFriend);
+        }
+        // add friend
+        else {
+          props.action[1]((old) => [...old, parseInt(id)]);
+        }
+      }
+    }
+
+    // unfriend
+    else if (action === 'unfriend') {
+      dispatch(
+        unfriendSaga({
+          accessToken,
+          refreshToken,
+          id,
+          callRefreshProfile,
+          dispatch,
+        })
+      );
+      if (Helper.checkURL('all')) {
+        props.action[0]((old) => [...old, parseInt(id)]);
+      }
+      // unfriend in request means deny
+      else if (Helper.checkURL('requests')) {
+        var filterRequest = props.actionList[0].filter(
+          (e) => e !== parseInt(id)
+        );
+        props.action[0](filterRequest);
+        props.action[1]((old) => [...old, parseInt(id)]);
+      }
+    }
+  };
+  // #endregion
+
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -201,7 +306,7 @@ function UserProfile(props) {
           ></div>
 
           {/* handle wallpaper actions */}
-          {profileData?.profile_id == userData?.profile_id && (
+          {profileData?.profile_id === userData?.profile_id && (
             <ClickAwayListener
               onClickAway={() => {
                 setMenuClicked(false);
@@ -291,7 +396,7 @@ function UserProfile(props) {
               </Avatar>
 
               {/* handle Avatar */}
-              {profileData?.profile_id == userData?.profile_id && (
+              {profileData?.profile_id === userData?.profile_id && (
                 <>
                   <button
                     className="bg-white absolute right-0 top-[12rem] z-1 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer"
@@ -340,23 +445,11 @@ function UserProfile(props) {
               <div className="flex items-end gap-[1rem]">
                 <ProfileAction
                   isMainUser={
-                    profileData?.profile_id == userData?.profile_id
+                    profileData?.profile_id === userData?.profile_id
                   }
                   isFriend={profileData?.isFriend}
                   isSentFriendReq={profileData?.isSentFriendRequest}
-                  actionProps={{
-                    accessToken: accessToken,
-                    refreshToken: refreshToken,
-                    id: profileData?.profile_id,
-                    mainId: userData?.profile_id,
-                    callRefreshFriend: callRefreshFriend,
-                    callRefreshProfile: callRefreshProfile,
-                    callRefreshSentRequest: callRefreshSentRequest,
-                    callRefreshFriendSuggestion:
-                      callRefreshFriendSuggestion,
-                    dispatch: dispatch,
-                    navigate: navigate,
-                  }}
+                  navigate={navigate}
                   action={handleActions}
                 />
               </div>
@@ -386,7 +479,7 @@ function UserProfile(props) {
       </div>
 
       {/* handle when you visit someone profile and they had already send you a friend request */}
-      {profileData?.isSentFriendRequest == 'TARGET' && (
+      {profileData?.isSentFriendRequest === 'TARGET' && (
         <div id="friendRequest">
           <span className="flex-1 font-medium">
             {profileData?.profile_name} sent you a friend request
@@ -396,18 +489,7 @@ function UserProfile(props) {
               className="gap-[0.8rem]"
               style={{ minWidth: '14rem' }}
               onClick={() => {
-                handleActions(() => {
-                  dispatch(
-                    acceptSaga({
-                      accessToken,
-                      refreshToken,
-                      id,
-                      callRefreshFriend,
-                      callRefreshProfile,
-                      dispatch,
-                    })
-                  );
-                });
+                handleActions('accept');
               }}
             >
               <FaUserPlus style={{ fontSize: '2.2rem' }} />
@@ -419,18 +501,7 @@ function UserProfile(props) {
               className="gap-[0.8rem]"
               style={{ minWidth: '14rem' }}
               onClick={() => {
-                handleActions(() => {
-                  dispatch(
-                    denySaga({
-                      accessToken,
-                      refreshToken,
-                      id,
-                      callRefreshFriend,
-                      callRefreshProfile,
-                      dispatch,
-                    })
-                  );
-                });
+                handleActions('deny');
               }}
             >
               <FaUserMinus style={{ fontSize: '2.2rem' }} />
@@ -447,7 +518,7 @@ function UserProfile(props) {
           <div className="sticky top-[-83.5rem] ">
             {/* profile description */}
             {(!Helper.isEmptyObject(profile_description, true) ||
-              userData?.profile_id == profileData?.profile_id) && (
+              userData?.profile_id === profileData?.profile_id) && (
               <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem] ">
                 <div className="flex flex-col">
                   <span className="font-bold text-[2.3rem]">
@@ -460,7 +531,7 @@ function UserProfile(props) {
                           {profile_description?.description}
                         </span>
                       )}
-                      {userData?.profile_id ==
+                      {userData?.profile_id ===
                         profileData?.profile_id && (
                         <SideBarButton
                           id="editBioBtn"
@@ -529,7 +600,7 @@ function UserProfile(props) {
                       )}
                     </ul>
                   )}
-                  {userData?.profile_id ==
+                  {userData?.profile_id ===
                     profileData?.profile_id && (
                     <SideBarButton
                       label="Edit details"
@@ -562,7 +633,7 @@ function UserProfile(props) {
             {/* gallery images section */}
             <GridSideInfo
               type="photo"
-              leftLabel="Photo"
+              leftLabel="Photos"
               // rightLabel={{ text: 'See all Photos' }}
               listImg={galleryImgs?.data?.map((x) => {
                 return { url: x.link };
@@ -574,11 +645,11 @@ function UserProfile(props) {
               type="friendPhoto"
               leftLabel="Friends"
               rightLabel={
-                userData?.profile_id == profileData?.profile_id
+                userData?.profile_id === profileData?.profile_id
                   ? {
                       text: 'See all Friends',
                       onClick: () => {
-                        if (id == userData?.profile_id) {
+                        if (parseInt(id) === userData?.profile_id) {
                           navigate('/friends/all');
                         }
                       },
@@ -603,17 +674,13 @@ function UserProfile(props) {
 
         <div className="rightSidePosts w-[55%]">
           {profileData?.profile_id === userData?.profile_id && (
-            <PostStatus
-              profile={profileData}
-              setReRender={setReRender}
-            />
+            <PostStatus profile={profileData} />
           )}
           {posts?.map((post) => (
             <CardPost
               postData={post}
               key={post.post_id}
               profile={profileData}
-              setReRender={setReRender}
             />
           ))}
         </div>
@@ -626,21 +693,9 @@ function ProfileAction({
   isMainUser,
   isFriend,
   isSentFriendReq,
-  actionProps,
+  navigate,
   action,
 }) {
-  const {
-    accessToken,
-    refreshToken,
-    id,
-    mainId,
-    callRefreshFriendSuggestion,
-    callRefreshFriend,
-    callRefreshSentRequest,
-    callRefreshProfile,
-    dispatch,
-    navigate,
-  } = actionProps;
   const [menuClicked, setMenuClicked] = useState(false);
 
   function handleFirstAction() {
@@ -649,22 +704,10 @@ function ProfileAction({
       if (isFriend) {
         setMenuClicked(!menuClicked);
       } else {
-        if (isSentFriendReq == 'TARGET') {
+        if (isSentFriendReq === 'TARGET') {
           setMenuClicked(!menuClicked);
         } else {
-          action(() => {
-            dispatch(
-              addFriendSaga({
-                accessToken,
-                refreshToken,
-                id,
-                callRefreshFriendSuggestion,
-                callRefreshSentRequest,
-                callRefreshProfile,
-                dispatch,
-              })
-            );
-          });
+          action('add');
         }
       }
     }
@@ -683,59 +726,25 @@ function ProfileAction({
       {
         middle: 'Unfriend',
         onClick: () => {
-          action(() => {
-            dispatch(
-              unfriendSaga({
-                accessToken,
-                refreshToken,
-                id,
-                mainId,
-                callRefreshFriend,
-                callRefreshProfile,
-                dispatch,
-              })
-            );
-          });
+          action('unfriend');
           setMenuClicked(false);
         },
       },
     ];
   }
-  if (isSentFriendReq == 'TARGET') {
+  if (isSentFriendReq === 'TARGET') {
     actionList = [
       {
         middle: 'Confirm',
         onClick: () => {
-          action(() => {
-            dispatch(
-              acceptSaga({
-                accessToken,
-                refreshToken,
-                id,
-                callRefreshFriend,
-                callRefreshProfile,
-                dispatch,
-              })
-            );
-          });
+          action('accept');
           setMenuClicked(false);
         },
       },
       {
         middle: 'Deny',
         onClick: () => {
-          action(() => {
-            dispatch(
-              denySaga({
-                accessToken,
-                refreshToken,
-                id,
-                callRefreshFriend,
-                callRefreshProfile,
-                dispatch,
-              })
-            );
-          });
+          action('deny');
           setMenuClicked(false);
         },
       },
@@ -769,21 +778,21 @@ function ProfileAction({
                   Friends
                 </span>
               </>
-            ) : isSentFriendReq == 'NONE' ? (
+            ) : isSentFriendReq === 'NONE' ? (
               <>
                 <FaUserPlus style={{ fontSize: '2.2rem' }} />
                 <span className=" text-[1.6rem] font-semibold">
                   Add Friend
                 </span>
               </>
-            ) : isSentFriendReq == 'REQUEST' ? (
+            ) : isSentFriendReq === 'REQUEST' ? (
               <>
                 <FaUserTimes style={{ fontSize: '2.2rem' }} />
                 <span className=" text-[1.6rem] font-semibold">
                   Cancel
                 </span>
               </>
-            ) : isSentFriendReq == 'TARGET' ? (
+            ) : isSentFriendReq === 'TARGET' ? (
               <>
                 <FaUserCheck style={{ fontSize: '2.2rem' }} />
                 <span className=" text-[1.6rem] font-semibold">

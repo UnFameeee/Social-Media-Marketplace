@@ -1,19 +1,32 @@
-import { useLayoutEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useLayoutEffect, useState } from 'react';
+import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import FriendCard from './FriendCard';
 import {
   acceptSaga,
   addFriendSaga,
   denySaga,
-  getFriendRequestSaga,
-  getFriendSuggestionSaga,
 } from '../../../../redux/friend/friendSlice';
+import {
+  getAllRequest,
+  getAllSuggestions,
+} from '../../../../redux/friend/friendAPI';
+import { Helper } from '../../../../utils/Helper';
 import '../index.css';
 
 const FriendHome = () => {
   const reRenderLayout = useOutletContext();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // requests
+  const [listConfirm, setListConfirm] = useState([]);
+  const [listDeny, setListDeny] = useState([]);
+
+  // suggestions
+  const [listAdded, setListAdded] = useState([]);
+  const [listRemoved, setListRemoved] = useState([]);
+
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -30,25 +43,11 @@ const FriendHome = () => {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      reRenderLayout(); //re-render the parent layout
+      // reRenderLayout(); //re-render the parent layout
 
-      dispatch(
-        getFriendRequestSaga({
-          accessToken,
-          refreshToken,
-          callRefreshFriend: true,
-          dispatch,
-        })
-      );
+      getAllRequest(accessToken, refreshToken, dispatch);
 
-      dispatch(
-        getFriendSuggestionSaga({
-          accessToken,
-          refreshToken,
-          callRefreshFriendSuggestion: true,
-          dispatch,
-        })
-      );
+      getAllSuggestions(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;
@@ -57,13 +56,26 @@ const FriendHome = () => {
 
   return (
     <>
-      <h2 className="friend-home-title">Friend Requests</h2>
+      <div className="friend-home-title">
+        <h2 className="type">Friend Requests</h2>
+
+        <button
+          id="gridSideButton"
+          onClick={() => {
+            navigate('requests');
+          }}
+        >
+          See All
+        </button>
+      </div>
       {friendRequests?.length > 0 ? (
         <div className="friend-home-grid">
           {friendRequests.map((item, index) => (
             <div key={index}>
               <FriendCard
                 profileDetails={item}
+                listAction={[listConfirm, listDeny]}
+                navigate={navigate}
                 firstButtonConfig={{
                   onClick: () => {
                     dispatch(
@@ -74,6 +86,10 @@ const FriendHome = () => {
                         dispatch,
                       })
                     );
+                    setListConfirm((old) => [
+                      ...old,
+                      item.profile_id,
+                    ]);
                   },
                 }}
                 secondButtonConfig={{
@@ -86,6 +102,7 @@ const FriendHome = () => {
                         dispatch,
                       })
                     );
+                    setListDeny((old) => [...old, item.profile_id]);
                   },
                 }}
               />
@@ -98,33 +115,80 @@ const FriendHome = () => {
         </h3>
       )}
 
-      <h2 className="friend-home-title">People you may know</h2>
+      <div className="friend-home-title">
+        <h2 className="type">People you may know</h2>
+
+        <button
+          id="gridSideButton"
+          onClick={() => {
+            navigate('suggestions');
+          }}
+        >
+          See All
+        </button>
+      </div>
       {friendSuggestions?.length > 0 ? (
         <div className="friend-home-grid">
-          {friendSuggestions?.map((item, index) => (
-            <div key={index}>
-              <FriendCard
-                type="suggestions"
-                profileDetails={item}
-                firstButtonConfig={{
-                  name:
-                    item.isSentFriendRequest != 'REQUEST'
-                      ? 'Add Friend'
-                      : 'Cancel',
-                  onClick: () => {
-                    dispatch(
-                      addFriendSaga({
-                        accessToken,
-                        refreshToken,
-                        id: item.profile_id,
-                        dispatch,
-                      })
-                    );
-                  },
-                }}
-              />
-            </div>
-          ))}
+          {friendSuggestions?.map((item, index) => {
+            return Helper.checkValueExistInArray(
+              listRemoved,
+              item.profile_id
+            ) ? (
+              <></>
+            ) : (
+              <div key={index}>
+                <FriendCard
+                  profileDetails={item}
+                  type="suggestions"
+                  listAction={listAdded}
+                  navigate={navigate}
+                  firstButtonConfig={{
+                    name: 'Add Friend',
+                    onClick: () => {
+                      dispatch(
+                        addFriendSaga({
+                          accessToken,
+                          refreshToken,
+                          id: item.profile_id,
+                          dispatch,
+                        })
+                      );
+                      setListAdded((old) => [
+                        ...old,
+                        item.profile_id,
+                      ]);
+                    },
+                  }}
+                  secondButtonConfig={{
+                    name: 'Remove',
+                    onClick: () => {
+                      setListRemoved((old) => [
+                        ...old,
+                        item.profile_id,
+                      ]);
+                    },
+                  }}
+                  hiddenButtonConfig={{
+                    name: 'Cancel',
+                    onClick: () => {
+                      dispatch(
+                        addFriendSaga({
+                          accessToken,
+                          refreshToken,
+                          id: item.profile_id,
+                          dispatch,
+                        })
+                      );
+                      var filter = listAdded.filter(
+                        (e) => e !== item.profile_id
+                      );
+                      setListAdded(filter);
+                    },
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
       ) : (
         <h3 className="text-[8rem] text-center pt-[10rem]">
