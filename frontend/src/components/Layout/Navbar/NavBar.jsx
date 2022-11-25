@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FacebookOutlined, Close } from '@mui/icons-material';
 import {
@@ -23,8 +23,11 @@ import { Helper } from '../../../utils/Helper';
 import { logOut } from '../../../redux/apiRequest';
 import { localStorageService } from '../../../services/localStorageService';
 import '../Layout.css';
+import socket from '../../../socket';
+
 
 export default function NavBar() {
+  // const {socket} = useContext(SocketContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -51,6 +54,9 @@ export default function NavBar() {
   const handleLogOut = () => {
     logOut(dispatch, accessToken, refreshToken);
     dispatch(revertAll());
+    socket.off('join_room');
+    socket.off('receive_notification');
+    socket.disconnect();
   };
 
   function handleSearch() {
@@ -144,13 +150,13 @@ export default function NavBar() {
                   path: '',
                 })
                   ? {
-                      marginBottom: '-0.4rem',
-                      borderBottomLeftRadius: 0,
-                      borderBottomRightRadius: 0,
-                      color: 'var(--primary-color)',
-                      borderBottom:
-                        '0.4rem solid var(--primary-color)',
-                    }
+                    marginBottom: '-0.4rem',
+                    borderBottomLeftRadius: 0,
+                    borderBottomRightRadius: 0,
+                    color: 'var(--primary-color)',
+                    borderBottom:
+                      '0.4rem solid var(--primary-color)',
+                  }
                   : null
               }
               onClick={() => {
@@ -226,7 +232,7 @@ export default function NavBar() {
                       alt={userData.profile_name}
                       src={
                         userData?.profile_id ==
-                        profileData?.profile_id
+                          profileData?.profile_id
                           ? profileData?.avatar
                           : userData?.avatar
                       }
