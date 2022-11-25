@@ -28,7 +28,7 @@ export const middleNavIcons = [
   },
   {
     icon: [<IoBagOutline />, <IoBag />],
-    tooltip: 'Marketplace',
+    tooltip: 'marketplace/shopping',
   },
   // {
   //   icon: [

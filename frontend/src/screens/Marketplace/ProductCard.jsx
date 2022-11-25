@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Avatar, Button, Modal } from "@mui/material";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
 import "./ProductCard.scss";
 import styled from "styled-components";
 import ProductCartDetailModal from "./ProductCartDetailModal";
 import macbook_example from "../../assets/macbook.jpeg";
-function ProductCard() {
+function ProductCard({ arrayBtn, ...props }) {
   const userData = useSelector((state) => state.auth.user.userData);
   const [showModal, setShowModal] = useState(false);
 
@@ -15,7 +15,6 @@ function ProductCard() {
       setShowModal(true);
     }
   };
-
   return (
     <>
       <ProductCartDetailModal
@@ -29,9 +28,11 @@ function ProductCard() {
             src={macbook_example}
             alt=""
           />
-          <div className=" absolute  top-[1rem] right-[1rem] p-[0.5rem] rounded-md bg-[#9a6de1]">
-            <AiFillHeart className=" text-[#fffdfd] cursor-pointer text-[2.2rem] hover:text-[#fda9a9]" />
-          </div>
+          {
+            // <div className=" absolute  top-[1rem] right-[1rem] p-[0.5rem] rounded-md bg-[#9a6de1]">
+            //   <AiFillHeart className=" text-[#fffdfd] cursor-pointer text-[2.2rem] hover:text-[#fda9a9]" />
+            // </div>
+          }
         </div>
         <div className="card-info flex items-center gap-[0.5rem] mb-[1rem]">
           <Avatar
@@ -64,32 +65,38 @@ function ProductCard() {
           </div>
         </div>
         <div className="btn-product-action">
-          <Button
-            onClick={handleShowModalDetail}
-            style={{
-              color: "black",
-              background: "white",
-              border: "1px solid var(--primary-color)",
-              borderRadius: "8px",
-              MozBorderRadius: "8px",
-              WebkitBorderRadius: "8px",
-              textTransform: "capitalize",
-            }}
-          >
-            <span className="text-[1.3rem]">View details</span>
-          </Button>
-          <Button
-            style={{
-              color: "white",
-              background: "var(--primary-color)",
-              borderRadius: "8px",
-              MozBorderRadius: "8px",
-              WebkitBorderRadius: "8px",
-              textTransform: "capitalize",
-            }}
-          >
-            <span className=" text-[1.3rem]">Add to cart</span>
-          </Button>
+          {
+            // <Button
+            //   onClick={handleShowModalDetail}
+            //   style={{
+            //     color: "black",
+            //     background: "white",
+            //     border: "1px solid var(--primary-color)",
+            //     borderRadius: "8px",
+            //     MozBorderRadius: "8px",
+            //     WebkitBorderRadius: "8px",
+            //     textTransform: "capitalize",
+            //   }}
+            // >
+            //   <span className="text-[1.3rem]">View details</span>
+            // </Button>
+          }
+          {arrayBtn &&
+            arrayBtn.map((btn) => (
+              <Button
+                onClick={btn.handle}
+                style={{
+                  color: ` ${btn.pos ? "white" : "var(--primary-color)"}`,
+                  background: ` ${btn.pos ? "var(--primary-color)" : "white"}`,
+                  borderRadius: "8px",
+                  MozBorderRadius: "8px",
+                  WebkitBorderRadius: "8px",
+                  textTransform: "capitalize",
+                }}
+              >
+                <span className=" text-[1.3rem]">{btn.text}</span>
+              </Button>
+            ))}
         </div>
       </div>
     </>
