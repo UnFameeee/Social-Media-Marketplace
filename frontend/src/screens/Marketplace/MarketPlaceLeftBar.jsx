@@ -27,7 +27,7 @@ const ResponSiveButtonWrapper = styled.div`
     flex-direction: column;
   }
 `;
-function MarketPlaceLeftBar() {
+function MarketPlaceLeftBar({setShowManagerModal,...props}) {
   const userData = useSelector((state) => state.auth.user.userData);
   const [value, setValue] = React.useState("2");
   const navigate = useNavigate();
@@ -326,6 +326,7 @@ function MarketPlaceLeftBar() {
         </div>
         <div className="manager-selling-btn flex gap-[0.5rem] flex-col mb-[1rem] p-[0.5rem] bg-gray-100 rounded-3xl shadow-lg">
           <MUI.ButtonWithIcon
+          onClick={(e) =>setShowManagerModal(true)}
             style={{
               display: "flex",
               gap: "10px",

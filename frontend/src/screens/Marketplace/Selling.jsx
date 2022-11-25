@@ -14,6 +14,9 @@ import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 
+import { useState } from "react";
+import ManagerProductModal from "./ManagerProductModa";
+
 //#region media responsive
 const ResponSiveDiv = styled.div`
   .btn-product-action {
@@ -103,7 +106,7 @@ function Selling() {
     setPage(value);
   };
   const navigate = useNavigate();
-
+  const [showManagerModal,setShowManagerModal] = useState(false)
   // #endregion
   //#region declare function
   function randomNumberInRange(min, max) {
@@ -116,7 +119,6 @@ function Selling() {
   }
   const handleDelete= () =>{
     console.log("delete");
-
 }
 const handleNavigateToCheckOut = () => {
     navigate("/marketplace/checkout");
@@ -126,9 +128,10 @@ const handleNavigateToShopping = () =>{
 }
   return (
     <>
+      <ManagerProductModal showModal={showManagerModal} setShowModal={setShowManagerModal} />
       <ResponSiveDiv>
         <ThreeColumns className="ThreeColumns pr-[2%] pl-[430px] pt-6">
-          <MarketPlaceLeftBar />
+          <MarketPlaceLeftBar setShowManagerModal={setShowManagerModal} />
           <div className="main-market-place mb-[2rem] rounded-xl h-full p-[1.5rem] shadow-2xl ">
             <Fab
             onClick={handleNavigateToCheckOut}
