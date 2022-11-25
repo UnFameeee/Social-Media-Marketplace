@@ -1,16 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
+import { NotificationRepository } from '../repository/notification.repository';
 
 @Injectable()
 export class NotificationService {
-  create(notificationDto: any) {
-    return 'This action adds a new message';
-  }
 
-  findAll() {
-    return `This action returns all message`;
-  }
+  constructor(
+    private readonly notificationRepository: NotificationRepository,
+  ) { }
 
-  findOne(id: number) {
-    return `This action returns a #${id} message`;
+  async getProfileReceiverByPostId(post_id: number): Promise<number> {
+    try {
+      const data = await this.notificationRepository.getProfileReceiverByPostId(post_id);
+      return data["profile_id"];
+    } catch (err) {
+      ExceptionResponse(err);
+    }
   }
 }

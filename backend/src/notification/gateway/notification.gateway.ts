@@ -3,7 +3,7 @@ import { Socket, Server } from 'socket.io';
 import { Logger } from '@nestjs/common';
 import { NotificationService } from '../service/notification.service';
 
-@WebSocketGateway(1234)
+@WebSocketGateway(1234, { cors: true })
 export class NotificationGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
@@ -35,6 +35,7 @@ export class NotificationGateway implements OnGatewayConnection, OnGatewayDiscon
   async sendNotification(@ConnectedSocket() client: Socket, @MessageBody() payload: any) {
     //send the notification to the specific profile_id
     const profileId = payload.profile_id.toString();
-    this.server.to(profileId).emit('receive_notification', payload.notification);
+    client.to(profileId).emit('receive_notification', payload.notification)
+    // this.server.to(profileId).emit();
   }
 }
