@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { ShoppingBag } from "@mui/icons-material";
 import SellIcon from "@mui/icons-material/Sell";
@@ -13,6 +12,8 @@ import ProductCard from "./ProductCard";
 import styled from "styled-components";
 import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import { Outlet } from "react-router";
+import { useNavigate } from "react-router-dom";
+
 //#region media responsive
 const ResponSiveDiv = styled.div`
   .btn-product-action {
@@ -101,6 +102,8 @@ function Selling() {
   const handleChange = (event, value) => {
     setPage(value);
   };
+  const navigate = useNavigate();
+
   // #endregion
   //#region declare function
   function randomNumberInRange(min, max) {
@@ -115,7 +118,12 @@ function Selling() {
     console.log("delete");
 
 }
-
+const handleNavigateToCheckOut = () => {
+    navigate("/marketplace/checkout");
+};
+const handleNavigateToShopping = () =>{
+    navigate("/marketplace/shopping");
+}
   return (
     <>
       <ResponSiveDiv>
@@ -123,6 +131,7 @@ function Selling() {
           <MarketPlaceLeftBar />
           <div className="main-market-place mb-[2rem] rounded-xl h-full p-[1.5rem] shadow-2xl ">
             <Fab
+            onClick={handleNavigateToCheckOut}
               className="fab-btn-check-out"
               color="primary"
               aria-label="add"
@@ -135,6 +144,7 @@ function Selling() {
               <ShoppingCartCheckoutIcon style={{ fontSize: "2.5rem" }} />
             </Fab>
             <Fab
+            onClick={handleNavigateToShopping}
               className="fab-btn-shopping"
               color="primary"
               aria-label="add"
