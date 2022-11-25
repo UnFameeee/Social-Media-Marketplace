@@ -12,7 +12,8 @@ import SellIcon from "@mui/icons-material/Sell";
 import ProductCard from "./ProductCard";
 import styled from "styled-components";
 import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
-import { Outlet } from 'react-router';
+import { Outlet } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 //#region media responsive
 const ResponSiveDiv = styled.div`
@@ -102,6 +103,8 @@ function Shopping() {
   const handleChange = (event, value) => {
     setPage(value);
   };
+  const navigate = useNavigate();
+
   // #endregion
   //#region declare function
   function randomNumberInRange(min, max) {
@@ -109,86 +112,97 @@ function Shopping() {
   }
   //#endregion
   let randomNum = randomNumberInRange(1400, 1050);
-  const handleViewDetail = () =>{
+  const handleViewDetail = () => {
     console.log("view details");
-  }
-  const handleAddToCart = () =>{
+  };
+  const handleAddToCart = () => {
     console.log("add to cart");
-  }
+  };
+  const handleNavigateToCheckOut = () => {
+    navigate("/marketplace/checkout");
+  };
+  const handleNavigateToSelling = () => {
+    navigate("/marketplace/selling");
+  };
   return (
     <>
-    <ResponSiveDiv>
-    <ThreeColumns className="ThreeColumns pr-[2%] pl-[430px] pt-6">
-      <MarketPlaceLeftBar />
-      <div className="main-market-place mb-[2rem] rounded-xl h-full p-[1.5rem] shadow-2xl ">
-        <Fab
-          className="fab-btn-check-out"
-          color="primary"
-          aria-label="add"
-          style={{
-            background: "var(--primary-color)",
-            top: "50%",
-            position: "fixed",
-          }}
-        >
-          <ShoppingCartCheckoutIcon style={{ fontSize: "2.5rem" }} />
-        </Fab>
-        <Fab
-          className="fab-btn-selling"
-          color="primary"
-          aria-label="add"
-          style={{
-            background: "var(--primary-color)",
-            top: "57%",
-            position: "fixed",
-          }}
-        >
-          <SellIcon style={{ fontSize: "2.5rem" }} />
-        </Fab>
-        <div className="slide-show">
-          <Slider {...settings}>
-            {[
-              ...Array.from({ length: 5 }, () =>
-                randomNumberInRange(1400, 1050)
-              ),
-            ].map((index) => (
-              <div key={index}>
-                <img
-                  className="h-[300px] w-full object-cover rounded-xl"
-                  src={`https://source.unsplash.com/random/1000x${
-                    randomNum * index
-                  }/?3D Renders`}
-                  alt=""
+      <ResponSiveDiv>
+        <ThreeColumns className="ThreeColumns pr-[2%] pl-[430px] pt-6">
+          <MarketPlaceLeftBar />
+          <div className="main-market-place mb-[2rem] rounded-xl h-full p-[1.5rem] shadow-2xl ">
+            <Fab
+              onClick={handleNavigateToCheckOut}
+              className="fab-btn-check-out"
+              color="primary"
+              aria-label="add"
+              style={{
+                background: "var(--primary-color)",
+                top: "50%",
+                position: "fixed",
+              }}
+            >
+              <ShoppingCartCheckoutIcon style={{ fontSize: "2.5rem" }} />
+            </Fab>
+            <Fab
+              onClick={handleNavigateToSelling}
+              className="fab-btn-selling"
+              color="primary"
+              aria-label="add"
+              style={{
+                background: "var(--primary-color)",
+                top: "57%",
+                position: "fixed",
+              }}
+            >
+              <SellIcon style={{ fontSize: "2.5rem" }} />
+            </Fab>
+            <div className="slide-show">
+              <Slider {...settings}>
+                {[
+                  ...Array.from({ length: 5 }, () =>
+                    randomNumberInRange(1400, 1050)
+                  ),
+                ].map((index) => (
+                  <div key={index}>
+                    <img
+                      className="h-[300px] w-full object-cover rounded-xl"
+                      src={`https://source.unsplash.com/random/1000x${
+                        randomNum * index
+                      }/?3D Renders`}
+                      alt=""
+                    />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+            <div className="product-container mb-[1rem]">
+              {[...Array(15)].map((index) => (
+                <ProductCard
+                  key={index}
+                  arrayBtn={[
+                    { pos: 0, text: "view details", handle: handleViewDetail },
+                    { pos: 1, text: "add to cart", handle: handleAddToCart },
+                  ]}
                 />
-              </div>
-            ))}
-          </Slider>
-        </div>
-        <div className="product-container mb-[1rem]">
-          {[...Array(15)].map((index) => (
-            <ProductCard key={index} 
-            arrayBtn={[{pos:0,text:'view details',handle:handleViewDetail},{pos:1,text:'add to cart',handle:handleAddToCart}]}
-             />
-          ))}
-        </div>
-        <div className="Pagination float-right">
-          <Typography>Page: {page}</Typography>
-          <Pagination
-            page={page}
-            onChange={handleChange}
-            count={11}
-            defaultPage={1}
-            siblingCount={0}
-            variant="outlined"
-            size="large"
-          />
-        </div>
-      </div>
-    </ThreeColumns>
-    </ResponSiveDiv>
-    <Outlet />
+              ))}
+            </div>
+            <div className="Pagination float-right">
+              <Typography>Page: {page}</Typography>
+              <Pagination
+                page={page}
+                onChange={handleChange}
+                count={11}
+                defaultPage={1}
+                siblingCount={0}
+                variant="outlined"
+                size="large"
+              />
+            </div>
+          </div>
+        </ThreeColumns>
+      </ResponSiveDiv>
+      <Outlet />
     </>
-   
   );
 }
 
