@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 import ManagerProductModal from "./ManagerProductModa";
+import { createProduct, getAllProduct } from "../../redux/apiRequest";
+import { useEffect } from "react";
 
 //#region media responsive
 const ResponSiveDiv = styled.div`
@@ -107,6 +109,12 @@ function Selling() {
   };
   const navigate = useNavigate();
   const [showManagerModal,setShowManagerModal] = useState(false)
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
   // #endregion
   //#region declare function
   function randomNumberInRange(min, max) {
@@ -126,9 +134,15 @@ const handleNavigateToCheckOut = () => {
 const handleNavigateToShopping = () =>{
     navigate("/marketplace/shopping");
 }
+const handleSubmitCreateProduct = (product,uploadImages) =>{
+    createProduct(accessToken,refreshToken,product,uploadImages)
+}
+useEffect(()=>{
+    getAllProduct(accessToken,refreshToken)
+},[])
   return (
     <>
-      <ManagerProductModal showModal={showManagerModal} setShowModal={setShowManagerModal} />
+      <ManagerProductModal showModal={showManagerModal} handleSubmitCreateProduct={handleSubmitCreateProduct} setShowModal={setShowManagerModal} />
       <ResponSiveDiv>
         <ThreeColumns className="ThreeColumns pr-[2%] pl-[430px] pt-6">
           <MarketPlaceLeftBar setShowManagerModal={setShowManagerModal} />
