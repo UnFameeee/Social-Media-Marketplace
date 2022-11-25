@@ -130,7 +130,6 @@ function isObjectList(value) {
 
 function checkURL(value, defaultConfig = {}, lastOnly = false) {
   const pathArray = window.location.pathname.split('/');
-
   if (lastOnly) {
     return pathArray[pathArray.length - 1] === value.toLowerCase();
   } else {

@@ -4,8 +4,6 @@ import { makeStyles } from "tss-react/mui";
 import "../Layout.css";
 import FriendRequest from "../../FriendRequest/FriendRequest";
 import FriendContact from "../../FriendContact/FriendContact";
-import ProductSideBarDetails from "../../../screens/Marketplace/ProductSideBarDetails";
-
 const useStyles = makeStyles()(() => ({
   scroll: {
     "&::-webkit-scrollbar": {
@@ -24,10 +22,6 @@ const useStyles = makeStyles()(() => ({
 
 export default function RightBar(props) {
   const { classes, cx } = useStyles();
-  const { marketplace } = props;
-  if (marketplace) {
-    return <ProductSideBarDetails />;
-  } else
     return (
       <div className="right-bar">
         <Box
