@@ -1,11 +1,22 @@
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Avatar, TextareaAutosize, Button } from "@mui/material";
-import { useState } from "react";
+import {
+  Avatar,
+  TextareaAutosize,
+  Button,
+  CircularProgress,
+} from "@mui/material";
+import { useState, useMemo, useEffect } from "react";
 import MUI from "../MUI";
-import { useEffect } from "react";
 import { commentPostSaga } from "../../redux/comment/commentSlice";
-function CommentForm({ formWidth, placeholder, formReply,post_id, ...props }) {
+function CommentForm({
+  formWidth,
+  placeholder,
+  formReply,
+  post_id,
+  seeAllComment,
+  totalElement,
+  ...props
+}) {
   const userData = useSelector((state) => state.auth.user.userData);
   const dispatch = useDispatch();
   const accessToken = useSelector(
@@ -14,54 +25,109 @@ function CommentForm({ formWidth, placeholder, formReply,post_id, ...props }) {
   const refreshToken = useSelector(
     (state) => state.auth.login.currentUser.refresh
   );
+  const isLoadingCreateComment = useSelector((state) => state.comment?.create);
+  const isLoadingGetComment = useSelector((state) => state.comment?.get);
   const [replyInput, setReplyInput] = useState("");
+  let isLoading = useMemo(() => {
+    var result = false;
+    if (isLoadingCreateComment?.isFetching) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isLoadingCreateComment]);
   const handleOnChangeReplyInput = (e) => {
     setReplyInput(e.target.value);
   };
-  const handleCreateComment = () =>{
-    console.log("comment: ",replyInput," + ", "post id: ",post_id, " + ", " parent comment ",formReply?.parent_comment_id);
+  const handleCreateComment = (e) => {
     let comment_text = replyInput;
-    let parent_comment_id = formReply?.parent_comment_id ? formReply?.parent_comment_id : null;
-    dispatch(commentPostSaga({accessToken,refreshToken,dispatch,comment_text,parent_comment_id,post_id}))
-  }
+    let parent_comment_id = formReply?.parent_comment_id
+      ? formReply?.parent_comment_id
+      : null;
+    if (seeAllComment) {
+      let paging = {
+        page: 0, // commentPaging.page + 1,
+        pageSize: totalElement + 1, // commentPaging.pageSize,
+      };
+      dispatch(
+        commentPostSaga({
+          accessToken,
+          refreshToken,
+          dispatch,
+          comment_text,
+          parent_comment_id,
+          post_id,
+          paging,
+        })
+      );
+    } else {
+      dispatch(
+        commentPostSaga({
+          accessToken,
+          refreshToken,
+          dispatch,
+          comment_text,
+          parent_comment_id,
+          post_id,
+        })
+      );
+    }
+    setReplyInput("");
+  };
+  const commentEnterSubmit = (e) => {
+    if (
+      e.key === "Enter" &&
+      e.shiftKey == false &&
+      e.target.value.trim() != ""
+    ) {
+      e.preventDefault();
+      return handleCreateComment();
+    }
+  };
   useEffect(() => {
-    if (formReply?.text) setReplyInput("Reply to " + formReply?.text + " ");
+    if (formReply?.text) setReplyInput("Reply to " + formReply?.text + "\n");
   }, [formReply]);
   return (
-    <form
-      className={`flex gap-[1rem]  ${
-        formWidth ? `w-[${formWidth}]` : "w-[100%]"
-      }    `}
-    >
-      <Avatar
-        style={{
-          fontSize: "2rem",
-        }}
-        alt={userData.profile.profile_name}
-        src={
-          userData.profile?.picture
-            ? JSON.parse(userData.profile?.picture)
-            : null
-        }
-      >
-        {userData.profile.profile_name?.at(0)}
-      </Avatar>
-      <TextareaAutosize
-        autoFocus
-        value={replyInput}
-        onChange={handleOnChangeReplyInput}
-        maxRows={5}
-        placeholder={placeholder ? placeholder : "write a reply..."}
-        onFocus={(e) =>
-          e.currentTarget.setSelectionRange(
-            e.currentTarget.value.length,
-            e.currentTarget.value.length
-          )
-        }
-        className="w-full p-[1rem] resize-none outline-none rounded-3xl bg-gray-100 px-[1rem]"
-      ></TextareaAutosize>
-      <MUI.Button onClick={() =>handleCreateComment()} >Post</MUI.Button>
-    </form>
+    <>
+      {isLoading ? (
+        <div className="loading-spinner text-center">
+          <CircularProgress />
+        </div>
+      ) : (
+        <form
+          className={`flex gap-[0.5rem]  ${
+            formWidth ? `w-[${formWidth}]` : "w-[100%]"
+          }    `}
+        >
+          <Avatar
+            style={{
+              fontSize: "2rem",
+            }}
+            alt={userData.profile.profile_name}
+            src={userData.profile?.avatar ? userData.profile?.avatar : null}
+          >
+            {userData.profile.profile_name?.at(0)}
+          </Avatar>
+
+          <TextareaAutosize
+            autoFocus
+            value={replyInput}
+            maxRows={5}
+            placeholder={placeholder ? placeholder : "write a reply..."}
+            onKeyPress={commentEnterSubmit}
+            onChange={handleOnChangeReplyInput}
+            onFocus={(e) =>
+              e.currentTarget.setSelectionRange(
+                e.currentTarget.value.length,
+                e.currentTarget.value.length
+              )
+            }
+            className="w-full p-[1rem] whitespace-pre-wrap resize-none outline-none rounded-xl bg-gray-100 px-[1rem]"
+          ></TextareaAutosize>
+        </form>
+      )}
+    </>
   );
 }
 

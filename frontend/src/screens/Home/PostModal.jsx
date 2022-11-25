@@ -22,6 +22,7 @@ function PostModal(props) {
     post_image: [],
   });
   const { written_text, post_image } = postData;
+  
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -38,8 +39,7 @@ function PostModal(props) {
   //#region Function
   const closeModal = () => {
     props.setShowPostModal(false);
-    props.setReRender(prev => !prev)
-    // setImgArray([]);
+    setImages([])
   };
   const handlePost = (e) => {
     e.preventDefault();

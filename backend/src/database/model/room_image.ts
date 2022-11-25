@@ -17,4 +17,10 @@ export class RoomImage extends Model<RoomImage> {
 
     @Column(DataType.TEXT)
     link: string;
+
+    @Column(DataType.DATE(3))
+    createdAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 }

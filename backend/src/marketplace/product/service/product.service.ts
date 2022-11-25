@@ -21,8 +21,8 @@ export class ProductService {
         try {
             var response = new ResponseData<Product>();
             var productCreated = await this.productRepository.createProduct(profile_id, data);
-            await this.variationRepository.createVariation(productCreated.product_id, data.variation);
-            await this.shopAddressRepository.createShopAddress(productCreated.product_id, data.shop_address);
+            await this.variationRepository.createVariation(productCreated.product_id, data.Variation);
+            await this.shopAddressRepository.createShopAddress(productCreated.product_id, data.ShopAddress);
             response.results = await this.productRepository.getProductDetail(profile_id, productCreated.product_id);
             return response;
         } catch (err) {
@@ -55,8 +55,8 @@ export class ProductService {
         try {
             var response = new ResponseData<Product>();
             await this.productRepository.updateProduct(product_id, data);
-            await this.variationRepository.updateVariation(product_id, data.variation);
-            await this.shopAddressRepository.updateShopAddress(product_id, data.shop_address);
+            await this.variationRepository.updateVariation(product_id, data.Variation);
+            await this.shopAddressRepository.updateShopAddress(product_id, data.ShopAddress);
             response.results = await this.productRepository.getProductDetail(profile_id, product_id);
 
             return response;

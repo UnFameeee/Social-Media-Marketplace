@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   ThumbUpOutlined,
   ThumbUpAlt,
@@ -11,10 +11,11 @@ import {
   Avatar,
   Button,
   ClickAwayListener,
+  CircularProgress,
 } from "@mui/material";
 import MUI from "../MUI";
 import "react-toastify/dist/ReactToastify.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { format } from "timeago.js";
 import ShowMoreText from "react-show-more-text";
 import { deletePostSaga, likePostSaga } from "../../redux/post/postSlice";
@@ -23,21 +24,23 @@ import styled from "styled-components";
 import CommentList from "../Comment/CommentList";
 import CommentForm from "../Comment/CommentForm";
 import PostModal from "../../screens/Home/PostModal";
+import { getCommentPostSaga } from "../../redux/comment/commentSlice";
 function CardPost(props) {
   //#region Declare variables
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
+  const [showComment, setShowComment] = useState(false);
   const { postData } = props;
   const { post_id, profile_id, written_text, post_image, isLiked, totalLike } =
     postData;
   const { profile } = props;
   const postUpdateData = {
-      post_id: post_id,
-      profile_id: profile_id,
-      written_text: written_text,
-      post_image: post_image,
-    }
+    post_id: post_id,
+    profile_id: profile_id,
+    written_text: written_text,
+    post_image: post_image,
+  };
 
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
@@ -46,59 +49,98 @@ function CardPost(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const userData = useSelector((state) => state.auth?.user?.userData.profile);
-
-  let rootComments = useMemo(() => {
-    const result = [
-      {
-        id: 0,
-        message:
-          "            Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse excepturi a ratione hic rerum. Repellat enim iure eveniet officia minima sunt consectetur eos beatae dolores explicabo, alias rerum nostrum? Eveniet nisi cum ab incidunt repellat labore reprehenderit minus aspernatur voluptas, molestias, sequi doloribus? Quidem adipisci minus magnam, autem cumque architecto?",
-        user: "Dang nhat tien",
-        createdAt: 2022,
-      },
-      {
-        id: 1,
-        message: "test2",
-        user: "Quan minh duc",
-        createdAt: 2022,
-      },
-      {
-        id: 2,
-        message: "test3",
-        user: "Nguyen phuoc dang",
-        createdAt: 2022,
-      },
-    ];
-    return result;
-  }, []);
+  const comments = useSelector(
+    (state) => state.comment?.get?.data,
+    shallowEqual
+  );
+  const isLoadingCreateComment = useSelector((state) => state.comment?.create);
+  const isLoadingGetComment = useSelector((state) => state.comment?.get);
+  const [commentPaging, setCommentPaging] = useState({ page: 0, pageSize: 10 });
+  const [seeAllComment, setSeeAllComment] = useState(false);
   //#endregion
 
   //#region Function
   const handleShowModal = () => {
     setShowPostModal(true);
-    setShowAction(false)
+    setShowAction(false);
   };
   const handleDeletePost = () => {
     let postId = post_id;
-    dispatch(deletePostSaga({ accessToken, refreshToken, postId, dispatch }));
+    dispatch(deletePostSaga({ accessToken, refreshToken, dispatch, postId }));
     setShowAction(!showAction);
-    props.setReRender(prev => !prev)
   };
   const handleLikePost = () => {
     let postId = post_id;
-    dispatch(likePostSaga({ accessToken, refreshToken, postId, dispatch }));
-    props.setReRender(prev => !prev)
+    dispatch(likePostSaga({ accessToken, refreshToken, dispatch, postId }));
   };
-  const handleShowComment = () => {};
-  //#endregion
+  const handleShowComment = () => {
+    dispatch(
+      getCommentPostSaga({ accessToken, refreshToken, dispatch, post_id })
+    );
+    setShowComment(true);
+  };
+  const handleGetMoreComment = () => {
+    // setCommentPaging((prev) => prev + 1);
+    let paging = {
+      page: 0, // commentPaging.page + 1,
+      pageSize: totalComment?.totalElement, // commentPaging.pageSize,
+    };
+    dispatch(
+      getCommentPostSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        post_id,
+        paging,
+      })
+    );
+  };
+  let isLoading = useMemo(() => {
+    var result = false;
+    if (isLoadingCreateComment?.isFetching) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isLoadingCreateComment]);
 
+  let rootComments = useMemo(() => {
+    var result = [];
+    if (comments) {
+      comments.map((comment) => {
+        if (comment.post_id === post_id) {
+          result = comment.list_comment;
+        }
+      });
+    }
+    return result;
+  }, [comments]);
+  let totalComment = useMemo(() => {
+    var result;
+    if (comments) {
+      comments.map((comment) => {
+        if (comment.post_id === post_id) {
+          result = {
+            totalCurrentShowComment: comment?.list_comment
+              ? comment?.list_comment?.length
+              : null,
+            totalElement: comment?.page?.totalElement
+              ? comment?.page?.totalElement
+              : null,
+          };
+        }
+      });
+    }
+    return result;
+  }, [comments]);
+  //#endregion
   return (
     <>
       <PostModal
         showModal={showPostModal}
         setShowPostModal={setShowPostModal}
         postUpdateData={postUpdateData}
-        setReRender={props.setReRender}
         profile={userData}
       />
       {/* {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && ( */}
@@ -114,8 +156,8 @@ function CardPost(props) {
                 {props.postData.profile_name?.at(0)}
               </Avatar>
               <div>
-                <p>{props.postData.profile_name}</p>
-                <span className=" font-light text-[1.4rem]">
+                <p className=" font-[500]">{props.postData.profile_name}</p>
+                <span className=" font-light text-[1.4rem] ">
                   {format(props.postData.createdAt)}
                 </span>
               </div>
@@ -125,7 +167,7 @@ function CardPost(props) {
                 <MoreHoriz
                   className=" right-[2rem] Icon"
                   style={{ fontSize: "2.5rem" }}
-                  onClick={() => setShowAction(prev => !prev)}
+                  onClick={() => setShowAction((prev) => !prev)}
                 />
                 {showAction && (
                   <ClickAwayListener onClickAway={(e) => setShowAction(false)}>
@@ -243,27 +285,46 @@ function CardPost(props) {
             </MUI.ButtonWithIcon>
           </div>
           <hr className="mb-[0.5rem] " />
-          <div className="card-comment-section">
-            <div className="flex justify-end mb-[0.5rem] items-center px-[2rem]">
-              <span>Most relate comment</span>
-              <ArrowDropDown style={{ fontSize: "2.5rem" }} />
-            </div>
-            <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem]">
-              <CommentForm
-                formWidth={"100%"}
-                placeholder={"write a comment...."}
-                post_id={post_id}
-              />
-              <CommentList comments={rootComments} post_id={post_id} />
-
-              <div className="flex">
-                <span className="flex-1 hover:cursor-pointer">
-                  See more comments
-                </span>
-                <span>4/50</span>
+          {showComment && (
+            <div className="card-comment-section mt-[1rem]">
+              <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem] ">
+                  <CommentForm
+                    formWidth={"100%"}
+                    placeholder={"write a comment...."}
+                    post_id={post_id}
+                    seeAllComment={seeAllComment}
+                    totalElement={totalComment?.totalElement}
+                  />
+                <CommentList
+                  comments={rootComments}
+                  post_id={post_id}
+                  seeAllComment={seeAllComment}
+                  totalElement={totalComment?.totalElement}
+                />
+                {!seeAllComment &&
+                  totalComment?.totalCurrentShowComment <
+                    totalComment?.totalElement && (
+                    <div className="flex">
+                      <div className="flex-1">
+                        <span
+                          className="flex-1 hover:cursor-pointer underline"
+                          onClick={(e) => {
+                            handleGetMoreComment();
+                            setSeeAllComment(true);
+                          }}
+                        >
+                          See all comments
+                        </span>
+                      </div>
+                      <span>
+                        {totalComment?.totalCurrentShowComment}/
+                        {totalComment?.totalElement}
+                      </span>
+                    </div>
+                  )}
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

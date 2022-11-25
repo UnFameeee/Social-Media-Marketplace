@@ -4,7 +4,7 @@ import { Avatar } from "@mui/material";
 import PostStatus from "../../components/PostStatus/PostStatus";
 import PostModal from "./PostModal";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector,shallowEqual } from "react-redux";
 import { getAllPost } from "../../redux/apiRequest";
 import { useEffect } from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
@@ -27,6 +27,9 @@ const ResponSiveDiv = styled.div`
     }
     .left-bar {
       width: 80px;
+      ul{
+        overflow-x:hidden;
+      }
     }
     .threeColumn-wrapper .left-bar-text {
       display: none;
@@ -86,7 +89,7 @@ const ResponSiveDiv = styled.div`
 function Home() {
   //#region Declare variables
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.post.get.posts?.results?.data);
+  const posts = useSelector((state) => state.post.get.posts?.results?.data,shallowEqual );
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -153,7 +156,6 @@ function Home() {
                 ? profileData
                 : userData.profile
             }
-            setReRender={setReRender}
           />
           {posts &&
             posts.map((post) => (
@@ -161,7 +163,6 @@ function Home() {
                 postData={post}
                 key={post.post_id}
                 profile={userData.profile}
-                setReRender={setReRender}
               />
             ))}
         </ThreeColumns>

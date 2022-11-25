@@ -10,10 +10,6 @@ export class Product extends Model<Product> {
     @AllowNull(false)
     @Column
     product_id: number
- 
-    //category_id: number; 
-    //sub_category_id: number; 
-    //product_image_id: number; 
 
     @Column
     name: string
@@ -26,4 +22,13 @@ export class Product extends Model<Product> {
 
     @Column
     quantity_in_stock: number
+    
+    @Column(DataType.DATE(3))
+    createdAt: string;
+    
+    @Column(DataType.DATE(3))
+    updatedAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 } 

@@ -19,4 +19,10 @@ export class ProfilePostImage extends Model<ProfilePostImage> {
 
     @Column(DataType.TEXT)
     link: string;
+
+    @Column(DataType.DATE(3))
+    createdAt: string;
+
+    @Column(DataType.DATE(3))
+    deletedAt: string;
 }
