@@ -494,3 +494,105 @@ export const searchProfile = async (
     dispatch(searchProfileFailed());
   }
 };
+export const getAllProduct = async (
+  accessToken,
+  refreshToken,
+) => {
+
+  try {
+    const paging ={
+      page:0,
+      pageSize:30,
+    }
+    const res = await axiosInStanceJWT.post(
+      `${api.product}/all`,
+      paging,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      console.log(res.data);
+    } else {
+     
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const createProduct = async (
+  accessToken,
+  refreshToken,
+  product,
+  uploadImages
+) => {
+
+  try {
+
+    const res = await axiosInStanceJWT.post(
+      `${api.product}/create`,
+      product,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      if (uploadImages && uploadImages.length > 0) {
+        let product_id = res.data.results.product_id;
+        const resImages = await uploadProductImages(
+          accessToken,
+          refreshToken,
+          uploadImages,
+          product_id,
+        );
+        console.log(resImages);
+      }
+    } else {
+     
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const uploadProductImages = async (
+  accessToken,
+  refreshToken,
+  uploadImages,
+  product_id,
+) => {
+
+  try {
+    const config = {
+      'content-type': 'multipart/form-data;',
+      Authorization: `Bearer ${accessToken}`,
+    };
+    let formData = new FormData();
+    uploadImages.forEach((file) => {
+      formData.append('files', file.files);
+    });
+    const res = await axiosInStanceJWT.post(
+      `${api.image}/product_image/${product_id}/upload`,
+      formData,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+     
+    } else {
+     
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

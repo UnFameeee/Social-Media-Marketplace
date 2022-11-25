@@ -133,7 +133,7 @@ const createPostSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
-      if (uploadImage.length > 0) {
+      if (uploadImage && uploadImage.length > 0) {
         let post_id = res.data.results.post_id;
         const resImages = await uploadImages(
           accessToken,
