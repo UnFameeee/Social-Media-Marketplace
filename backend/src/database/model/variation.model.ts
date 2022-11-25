@@ -25,6 +25,9 @@ export class Variation extends Model<Variation> {
     type: string;
 
     @Column
+    specification: string;
+
+    @Column
     warranty: string;
 
     @Column(DataType.DATE(3))
