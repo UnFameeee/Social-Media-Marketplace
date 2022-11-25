@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
@@ -22,7 +22,6 @@ export default function FriendRequests() {
 
   const [listConfirm, setListConfirm] = useState([]);
   const [listDeny, setListDeny] = useState([]);
-  const [reRender, setReRender] = useState('');
 
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
@@ -145,7 +144,12 @@ export default function FriendRequests() {
       {!Helper.isNullOrEmpty(queryParams) &&
         friendRequests?.data.some(
           (e) => e.profile_id.toString() === queryParams.toString()
-        ) && <UserProfile setReRender={setReRender} />}
+        ) && (
+          <UserProfile
+            action={[setListConfirm, setListDeny]}
+            actionList={[listConfirm, listDeny]}
+          />
+        )}
     </TwoColumns>
   );
 }

@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLayoutEffect, useState, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
@@ -59,6 +59,7 @@ function UserProfile(props) {
   const [searchParams] = useSearchParams();
   const queryParams = Object.fromEntries([...searchParams]);
 
+  // #region data from redux
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -69,7 +70,8 @@ function UserProfile(props) {
     (state) => state.post.getByProfile?.posts?.results?.data
   );
   const profileData = useSelector(
-    (state) => state.profile?.profileDetails?.data
+    (state) => state.profile?.profileDetails?.data,
+    shallowEqual
   );
   const userData = useSelector(
     (state) => state.auth?.user?.userData?.profile
@@ -80,6 +82,7 @@ function UserProfile(props) {
   const galleryImgs = useSelector(
     (state) => state.profile.galleryImg?.data
   );
+  // #endregion
 
   var id =
     queryParams.id ?? profileData?.profile_id ?? userData?.profile_id;
@@ -91,15 +94,7 @@ function UserProfile(props) {
       profile_description;
   }
 
-  const handleActions = async (action) => {
-    action();
-    if (Helper.checkURL('profile', {}, true)) {
-      setReRender(!reRender);
-    } else {
-      props.setReRender('');
-    }
-  };
-
+  // #region wallpaper section
   const [menuClicked, setMenuClicked] = useState(false);
   const [openConfirmRemove, setOpenConfirmRemove] = useState(false);
   const [wallpaper, setWallpaper] = useState();
@@ -126,9 +121,118 @@ function UserProfile(props) {
   const clearWallpaper = () => {
     setWallpaper('');
   };
+  // #endregion
 
-  var callRefreshFriend = Helper.checkURL('friends');
   var callRefreshProfile = true;
+  const handleActions = (action) => {
+    // accept friend requests
+    if (action === 'accept') {
+      dispatch(
+        acceptSaga({
+          accessToken,
+          refreshToken,
+          id,
+          callRefreshProfile,
+          dispatch,
+        })
+      );
+      if (Helper.checkURL('requests')) {
+        props.action[0]((old) => [...old, parseInt(id)]);
+      }
+    }
+    
+    // deny friend request
+    else if (action === 'deny') {
+      dispatch(
+        denySaga({
+          accessToken,
+          refreshToken,
+          id,
+          callRefreshProfile,
+          dispatch,
+        })
+      );
+      if (Helper.checkURL('requests')) {
+        props.action[1]((old) => [...old, parseInt(id)]);
+      }
+    }
+
+    // add friend/ cancel sent request
+    else if (action === 'add' || action === 'cancel') {
+      dispatch(
+        addFriendSaga({
+          accessToken,
+          refreshToken,
+          id,
+          callRefreshProfile,
+          dispatch,
+        })
+      );
+      
+      if (Helper.checkURL('suggestions') || Helper.checkURL('sent')) {
+        // cancel sent request
+        if (
+          Helper.checkValueExistInArray(
+            props.actionList,
+            parseInt(id)
+          )
+        ) {
+          var filter = props.actionList.filter(
+            (e) => e !== parseInt(id)
+          );
+          props.action(filter);
+        }
+        // add friend
+        else {
+          props.action((old) => [...old, parseInt(id)]);
+        }
+      } 
+
+      // screen all friends
+      else if (Helper.checkURL('all')) {
+        if (
+          Helper.checkValueExistInArray(
+            props.actionList[1],
+            parseInt(id)
+          )
+        ) {
+          var filter = props.actionList[1].filter(
+            (e) => e !== parseInt(id)
+          );
+          props.action[1](filter);
+        }
+        // add friend
+        else {
+          props.action[1]((old) => [...old, parseInt(id)]);
+        }
+      }
+    }
+
+    // unfriend
+    else if (action === 'unfriend') {
+      dispatch(
+        unfriendSaga({
+          accessToken,
+          refreshToken,
+          id,
+          callRefreshProfile,
+          dispatch,
+        })
+      );
+      if (Helper.checkURL('all')) {
+        props.action[0]((old) => [...old, parseInt(id)]);
+      }
+      // unfriend in request means deny
+      else if (Helper.checkURL('requests')) {
+        var filter = props.actionList[0].filter(
+          (e) => e !== parseInt(id)
+        );
+        props.action[0](filter);
+        props.action[1]((old) => [...old, parseInt(id)]);
+      }
+    }
+  };
+
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
@@ -342,16 +446,7 @@ function UserProfile(props) {
                   }
                   isFriend={profileData?.isFriend}
                   isSentFriendReq={profileData?.isSentFriendRequest}
-                  actionProps={{
-                    accessToken: accessToken,
-                    refreshToken: refreshToken,
-                    id: profileData?.profile_id,
-                    mainId: userData?.profile_id,
-                    callRefreshFriend: callRefreshFriend,
-                    callRefreshProfile: callRefreshProfile,
-                    dispatch: dispatch,
-                    navigate: navigate,
-                  }}
+                  navigate={navigate}
                   action={handleActions}
                 />
               </div>
@@ -391,17 +486,7 @@ function UserProfile(props) {
               className="gap-[0.8rem]"
               style={{ minWidth: '14rem' }}
               onClick={() => {
-                handleActions(() => {
-                  dispatch(
-                    acceptSaga({
-                      accessToken,
-                      refreshToken,
-                      id,
-                      callRefreshProfile,
-                      dispatch,
-                    })
-                  );
-                });
+                handleActions('accept');
               }}
             >
               <FaUserPlus style={{ fontSize: '2.2rem' }} />
@@ -413,17 +498,7 @@ function UserProfile(props) {
               className="gap-[0.8rem]"
               style={{ minWidth: '14rem' }}
               onClick={() => {
-                handleActions(() => {
-                  dispatch(
-                    denySaga({
-                      accessToken,
-                      refreshToken,
-                      id,
-                      callRefreshProfile,
-                      dispatch,
-                    })
-                  );
-                });
+                handleActions('deny');
               }}
             >
               <FaUserMinus style={{ fontSize: '2.2rem' }} />
@@ -619,20 +694,9 @@ function ProfileAction({
   isMainUser,
   isFriend,
   isSentFriendReq,
-  actionProps,
+  navigate,
   action,
 }) {
-  const {
-    accessToken,
-    refreshToken,
-    id,
-    mainId,
-    callRefreshFriend,
-    callRefreshSentRequest,
-    callRefreshProfile,
-    dispatch,
-    navigate,
-  } = actionProps;
   const [menuClicked, setMenuClicked] = useState(false);
 
   function handleFirstAction() {
@@ -644,18 +708,7 @@ function ProfileAction({
         if (isSentFriendReq == 'TARGET') {
           setMenuClicked(!menuClicked);
         } else {
-          action(() => {
-            dispatch(
-              addFriendSaga({
-                accessToken,
-                refreshToken,
-                id,
-                callRefreshSentRequest,
-                callRefreshProfile,
-                dispatch,
-              })
-            );
-          });
+          action('add');
         }
       }
     }
@@ -674,19 +727,7 @@ function ProfileAction({
       {
         middle: 'Unfriend',
         onClick: () => {
-          action(() => {
-            dispatch(
-              unfriendSaga({
-                accessToken,
-                refreshToken,
-                id,
-                mainId,
-                callRefreshFriend,
-                callRefreshProfile,
-                dispatch,
-              })
-            );
-          });
+          action('unfriend');
           setMenuClicked(false);
         },
       },
@@ -697,34 +738,14 @@ function ProfileAction({
       {
         middle: 'Confirm',
         onClick: () => {
-          action(() => {
-            dispatch(
-              acceptSaga({
-                accessToken,
-                refreshToken,
-                id,
-                callRefreshProfile,
-                dispatch,
-              })
-            );
-          });
+          action('accept');
           setMenuClicked(false);
         },
       },
       {
         middle: 'Deny',
         onClick: () => {
-          action(() => {
-            dispatch(
-              denySaga({
-                accessToken,
-                refreshToken,
-                id,
-                callRefreshProfile,
-                dispatch,
-              })
-            );
-          });
+          action('deny');
           setMenuClicked(false);
         },
       },

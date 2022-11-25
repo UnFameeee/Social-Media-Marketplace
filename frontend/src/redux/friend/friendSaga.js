@@ -34,7 +34,11 @@ import { getProfileSagaSuccess } from '../profile/profileSlice';
 // #region get all friends
 export function* refreshAllFriend() {
   yield takeLatest(
-    [getProfileSagaSuccess.type, getAllFriendSaga.type],
+    [
+      getAllFriendSaga.type,
+      getProfileSagaSuccess.type,
+      unfriendSagaSuccess.type,
+    ],
     handleRefreshAllSaga
   );
 }
@@ -204,7 +208,13 @@ function* handleUnfriend(data) {
   }
 }
 async function unfriendSagaRequest(data) {
-  const { accessToken, refreshToken, id, dispatch } = data.payload;
+  const {
+    accessToken,
+    refreshToken,
+    id,
+    callRefreshProfile,
+    dispatch,
+  } = data.payload;
   //   dispatch(unfriendStart());
   try {
     const res = await axiosInStanceJWT.post(
@@ -225,6 +235,8 @@ async function unfriendSagaRequest(data) {
           accessToken,
           refreshToken,
           id,
+          callRefreshProfile,
+          callRefreshPost: false,
           dispatch,
         })
       );

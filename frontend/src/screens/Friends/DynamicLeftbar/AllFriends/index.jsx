@@ -178,7 +178,7 @@ export default function AllFriends() {
       {!Helper.isNullOrEmpty(queryParams) &&
         allFriends?.data.some(
           (e) => e.profile_id.toString() === queryParams.toString()
-        ) && <UserProfile setReRender={navigate} />}
+        ) && <UserProfile action={[setListRemoved, setListAdded]} actionList={[listRemoved, listAdded]} />}
     </TwoColumns>
   );
 }

@@ -133,7 +133,9 @@ export default function FriendSuggestions() {
                             dispatch,
                           })
                         );
-                        var filter = listAdded.filter(e => e !== x.profile_id);
+                        var filter = listAdded.filter(
+                          (e) => e !== x.profile_id
+                        );
                         setListAdded(filter);
                       },
                     }}
@@ -152,7 +154,7 @@ export default function FriendSuggestions() {
       {!Helper.isNullOrEmpty(queryParams) &&
         friendSuggestions?.data.some(
           (e) => e.profile_id.toString() === queryParams.toString()
-        ) && <UserProfile setReRender={navigate} />}
+        ) && <UserProfile action={setListAdded} actionList={listAdded} />}
     </TwoColumns>
   );
 }

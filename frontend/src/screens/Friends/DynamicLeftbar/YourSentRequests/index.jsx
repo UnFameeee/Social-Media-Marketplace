@@ -125,7 +125,7 @@ export default function YourSentRequests() {
       {!Helper.isNullOrEmpty(queryParams) &&
         sentRequests?.data.some(
           (e) => e.profile_id.toString() === queryParams.toString()
-        ) && <UserProfile setReRender={navigate} />}
+        ) && <UserProfile action={setListCancel} actionList={listCancel} />}
     </TwoColumns>
   );
 }
