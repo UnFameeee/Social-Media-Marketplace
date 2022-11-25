@@ -104,15 +104,18 @@ export default function NavBar() {
                       className="right-menu"
                       onClick={(e) => {
                         e.stopPropagation();
-                        localStorageService.deleteFromArray("recentSearch", x);
-                        navigate('#')
+                        localStorageService.deleteFromArray(
+                          'recentSearch',
+                          x
+                        );
+                        navigate('#');
                       }}
                     >
                       <Close sx={{ fontSize: '1.6rem' }} />
                     </MUI.BetterIconButton>
                   ),
                   onClick: () => {
-                    localStorageService.addToArray("recentSearch", x);
+                    localStorageService.addToArray('recentSearch', x);
                     navigate(`/profile?id=${x.profile_id}`);
                     setOpenSearch(false);
                   },
@@ -151,9 +154,13 @@ export default function NavBar() {
                   : null
               }
               onClick={() => {
-                if (item.tooltip) {
-                  if (item.tooltip === 'Home') navigate('/');
-                  else navigate(`/${item.tooltip?.toLowerCase()}`);
+                if (item.navigate) {
+                  navigate(`/${item.navigate?.toLowerCase()}`);
+                } else {
+                  if (item.tooltip) {
+                    if (item.tooltip === 'Home') navigate('/');
+                    else navigate(`/${item.tooltip?.toLowerCase()}`);
+                  }
                 }
               }}
               disabled={Helper.checkURL(item.tooltip?.toLowerCase(), {

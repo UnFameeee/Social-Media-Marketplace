@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchProfile } from '../../redux/apiRequest';
 import TwoColumns from '../../components/Layout/TwoColumns';
@@ -22,7 +22,6 @@ export default function SearchPage() {
 
   const [searchParams] = useSearchParams();
   const queryParams = Object.fromEntries([...searchParams]);
-  const [reRender, setReRender] = useState(false);
 
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
@@ -34,13 +33,9 @@ export default function SearchPage() {
     (state) => state.profile?.profileSearch?.data
   );
   const profileData = useSelector(
-    (state) => state.profile?.profileDetails?.data
+    (state) => state.profile?.profileDetails?.data,
+    shallowEqual
   );
-  const userData = useSelector(
-    (state) => state.auth?.user?.userData?.profile
-  );
-  var mainId = userData?.profile_id;
-  var callRefreshFriend = false;
 
   function handleAction(isFriend, requestType, id) {
     if (isFriend) {
@@ -49,8 +44,6 @@ export default function SearchPage() {
           accessToken,
           refreshToken,
           id,
-          mainId,
-          callRefreshFriend,
           dispatch,
         })
       );
@@ -61,7 +54,6 @@ export default function SearchPage() {
             accessToken,
             refreshToken,
             id,
-            callRefreshFriend,
             dispatch,
           })
         );
@@ -71,13 +63,11 @@ export default function SearchPage() {
             accessToken,
             refreshToken,
             id,
-            callRefreshFriendSuggestion: false,
             dispatch,
           })
         );
       }
     }
-    setReRender(!reRender);
   }
 
   useLayoutEffect(() => {
@@ -95,7 +85,7 @@ export default function SearchPage() {
     return () => {
       onDestroy = true;
     };
-  }, [queryParams.value, reRender]);
+  }, [queryParams.value]);
 
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -105,7 +95,7 @@ export default function SearchPage() {
           getProfileSaga({
             accessToken,
             refreshToken,
-            id: queryParams.id,            
+            id: queryParams.id,
             callRefreshProfile: true,
             dispatch,
           })
@@ -141,6 +131,9 @@ export default function SearchPage() {
         ),
         leftBarList: !Helper.isEmptyObject(queryParams, true)
           ? profiles?.data?.map((x) => {
+              var profileChecked =
+                !Helper.isNullOrEmpty(queryParams) &&
+                x.profile_id === profileData?.profile_id;
               return {
                 left: {
                   url: x.avatar,
@@ -148,7 +141,7 @@ export default function SearchPage() {
                 },
                 middle: (
                   <LeftbarMiddleItem
-                    profileName={x.profile_name}
+                    profile={x}
                     firstButtonConfig={{
                       name: x.isFriend
                         ? 'Unfriend'
@@ -196,21 +189,15 @@ export default function SearchPage() {
                     `?value=${queryParams.value}&id=${x.profile_id}`
                   );
                 },
-                selected:
-                  !Helper.isNullOrEmpty(queryParams.id) &&
-                  x.profile_id === profileData?.profile_id,
-                disabled:
-                  !Helper.isNullOrEmpty(queryParams.id) &&
-                  x.profile_id === profileData?.profile_id,
+                selected: profileChecked,
+                disabled: profileChecked,
               };
             })
           : null,
         leftBarColor: 'white',
       }}
     >
-      {!Helper.isNullOrEmpty(queryParams.id) && (
-        <UserProfile setReRender={setReRender} />
-      )}
+      {!Helper.isNullOrEmpty(queryParams.id) && <UserProfile />}
     </TwoColumns>
   );
 }
