@@ -14,16 +14,6 @@ import { Helper } from '../../../utils/Helper';
 import MiddleHr from '../../FullWidthHr/MiddleHr';
 import '../Layout.css';
 import styled from 'styled-components';
-const ResponSiveDiv = styled.div`
-  @media screen and (max-width: 940px) {
-    .left-bar {
-      width: 75px;
-    }
-    .left-bar-text {
-      display: none;
-    }
-  }
-`;
 const useStyles = makeStyles()(() => ({
   scroll: {
     '&::-webkit-scrollbar': {

@@ -5,5 +5,6 @@ export class VariationEntity {
     color: string;
     condition: string;
     type: string;
-    guarantee: string;
+    specification: string;
+    warranty: string;
 }

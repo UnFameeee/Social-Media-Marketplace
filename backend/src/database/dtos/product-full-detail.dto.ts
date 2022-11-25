@@ -11,6 +11,6 @@ export class ProductFullDetailDto {
     profile_id: number;
 
     category_id: number; 
-    variation: VariationEntity;
-    shop_address: ShopAddressEntity;
+    Variation: VariationEntity;
+    ShopAddress: ShopAddressEntity;
 }

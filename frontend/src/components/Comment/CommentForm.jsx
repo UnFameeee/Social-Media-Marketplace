@@ -37,7 +37,6 @@ function CommentForm({
     }
     return result;
   }, [isLoadingCreateComment]);
-  console.log("isLoading", isLoading);
   const handleOnChangeReplyInput = (e) => {
     setReplyInput(e.target.value);
   };

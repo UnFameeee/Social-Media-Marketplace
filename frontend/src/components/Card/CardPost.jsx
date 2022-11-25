@@ -114,11 +114,6 @@ function CardPost(props) {
         }
       });
     }
-    let sortArray = [...result];
-    sortArray.sort(function (a, b) {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-    result = [...sortArray];
     return result;
   }, [comments]);
   let totalComment = useMemo(() => {

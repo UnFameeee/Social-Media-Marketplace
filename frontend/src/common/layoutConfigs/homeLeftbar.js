@@ -14,7 +14,7 @@ export const homeLeftbar = [
   {
     left: <IoBag />,
     middle: 'Marketplace',
-    navigate: '/marketplace'
+    navigate: '/marketplace/shopping'
   },
   // {
   //   left: <IoPeopleCircle />,
