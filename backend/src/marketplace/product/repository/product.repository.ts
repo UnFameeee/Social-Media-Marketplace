@@ -24,8 +24,8 @@ export class ProductRepository {
         try {
             var productFullDetailEntity = new ProductFullDetailDto();
             productFullDetailEntity = { ...data };
-            delete productFullDetailEntity.variation;
-            delete productFullDetailEntity.shop_address;
+            delete productFullDetailEntity.Variation;
+            delete productFullDetailEntity.ShopAddress;
 
             var productEntity = new ProductEntity();
             productEntity = { ...productFullDetailEntity };
@@ -153,8 +153,8 @@ export class ProductRepository {
         try {
             var productFullDetailEntity = new ProductFullDetailDto();
             productFullDetailEntity = { ...data };
-            delete productFullDetailEntity.variation;
-            delete productFullDetailEntity.shop_address;
+            delete productFullDetailEntity.Variation;
+            delete productFullDetailEntity.ShopAddress;
 
             var productEntity = new ProductEntity();
             productEntity = { ...productFullDetailEntity };
