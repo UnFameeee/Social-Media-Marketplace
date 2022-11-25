@@ -87,7 +87,7 @@ function splitSpaceString(str) {
 }
 
 function createSpaceString(str) {
-  if (str == null || str == undefined) return null;
+  if (str === null || str === undefined) return null;
   return str.match(/[A-Z][a-z]+/g).join(' ');
 }
 
@@ -110,7 +110,7 @@ function isArrayList(value) {
   if (!Array.isArray(value) || !value.length) return false;
   else {
     let res = true;
-    value.map((item) => {
+    value.forEach((item) => {
       if (!Array.isArray(item)) res = false;
     });
     return res;
@@ -121,7 +121,7 @@ function isObjectList(value) {
   if (!Array.isArray(value) || !value.length) return false;
   else {
     let res = true;
-    value.map((item) => {
+    value.forEach((item) => {
       if (item === Object(item)) res = false;
     });
     return res;
@@ -162,7 +162,7 @@ function isEmptyObject(obj, checkValue = false) {
     return res && JSON.stringify(obj) === JSON.stringify({});
   } else {
     if (obj) {
-      Object.values(obj).map((x) => {
+      Object.values(obj).forEach((x) => {
         if (x) {
           res = false;
         }
@@ -214,6 +214,10 @@ function convertArrayObjectToObject(arrayObject) {
 //       : 0;
 // }
 
+function checkValueExistInArray(array, value) {
+  return array.length > 0 && array.includes(value);
+}
+
 export const Helper = {
   generateId,
   checkPropsInObject,
@@ -236,4 +240,5 @@ export const Helper = {
   // sortEntriesByKey,
   // sortArrayByKey,
   isEmptyObjectList,
+  checkValueExistInArray,
 };

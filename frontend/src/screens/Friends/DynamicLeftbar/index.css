@@ -39,6 +39,19 @@
   height: var(--navbar-height);
   max-height: var(--navbar-height);
 }
+.friend-left-bar-middle {
+  padding: 0 1.2rem;
+}
+.friend-left-bar-middle.title {
+  display: flex;
+  align-items: center;
+}
+.unimportant-text {
+  font-size: 1.2rem;
+  font-weight: 100;
+  color:#8c8c8c;
+  letter-spacing: 0.8px;
+}
 .action {
   display: flex;
   justify-content: space-evenly;
