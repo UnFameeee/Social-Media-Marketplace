@@ -51,7 +51,7 @@ import './index.css';
 function UserProfile(props) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [reRender, setReRender] = useState(false);
+
   const [openAvatarModal, setOpenAvatarModal] = useState(false); //toggle update avatar modal
   const [openDetailsModal, setOpenDetailsModal] = useState(false); //toggle update details modal
   const [editBio, setEditBio] = useState(false); //toggle edit bio
@@ -67,7 +67,8 @@ function UserProfile(props) {
     (state) => state.auth.login.currentUser.refresh
   );
   const posts = useSelector(
-    (state) => state.post.getByProfile?.posts?.results?.data
+    (state) => state.post.getByProfile?.posts?.results?.data,
+    shallowEqual
   );
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data,
@@ -123,6 +124,7 @@ function UserProfile(props) {
   };
   // #endregion
 
+  // #region handle friend actions
   var callRefreshProfile = true;
   const handleActions = (action) => {
     // accept friend requests
@@ -140,7 +142,7 @@ function UserProfile(props) {
         props.action[0]((old) => [...old, parseInt(id)]);
       }
     }
-    
+
     // deny friend request
     else if (action === 'deny') {
       dispatch(
@@ -168,7 +170,7 @@ function UserProfile(props) {
           dispatch,
         })
       );
-      
+
       if (Helper.checkURL('suggestions') || Helper.checkURL('sent')) {
         // cancel sent request
         if (
@@ -177,16 +179,16 @@ function UserProfile(props) {
             parseInt(id)
           )
         ) {
-          var filter = props.actionList.filter(
+          var filterSuggestions = props.actionList.filter(
             (e) => e !== parseInt(id)
           );
-          props.action(filter);
+          props.action(filterSuggestions);
         }
         // add friend
         else {
           props.action((old) => [...old, parseInt(id)]);
         }
-      } 
+      }
 
       // screen all friends
       else if (Helper.checkURL('all')) {
@@ -196,10 +198,10 @@ function UserProfile(props) {
             parseInt(id)
           )
         ) {
-          var filter = props.actionList[1].filter(
+          var filterAllFriend = props.actionList[1].filter(
             (e) => e !== parseInt(id)
           );
-          props.action[1](filter);
+          props.action[1](filterAllFriend);
         }
         // add friend
         else {
@@ -224,14 +226,15 @@ function UserProfile(props) {
       }
       // unfriend in request means deny
       else if (Helper.checkURL('requests')) {
-        var filter = props.actionList[0].filter(
+        var filterRequest = props.actionList[0].filter(
           (e) => e !== parseInt(id)
         );
-        props.action[0](filter);
+        props.action[0](filterRequest);
         props.action[1]((old) => [...old, parseInt(id)]);
       }
     }
   };
+  // #endregion
 
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -303,7 +306,7 @@ function UserProfile(props) {
           ></div>
 
           {/* handle wallpaper actions */}
-          {profileData?.profile_id == userData?.profile_id && (
+          {profileData?.profile_id === userData?.profile_id && (
             <ClickAwayListener
               onClickAway={() => {
                 setMenuClicked(false);
@@ -393,7 +396,7 @@ function UserProfile(props) {
               </Avatar>
 
               {/* handle Avatar */}
-              {profileData?.profile_id == userData?.profile_id && (
+              {profileData?.profile_id === userData?.profile_id && (
                 <>
                   <button
                     className="bg-white absolute right-0 top-[12rem] z-1 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer"
@@ -442,7 +445,7 @@ function UserProfile(props) {
               <div className="flex items-end gap-[1rem]">
                 <ProfileAction
                   isMainUser={
-                    profileData?.profile_id == userData?.profile_id
+                    profileData?.profile_id === userData?.profile_id
                   }
                   isFriend={profileData?.isFriend}
                   isSentFriendReq={profileData?.isSentFriendRequest}
@@ -476,7 +479,7 @@ function UserProfile(props) {
       </div>
 
       {/* handle when you visit someone profile and they had already send you a friend request */}
-      {profileData?.isSentFriendRequest == 'TARGET' && (
+      {profileData?.isSentFriendRequest === 'TARGET' && (
         <div id="friendRequest">
           <span className="flex-1 font-medium">
             {profileData?.profile_name} sent you a friend request
@@ -515,7 +518,7 @@ function UserProfile(props) {
           <div className="sticky top-[-83.5rem] ">
             {/* profile description */}
             {(!Helper.isEmptyObject(profile_description, true) ||
-              userData?.profile_id == profileData?.profile_id) && (
+              userData?.profile_id === profileData?.profile_id) && (
               <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem] ">
                 <div className="flex flex-col">
                   <span className="font-bold text-[2.3rem]">
@@ -528,7 +531,7 @@ function UserProfile(props) {
                           {profile_description?.description}
                         </span>
                       )}
-                      {userData?.profile_id ==
+                      {userData?.profile_id ===
                         profileData?.profile_id && (
                         <SideBarButton
                           id="editBioBtn"
@@ -597,7 +600,7 @@ function UserProfile(props) {
                       )}
                     </ul>
                   )}
-                  {userData?.profile_id ==
+                  {userData?.profile_id ===
                     profileData?.profile_id && (
                     <SideBarButton
                       label="Edit details"
@@ -642,11 +645,11 @@ function UserProfile(props) {
               type="friendPhoto"
               leftLabel="Friends"
               rightLabel={
-                userData?.profile_id == profileData?.profile_id
+                userData?.profile_id === profileData?.profile_id
                   ? {
                       text: 'See all Friends',
                       onClick: () => {
-                        if (id == userData?.profile_id) {
+                        if (parseInt(id) === userData?.profile_id) {
                           navigate('/friends/all');
                         }
                       },
@@ -671,17 +674,13 @@ function UserProfile(props) {
 
         <div className="rightSidePosts w-[55%]">
           {profileData?.profile_id === userData?.profile_id && (
-            <PostStatus
-              profile={profileData}
-              setReRender={setReRender}
-            />
+            <PostStatus profile={profileData} />
           )}
           {posts?.map((post) => (
             <CardPost
               postData={post}
               key={post.post_id}
               profile={profileData}
-              setReRender={setReRender}
             />
           ))}
         </div>
@@ -705,7 +704,7 @@ function ProfileAction({
       if (isFriend) {
         setMenuClicked(!menuClicked);
       } else {
-        if (isSentFriendReq == 'TARGET') {
+        if (isSentFriendReq === 'TARGET') {
           setMenuClicked(!menuClicked);
         } else {
           action('add');
@@ -733,7 +732,7 @@ function ProfileAction({
       },
     ];
   }
-  if (isSentFriendReq == 'TARGET') {
+  if (isSentFriendReq === 'TARGET') {
     actionList = [
       {
         middle: 'Confirm',
@@ -779,21 +778,21 @@ function ProfileAction({
                   Friends
                 </span>
               </>
-            ) : isSentFriendReq == 'NONE' ? (
+            ) : isSentFriendReq === 'NONE' ? (
               <>
                 <FaUserPlus style={{ fontSize: '2.2rem' }} />
                 <span className=" text-[1.6rem] font-semibold">
                   Add Friend
                 </span>
               </>
-            ) : isSentFriendReq == 'REQUEST' ? (
+            ) : isSentFriendReq === 'REQUEST' ? (
               <>
                 <FaUserTimes style={{ fontSize: '2.2rem' }} />
                 <span className=" text-[1.6rem] font-semibold">
                   Cancel
                 </span>
               </>
-            ) : isSentFriendReq == 'TARGET' ? (
+            ) : isSentFriendReq === 'TARGET' ? (
               <>
                 <FaUserCheck style={{ fontSize: '2.2rem' }} />
                 <span className=" text-[1.6rem] font-semibold">
