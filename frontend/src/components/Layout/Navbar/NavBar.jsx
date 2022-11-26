@@ -23,7 +23,8 @@ import { Helper } from '../../../utils/Helper';
 import { logOut } from '../../../redux/apiRequest';
 import { localStorageService } from '../../../services/localStorageService';
 import '../Layout.css';
-import socket from '../../../socket';
+import socket from '../../../socket/socket';
+import { SOCKET_EVENT } from '../../../socket/socket.constant';
 
 
 export default function NavBar() {
@@ -54,8 +55,9 @@ export default function NavBar() {
   const handleLogOut = () => {
     logOut(dispatch, accessToken, refreshToken);
     dispatch(revertAll());
-    socket.off('join_room');
-    socket.off('receive_notification');
+    
+    socket.off(SOCKET_EVENT.JOIN_ROOM);
+    socket.off(SOCKET_EVENT.RECEIVE_NOTIFICATION);
     socket.disconnect();
   };
 

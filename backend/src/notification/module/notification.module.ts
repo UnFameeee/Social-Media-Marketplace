@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { postCommentProviders, postProviders } from 'src/database/providers/all.providers';
+import { postCommentProviders, postProviders, profileProviders } from 'src/database/providers/all.providers';
 import { NotificationGateway } from '../gateway/notification.gateway';
 import { NotificationRepository } from '../repository/notification.repository';
 import { NotificationService } from '../service/notification.service';
@@ -11,7 +11,8 @@ import { NotificationService } from '../service/notification.service';
     NotificationService,
     NotificationRepository,
     ...postProviders,
-    ...postCommentProviders
+    ...postCommentProviders,
+    ...profileProviders,
   ],
   exports: [NotificationGateway, NotificationService],
 })
