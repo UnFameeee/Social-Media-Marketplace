@@ -6,55 +6,75 @@ import { useSelector } from 'react-redux';
 import jwt_decode from "jwt-decode";
 
 import { useEffect, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer, toast, Slide, Zoom, Flip, Bounce } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import socket from "./socket";
+import socket from "./socket/socket";
+import { SOCKET_EVENT } from "./socket/socket.constant";
+import Notification from "./socket/Notification";
 
 function App() {
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  // const [isConnected, setIsConnected] = useState(socket.connected);
 
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
 
-  const notify = (data) => toast(`${data}`);
+  const notify = (data) => toast(data);
 
   useEffect(() => {
     if (accessToken) {
       socket.connect();
       //listening on the event connect to server's socket
-      socket.on("join_room", (payload) => {
-        setIsConnected(true);
+      socket.on(SOCKET_EVENT.JOIN_ROOM, (payload) => {
+        // setIsConnected(true);
         notify(payload);
       });
 
       //listening to the event receiving the notification
-      socket.on("receive_notification", (payload) => {
-        notify(payload);
+      socket.on(SOCKET_EVENT.RECEIVE_NOTIFICATION, (payload) => {
+
+        console.log(payload);
+
+        const notify = (avatar, profile_name, content) => {
+          toast(<Notification avatar={avatar} profile_name={profile_name} content={content} />, {
+            position: "bottom-left",
+            autoClose: 3000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "light",
+          })
+        };
+        notify(payload.avatar, payload.profile_name, payload.content);
       });
 
       var decoded = jwt_decode(accessToken);
       // COMPULSORY
       // Sending the event to server's socket -> assign this user is online -> this event will be sent when the profile login to the system
-      socket.emit("join_room", {
+      socket.emit(SOCKET_EVENT.JOIN_ROOM, {
         profile_id: decoded.profile.profile_id,
       });
     }
 
     return () => {
       //Remove the event that you listened 
-      socket.off('join_room');
-      socket.off('receive_notification');
+      socket.off(SOCKET_EVENT.JOIN_ROOM);
+      socket.off(SOCKET_EVENT.RECEIVE_NOTIFICATION);
     };
   }, [accessToken]);
 
   return (
-    // <SocketContext.Provider value={socketIO}>
     <>
       <RootRoutes />
-      <ToastContainer />
+      <ToastContainer
+        pauseOnFocusLoss={false}
+        limit={6}
+        draggable={false}
+        transition={Slide}
+      />
     </>
-    // </SocketContext.Provider>
   );
 }
 
