@@ -82,6 +82,7 @@ import {
 } from './profile/profileSlice';
 import { notifyService } from '../services/notifyService';
 import { axiosInStanceJWT } from './axiosJWT';
+import { getProduct, getSellingProduct } from './product/productSlice';
 
 const notify = (message, type) => {
   if (type === 'info') {
@@ -494,9 +495,10 @@ export const searchProfile = async (
     dispatch(searchProfileFailed());
   }
 };
-export const getAllProduct = async (
+export const getAllSellingProduct = async (
   accessToken,
   refreshToken,
+  dispatch
 ) => {
 
   try {
@@ -505,7 +507,7 @@ export const getAllProduct = async (
       pageSize:30,
     }
     const res = await axiosInStanceJWT.post(
-      `${api.product}/all`,
+      `${api.product}/selling/all`,
       paging,
       {
         headers: {
@@ -516,7 +518,7 @@ export const getAllProduct = async (
       }
     );
     if (!res.data.message) {
-      console.log(res.data);
+      dispatch(getSellingProduct(res.data.results.data))
     } else {
      
     }
@@ -562,6 +564,7 @@ export const createProduct = async (
     console.log(error);
   }
 };
+
 export const uploadProductImages = async (
   accessToken,
   refreshToken,
@@ -589,6 +592,61 @@ export const uploadProductImages = async (
     );
     if (!res.data.message) {
      
+    } else {
+     
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const removeUploadProductImages = async (
+  accessToken,
+  refreshToken,
+  removeUploadImages,
+  product_id,
+) => {
+
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const res = await axiosInStanceJWT.post(
+      `${api.image}/product_image/${product_id}/delete`,
+      removeUploadImages,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+     
+    } else {
+     
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const deleteProduct = async (
+  accessToken,
+  refreshToken,
+  product_id,
+) => {
+
+  try {
+
+    const res = await axiosInStanceJWT.delete(
+      `${api.product}/delete/${product_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
     } else {
      
     }

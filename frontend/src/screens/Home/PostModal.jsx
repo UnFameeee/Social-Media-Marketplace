@@ -147,8 +147,8 @@ function PostModal(props) {
                 }}
                 alt={props.profile?.profile_name}
                 src={
-                  props.profile?.picture
-                    ? JSON.parse(props.profile?.picture)
+                  props.profile?.avatar
+                    ? props.profile?.avatar
                     : null
                 }
               >
