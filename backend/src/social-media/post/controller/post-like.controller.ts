@@ -2,7 +2,6 @@ import { Controller, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Profile } from 'src/database/model/profile.model';
-import { NotificationGateway } from 'src/notification/gateway/notification.gateway';
 import { PostLikeService } from '../service/post-like.service';
 
 @UseGuards(JwtAuthGuard)

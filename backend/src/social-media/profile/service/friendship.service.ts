@@ -6,9 +6,17 @@ import { Page } from 'src/database/view-model/page-model';
 import { ResponseData } from 'src/database/view-model/success-message.model';
 import { Friendship } from 'src/database/model/friendship.model';
 import { PagingData } from 'src/database/view-model/paging.model';
+import { NotificationGateway } from 'src/notification/gateway/notification.gateway';
+import { NotificationService } from 'src/notification/service/notification.service';
+import { NOTIFICATION_DESCRIPTION } from 'src/common/constants/notification_type.constant';
+import { SOCKET_EVENT } from 'src/common/constants/socket.constant';
 @Injectable()
 export class FriendshipService {
-    constructor(private readonly friendshipRepository: FriendshipRepository) { }
+    constructor(
+        private readonly friendshipRepository: FriendshipRepository,
+        private readonly notificationGateway: NotificationGateway,
+        private readonly notificationService: NotificationService,
+    ) { }
 
     async getAllFriendRequest(profile: Profile, page: Page): Promise<ResponseData<PagingData<Friendship[]>>> {
         try {
@@ -30,10 +38,26 @@ export class FriendshipService {
         }
     }
 
-    async sendFriendRequest(profile: Profile, profile_target_id: number): Promise<ResponseData<boolean>> {
+    async sendFriendRequest(profile: Profile, profile_target_id: number): Promise<ResponseData<Boolean>> {
         try {
-            var response = new ResponseData<boolean>();
+            var response = new ResponseData<Boolean>();
             response.results = await this.friendshipRepository.sendFriendRequest(profile.profile_id, profile_target_id);
+
+            if (response.results) {
+                const profile_receiver = profile_target_id;
+                if (profile_receiver && profile_receiver != profile.profile_id) {
+                    const profile_sender = await this.notificationService.getProfileSenderByProfileId(profile.profile_id);
+                    
+                    const data = {
+                        avatar: profile_sender["avatar"] ? profile_sender["avatar"] : null,
+                        profile_name: profile_sender.profile_name,
+                        content: `${profile_sender.profile_name} ${NOTIFICATION_DESCRIPTION.SEND_FRIEND_REQUEST}`,
+                    }
+
+                    this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RECEIVE_NOTIFICATION, data);
+                }
+            }
+
             return response;
         } catch (err) {
             ExceptionResponse(err);
