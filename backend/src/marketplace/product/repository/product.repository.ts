@@ -1,5 +1,6 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Sequelize } from "sequelize-typescript";
+import { Op } from "sequelize";
 import { Helper } from "src/common/utils/helper.utils";
 import { paginate } from "src/common/utils/paginate.utils";
 import { ProductFullDetailDto } from "src/database/dtos/product-full-detail.dto";
@@ -191,7 +192,7 @@ export class ProductRepository {
         }
     }
 
-    async getAllProduct(page: Page): Promise<PagingData<Product[]>> {
+    async getAllShoppingProduct(profile_id: number, page: Page): Promise<PagingData<Product[]>> {
         try {
             var result = new PagingData<Product[]>();
             var queryData = await this.productRepository.findAndCountAll({
@@ -202,6 +203,11 @@ export class ProductRepository {
                     {
                         model: Profile,
                         attributes: ["profile_id", "profile_name"],
+                        where: {
+                            profile_id: {
+                                [Op.ne]: profile_id
+                            }
+                        },
                         include: [
                             {
                                 model: ProfileAvatarImage,
@@ -231,6 +237,70 @@ export class ProductRepository {
                 order: [
                     // ['createdAt', 'DESC'],
                     Sequelize.literal('rand()'),
+                ],
+                raw: false,
+                ...paginate({ page })
+            })
+
+            const productObject = await Helper.SQLobjectToObject(queryData.rows);
+            for (const element of productObject) {
+                if (element["Profile"]["profile_avatar"] != null) {
+                    element["Profile"]["avatar"] = element["Profile"]["profile_avatar"]["link"];
+                }
+                else element["Profile"]["avatar"] = null;
+                delete element["Profile"]["profile_avatar"]
+            }
+
+            result.data = productObject;
+            page.totalElement = queryData.count;
+            result.page = page;
+            return result;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async getAllSellingProduct(profile_id: number, page: Page): Promise<PagingData<Product[]>> {
+        try {
+            var result = new PagingData<Product[]>();
+            var queryData = await this.productRepository.findAndCountAll({
+                attributes: {
+                    exclude: ["deletedAt", "profile_id"],
+                },
+                include: [
+                    {
+                        model: Profile,
+                        attributes: ["profile_id", "profile_name"],
+                        where: { profile_id: profile_id },
+                        include: [
+                            {
+                                model: ProfileAvatarImage,
+                                as: "profile_avatar",
+                                attributes: ["link"],
+                            }
+                        ]
+                    },
+                    {
+                        model: Variation,
+                        attributes: {
+                            exclude: ["createdAt", "deletedAt", "updatedAt", "product_id"]
+                        }
+                    },
+                    {
+                        model: ShopAddress,
+                        attributes: {
+                            exclude: ["createdAt", "deletedAt", "updatedAt", "product_id"]
+                        }
+                    },
+                    {
+                        model: ProductImage,
+                        as: "product_image",
+                        attributes: ["link"],
+                    }
+                ],
+                order: [
+                    ['createdAt', 'DESC'],
+                    // Sequelize.literal('rand()'),
                 ],
                 raw: false,
                 ...paginate({ page })
