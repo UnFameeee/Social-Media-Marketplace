@@ -1,7 +1,7 @@
 import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
 import { Tooltip, Pagination, Typography, Fab } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -16,8 +16,9 @@ import { useNavigate } from "react-router-dom";
 
 import { useState } from "react";
 import ManagerProductModal from "./ManagerProductModa";
-import { createProduct, getAllProduct } from "../../redux/apiRequest";
+import { createProduct, deleteProduct, getAllSellingProduct } from "../../redux/apiRequest";
 import { useEffect } from "react";
+import { createSellingProductSaga, deleteSellingProductSaga, resetUpdateProduct, updateProduct, updateSellingProductSaga } from "../../redux/product/productSlice";
 
 //#region media responsive
 const ResponSiveDiv = styled.div`
@@ -96,6 +97,7 @@ function Selling() {
   //#region declare variables
   const userData = useSelector((state) => state.auth.user.userData);
   const settings = {
+    arrows: false,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
@@ -107,13 +109,19 @@ function Selling() {
   const handleChange = (event, value) => {
     setPage(value);
   };
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showManagerModal,setShowManagerModal] = useState(false)
+  const [showManagerModal, setShowManagerModal] = useState({isShow:false,action:0});
+
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
   const refreshToken = useSelector(
     (state) => state.auth.login.currentUser.refresh
+  );
+  const productList = useSelector(
+    (state) => state.product?.getSelling?.data,
+    shallowEqual
   );
   // #endregion
   //#region declare function
@@ -122,33 +130,51 @@ function Selling() {
   }
   //#endregion
   let randomNum = randomNumberInRange(1400, 1050);
-  const handleUpdate = () =>{
-    console.log("update");
+  const handleUpdate = (productObj) => {
+    dispatch(updateProduct(productObj));
+    setShowManagerModal({isShow:true,action:2});
+  };
+  const handleOpenModalCreate = ()=>{
+    setShowManagerModal({isShow:true,action:1});
+    dispatch(resetUpdateProduct());
   }
-  const handleDelete= () =>{
-    console.log("delete");
-}
-const handleNavigateToCheckOut = () => {
+  const handleDelete = (productObj) => {
+    // deleteProduct(accessToken,refreshToken,productObj.product_id)
+    let product_id = productObj.product_id
+    dispatch(deleteSellingProductSaga({accessToken,refreshToken,dispatch,product_id}))
+  };
+  const handleNavigateToCheckOut = () => {
     navigate("/marketplace/checkout");
-};
-const handleNavigateToShopping = () =>{
+  };
+  const handleNavigateToShopping = () => {
     navigate("/marketplace/shopping");
-}
-const handleSubmitCreateProduct = (product,uploadImages) =>{
-    createProduct(accessToken,refreshToken,product,uploadImages)
-}
-useEffect(()=>{
-    getAllProduct(accessToken,refreshToken)
-},[])
+  };
+  const handleSubmitCreateProduct = (product, uploadImages) => {
+    dispatch(createSellingProductSaga({accessToken,refreshToken,dispatch,product,uploadImages}))
+  };
+  const handleSaveUpdateProduct = (product, uploadImages,removeUploadImages,productId) => {
+    let removeImages =removeUploadImages;
+    let product_id= productId;
+    dispatch(updateSellingProductSaga({accessToken,refreshToken,dispatch,product,product_id,uploadImages,removeImages}))
+  };
+  useEffect(() => {
+    getAllSellingProduct(accessToken, refreshToken, dispatch);
+  }, []);
+
   return (
     <>
-      <ManagerProductModal showModal={showManagerModal} handleSubmitCreateProduct={handleSubmitCreateProduct} setShowModal={setShowManagerModal} />
+      <ManagerProductModal
+      showManagerModal={showManagerModal}
+      handleSaveUpdateProduct={handleSaveUpdateProduct}
+        handleSubmitCreateProduct={handleSubmitCreateProduct}
+        setShowModal={setShowManagerModal}
+      />
       <ResponSiveDiv>
         <ThreeColumns className="ThreeColumns pr-[2%] pl-[430px] pt-6">
-          <MarketPlaceLeftBar setShowManagerModal={setShowManagerModal} />
+          <MarketPlaceLeftBar handleOpenModalCreate={handleOpenModalCreate} />
           <div className="main-market-place mb-[2rem] rounded-xl h-full p-[1.5rem] shadow-2xl ">
             <Fab
-            onClick={handleNavigateToCheckOut}
+              onClick={handleNavigateToCheckOut}
               className="fab-btn-check-out"
               color="primary"
               aria-label="add"
@@ -161,7 +187,7 @@ useEffect(()=>{
               <ShoppingCartCheckoutIcon style={{ fontSize: "2.5rem" }} />
             </Fab>
             <Fab
-            onClick={handleNavigateToShopping}
+              onClick={handleNavigateToShopping}
               className="fab-btn-shopping"
               color="primary"
               aria-label="add"
@@ -193,10 +219,17 @@ useEffect(()=>{
               </Slider>
             </div>
             <div className="product-container mb-[1rem]">
-              {[...Array(15)].map((index) => (
-                <ProductCard key={index} 
-                arrayBtn={[{pos:0,text:'update',handle:handleUpdate},{pos:1,text:'delete',handle:handleDelete}]} />
-              ))}
+              {productList &&
+                productList.map((product) => (
+                  <ProductCard
+                    key={product.product_id}
+                    productObj={product}
+                    arrayBtn={[
+                      { pos: 0, text: "update", handle: handleUpdate },
+                      { pos: 1, text: "delete", handle: handleDelete },
+                    ]}
+                  />
+                ))}
             </div>
             <div className="Pagination float-right">
               <Typography>Page: {page}</Typography>
