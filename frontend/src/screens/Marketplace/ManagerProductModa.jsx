@@ -30,16 +30,16 @@ import {
 import { useEffect } from "react";
 
 function ManagerProductModal({
-  showModal,
+  showManagerModal,
   setShowModal,
   handleSubmitCreateProduct,
+  handleSaveUpdateProduct,
   ...props
 }) {
   const dispatch = useDispatch();
   const updateProductData = useSelector(
     (state) => state.product?.update?.product
   );
-
   const [product, setProduct] = useState({
     name: "",
     description: "",
@@ -63,31 +63,21 @@ function ManagerProductModal({
   const [images, setImages] = useState([]);
   const [updateImages, setUpdateImages] = useState([]);
   const [removeImages, setRemoveImages] = useState([]);
+  const [productId, setProductId] = useState();
+
   const { name, description, price, quantity_in_stock } = product;
   const { brand, color, condition, type, warranty, specification } = variation;
   const { city, district, ward, detail_address } = shopAddress;
-  useEffect(() => {
-    if (updateProductData?.ShopAddress) {
-      setShopAddress(updateProductData?.ShopAddress);
-    }
-    if (updateProductData?.Variation) {
-      setVariation(updateProductData?.Variation);
-    }
-    if (updateProductData) {
-      setProduct({
-        name: updateProductData?.name,
-        description: updateProductData?.description,
-        price: updateProductData?.price,
-        quantity_in_stock: updateProductData?.quantity_in_stock,
-      });
-    }
-    if (updateProductData?.product_image) {
-      setUpdateImages(updateProductData.product_image);
-    }
-    if (!updateProductData) {
-      resetModal();
-    }
-  }, [updateProductData,showModal]);
+  let xColor = colors;
+  let xBrands = brands;
+  xColor = useMemo(() => {
+    var result = xColor.sort((a, b) => a.localeCompare(b));
+    return result;
+  });
+  xBrands = useMemo(() => {
+    var result = xBrands.sort((a, b) => a.localeCompare(b));
+    return result;
+  });
 
   const handleOnChangeVariation = (event) => {
     setVariation({ ...variation, [event.target.name]: event.target.value });
@@ -112,6 +102,20 @@ function ManagerProductModal({
       uploadImages.push({ files: images[i].file });
     }
     handleSubmitCreateProduct(submitObj, uploadImages);
+    handleCloseModal();
+  };
+  const handleSave = () => {
+    debugger
+    let submitObj = {
+      ...product,
+      Variation: variation,
+      ShopAddress: shopAddress,
+    };
+    var uploadImages = [];
+    for (let i = 0; i < images.length; i++) {
+      uploadImages.push({ files: images[i].file });
+    }
+    handleSaveUpdateProduct(submitObj, uploadImages,removeImages,productId);
     handleCloseModal();
   };
   const resetModal = () => {
@@ -139,9 +143,8 @@ function ManagerProductModal({
     setUpdateImages([]);
   };
   const closeModal = () => {
-    setShowModal(false);
+    setShowModal({ isShow: false, action: 0 });
   };
-
   const handleCloseModal = () => {
     resetModal();
     closeModal();
@@ -155,18 +158,34 @@ function ManagerProductModal({
     setUpdateImages([...filter_product_image]);
     setRemoveImages([...removeImages, imageKey]);
   };
-  let xColor = colors;
-  let xBrands = brands;
-  xColor = useMemo(() => {
-    var result = xColor.sort((a, b) => a.localeCompare(b));
-    return result;
-  });
-  xBrands = useMemo(() => {
-    var result = xBrands.sort((a, b) => a.localeCompare(b));
-    return result;
-  });
+  useEffect(() => {
+    if (updateProductData?.ShopAddress) {
+      setShopAddress(updateProductData?.ShopAddress);
+    }
+    if (updateProductData?.Variation) {
+      setVariation(updateProductData?.Variation);
+    }
+    if (updateProductData) {
+      setProduct({
+        name: updateProductData?.name,
+        description: updateProductData?.description,
+        price: updateProductData?.price,
+        quantity_in_stock: updateProductData?.quantity_in_stock,
+      });
+    }
+    if (updateProductData?.product_image) {
+      setUpdateImages(updateProductData.product_image);
+    }
+    if(updateProductData?.product_id){
+      setProductId(updateProductData?.product_id)
+    }
+    if (!updateProductData) {
+      resetModal();
+    }
+  }, [updateProductData, showManagerModal]);
+
   return (
-    <Modal open={showModal} onClose={closeModal}>
+    <Modal open={showManagerModal.isShow} onClose={closeModal}>
       <div className="managerProductModal border-[1px] w-[80%] border-gray-400 rounded-xl gap-[2rem] fixed p-[2rem] top-[50%] left-[50%]  bg-white translate-x-[-50%] translate-y-[-50%]">
         <div className="detail-product-info flex gap-[2rem] ">
           <div className="first-col-info flex flex-col gap-[2rem] flex-1">
@@ -188,25 +207,23 @@ function ManagerProductModal({
               {({ imageList, onImageUpload, onImageRemove }) => (
                 // write your building UI
                 <div className="upload__image-wrapper">
-                  {!imageList.length > 0 &&
-                    !updateImages.length && (
-                      <div
-                        onClick={onImageUpload}
-                        className="h-[21rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer mb-[2rem]"
-                      >
-                        <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
-                          <div className="bg-gray-300 p-[1rem] rounded-[50%]">
-                            <PhotoLibrary
-                              className=" "
-                              style={{ fontSize: "3rem" }}
-                            />
-                          </div>
+                  {!imageList.length > 0 && !updateImages.length && (
+                    <div
+                      onClick={onImageUpload}
+                      className="h-[21rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer mb-[2rem]"
+                    >
+                      <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
+                        <div className="bg-gray-300 p-[1rem] rounded-[50%]">
+                          <PhotoLibrary
+                            className=" "
+                            style={{ fontSize: "3rem" }}
+                          />
                         </div>
                       </div>
-                    )}
+                    </div>
+                  )}
                   {((imageList && imageList.length > 0) ||
-                    (updateImages &&
-                      updateImages.length > 0)) && (
+                    (updateImages && updateImages.length > 0)) && (
                     <div className="relative rounded-xl mb-[2rem] flex gap-[2rem] flex-col ">
                       <ul className="flex flex-wrap gap-[1rem] justify-center shadow-2xl rounded-lg py-[2rem]  ">
                         {updateImages &&
@@ -509,7 +526,12 @@ function ManagerProductModal({
             </FormControl>
           </div>
         </div>
-        <Button onClick={handleSubmit}>Submit</Button>
+        {showManagerModal.action == 1 && (
+          <Button onClick={handleSubmit}>Submit</Button>
+        )}
+        {showManagerModal.action == 2 && (
+          <Button onClick={handleSave}>Save</Button>
+        )}
         <Button onClick={handleCloseModal}>Cancel</Button>
       </div>
     </Modal>

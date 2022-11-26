@@ -605,7 +605,7 @@ export const removeUploadProductImages = async (
   removeUploadImages,
   product_id,
 ) => {
-
+  debugger
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,

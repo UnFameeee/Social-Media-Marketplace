@@ -15,7 +15,7 @@ import {
   reFreshPosts,
   updateOnePost,
 } from './post/postSaga';
-import { createSellingProduct, deleteSellingProduct, getAllSellingProduct } from './product/productSaga';
+import { createSellingProduct, deleteSellingProduct, getAllSellingProduct, updateSellingProduct } from './product/productSaga';
 import {
   deleteAvtReq,
   deleteWallReq,
@@ -61,6 +61,7 @@ export default function* rootSaga() {
   yield all([
     fork(getAllSellingProduct),
     fork(createSellingProduct),
-    fork(deleteSellingProduct)
+    fork(deleteSellingProduct),
+    fork(updateSellingProduct),
   ])
 }

@@ -18,7 +18,7 @@ import { useState } from "react";
 import ManagerProductModal from "./ManagerProductModa";
 import { createProduct, deleteProduct, getAllSellingProduct } from "../../redux/apiRequest";
 import { useEffect } from "react";
-import { createSellingProductSaga, deleteSellingProductSaga, resetUpdateProduct, updateProduct } from "../../redux/product/productSlice";
+import { createSellingProductSaga, deleteSellingProductSaga, resetUpdateProduct, updateProduct, updateSellingProductSaga } from "../../redux/product/productSlice";
 
 //#region media responsive
 const ResponSiveDiv = styled.div`
@@ -111,7 +111,7 @@ function Selling() {
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showManagerModal, setShowManagerModal] = useState(false);
+  const [showManagerModal, setShowManagerModal] = useState({isShow:false,action:0});
 
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
@@ -132,10 +132,10 @@ function Selling() {
   let randomNum = randomNumberInRange(1400, 1050);
   const handleUpdate = (productObj) => {
     dispatch(updateProduct(productObj));
-    setShowManagerModal(true);
+    setShowManagerModal({isShow:true,action:2});
   };
   const handleOpenModalCreate = ()=>{
-    setShowManagerModal(true);
+    setShowManagerModal({isShow:true,action:1});
     dispatch(resetUpdateProduct());
   }
   const handleDelete = (productObj) => {
@@ -152,6 +152,11 @@ function Selling() {
   const handleSubmitCreateProduct = (product, uploadImages) => {
     dispatch(createSellingProductSaga({accessToken,refreshToken,dispatch,product,uploadImages}))
   };
+  const handleSaveUpdateProduct = (product, uploadImages,removeUploadImages,productId) => {
+    let removeImages =removeUploadImages;
+    let product_id= productId;
+    dispatch(updateSellingProductSaga({accessToken,refreshToken,dispatch,product,product_id,uploadImages,removeImages}))
+  };
   useEffect(() => {
     getAllSellingProduct(accessToken, refreshToken, dispatch);
   }, []);
@@ -159,7 +164,8 @@ function Selling() {
   return (
     <>
       <ManagerProductModal
-        showModal={showManagerModal}
+      showManagerModal={showManagerModal}
+      handleSaveUpdateProduct={handleSaveUpdateProduct}
         handleSubmitCreateProduct={handleSubmitCreateProduct}
         setShowModal={setShowManagerModal}
       />

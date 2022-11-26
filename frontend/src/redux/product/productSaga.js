@@ -21,6 +21,7 @@ export function* getAllSellingProduct() {
       getSellingProductSaga.type,
       createSellingProductSagaSuccess.type,
       deleteSellingProductSagaSuccess.type,
+      updateSellingProductSagaSuccess.type,
     ],
     handleGetSellingProduct
   );
@@ -164,11 +165,13 @@ function* handleUpdateSellingProduct(data) {
   }
 }
 const updateSellingProductRequest = async (data) => {
+    debugger
   const {
     accessToken,
     refreshToken,
     dispatch,
     product,
+    product_id,
     uploadImages,
     removeImages,
   } = data.payload;
@@ -178,7 +181,7 @@ const updateSellingProductRequest = async (data) => {
       Authorization: `Bearer ${accessToken}`,
     };
     const res = await axiosInStanceJWT.put(
-      `${api.product}/update/${product.product_id}`,
+      `${api.product}/update/${product_id}`,
       product,
       {
         headers: config,
@@ -192,17 +195,16 @@ const updateSellingProductRequest = async (data) => {
           accessToken,
           refreshToken,
           removeImages,
-          product.product_id,
+          product_id,
         );
         console.log("resRemoveImage", resRemoveImage);
       }
       if (uploadImages && uploadImages.length > 0) {
-        let product_id = res.data.results.product_id;
         const resImages = await uploadProductImages(
           accessToken,
           refreshToken,
           uploadImages,
-          product_id
+          product_id,
         );
         console.log(resImages);
       }
