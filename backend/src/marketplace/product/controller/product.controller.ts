@@ -28,9 +28,16 @@ export class ProductController {
         return this.productService.getProductDetail(profile.profile_id, product_id); 
     }
 
-    @Post("all")
-    async getAllProduct(@Body() page: Page): Promise<ResponseData<PagingData<Product[]>>> {
-        return this.productService.getAllProduct(page); 
+    @Post("shopping/all")
+    async getAllShoppingProduct(@Request() request: any, @Body() page: Page): Promise<ResponseData<PagingData<Product[]>>> {
+        const profile = <Profile>request.user;
+        return this.productService.getAllShoppingProduct(profile.profile_id, page); 
+    }
+
+    @Post("selling/all")
+    async getAllSellingProduct(@Request() request: any, @Body() page: Page): Promise<ResponseData<PagingData<Product[]>>> {
+        const profile = <Profile>request.user;
+        return this.productService.getAllSellingProduct(profile.profile_id, page); 
     }
 
 

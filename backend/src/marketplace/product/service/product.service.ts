@@ -40,10 +40,20 @@ export class ProductService {
         }
     }
 
-    async getAllProduct(page: Page): Promise<ResponseData<PagingData<Product[]>>> {
+    async getAllShoppingProduct(profile_id: number, page: Page): Promise<ResponseData<PagingData<Product[]>>> {
         try {
             var response = new ResponseData<PagingData<Product[]>>();
-            response.results = await this.productRepository.getAllProduct(page);
+            response.results = await this.productRepository.getAllShoppingProduct(profile_id, page);
+            return response;
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
+
+    async getAllSellingProduct(profile_id: number, page: Page): Promise<ResponseData<PagingData<Product[]>>> {
+        try {
+            var response = new ResponseData<PagingData<Product[]>>();
+            response.results = await this.productRepository.getAllSellingProduct(profile_id, page);
             return response;
         } catch (err) {
             ExceptionResponse(err);
