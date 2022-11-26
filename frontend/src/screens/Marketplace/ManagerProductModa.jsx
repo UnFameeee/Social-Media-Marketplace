@@ -105,7 +105,6 @@ function ManagerProductModal({
     handleCloseModal();
   };
   const handleSave = () => {
-    debugger
     let submitObj = {
       ...product,
       Variation: variation,

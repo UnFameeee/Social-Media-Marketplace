@@ -165,7 +165,6 @@ function* handleUpdateSellingProduct(data) {
   }
 }
 const updateSellingProductRequest = async (data) => {
-    debugger
   const {
     accessToken,
     refreshToken,
