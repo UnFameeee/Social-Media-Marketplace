@@ -10,7 +10,7 @@ export class ProductFullDetailDto {
     
     profile_id: number;
 
-    category_id: number; 
+    // category_id: number; 
     Variation: VariationEntity;
     ShopAddress: ShopAddressEntity;
 }

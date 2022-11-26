@@ -66,8 +66,8 @@ export const databaseProviders = [
 
                 Notification,
 
-                ShippingAddress, ShopOrder, ShoppingCart, ShoppingCartItem, PaymentMethod, OrderLine, Product, ProductImage, Category, ShopAddress, Variation
-                // SubCategory,
+                ShippingAddress, ShopOrder, ShoppingCart, ShoppingCartItem, PaymentMethod, OrderLine, Product, ProductImage, ShopAddress, Variation,
+                // SubCategory, Category
 
                 // ChatRoom, ChatConnectedProfile, ChatJoinedRoom, ChatMessage, RoomImage
             ]);
@@ -175,8 +175,8 @@ export const databaseProviders = [
             // Category.hasMany(SubCategory, { foreignKey: { name: "category_id", field: "category_id" } });
             // SubCategory.belongsTo(Category, { foreignKey: { name: "category_id", field: "category_id" } });
 
-            Category.hasMany(Product, { foreignKey: { name: "category_id", field: "category_id" } });
-            Product.belongsTo(Category, { foreignKey: { name: "category_id", field: "category_id" } });
+            // Category.hasMany(Product, { foreignKey: { name: "category_id", field: "category_id" } });
+            // Product.belongsTo(Category, { foreignKey: { name: "category_id", field: "category_id" } });
 
             Profile.hasMany(Notification, { foreignKey: { name: "profile_sender_id", field: "profile_sender_id" } });
             Notification.belongsTo(Profile, { foreignKey: { name: "profile_sender_id", field: "profile_sender_id" }, as: "profile_sender" });
