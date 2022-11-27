@@ -15,9 +15,10 @@ import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { getAllShoppingProduct } from "../../redux/apiRequest";
-import { getProductDetail } from "../../redux/product/productSlice";
+import { addProductToCart, getAllShoppingProduct } from "../../redux/apiRequest";
+import { addProductToCartWithoutPagingSaga, getProductDetail } from "../../redux/product/productSlice";
 import { useState } from "react";
+import { addProductToListCartWithoutPagingRequest } from "../../redux/product/productSaga";
 
 //#region media responsive
 const ResponSiveDiv = styled.div`
@@ -128,10 +129,11 @@ function Shopping() {
   //#endregion
   let randomNum = randomNumberInRange(1400, 1050);
   const handleViewDetail = (productObj) => {
-    setProductDetail(productObj)
+    dispatch(getProductDetail(productObj))
   };
-  const handleAddToCart = () => {
-    console.log("add to cart");
+  const handleAddToCart = (productObj) => {
+    let product_id= productObj.product_id;
+    addProductToListCartWithoutPagingRequest(accessToken,refreshToken,product_id,dispatch)
   };
   const handleNavigateToCheckOut = () => {
     navigate("/marketplace/checkout");
@@ -176,21 +178,23 @@ function Shopping() {
             </Fab>
             <div className="slide-show">
               <Slider {...settings}>
-                {[
-                  ...Array.from({ length: 5 }, () =>
-                    randomNumberInRange(1400, 1050)
-                  ),
-                ].map((index) => (
-                  <div key={index}>
-                    <img
-                      className="h-[300px] w-full object-cover rounded-xl"
-                      src={`https://source.unsplash.com/random/1000x${
-                        randomNum * index
-                      }/?3D Renders`}
-                      alt=""
-                    />
-                  </div>
-                ))}
+                {
+                //   [
+                //   ...Array.from({ length: 5 }, () =>
+                //     randomNumberInRange(1400, 1050)
+                //   ),
+                // ].map((index) => (
+                //   <div key={index}>
+                //     <img
+                //       className="h-[300px] w-full object-cover rounded-xl"
+                //       src={`https://source.unsplash.com/random/1000x${
+                //         randomNum * index
+                //       }/?3D Renders`}
+                //       alt=""
+                //     />
+                //   </div>
+                // ))
+              }
               </Slider>
             </div>
             <div className="product-container mb-[1rem]">

@@ -28,6 +28,11 @@ import {
   updateProduct,
   updateSellingProductSaga,
 } from "../../redux/product/productSlice";
+import {
+  createSellingProductRequest,
+  deleteSellingProductRequest,
+  updateSellingProductRequest,
+} from "../../redux/product/productSaga";
 
 //#region media responsive
 const ResponSiveDiv = styled.div`
@@ -150,33 +155,29 @@ function Selling() {
     setShowManagerModal({ isShow: true, action: 1 });
     dispatch(resetUpdateProduct());
   };
-  const handleDelete = (productObj) => {
-    // deleteProduct(accessToken,refreshToken,productObj.product_id)
-    let product_id = productObj.product_id;
-    dispatch(
-      deleteSellingProductSaga({
-        accessToken,
-        refreshToken,
-        dispatch,
-        product_id,
-      })
-    );
-  };
+
   const handleNavigateToCheckOut = () => {
     navigate("/marketplace/checkout");
   };
   const handleNavigateToShopping = () => {
     navigate("/marketplace/shopping");
   };
+  const handleDelete = (productObj) => {
+    let product_id = productObj.product_id;
+    deleteSellingProductRequest(
+      accessToken,
+      refreshToken,
+      dispatch,
+      product_id
+    );
+  };
   const handleSubmitCreateProduct = (product, uploadImages) => {
-    dispatch(
-      createSellingProductSaga({
-        accessToken,
-        refreshToken,
-        dispatch,
-        product,
-        uploadImages,
-      })
+    createSellingProductRequest(
+      accessToken,
+      refreshToken,
+      dispatch,
+      product,
+      uploadImages
     );
   };
   const handleSaveUpdateProduct = (
@@ -187,16 +188,14 @@ function Selling() {
   ) => {
     let removeImages = removeUploadImages;
     let product_id = productId;
-    dispatch(
-      updateSellingProductSaga({
-        accessToken,
-        refreshToken,
-        dispatch,
-        product,
-        product_id,
-        uploadImages,
-        removeImages,
-      })
+    updateSellingProductRequest(
+      accessToken,
+      refreshToken,
+      dispatch,
+      product,
+      product_id,
+      uploadImages,
+      removeImages
     );
   };
   useEffect(() => {

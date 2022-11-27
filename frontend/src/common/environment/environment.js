@@ -6,7 +6,8 @@ const api = {
   friend: apiUrl + '/friendship',
   post: apiUrl + '/post',
   image: apiUrl + '/image',
-  product:apiUrl + '/product'
+  product:apiUrl + '/product',
+  shoppingCart: apiUrl + '/shopping_cart',
 };
 
 export default api;
