@@ -18,7 +18,7 @@ export class SubCategory extends Model<SubCategory> {
     sub_category_name: string;
 
     @Column(DataType.DATE(3))
-    createdAt: string;
+    createdAt: string;  
     
     @Column(DataType.DATE(3))
     updatedAt: string;

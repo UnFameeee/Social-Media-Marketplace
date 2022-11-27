@@ -35,8 +35,8 @@ function App() {
 
         console.log(payload);
 
-        const notify = (avatar, profile_name, content) => {
-          toast(<Notification avatar={avatar} profile_name={profile_name} content={content} />, {
+        const notify = (avatar, profile_name, content, notification_type) => {
+          toast(<Notification avatar={avatar} profile_name={profile_name} content={content} notification_type={notification_type}/>, {
             position: "bottom-left",
             autoClose: 3000,
             hideProgressBar: true,
@@ -47,7 +47,7 @@ function App() {
             theme: "light",
           })
         };
-        notify(payload.avatar, payload.profile_name, payload.content);
+        notify(payload.avatar, payload.profile_name, payload.content, payload.notification_type);
       });
 
       var decoded = jwt_decode(accessToken);
