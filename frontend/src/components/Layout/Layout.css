@@ -5,7 +5,7 @@
   position: fixed;
   /* bottom: 0; */
 }
-.left-bar-list {  
+.left-bar-list {
   height: 100%;
   overflow-y: scroll;
 }
@@ -31,7 +31,7 @@
 .left-bar .left-bar-button.Mui-selected {
   background-color: rgba(0, 0, 0, 0.04);
   border-radius: 8px;
-  border: 2px solid  var(--primary-color);
+  border: 2px solid var(--primary-color);
 }
 .left-bar .left-bar-button.Mui-selected:hover {
   background-color: rgba(0, 0, 0, 0.04);
@@ -53,11 +53,11 @@
 .left-bar .left-bar-title.second {
   padding: 1.6rem 0 0.8rem 1.6rem;
 }
-.left-bar-button .left {  
+.left-bar-button .left {
   pointer-events: none;
   margin-left: 0.6rem;
 }
-.left-bar-button .left .rounded {  
+.left-bar-button .left .rounded {
   width: 3.6rem;
   height: 3.6rem;
   pointer-events: none;
@@ -78,7 +78,7 @@
   padding-left: 1.2rem;
 }
 .left-bar-button .right svg {
-  color: black
+  color: black;
 }
 a[disabled] {
   pointer-events: none;
@@ -100,6 +100,47 @@ a[disabled] {
   height: 100%;
   align-items: center;
   padding-right: 1.4rem;
+}
+
+.nav-bar-wrapper .right {
+  border: 0;
+  padding: 0.4rem;
+}
+.nav-bar-wrapper .right:hover,
+.nav-bar-wrapper .right.MuiToggleButton-root.Mui-selected,
+.nav-bar-wrapper .right.MuiToggleButton-root.Mui-selected:hover {
+  color: white;
+  background-color: white;
+}
+.MuiToggleButton-root.Mui-selected
+  .right-nav-icon
+  .icon-button-with-background {
+  background-color: var(--secondary-color);
+}
+.MuiToggleButton-root.Mui-selected
+  .right-nav-icon
+  .icon-button-with-background
+  svg {
+  color: var(--primary-color);
+}
+
+.MuiToggleButtonGroup-root.notification-type-wrapper {
+  display: flex;
+  gap: 0.8rem;
+  padding-top: 0.6rem;
+}
+.MuiToggleButtonGroup-root.notification-type-wrapper
+  .MuiToggleButton-root.type {
+  text-transform: none;
+  border: 0;
+  border-radius: 18px;
+  padding: 0.4rem 1.4rem;
+  font-size: 1.4rem !important;
+}
+.MuiToggleButtonGroup-root.notification-type-wrapper
+  .MuiToggleButton-root.Mui-selected.type {
+  color: var(--primary-color);
+  background-color: var(--secondary-color);
 }
 /* #endregion */
 

@@ -5,11 +5,12 @@ import {
   Paper,
   Grid,
   Avatar,
-  Typography,
   ClickAwayListener,
+  ToggleButtonGroup,
+  ToggleButton,
 } from '@mui/material';
 import { IoLogOut } from 'react-icons/io5';
-import MUI from '../../MUI';
+import { RiMoreFill } from 'react-icons/ri';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   middleNavIcons,
@@ -21,18 +22,21 @@ import { logOut } from '../../../redux/apiRequest';
 import { localStorageService } from '../../../services/localStorageService';
 import socket from '../../../socket/socket';
 import { SOCKET_EVENT } from '../../../socket/socket.constant';
+import MUI from '../../MUI';
 import '../Layout.css';
 
 export default function NavBar() {
-  // const {socket} = useContext(SocketContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const [value, setValue] = useState('');
-  const [rightGroup, setRightGroup] = useState('');
   const [openSearch, setOpenSearch] = useState(false);
+  const [rightGroup, setRightGroup] = useState(''); //right nav bar
+  const [notificationType, setNotificationType] = useState('all'); //notification type default is all
+
+  var recentSearch = localStorageService.getItem('recentSearch');
 
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
@@ -56,7 +60,6 @@ export default function NavBar() {
     socket.disconnect();
   };
 
-  var recentSearch = localStorageService.getItem('recentSearch');
   function handleSearch() {
     if (value) {
       navigate(`/search?value=${value}`);
@@ -72,7 +75,10 @@ export default function NavBar() {
           <MUI.BetterIconButton
             sx={{ padding: 0 }}
             onClick={() => {
-              setValue('');
+              if (value) {
+                setValue(''); //reset the search bar input
+              }
+
               navigate('/');
             }}
           >
@@ -96,9 +102,11 @@ export default function NavBar() {
                 middleClass: 'navbar-search',
               },
               before: (
-                <Typography sx={{ marginLeft: '1.6rem' }}>
+                <div
+                  style={{ marginLeft: '1.6rem', fontWeight: '500' }}
+                >
                   Recent Searchs
-                </Typography>
+                </div>
               ),
               list: recentSearch?.map((x) => {
                 return {
@@ -162,7 +170,10 @@ export default function NavBar() {
                   : null
               }
               onClick={() => {
-                setValue('');
+                if (value) {
+                  setValue(''); //reset the search bar input
+                }
+
                 if (item.navigate) {
                   navigate(`/${item.navigate?.toLowerCase()}`);
                 } else {
@@ -199,49 +210,50 @@ export default function NavBar() {
             xs
             sx={{ display: 'flex', justifyContent: 'flex-end' }}
           >
-            {rightNavIcons.map((item, index) => (
-              <div
-                key={index}
-                onClick={() => {
-                  setValue('');
-                  if (item.navigate) {
-                    navigate(`/${item.navigate}`);
-                  } else {
-                    if (item.tooltip) {
-                      setRightGroup(item.tooltip.toLowerCase());
-                    } else {
-                      setRightGroup('avatar');
-                    }
-                  }
-                }}
-              >
-                {item.avatar ? (
-                  <Avatar
-                    className="relative"
-                    style={{
-                      fontSize: '2rem',
-                      cursor: 'pointer',
-                    }}
-                    alt={userData.profile_name}
-                    src={
-                      userData?.profile_id == profileData?.profile_id
-                        ? profileData?.avatar
-                        : userData?.avatar
-                    }
-                  >
-                    {userData?.profile_name?.at(0)}
-                  </Avatar>
-                ) : (
-                  <MUI.BetterIconButton
-                    hasBackground
-                    tooltip={item.tooltip}
-                    style={{ marginRight: '0.8rem' }}
-                  >
-                    {item.icon}
-                  </MUI.BetterIconButton>
-                )}
-              </div>
-            ))}
+            <ToggleButtonGroup
+              value={rightGroup}
+              exclusive
+              onChange={(e, value) => {
+                setRightGroup(value);
+              }}
+            >
+              {rightNavIcons.map((item, index) => (
+                <ToggleButton
+                  key={index}
+                  value={item.tooltip?.toLowerCase() ?? 'avatar'}
+                  className="right"
+                >
+                  {item.avatar ? (
+                    <Avatar
+                      className="relative"
+                      style={{
+                        fontSize: '2rem',
+                        cursor: 'pointer',
+                        textTransform: 'none',
+                      }}
+                      alt={userData.profile_name}
+                      src={
+                        userData?.profile_id ==
+                        profileData?.profile_id
+                          ? profileData?.avatar
+                          : userData?.avatar
+                      }
+                    >
+                      {userData?.profile_name?.at(0)}
+                    </Avatar>
+                  ) : (
+                    <MUI.BetterIconButton
+                      hasBackground
+                      tooltip={item.tooltip}
+                      className="right-nav-icon"
+                    >
+                      {item.icon}
+                    </MUI.BetterIconButton>
+                  )}
+                </ToggleButton>
+              ))}
+            </ToggleButtonGroup>
+
             {rightGroup && (
               <div className="relative top-[4rem]">
                 {rightGroup === 'avatar' && (
@@ -270,6 +282,53 @@ export default function NavBar() {
                 {rightGroup === 'notifications' && (
                   <MUI.Menu
                     sx={{ right: '4.8rem', minWidth: '40rem' }}
+                    before={
+                      <div style={{ padding: '0.4rem 1.6rem 0' }}>
+                        <div className="flex items-center justify-between">
+                          <span
+                            style={{
+                              fontSize: '2rem',
+                              fontWeight: '600',
+                              letterSpacing: '0.4px',
+                            }}
+                          >
+                            Notifications
+                          </span>
+                          <MUI.BetterIconButton>
+                            <RiMoreFill
+                              style={{ fontSize: '1.8rem' }}
+                            />
+                          </MUI.BetterIconButton>
+                        </div>
+
+                        <ToggleButtonGroup
+                          value={notificationType}
+                          exclusive
+                          onChange={(e, value) => {
+                            setNotificationType(value);
+                          }}
+                          className="notification-type-wrapper"
+                        >
+                          <ToggleButton value="all" className="type">
+                            All
+                          </ToggleButton>
+
+                          <ToggleButton
+                            value="unread"
+                            className="type"
+                          >
+                            Unread
+                          </ToggleButton>
+
+                          <ToggleButton
+                            value="friends"
+                            className="type"
+                          >
+                            Friends
+                          </ToggleButton>
+                        </ToggleButtonGroup>
+                      </div>
+                    }
                     list={[
                       {
                         onClick: handleLogOut,
