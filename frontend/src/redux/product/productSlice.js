@@ -9,11 +9,14 @@ const initialState = {
     isError: false,
     isSuccess: false,
   },
-  getShopping:{
-    data:[],
+  getShopping: {
+    data: [],
   },
-  getProductDetail:{
-    data:null
+  getProductDetail: {
+    data: null,
+  },
+  getListCartWithoutPaging: {
+    data: [],
   },
   update: {
     product: null,
@@ -30,11 +33,14 @@ export const productSlice = createSlice({
       isError: false,
       isSuccess: false,
     },
-    getShopping:{
-      data:[],
+    getShopping: {
+      data: [],
     },
-    getProductDetail:{
-      data:null
+    getProductDetail: {
+      data: null,
+    },
+    getListCartWithoutPaging: {
+      data: [],
     },
     update: {
       product: null,
@@ -43,17 +49,14 @@ export const productSlice = createSlice({
   extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
     getSellingProductSaga() {},
-    getSellingProductSagaSuccess() {},
     getSellingProduct: (state, action) => {
       state.getSelling.data = action.payload;
     },
-    createSellingProductSaga() {},
     createSellingProductSagaSuccess() {},
 
-    deleteSellingProductSaga() {},
+
     deleteSellingProductSagaSuccess() {},
 
-    updateSellingProductSaga() {},
     updateSellingProductSagaSuccess() {},
 
     getShoppingProductSaga() {},
@@ -61,7 +64,16 @@ export const productSlice = createSlice({
     getShoppingProduct: (state, action) => {
       state.getShopping.data = action.payload;
     },
-    getProductDetail: (state,action) =>{
+   
+    
+    getListCartWithoutPagingSaga() {},
+    getListCartWithoutPaging: (state, action) => {
+      state.getListCartWithoutPaging.data = action.payload;
+    },
+    addProductToCartWithoutPagingSagaSuccess(){},
+    removeProductFromListCartWithoutPagingSuccess(){},
+    
+    getProductDetail: (state, action) => {
       state.getProductDetail.data = action.payload;
     },
     updateProduct: (state, action) => {
@@ -74,20 +86,22 @@ export const productSlice = createSlice({
 });
 export const {
   getProductDetail,
-  
+
+  getListCartWithoutPaging,
+  getListCartWithoutPagingSaga,
+  addProductToCartWithoutPagingSagaSuccess,
+  removeProductFromListCartWithoutPagingSuccess,
+
   getShoppingProductSaga,
   getShoppingProduct,
   getShoppingProductSagaSuccess,
 
   getSellingProductSaga,
   getSellingProduct,
-  getSellingProductSagaSuccess,
-  createSellingProductSaga,
   createSellingProductSagaSuccess,
-  deleteSellingProductSaga,
   deleteSellingProductSagaSuccess,
-  updateSellingProductSaga,
   updateSellingProductSagaSuccess,
+
   updateProduct,
   resetUpdateProduct,
 } = productSlice.actions;

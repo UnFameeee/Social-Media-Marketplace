@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Avatar, Button, Modal } from "@mui/material";
 import { AiFillHeart } from "react-icons/ai";
 import { useSelector } from "react-redux";
@@ -19,17 +19,20 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
       setShowModal(true);
     }
   };
-  const settings = {
-    dots: true,
-    arrows: false,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 750,
-    autoplaySpeed: 5000,
-    cssEase: "linear",
-    dotsClass: "slick-dots bottom-[10px]",
-  };
+  const settings = useMemo(() => {
+    var result = {
+      dots: true,
+      arrows: false,
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      autoplay: true,
+      speed: 750,
+      autoplaySpeed: 5000,
+      cssEase: "linear",
+      dotsClass: "slick-dots bottom-[10px]",
+    };
+    return result;
+  });
   const [showManagerModal, setShowManagerModal] = useState(false);
 
   return (
@@ -55,13 +58,14 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
                     }}
                   />
                 ))}
-              {productObj?.product_image.length == 0 || !productObj && (
-                <img
-                  alt="not found"
-                  className="w-full object-cover rounded-lg h-[228px]"
-                  src={notFoundImage}
-                />
-              )}
+              {productObj?.product_image.length == 0 ||
+                (!productObj && (
+                  <img
+                    alt="not found"
+                    className="w-full object-cover rounded-lg h-[228px]"
+                    src={notFoundImage}
+                  />
+                ))}
             </Slider>
           </div>
           {

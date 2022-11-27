@@ -82,7 +82,7 @@ import {
 } from './profile/profileSlice';
 import { notifyService } from '../services/notifyService';
 import { axiosInStanceJWT } from './axiosJWT';
-import { getProduct, getSellingProduct, getShoppingProduct } from './product/productSlice';
+import { getListCartWithoutPaging, getProduct, getSellingProduct, getShoppingProduct } from './product/productSlice';
 
 const notify = (message, type) => {
   if (type === 'info') {
@@ -526,7 +526,6 @@ export const getAllSellingProduct = async (
     console.log(error);
   }
 };
-
 export const getAllShoppingProduct = async (
   accessToken,
   refreshToken,
@@ -558,6 +557,33 @@ export const getAllShoppingProduct = async (
     console.log(error);
   }
 };
+export const getAllShoppingCartList = async (
+  accessToken,
+  refreshToken,
+  dispatch
+) => {
+  try {
+
+    const res = await axiosInStanceJWT.get(
+      `${api.shoppingCart}/getCartWithoutPaging`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(getListCartWithoutPaging(res.data.results))
+    } else {
+     
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const createProduct = async (
   accessToken,
   refreshToken,
@@ -596,6 +622,34 @@ export const createProduct = async (
     console.log(error);
   }
 };
+export const addProductToCart = async (
+  accessToken,
+  refreshToken,
+  product_id,
+) => {
+  try {
+
+    const res = await axiosInStanceJWT.post(
+      `${api.shoppingCart}/addToCart/${product_id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+
+    } else {
+     
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const uploadProductImages = async (
   accessToken,
   refreshToken,

@@ -34,7 +34,6 @@ const rootReducer = combineReducers({
   uploadImage: uploadImageReducer,
   comment: commentReducer,
   product:productReducer,
-  
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
