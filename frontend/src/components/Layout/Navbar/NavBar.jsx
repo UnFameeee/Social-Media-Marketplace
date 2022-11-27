@@ -1,15 +1,12 @@
-import { useState, useContext } from 'react';
+import { useState, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FacebookOutlined, Close } from '@mui/icons-material';
 import {
   Paper,
   Grid,
-  IconButton,
   Avatar,
   Typography,
   ClickAwayListener,
-  ToggleButton,
-  ToggleButtonGroup,
 } from '@mui/material';
 import { IoLogOut } from 'react-icons/io5';
 import MUI from '../../MUI';
@@ -22,19 +19,19 @@ import { revertAll } from '../../../redux/resetStore';
 import { Helper } from '../../../utils/Helper';
 import { logOut } from '../../../redux/apiRequest';
 import { localStorageService } from '../../../services/localStorageService';
-import '../Layout.css';
 import socket from '../../../socket/socket';
 import { SOCKET_EVENT } from '../../../socket/socket.constant';
-
+import '../Layout.css';
 
 export default function NavBar() {
   // const {socket} = useContext(SocketContext);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+
   const [value, setValue] = useState('');
   const [rightGroup, setRightGroup] = useState('');
-  const [avatarMenu, setAvatarMenu] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
 
   const accessToken = useSelector(
@@ -50,17 +47,16 @@ export default function NavBar() {
     (state) => state.profile?.profileDetails?.data
   );
 
-  var recentSearch = localStorageService.getItem('recentSearch');
-
   const handleLogOut = () => {
     logOut(dispatch, accessToken, refreshToken);
     dispatch(revertAll());
-    
+
     socket.off(SOCKET_EVENT.JOIN_ROOM);
     socket.off(SOCKET_EVENT.RECEIVE_NOTIFICATION);
     socket.disconnect();
   };
 
+  var recentSearch = localStorageService.getItem('recentSearch');
   function handleSearch() {
     if (value) {
       navigate(`/search?value=${value}`);
@@ -75,7 +71,10 @@ export default function NavBar() {
         <Grid item xs sx={{ display: 'flex' }}>
           <MUI.BetterIconButton
             sx={{ padding: 0 }}
-            onClick={() => navigate('/')}
+            onClick={() => {
+              setValue('');
+              navigate('/');
+            }}
           >
             <FacebookOutlined
               sx={{
@@ -87,6 +86,7 @@ export default function NavBar() {
 
           <MUI.SearchBar
             placeHolder="Search FB"
+            value={value}
             getData={(input) => setValue(input)}
             handleSearch={handleSearch}
             toggleProps={[openSearch, setOpenSearch]}
@@ -116,7 +116,7 @@ export default function NavBar() {
                           'recentSearch',
                           x
                         );
-                        navigate('#');
+                        forceUpdate();
                       }}
                     >
                       <Close sx={{ fontSize: '1.6rem' }} />
@@ -152,16 +152,17 @@ export default function NavBar() {
                   path: '',
                 })
                   ? {
-                    marginBottom: '-0.4rem',
-                    borderBottomLeftRadius: 0,
-                    borderBottomRightRadius: 0,
-                    color: 'var(--primary-color)',
-                    borderBottom:
-                      '0.4rem solid var(--primary-color)',
-                  }
+                      marginBottom: '-0.4rem',
+                      borderBottomLeftRadius: 0,
+                      borderBottomRightRadius: 0,
+                      color: 'var(--primary-color)',
+                      borderBottom:
+                        '0.4rem solid var(--primary-color)',
+                    }
                   : null
               }
               onClick={() => {
+                setValue('');
                 if (item.navigate) {
                   navigate(`/${item.navigate?.toLowerCase()}`);
                 } else {
@@ -186,90 +187,112 @@ export default function NavBar() {
           ))}
         </Grid>
 
-        <Grid
-          item
-          xs
-          sx={{ display: 'flex', justifyContent: 'flex-end' }}
+        <ClickAwayListener
+          onClickAway={() => {
+            if (rightGroup) {
+              setRightGroup('');
+            }
+          }}
         >
-          <ToggleButtonGroup
-            value={rightGroup}
-            exclusive
-            onChange={(e, x) => {
-              e.preventDefault();
-              setRightGroup(x);
-            }}
-            aria-label="right-button"
+          <Grid
+            item
+            xs
+            sx={{ display: 'flex', justifyContent: 'flex-end' }}
           >
             {rightNavIcons.map((item, index) => (
-              <ToggleButton
+              <div
                 key={index}
-                style={{
-                  position: 'relative',
-                  border: 0,
-                  padding: '4px',
-                  backgroundColor: 'white',
-                }}
-                value={item.tooltip}
-                sx={{ textTransform: 'none' }}
                 onClick={() => {
+                  setValue('');
                   if (item.navigate) {
-                    navigate(item.navigate);
+                    navigate(`/${item.navigate}`);
+                  } else {
+                    if (item.tooltip) {
+                      setRightGroup(item.tooltip.toLowerCase());
+                    } else {
+                      setRightGroup('avatar');
+                    }
                   }
                 }}
               >
-                {item.icon ? (
+                {item.avatar ? (
+                  <Avatar
+                    className="relative"
+                    style={{
+                      fontSize: '2rem',
+                      cursor: 'pointer',
+                    }}
+                    alt={userData.profile_name}
+                    src={
+                      userData?.profile_id == profileData?.profile_id
+                        ? profileData?.avatar
+                        : userData?.avatar
+                    }
+                  >
+                    {userData?.profile_name?.at(0)}
+                  </Avatar>
+                ) : (
                   <MUI.BetterIconButton
                     hasBackground
                     tooltip={item.tooltip}
+                    style={{ marginRight: '0.8rem' }}
                   >
                     {item.icon}
                   </MUI.BetterIconButton>
-                ) : (
-                  <div onClick={() => setAvatarMenu(!avatarMenu)}>
-                    <Avatar
-                      className="relative"
-                      style={{
-                        fontSize: '1.5rem',
-                      }}
-                      alt={userData.profile_name}
-                      src={
-                        userData?.profile_id ==
-                          profileData?.profile_id
-                          ? profileData?.avatar
-                          : userData?.avatar
-                      }
-                    >
-                      {userData?.profile_name?.at(0)}
-                    </Avatar>
-
-                    {avatarMenu && (
-                      <MUI.Menu
-                        sx={{ right: '2px', minWidth: '20rem' }}
-                        list={[
-                          {
-                            onClick: handleLogOut,
-                            left: {
-                              icon: (
-                                <IoLogOut
-                                  style={{
-                                    fontSize: '2.4rem',
-                                    color: 'black',
-                                  }}
-                                />
-                              ),
-                              hasBackground: true,
-                            },
-                            middle: 'Log Out',
-                          },
-                        ]}
-                      />
-                    )}
-                  </div>
                 )}
-              </ToggleButton>
+              </div>
             ))}
-          </ToggleButtonGroup>
-        </Grid>
+            {rightGroup && (
+              <div className="relative top-[4rem]">
+                {rightGroup === 'avatar' && (
+                  <MUI.Menu
+                    sx={{ right: '0.2rem', minWidth: '20rem' }}
+                    list={[
+                      {
+                        onClick: handleLogOut,
+                        left: {
+                          icon: (
+                            <IoLogOut
+                              style={{
+                                fontSize: '2.4rem',
+                                color: 'black',
+                              }}
+                            />
+                          ),
+                          hasBackground: true,
+                        },
+                        middle: 'Log Out',
+                      },
+                    ]}
+                  />
+                )}
+
+                {rightGroup === 'notifications' && (
+                  <MUI.Menu
+                    sx={{ right: '4.8rem', minWidth: '40rem' }}
+                    list={[
+                      {
+                        onClick: handleLogOut,
+                        left: {
+                          icon: (
+                            <IoLogOut
+                              style={{
+                                fontSize: '2.4rem',
+                                color: 'black',
+                              }}
+                            />
+                          ),
+                          hasBackground: true,
+                        },
+                        middle: 'wtf',
+                      },
+                    ]}
+                  />
+                )}
+              </div>
+            )}
+          </Grid>
+        </ClickAwayListener>
       </Grid>
     </Paper>
   );

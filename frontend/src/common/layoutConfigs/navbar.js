@@ -49,13 +49,13 @@ export const middleNavIcons = [
 
 export const rightNavIcons = [
   {
-    icon: <CgMenuGridO />,
+    icon: <CgMenuGridO style={{ fontSize: '3.2rem' }} />,
     tooltip: 'Menu',
   },
   {
     icon: <IoChatbubbleEllipses style={{ fontSize: '2.4rem' }} />,
     tooltip: 'Chat',
-    navigate: '/messenger'
+    navigate: 'messenger'
   },
   {
     icon: <IoNotifications style={{ fontSize: '2.4rem' }} />,
@@ -63,6 +63,5 @@ export const rightNavIcons = [
   },
   {
     avatar: true,
-    tooltip: 'Avatar'
   },
 ];
