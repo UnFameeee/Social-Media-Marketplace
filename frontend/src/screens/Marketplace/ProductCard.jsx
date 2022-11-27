@@ -43,7 +43,7 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
           <div className="slide-show rounded-lg  shadow-lg">
             <Slider {...settings}>
               {productObj?.product_image &&
-                productObj.product_image.map((image) => (
+                productObj?.product_image.map((image) => (
                   <img
                     key={image.link}
                     alt="not found"
@@ -55,7 +55,7 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
                     }}
                   />
                 ))}
-              {productObj.product_image.length == 0 && (
+              {productObj?.product_image.length == 0 || !productObj && (
                 <img
                   alt="not found"
                   className="w-full object-cover rounded-lg h-[228px]"
@@ -75,19 +75,19 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
             style={{
               fontSize: "2rem",
             }}
-            alt={productObj.Profile.profile_name}
+            alt={productObj?.Profile.profile_name}
             src={
-              productObj.Profile?.profile_avatar
-                ? productObj.Profile?.profile_avatar
+              productObj?.Profile?.profile_avatar
+                ? productObj?.Profile?.profile_avatar
                 : null
             }
           >
-            {productObj.Profile.profile_name?.at(0)}
+            {productObj?.Profile.profile_name?.at(0)}
           </Avatar>
           <div className="flex flex-col ">
-            <span className="font-bold line-clamp-1 ">{productObj.name}</span>
+            <span className="font-bold line-clamp-1 ">{productObj?.name}</span>
             <span className=" font-light line-clamp-1">
-              @{productObj.Profile.profile_name}
+              @{productObj?.Profile.profile_name}
             </span>
           </div>
         </div>
@@ -95,7 +95,7 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
           <span className="text-[#9a6de1]">Price</span>
           <div className="flex gap-[1rem] font-bold justify-between">
             <span>20 Sold</span>
-            <span>{productObj.price} USD</span>
+            <span>{productObj?.price} USD</span>
           </div>
         </div>
         <div className="btn-product-action">

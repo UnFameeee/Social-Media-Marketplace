@@ -13,12 +13,21 @@ import styled from "styled-components";
 import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
-
 import { useState } from "react";
 import ManagerProductModal from "./ManagerProductModa";
-import { createProduct, deleteProduct, getAllSellingProduct } from "../../redux/apiRequest";
+import {
+  createProduct,
+  deleteProduct,
+  getAllSellingProduct,
+} from "../../redux/apiRequest";
 import { useEffect } from "react";
-import { createSellingProductSaga, deleteSellingProductSaga, resetUpdateProduct, updateProduct, updateSellingProductSaga } from "../../redux/product/productSlice";
+import {
+  createSellingProductSaga,
+  deleteSellingProductSaga,
+  resetUpdateProduct,
+  updateProduct,
+  updateSellingProductSaga,
+} from "../../redux/product/productSlice";
 
 //#region media responsive
 const ResponSiveDiv = styled.div`
@@ -111,7 +120,10 @@ function Selling() {
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showManagerModal, setShowManagerModal] = useState({isShow:false,action:0});
+  const [showManagerModal, setShowManagerModal] = useState({
+    isShow: false,
+    action: 0,
+  });
 
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
@@ -132,16 +144,23 @@ function Selling() {
   let randomNum = randomNumberInRange(1400, 1050);
   const handleUpdate = (productObj) => {
     dispatch(updateProduct(productObj));
-    setShowManagerModal({isShow:true,action:2});
+    setShowManagerModal({ isShow: true, action: 2 });
   };
-  const handleOpenModalCreate = ()=>{
-    setShowManagerModal({isShow:true,action:1});
+  const handleOpenModalCreate = () => {
+    setShowManagerModal({ isShow: true, action: 1 });
     dispatch(resetUpdateProduct());
-  }
+  };
   const handleDelete = (productObj) => {
     // deleteProduct(accessToken,refreshToken,productObj.product_id)
-    let product_id = productObj.product_id
-    dispatch(deleteSellingProductSaga({accessToken,refreshToken,dispatch,product_id}))
+    let product_id = productObj.product_id;
+    dispatch(
+      deleteSellingProductSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        product_id,
+      })
+    );
   };
   const handleNavigateToCheckOut = () => {
     navigate("/marketplace/checkout");
@@ -150,12 +169,35 @@ function Selling() {
     navigate("/marketplace/shopping");
   };
   const handleSubmitCreateProduct = (product, uploadImages) => {
-    dispatch(createSellingProductSaga({accessToken,refreshToken,dispatch,product,uploadImages}))
+    dispatch(
+      createSellingProductSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        product,
+        uploadImages,
+      })
+    );
   };
-  const handleSaveUpdateProduct = (product, uploadImages,removeUploadImages,productId) => {
-    let removeImages =removeUploadImages;
-    let product_id= productId;
-    dispatch(updateSellingProductSaga({accessToken,refreshToken,dispatch,product,product_id,uploadImages,removeImages}))
+  const handleSaveUpdateProduct = (
+    product,
+    uploadImages,
+    removeUploadImages,
+    productId
+  ) => {
+    let removeImages = removeUploadImages;
+    let product_id = productId;
+    dispatch(
+      updateSellingProductSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        product,
+        product_id,
+        uploadImages,
+        removeImages,
+      })
+    );
   };
   useEffect(() => {
     getAllSellingProduct(accessToken, refreshToken, dispatch);
@@ -164,8 +206,8 @@ function Selling() {
   return (
     <>
       <ManagerProductModal
-      showManagerModal={showManagerModal}
-      handleSaveUpdateProduct={handleSaveUpdateProduct}
+        showManagerModal={showManagerModal}
+        handleSaveUpdateProduct={handleSaveUpdateProduct}
         handleSubmitCreateProduct={handleSubmitCreateProduct}
         setShowModal={setShowManagerModal}
       />

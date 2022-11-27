@@ -82,7 +82,7 @@ import {
 } from './profile/profileSlice';
 import { notifyService } from '../services/notifyService';
 import { axiosInStanceJWT } from './axiosJWT';
-import { getProduct, getSellingProduct } from './product/productSlice';
+import { getProduct, getSellingProduct, getShoppingProduct } from './product/productSlice';
 
 const notify = (message, type) => {
   if (type === 'info') {
@@ -526,6 +526,38 @@ export const getAllSellingProduct = async (
     console.log(error);
   }
 };
+
+export const getAllShoppingProduct = async (
+  accessToken,
+  refreshToken,
+  dispatch
+) => {
+
+  try {
+    const paging ={
+      page:0,
+      pageSize:30,
+    }
+    const res = await axiosInStanceJWT.post(
+      `${api.product}/shopping/all`,
+      paging,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(getShoppingProduct(res.data.results.data))
+    } else {
+     
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const createProduct = async (
   accessToken,
   refreshToken,
@@ -564,7 +596,6 @@ export const createProduct = async (
     console.log(error);
   }
 };
-
 export const uploadProductImages = async (
   accessToken,
   refreshToken,

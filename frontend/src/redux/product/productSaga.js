@@ -10,6 +10,9 @@ import {
   getSellingProduct,
   getSellingProductSaga,
   getSellingProductSagaSuccess,
+  getShoppingProduct,
+  getShoppingProductSaga,
+  getShoppingProductSagaSuccess,
   updateSellingProductSaga,
   updateSellingProductSagaSuccess,
 } from "./productSlice";
@@ -218,5 +221,53 @@ const updateSellingProductRequest = async (data) => {
   } catch (error) {
     console.log(error);
     notifyService.showError("Update Selling Product Failed");
+  }
+};
+
+
+export function* getAllShoppingProduct() {
+  yield takeLatest(
+    [
+      getShoppingProductSaga.type,
+    ],
+    handleGetShoppingProduct
+  );
+}
+function* handleGetShoppingProduct(data) {
+  try {
+    const getProducts = yield call(getShoppingProductSagaRequest, data);
+    yield put(getShoppingProduct(getProducts));
+  } catch (error) {
+    console.log(error);
+  }
+}
+const getShoppingProductSagaRequest = async (data) => {
+  const { accessToken, refreshToken, dispatch } = data.payload;
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    let pagingObj = {
+      page: 0,
+      pageSize: 30,
+    };
+    const res = await axiosInStanceJWT.post(
+      `${api.product}/shopping/all`,
+      pagingObj,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(getShoppingProductSagaSuccess({ accessToken, refreshToken }));
+      return res.data.results.data;
+    } else {
+      notifyService.showError("Get List Shopping Product Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Get List Shopping Product Failed");
   }
 };

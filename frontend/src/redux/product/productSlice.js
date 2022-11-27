@@ -9,8 +9,14 @@ const initialState = {
     isError: false,
     isSuccess: false,
   },
+  getShopping:{
+    data:[],
+  },
+  getProductDetail:{
+    data:null
+  },
   update: {
-    product: {},
+    product: null,
   },
 };
 export const productSlice = createSlice({
@@ -23,6 +29,12 @@ export const productSlice = createSlice({
       isFetching: false,
       isError: false,
       isSuccess: false,
+    },
+    getShopping:{
+      data:[],
+    },
+    getProductDetail:{
+      data:null
     },
     update: {
       product: null,
@@ -44,6 +56,14 @@ export const productSlice = createSlice({
     updateSellingProductSaga() {},
     updateSellingProductSagaSuccess() {},
 
+    getShoppingProductSaga() {},
+    getShoppingProductSagaSuccess() {},
+    getShoppingProduct: (state, action) => {
+      state.getShopping.data = action.payload;
+    },
+    getProductDetail: (state,action) =>{
+      state.getProductDetail.data = action.payload;
+    },
     updateProduct: (state, action) => {
       state.update.product = action.payload;
     },
@@ -53,6 +73,12 @@ export const productSlice = createSlice({
   },
 });
 export const {
+  getProductDetail,
+  
+  getShoppingProductSaga,
+  getShoppingProduct,
+  getShoppingProductSagaSuccess,
+
   getSellingProductSaga,
   getSellingProduct,
   getSellingProductSagaSuccess,
