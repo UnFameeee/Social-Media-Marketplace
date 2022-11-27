@@ -13,7 +13,7 @@ export class ProfilePostImage extends Model<ProfilePostImage> {
     @Column
     profile_post_image_id: number;
 
-    //THis column does not map
+    //This column does not map
     @Column
     profile_id: number;
 
