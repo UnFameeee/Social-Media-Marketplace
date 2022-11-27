@@ -62,7 +62,6 @@ export default function AllFriends() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      window.scroll(0, 0);
       if (!Helper.isNullOrEmpty(queryParams)) {
         var id = queryParams;
         dispatch(

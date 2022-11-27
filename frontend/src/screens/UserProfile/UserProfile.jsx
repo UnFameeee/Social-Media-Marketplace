@@ -250,7 +250,6 @@ function UserProfile(props) {
           })
         );
       }
-      // window.scroll(0,0);
     }
     return () => {
       onDestroy = true;
