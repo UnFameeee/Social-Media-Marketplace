@@ -17,10 +17,10 @@ export class Product extends Model<Product> {
     @Column
     description: string
 
-    @Column
+    @Column(DataType.BIGINT)
     price: number
 
-    @Column
+    @Column(DataType.BIGINT)
     quantity_in_stock: number
     
     @Column(DataType.DATE(3))
