@@ -1,20 +1,13 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { searchProfile } from '../../redux/apiRequest';
 import TwoColumns from '../../components/Layout/TwoColumns';
 import { Helper } from '../../utils/Helper';
 import LeftbarTitle from '../Friends/DynamicLeftbar/LeftbarTitle';
-import LeftbarMiddleItem from '../Friends/DynamicLeftbar/LeftbarMiddleItem';
 import UserProfile from '../UserProfile/UserProfile';
 import { getProfileSaga } from '../../redux/profile/profileSlice';
 import { localStorageService } from '../../services/localStorageService';
-import {
-  acceptSaga,
-  denySaga,
-  addFriendSaga,
-  unfriendSaga,
-} from '../../redux/friend/friendSlice';
 
 export default function SearchPage() {
   const dispatch = useDispatch();
@@ -36,39 +29,6 @@ export default function SearchPage() {
     (state) => state.profile?.profileDetails?.data,
     shallowEqual
   );
-
-  function handleAction(isFriend, requestType, id) {
-    if (isFriend) {
-      dispatch(
-        unfriendSaga({
-          accessToken,
-          refreshToken,
-          id,
-          dispatch,
-        })
-      );
-    } else {
-      if (requestType == 'TARGET') {
-        dispatch(
-          acceptSaga({
-            accessToken,
-            refreshToken,
-            id,
-            dispatch,
-          })
-        );
-      } else {
-        dispatch(
-          addFriendSaga({
-            accessToken,
-            refreshToken,
-            id,
-            dispatch,
-          })
-        );
-      }
-    }
-  }
 
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -101,7 +61,6 @@ export default function SearchPage() {
           })
         );
       }
-      // window.scroll(0, 0);
     }
     return () => {
       onDestroy = true;
@@ -122,7 +81,7 @@ export default function SearchPage() {
                 ? Helper.isMultiple(
                     'Result',
                     profiles?.page?.totalElement,
-                    `Can't find profile ${queryParams.value}`
+                    `Can't find ${queryParams.value}`
                   )
                 : `Can't find any profile`
             }
@@ -132,56 +91,16 @@ export default function SearchPage() {
         leftBarList: !Helper.isEmptyObject(queryParams, true)
           ? profiles?.data?.map((x) => {
               var profileChecked =
-                !Helper.isNullOrEmpty(queryParams) &&
+                !Helper.isNullOrEmpty(queryParams.id) &&
                 x.profile_id === profileData?.profile_id;
+
               return {
                 left: {
                   url: x.avatar,
                   name: x.profile_name,
                 },
                 middle: (
-                  <LeftbarMiddleItem
-                    profile={x}
-                    firstButtonConfig={{
-                      name: x.isFriend
-                        ? 'Unfriend'
-                        : x.isSentFriendRequest == 'NONE'
-                        ? 'Add Friend'
-                        : x.isSentFriendRequest == 'REQUEST'
-                        ? 'Cancel'
-                        : '',
-                      onClick: (e) => {
-                        e.stopPropagation();
-                        handleAction(
-                          x.isFriend,
-                          x.isSentFriendRequest,
-                          x.profile_id
-                        );
-                      },
-                      style:
-                        x.isSentFriendRequest != 'TARGET'
-                          ? { width: '92%' }
-                          : {},
-                    }}
-                    secondButtonConfig={
-                      !x.isFriend && x.isSentFriendRequest == 'TARGET'
-                        ? {
-                            name: '',
-                            onClick: async (e) => {
-                              e.stopPropagation();
-                              dispatch(
-                                denySaga({
-                                  accessToken,
-                                  refreshToken,
-                                  id: x.profile_id,
-                                  dispatch,
-                                })
-                              );
-                            },
-                          }
-                        : null
-                    }
-                  />
+                  <div className="px-[0.8rem]">{x.profile_name}</div>
                 ),
                 onClick: () => {
                   localStorageService.addToArray('recentSearch', x);

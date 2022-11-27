@@ -62,7 +62,6 @@ export default function FriendRequests() {
           })
         );
       }
-      window.scroll(0, 0);
     }
     return () => {
       onDestroy = true;

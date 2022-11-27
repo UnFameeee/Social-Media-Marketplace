@@ -48,7 +48,6 @@ export default function FriendSuggestions() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      window.scroll(0, 0);
       if (!Helper.isNullOrEmpty(queryParams)) {
         dispatch(
           getProfileSaga({
