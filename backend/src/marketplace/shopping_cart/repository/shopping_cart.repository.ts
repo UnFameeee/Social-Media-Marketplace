@@ -15,6 +15,7 @@ import { PagingData } from "src/database/view-model/paging.model";
 import { ResponseData } from "src/database/view-model/success-message.model";
 import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
 import { Helper } from "src/common/utils/helper.utils";
+import { Variation } from "src/database/model/variation.model";
 
 @Injectable()
 export class ShoppingCartRepository {
@@ -240,6 +241,10 @@ export class ShoppingCartRepository {
                     },
                     include: [
                         {
+                            model: Variation,
+                            attributes: ["brand", "color"],
+                        },
+                        {
                             model: Profile,
                             attributes: ["profile_name"],
                             include: [
@@ -261,7 +266,6 @@ export class ShoppingCartRepository {
 
                 const product = await Helper.SQLobjectToObject(queryProductData);
                 for (const element of product) {
-                    console.log(element);
                     if (element["Profile"]["profile_avatar"] != null) {
                         element["Profile"]["avatar"] = element["Profile"]["profile_avatar"]["link"];
                     }
@@ -344,6 +348,10 @@ export class ShoppingCartRepository {
                         }
                     },
                     include: [
+                        {
+                            model: Variation,
+                            attributes: ["brand", "color"],
+                        },
                         {
                             model: Profile,
                             attributes: ["profile_name"],
