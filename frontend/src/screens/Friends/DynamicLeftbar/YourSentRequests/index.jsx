@@ -47,7 +47,6 @@ export default function YourSentRequests() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      window.scroll(0, 0);
       if (!Helper.isNullOrEmpty(queryParams)) {
         dispatch(
           getProfileSaga({

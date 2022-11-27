@@ -1,10 +1,9 @@
-import { useState, useContext } from 'react';
+import { useState, useReducer, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FacebookOutlined, Close } from '@mui/icons-material';
 import {
   Paper,
   Grid,
-  IconButton,
   Avatar,
   Typography,
   ClickAwayListener,
@@ -36,6 +35,7 @@ export default function NavBar() {
   const [rightGroup, setRightGroup] = useState('');
   const [avatarMenu, setAvatarMenu] = useState(false);
   const [openSearch, setOpenSearch] = useState(false);
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
@@ -116,7 +116,7 @@ export default function NavBar() {
                           'recentSearch',
                           x
                         );
-                        navigate('#');
+                        forceUpdate();
                       }}
                     >
                       <Close sx={{ fontSize: '1.6rem' }} />
