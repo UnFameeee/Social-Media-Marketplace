@@ -35,6 +35,7 @@ function Comment({
   totalLike,
   seeAllComment,
   totalElement,
+  avatar,
   ...props
 }) {
   const userData = useSelector((state) => state.auth.user.userData);
@@ -166,10 +167,10 @@ function Comment({
             style={{
               fontSize: "2rem",
             }}
-            alt={userData.profile.profile_name}
-            src={userData.profile?.avatar ? userData.profile?.avatar : null}
+            alt={profile_name}
+            src={avatar ? avatar : null}
           >
-            {userData.profile.profile_name?.at(0)}
+            {profile_name?.at(0)}
           </Avatar>
           {!showUpdate ? (
             <div className="name-and-message flex flex-col ">

@@ -8,18 +8,20 @@ import { PostLikeService } from '../service/post-like.service';
 @ApiTags('Post')
 @Controller('/api/post')
 export class PostLikeController {
-    constructor(private readonly postLikeService: PostLikeService){};
-    
+    constructor(
+        private readonly postLikeService: PostLikeService,
+    ) { };
+
     //Like a post
     @Post("/like/:post_id")
-    async likePost(@Request() request: any, @Param("post_id") postId: number){
+    async likePost(@Request() request: any, @Param("post_id") postId: number) {
         const profile = <Profile>request.user;
         return await this.postLikeService.likeUnlikePost(profile, postId);
     }
-    
+
     //See all like of post
     @Post("/allLikeOfPost/:post_id")
-    async allLikeOfPost(@Request() request: any, @Param("post_id") postId: number){
+    async allLikeOfPost(@Request() request: any, @Param("post_id") postId: number) {
         const profile = <Profile>request.user;
         return await this.postLikeService.allLikeOfPost(profile, postId);
     }

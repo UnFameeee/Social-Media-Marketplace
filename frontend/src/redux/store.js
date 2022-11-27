@@ -17,6 +17,7 @@ import friendReducer from "./friend/friendSlice";
 import profileReducer from "./profile/profileSlice";
 import uploadImageReducer from "./uploadImage/uploadImageSlice";
 import commentReducer from "./comment/commentSlice"
+import productReducer from "./product/productSlice";
 import rootSaga from "./rootSaga";
 
 const sagaMiddleware = createSagaMiddleware();
@@ -32,6 +33,7 @@ const rootReducer = combineReducers({
   profile: profileReducer,
   uploadImage: uploadImageReducer,
   comment: commentReducer,
+  product:productReducer,
   
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
