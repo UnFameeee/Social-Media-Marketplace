@@ -27,7 +27,7 @@ const ResponSiveButtonWrapper = styled.div`
     flex-direction: column;
   }
 `;
-function MarketPlaceLeftBar({handleOpenModalCreate,...props}) {
+function MarketPlaceLeftBar({handleOpenModalCreate,productDetail,...props}) {
   const userData = useSelector((state) => state.auth.user.userData);
   const [value, setValue] = React.useState("2");
   const navigate = useNavigate();
@@ -202,19 +202,19 @@ function MarketPlaceLeftBar({handleOpenModalCreate,...props}) {
                   style={{
                     fontSize: "2rem",
                   }}
-                  alt={userData.profile.profile_name}
+                  alt={productDetail?.Profile.profile_name}
                   src={
-                    userData.profile?.picture
-                      ? JSON.parse(userData.profile?.picture)
+                    productDetail?.Profile?.avatar
+                      ? productDetail?.Profile?.avatar
                       : null
                   }
                 >
-                  {userData.profile.profile_name?.at(0)}
+                  {productDetail?.Profile.profile_name.at(0)}
                 </Avatar>
                 <div className="flex flex-col">
-                  <span className="font-bold line-clamp-1">Product name</span>
+                  <span className="font-bold line-clamp-1">{productDetail?.name}</span>
                   <span className=" font-light line-clamp-1">
-                    @Nguyễn Hoàng Hai Dụ
+                    @ {productDetail?.Profile.profile_name}
                   </span>
                 </div>
               </div>
@@ -228,19 +228,14 @@ function MarketPlaceLeftBar({handleOpenModalCreate,...props}) {
                   width={0}
                   truncatedEndingComponent={"... "}
                 >
-                  olorem placeat enim consectetur expedita unde dolore similique
-                  qui veritatis, earum ratione. Et quam iste accusantium sequi
-                  fugit accusamus saepe doloremque itaque quas eum hic ad
-                  exercitationem, mollitia ex modi deserunt similique
-                  consequuntur! Earum architecto sint libero, consequuntur eaque
-                  exercitationem debitis, facilis neque aspernatur mollitia
+                {productDetail?.description}
                 </ShowMoreText>
               </div>
               <div className="card-price mb-[1rem]  text-[2.4rem]">
                 <span className="text-[#9a6de1]">Price</span>
                 <div className="flex gap-[1rem] font-bold justify-between">
                   <span>20 Sold</span>
-                  <span>365 USD</span>
+                  <span>{productDetail?.price} USD</span>
                 </div>
               </div>
               <ResponSiveButtonWrapper>
@@ -249,19 +244,6 @@ function MarketPlaceLeftBar({handleOpenModalCreate,...props}) {
                     color: "var(--primary-color)",
                     background: "white",
                     border: "1px solid var(--primary-color)",
-                    borderRadius: "8px",
-                    MozBorderRadius: "8px",
-                    WebkitBorderRadius: "8px",
-                    flex: "1",
-                    textTransform: "capitalize",
-                  }}
-                >
-                  <span className="w-full">View details</span>
-                </Button>
-                <Button
-                  style={{
-                    color: "white",
-                    background: "var(--primary-color)",
                     borderRadius: "8px",
                     MozBorderRadius: "8px",
                     WebkitBorderRadius: "8px",

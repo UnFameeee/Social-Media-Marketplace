@@ -1,7 +1,7 @@
 import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
 import { Tooltip, Pagination, Typography, Fab } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -14,6 +14,10 @@ import styled from "styled-components";
 import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { getAllShoppingProduct } from "../../redux/apiRequest";
+import { getProductDetail } from "../../redux/product/productSlice";
+import { useState } from "react";
 
 //#region media responsive
 const ResponSiveDiv = styled.div`
@@ -90,7 +94,17 @@ const ResponSiveDiv = styled.div`
 `;
 function Shopping() {
   //#region declare variables
-  const userData = useSelector((state) => state.auth.user.userData);
+  const dispatch = useDispatch();
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
+  const productList = useSelector(
+    (state) => state.product?.getShopping?.data,
+    shallowEqual
+  );
   const settings = {
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -100,6 +114,7 @@ function Shopping() {
     cssEase: "linear",
   };
   const [page, setPage] = React.useState(1);
+  const [productDetail,setProductDetail] = useState()
   const handleChange = (event, value) => {
     setPage(value);
   };
@@ -112,8 +127,8 @@ function Shopping() {
   }
   //#endregion
   let randomNum = randomNumberInRange(1400, 1050);
-  const handleViewDetail = () => {
-    console.log("view details");
+  const handleViewDetail = (productObj) => {
+    setProductDetail(productObj)
   };
   const handleAddToCart = () => {
     console.log("add to cart");
@@ -124,11 +139,14 @@ function Shopping() {
   const handleNavigateToSelling = () => {
     navigate("/marketplace/selling");
   };
+  useEffect(() => {
+    getAllShoppingProduct(accessToken, refreshToken, dispatch);
+  },[]);
   return (
     <>
       <ResponSiveDiv>
         <ThreeColumns className="ThreeColumns pr-[2%] pl-[430px] pt-6">
-          <MarketPlaceLeftBar />
+          <MarketPlaceLeftBar productDetail={productDetail} />
           <div className="main-market-place mb-[2rem] rounded-xl h-full p-[1.5rem] shadow-2xl ">
             <Fab
               onClick={handleNavigateToCheckOut}
@@ -176,15 +194,21 @@ function Shopping() {
               </Slider>
             </div>
             <div className="product-container mb-[1rem]">
-              {[...Array(15)].map((index) => (
-                <ProductCard
-                  key={index}
-                  arrayBtn={[
-                    { pos: 0, text: "view details", handle: handleViewDetail },
-                    { pos: 1, text: "add to cart", handle: handleAddToCart },
-                  ]}
-                />
-              ))}
+              {productList &&
+                productList.map((product) => (
+                  <ProductCard
+                    key={product.product_id}
+                    productObj={product}
+                    arrayBtn={[
+                      {
+                        pos: 0,
+                        text: "view details",
+                        handle: handleViewDetail,
+                      },
+                      { pos: 1, text: "add to cart", handle: handleAddToCart },
+                    ]}
+                  />
+                ))}
             </div>
             <div className="Pagination float-right">
               <Typography>Page: {page}</Typography>
