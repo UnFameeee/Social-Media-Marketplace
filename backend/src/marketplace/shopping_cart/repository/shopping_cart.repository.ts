@@ -206,16 +206,10 @@ export class ShoppingCartRepository {
                         },
                         {
                             model: ShoppingCart,
+                            where: {
+                                shopping_cart_id: queryCartData.shopping_cart_id,
+                            },
                             attributes: [],
-                            include: [
-                                {
-                                    model: Profile,
-                                    attributes: [],
-                                    where: {
-                                        profile_id: profile_id,
-                                    }
-                                }
-                            ]
                         }
                     ],
                     order: [
@@ -315,16 +309,10 @@ export class ShoppingCartRepository {
                         },
                         {
                             model: ShoppingCart,
+                            where: {
+                                shopping_cart_id: queryCartData.shopping_cart_id,
+                            },
                             attributes: [],
-                            include: [
-                                {
-                                    model: Profile,
-                                    attributes: [],
-                                    where: {
-                                        profile_id: profile_id,
-                                    }
-                                }
-                            ]
                         }
                     ],
                     order: [
@@ -333,6 +321,8 @@ export class ShoppingCartRepository {
                     raw: true,
                     nest: true,
                 });
+
+                console.log(queryData);
 
                 for (const element of queryData.rows) {
                     arrayProduct.push(element["product_id"]);
@@ -374,7 +364,6 @@ export class ShoppingCartRepository {
 
                 const product = await Helper.SQLobjectToObject(queryProductData);
                 for (const element of product) {
-                    console.log(element);
                     if (element["Profile"]["profile_avatar"] != null) {
                         element["Profile"]["avatar"] = element["Profile"]["profile_avatar"]["link"];
                     }
