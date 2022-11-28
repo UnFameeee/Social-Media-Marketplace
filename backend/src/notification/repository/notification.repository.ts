@@ -1,5 +1,6 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Sequelize } from "sequelize-typescript";
+import { Notification } from "src/database/model/notification.model";
 import { PostComment } from "src/database/model/post-comment.model";
 import { Post } from "src/database/model/post.model";
 import { Profile } from "src/database/model/profile.model";
@@ -74,6 +75,30 @@ export class NotificationRepository {
                 raw: true
             })
             return queryData;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }    
+
+    async createNotificationData(profile_sender: number, profile_receiver: number, profile_id?: number, post_id?: number, post_comment_id?: number): Promise<Notification> {
+        try {
+            return null;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }    
+
+    async removeNotificationData(profile_sender: number, profile_receiver: number, profile_id?: number, post_id?: number, post_comment_id?: number): Promise<Notification> {
+        try {
+            return null;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }    
+
+    async getAllNotificationData(profile_id: number): Promise<Notification[]> {
+        try {
+            return null;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
