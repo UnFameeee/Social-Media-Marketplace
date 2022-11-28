@@ -40,14 +40,14 @@ export class PostCommentService {
                 }
 
                 if (profile_receiver && profile_receiver != profile.profile_id) {
-                    const NotificationResponseDto = await this.notificationService.createNotification(profile_receiver, profile.profile_id, NOTIFICATION_TYPE.COMMENT, message, postCommentDto.post_id, res.post_comment_id);
+                    const NotificationResponseDto = await this.notificationService.createNotification(profile.profile_id, profile_receiver, NOTIFICATION_TYPE.COMMENT, message, postCommentDto.post_id, res.post_comment_id);
 
                     this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RECEIVE_NOTIFICATION, NotificationResponseDto);
                 }
 
             } else {
                 if (profile_receiver && profile_receiver != profile.profile_id) {
-                    await this.notificationService.removeNotification(profile_receiver, profile.profile_id, NOTIFICATION_TYPE.COMMENT, postCommentDto.post_id, res.post_comment_id);
+                    await this.notificationService.removeNotification(profile.profile_id, profile_receiver, NOTIFICATION_TYPE.COMMENT, postCommentDto.post_id, res.post_comment_id);
                 }
             }
 
@@ -84,9 +84,17 @@ export class PostCommentService {
             const response = new ResponseData<any>();
             var res = await this.postCommentRepository.deleteComment(profile_id, post_comment_id);
             response.results = res;
+
+            // if (response.results) {
+            //     if (profile_receiver && profile_receiver != profile.profile_id) {
+            //         await this.notificationService.removeNotification(profile.profile_id, profile_receiver, NOTIFICATION_TYPE.COMMENT, postCommentDto.post_id, res.post_comment_id);
+            //     }
+            // }
+
+
             return response;
         } catch (err) {
             ExceptionResponse(err);
-        }
+        }       
     }
 }

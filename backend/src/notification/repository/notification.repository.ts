@@ -190,17 +190,92 @@ export class NotificationRepository {
                         model: PostComment,
                         attributes: [],
                         where: {
-                            post_comment_id: {[Op.eq]: post_comment_id}
+                            post_comment_id: { [Op.eq]: post_comment_id }
                         },
                         required: false
                     },
                 ]
             })
 
-            console.log(queryData);
+            if (queryData) {
+                await queryData.destroy();
+            }
+            return true;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async removePostCommentNotification(profile_sender: number, profile_receiver: number, notification_type: NOTIFICATION_TYPE, post_id?: number, post_comment_id?: number): Promise<Boolean> {
+        try {
+            const queryData = await this.notificationRepository.findOne({
+                attributes: ["notification_id"],
+                where: {
+                    notification_type: notification_type
+                },
+                include: [
+                    {
+                        model: Profile,
+                        as: "profile_sender",
+                        attributes: [],
+                        where: {
+                            profile_id: profile_sender
+                        }
+                    },
+                    {
+                        model: Profile,
+                        as: "profile_receiver",
+                        attributes: [],
+                        where: {
+                            profile_id: profile_receiver
+                        }
+                    },
+                    {
+                        model: Post,
+                        attributes: [],
+                        where: {
+                            post_id: post_id
+                        }
+                    },
+                    {
+                        model: PostComment,
+                        attributes: [],
+                        where: {
+                            post_comment_id: { [Op.eq]: post_comment_id }
+                        },
+                        required: false
+                    },
+                ]
+            })
 
             if (queryData) {
                 await queryData.destroy();
+            }
+            return true;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async removePostNotification(post_id: number[]): Promise<Boolean> {
+        try {
+            const queryData = await this.notificationRepository.findAll({
+                attributes: ["notification_id"],
+                include: [
+                    {
+                        model: Post,
+                        attributes: [],
+                        where: {
+                            post_id: {
+                                [Op.in]: post_id
+                            }
+                        }
+                    },
+                ]
+            })
+
+            if (queryData) {
+                // await queryData.destroy();
             }
             return true;
         } catch (err) {
