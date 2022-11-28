@@ -45,29 +45,29 @@ function GridSideInfo(props) {
           {type === 'photo' &&
             listImg?.map((item, index) => {
               var border = '';
-              if (index == 0) {
+              if (index === 0) {
                 border = 'rounded-tl-[1rem]';
                 if (listImg.length < 4) {
-                  border += 'rounded-bl-[1rem]';
+                  border += ' rounded-bl-[1rem]';
                 }
               }
-              if (index == 2) {
+              if (index === 2) {
                 border = 'rounded-tr-[1rem]';
-                if (listImg.length == 3) {
-                  border += 'rounded-br-[1rem]';
+                if (listImg.length === 3) {
+                  border += ' rounded-br-[1rem]';
                 }
               }
-              if (listImg.length % 3 == 0) {
+              if (listImg.length % 3 === 0) {
                 if (
-                  (index == 5 && listImg.length == 6) ||
-                  (index == 8 && listImg.length == 9)
+                  (index === 5 && listImg.length === 6) ||
+                  (index === 8 && listImg.length === 9)
                 ) {
                   border = 'rounded-br-[1rem]';
                 }
               }
               if (
-                (listImg.length < 7 && index == 3) ||
-                (listImg.length > 6 && index == 6)
+                (listImg.length < 7 && index === 3) ||
+                (listImg.length > 6 && index === 6)
               ) {
                 border = 'rounded-bl-[1rem]';
               }

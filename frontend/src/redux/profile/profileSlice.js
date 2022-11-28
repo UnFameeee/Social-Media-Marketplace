@@ -11,16 +11,6 @@ const initialState = {
     isFetching: false,
     error: false,
   },
-  updateAvt: {
-    data: null,
-    isFetching: false,
-    error: false,
-  },
-  updateWallpaper: {
-    data: null,
-    isFetching: false,
-    error: false,
-  },
   profileSearch: {
     data: null,
     isFetching: false,
@@ -36,16 +26,6 @@ export const profileSlice = createSlice({
       error: false,
     },
     galleryImg: {
-      data: null,
-      isFetching: false,
-      error: false,
-    },
-    updateAvt: {
-      data: null,
-      isFetching: false,
-      error: false,
-    },
-    updateWallpaper: {
       data: null,
       isFetching: false,
       error: false,
@@ -70,11 +50,7 @@ export const profileSlice = createSlice({
       state.profileDetails.isFetching = false;
       state.profileDetails.error = true;
     },
-    updateDetailSaga() {},
-    updateDetailSagaSuccess() {},
-    getProfileSaga() {},
-    getProfileSagaSuccess() {},
-    
+
     getGalleryStart: (state) => {
       state.galleryImg.isFetching = true;
     },
@@ -86,40 +62,6 @@ export const profileSlice = createSlice({
       state.galleryImg.isFetching = false;
       state.galleryImg.error = true;
     },
-    getGallerySaga() {},
-    getGallerySagaSuccess() {}, 
-
-    updateAvtStart: (state) => {
-      state.updateAvt.isFetching = true;
-    },
-    updateAvtSuccess: (state, action) => {
-      state.updateAvt.isFetching = false;
-      state.updateAvt.data = action.payload;
-    },
-    updateAvtFailed: (state) => {
-      state.updateAvt.isFetching = false;
-      state.updateAvt.error = true;
-    },
-    updateAvtSaga() {},
-    updateAvtSagaSuccess() {},
-    deleteAvtSaga() {},
-    deleteAvtSagaSuccess() {},
-
-    updateWallpaperStart: (state) => {
-      state.updateWallpaper.isFetching = true;
-    },
-    updateWallpaperSuccess: (state, action) => {
-      state.updateWallpaper.isFetching = false;
-      state.updateWallpaper.data = action.payload;
-    },
-    updateWallpaperFailed: (state) => {
-      state.updateWallpaper.isFetching = false;
-      state.updateWallpaper.error = true;
-    },
-    updateWallpaperSaga() {},
-    updateWallpaperSagaSuccess() {},
-    deleteWallpaperSaga() {},
-    deleteWallpaperSagaSuccess() {},
 
     searchProfileStart: (state) => {
       state.profileSearch.isFetching = true;
@@ -132,43 +74,39 @@ export const profileSlice = createSlice({
       state.profileSearch.isFetching = false;
       state.profileSearch.error = true;
     },
+
+    getProfileSaga() {},
+    getProfileSagaSuccess() {},
+
+    updateDetailSagaSuccess() {},
+    updateAvtSagaSuccess() {},
+    deleteAvtSagaSuccess() {},
+    updateWallpaperSagaSuccess() {},
+    deleteWallpaperSagaSuccess() {},
   },
 });
 
 export const {
-    getProfileDetailStart,
-    getProfileDetailSuccess,
-    getProfileDetailFailed,
-    getProfileSaga,
-    getProfileSagaSuccess,
+  getProfileDetailStart,
+  getProfileDetailSuccess,
+  getProfileDetailFailed,
 
-    getGalleryStart,
-    getGallerySuccess,
-    getGalleryFailed,
-    getGallerySaga,
-    getGallerySagaSuccess,
+  searchProfileStart,
+  searchProfileSuccess,
+  searchProfileFailed,
 
-    updateAvtStart,
-    updateAvtSuccess,
-    updateAvtFailed,
+  getGalleryStart,
+  getGallerySuccess,
+  getGalleryFailed,
 
-    updateWallpaperStart,
-    updateWallpaperSuccess,
-    updateWallpaperFailed,
+  getProfileSaga,
+  getProfileSagaSuccess,
 
-    updateAvtSaga,
-    updateAvtSagaSuccess,
-    deleteAvtSaga,
-    deleteAvtSagaSuccess,
-    updateWallpaperSaga,
-    updateWallpaperSagaSuccess,
-    deleteWallpaperSaga,
-    deleteWallpaperSagaSuccess,
-    updateDetailSaga,
-    updateDetailSagaSuccess,
-
-    searchProfileStart,
-    searchProfileSuccess,
-    searchProfileFailed,
+  updateAvtSagaSuccess,
+  deleteAvtSagaSuccess,
+  updateWallpaperSagaSuccess,
+  deleteWallpaperSagaSuccess,
+  updateDetailSagaSuccess,
+  
 } = profileSlice.actions;
 export default profileSlice.reducer;

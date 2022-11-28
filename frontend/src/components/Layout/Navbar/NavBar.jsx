@@ -233,7 +233,7 @@ export default function NavBar() {
                       }}
                       alt={userData.profile_name}
                       src={
-                        userData?.profile_id ==
+                        userData?.profile_id ===
                         profileData?.profile_id
                           ? profileData?.avatar
                           : userData?.avatar
@@ -261,14 +261,25 @@ export default function NavBar() {
                     sx={{ right: '0.2rem', minWidth: '20rem' }}
                     list={[
                       {
+                        onClick: (e) => {
+                          e.preventDefault();
+                          setRightGroup('');
+                          navigate(
+                            `/profile?id=${userData?.profile_id}`
+                          );
+                        },
+                        left: {
+                          url: userData?.avatar,
+                          name: userData?.profile_name,
+                        },
+                        middle: userData?.profile_name,
+                      },
+                      {
                         onClick: handleLogOut,
                         left: {
                           icon: (
                             <IoLogOut
-                              style={{
-                                fontSize: '2.4rem',
-                                color: 'black',
-                              }}
+                              style={{ fontSize: '2.4rem' }}
                             />
                           ),
                           hasBackground: true,
@@ -305,6 +316,7 @@ export default function NavBar() {
                           value={notificationType}
                           exclusive
                           onChange={(e, value) => {
+                            e.preventDefault();
                             setNotificationType(value);
                           }}
                           className="notification-type-wrapper"
@@ -329,23 +341,7 @@ export default function NavBar() {
                         </ToggleButtonGroup>
                       </div>
                     }
-                    list={[
-                      {
-                        onClick: handleLogOut,
-                        left: {
-                          icon: (
-                            <IoLogOut
-                              style={{
-                                fontSize: '2.4rem',
-                                color: 'black',
-                              }}
-                            />
-                          ),
-                          hasBackground: true,
-                        },
-                        middle: 'wtf',
-                      },
-                    ]}
+                    list={[]}
                   />
                 )}
               </div>
