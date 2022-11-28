@@ -23,21 +23,11 @@ import {
   changeProductFromListCartWithoutPagingQuantityRequest,
   removeProductFromListCartWithoutPagingRequest,
 } from "../../redux/product/productSaga";
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
+import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 function CheckOut() {
-  const [value, setValue] = React.useState("1");
+  const [value, setValue] = useState("1");
   const [openConfirmRemove, setOpenConfirmRemove] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(-1);
-
   const dispatch = useDispatch();
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
@@ -84,7 +74,6 @@ function CheckOut() {
       quantity,
       dispatch
     );
-    console.log(e.target.value);
   };
   const debouncedChangeHandler = useMemo(
     () => debounce(handleOnChangeQuantity, 300),
@@ -96,7 +85,8 @@ function CheckOut() {
     };
   }, []);
   return (
-    <div className="CheckOut pt-[5%] px-[10%]  ">
+    <div className="CheckOut pt-[4%] px-[425px]  ">
+      <MarketPlaceLeftBar />
       <TabContext value={value}>
         <Box
           sx={{
@@ -104,7 +94,6 @@ function CheckOut() {
             borderColor: "divider",
             displayPrint: "flex",
           }}
-          style={{}}
         >
           <div className="header flex items-center bg-white px-[2rem] mb-[1rem] rounded-md">
             <div className="header-title flex-1">
@@ -195,8 +184,8 @@ function CheckOut() {
                           <div className="flex gap-[1rem]">
                             <div className="card-image mb-[1rem]">
                               <img
-                                className="min-w-[8rem] max-h-[8rem] rounded-lg shadow-xl  brief-detail-img"
-                                src={item.product_image[0]}
+                                className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-xl  brief-detail-img"
+                                src={item.product_image[0].link}
                                 alt=""
                                 onError={({ currentTarget }) => {
                                   currentTarget.onerror = null;
@@ -270,143 +259,142 @@ function CheckOut() {
               />
             </div>
           </TabPanel>
-        </div>
-        <TabPanel value="2" sx={{ padding: "1.2rem", background: "white" }}>
-          <div className="payment-details-wrapper flex py-[1rem]">
-            <div className="summary-order flex-1 px-[2rem]">
-              <span className="title-text font-bold text-[2.5rem]">
-                Summary Order
-              </span>
-              <p className=" max-w-[35rem]">
-                Check your item and select your shipping for better experience
-                order item.
-              </p>
-              <ul className="flex gap-[1rem] flex-col max-h-[30rem] shadow-md overflow-y-scroll mt-[1rem] list-item-order border-[0.5px] border-gray-400 p-[1.5rem] rounded-xl">
-                {getShoppingCartList &&
-                  getShoppingCartList.length > 0 &&
-                  getShoppingCartList.map((item) => (
-                    <li
-                      key={item.product_id}
-                      className="item-orders flex gap-[1rem] items-center "
-                    >
-                      <div className="card-image mb-[1rem] rounded-[2rem]">
-                        <img
-                          className="w-[10rem] max-h-[8rem] rounded-lg shadow-md object-cover"
-                          src={item.product_image[0]}
-                          alt=""
-                          onError={({ currentTarget }) => {
-                            currentTarget.onerror = null;
-                            currentTarget.src = notFoundImage;
-                          }}
-                        />
-                      </div>
-                      <div className="cart-item-info w-full overflow-hidden">
-                        <span className="name line-clamp-2 font-semibold">
-                          {item.name}
-                        </span>
-                        <div className="cart-item-info-price flex items-center">
-                          <ul className="flex flex-col flex-1">
-                            {Object.entries(item.Variation).map((props) => (
-                              <li
-                                key={props[0]}
-                                className="flex-1 flex gap-[0.5rem] items-center"
-                              >
-                                <span className="text-[1.5rem] capitalize font-bold">
-                                  {props[0]}:
-                                </span>
-                                <span
-                                  className={` ${
-                                    props[0] == "brand"
-                                      ? "uppercase"
-                                      : "capitalize"
-                                  }`}
+          <TabPanel value="2" sx={{ padding: "1.2rem", background: "white" }}>
+            <div className="payment-details-wrapper flex py-[1rem]">
+              <div className="summary-order flex-1 px-[2rem]">
+                <span className="title-text font-bold text-[2.5rem]">
+                  Summary Order
+                </span>
+                <p className=" max-w-[35rem]">
+                  Check your item and select your shipping for better experience
+                  order item.
+                </p>
+                <ul className="flex gap-[1rem] flex-col max-h-[30rem] shadow-md overflow-y-scroll mt-[1rem] list-item-order border-[0.5px] border-gray-400 p-[1.5rem] rounded-xl">
+                  {(getShoppingCartList &&
+                    getShoppingCartList.length > 0) &&
+                    getShoppingCartList.map((item) => (
+                      <li key={item.product_id}
+                        className="item-orders flex gap-[1rem] items-center "
+                      >
+                        <div className="card-image mb-[1rem] rounded-[2rem]">
+                          <img
+                            className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-md "
+                            src={item.product_image[0].link}
+                            alt=""
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null;
+                              currentTarget.src = notFoundImage;
+                            }}
+                          />
+                        </div>
+                        <div className="cart-item-info w-full overflow-hidden">
+                          <span className="name line-clamp-2 font-semibold">
+                            {item.name}
+                          </span>
+                          <div className="cart-item-info-price flex items-center">
+                            <ul className="flex flex-col flex-1">
+                              {Object.entries(item.Variation).map((props, index) => (
+                                <li
+                                  key={index}
+                                  className="flex-1 flex gap-[0.5rem] items-center"
                                 >
-                                  {props[1]}
+                                  <span className="text-[1.5rem] capitalize font-bold">
+                                    {props[0]}:
+                                  </span>
+                                  <span
+                                    className={` ${
+                                      props[0] == "brand"
+                                        ? "uppercase"
+                                        : "capitalize"
+                                    }`}
+                                  >
+                                    {props[1]}
+                                  </span>
+                                </li>
+                              ))}
+                            </ul>
+                            <div className="cart-item-info-price flex items-center gap-[1rem]">
+                              <div className=" flex gap-[1.2rem] items-center">
+                                <span className="text-[1.7rem] font-light">
+                                  ${item.price}
                                 </span>
-                              </li>
-                            ))}
-                          </ul>
-                          <div className="cart-item-info-price flex items-center gap-[1rem]">
-                            <div className=" flex gap-[1.2rem] items-center">
-                              <span className="text-[1.7rem] font-light">
-                                ${item.price}
-                              </span>
-                              <span>x</span>
-                              <input
-                                className="border-[1px] rounded-lg outline-none border-gray-300 w-[5rem]"
-                                type="number"
-                                defaultValue={item.quantity}
-                                readOnly={true}
-                              />
+                                <span>x</span>
+                                <input
+                                  className="border-[1px] rounded-lg outline-none border-gray-300 w-[5rem]"
+                                  type="number"
+                                  defaultValue={item.quantity}
+                                  readOnly={true}
+                                />
+                              </div>
+                              <div
+                                className="flex-1 text-[2rem]"
+                                style={{ color: "var(--primary-color)" }}
+                              >
+                                <span>${item.price * item.quantity}</span>
+                              </div>
                             </div>
-                            <div
-                              className="flex-1 text-[2rem]"
-                              style={{ color: "var(--primary-color)" }}
-                            >
-                              <span>${item.price * item.quantity}</span>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                </ul>
+                <ul className="shipping-types mt-[1rem] flex flex-col gap-[1rem]">
+                  {[...Array(2)].map((index) => (
+                    <li key={index} className="shipping-type ">
+                      <span className="shipping-title capitalize font-semibold text-[2rem]">
+                        Available shipping methods!
+                      </span>
+                      <div className="shipping-check-btn flex gap-[1rem] items-center border-[0.5px] border-gray-400 p-[1.5rem] rounded-xl  ">
+                        <div className="card-image mb-[1rem] rounded-[2rem]">
+                          <img
+                            className="w-[10rem] max-h-[7rem] rounded-lg shadow-md object-cover"
+                            src={macbook_example}
+                            alt=""
+                          />
+                        </div>
+                        <div className="cart-item-info w-full flex gap-[1rem]">
+                          <div className="flex flex-col">
+                            <span className="name line-clamp-1 font-semibold">
+                              Fedex Delivery
+                            </span>
+                            <span className="text-[1.5rem] line-clamp-1 font-light">
+                              Delivery 2-3 days work
+                            </span>
+                          </div>
+                          <div className="cart-item-info-price flex justify-center items-center gap-[1rem]">
+                            <div className="flex gap-[1rem]">
+                              <span className="font-semibold">Free</span>
+                              <input type="radio" name="shipping" />
                             </div>
                           </div>
                         </div>
                       </div>
                     </li>
                   ))}
-              </ul>
-              <ul className="shipping-types mt-[1rem] flex flex-col gap-[1rem]">
-                {[...Array(2)].map((index) => (
-                  <li key={index} className="shipping-type ">
-                    <span className="shipping-title capitalize font-semibold text-[2rem]">
-                      Available shipping methods!
-                    </span>
-                    <div className="shipping-check-btn flex gap-[1rem] items-center border-[0.5px] border-gray-400 p-[1.5rem] rounded-xl  ">
-                      <div className="card-image mb-[1rem] rounded-[2rem]">
-                        <img
-                          className="w-[10rem] max-h-[7rem] rounded-lg shadow-md object-cover"
-                          src={macbook_example}
-                          alt=""
-                        />
-                      </div>
-                      <div className="cart-item-info w-full flex gap-[1rem]">
-                        <div className="flex flex-col">
-                          <span className="name line-clamp-1 font-semibold">
-                            Fedex Delivery
-                          </span>
-                          <span className="text-[1.5rem] line-clamp-1 font-light">
-                            Delivery 2-3 days work
-                          </span>
-                        </div>
-                        <div className="cart-item-info-price flex justify-center items-center gap-[1rem]">
-                          <div className="flex gap-[1rem]">
-                            <span className="font-semibold">Free</span>
-                            <input type="radio" name="shipping" />
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                </ul>
+              </div>
+              <div className="payment-details flex-1 px-[2rem]">
+                <span className="title-payment-details font-bold text-[2.5rem]">
+                  Payment Details
+                </span>
+                <p className=" max-w-[35rem]">
+                  Complete your purchase item by providing your payment detail
+                  order
+                </p>
+                <span className="title-payment-details font-bold text-primaryColor text-[2.5rem]">
+                  Total: {totalPrice}$
+                </span>
+              </div>
             </div>
-            <div className="payment-details flex-1 px-[2rem]">
-              <span className="title-payment-details font-bold text-[2.5rem]">
-                Payment Details
-              </span>
-              <p className=" max-w-[35rem]">
-                Complete your purchase item by providing your payment detail
-                order
-              </p>
-              <span className="title-payment-details font-bold text-primaryColor text-[2.5rem]">
-                Total: {totalPrice}$
-              </span>
-            </div>
-          </div>
-        </TabPanel>
-        <TabPanel value="3" sx={{ padding: "1.2rem", background: "white" }}>
-          <img
-            src={`https://source.unsplash.com/random/1920x1200/?congratulations `}
-            alt=""
-            className="w-full max-h-[60vh] object-cover"
-          />
-        </TabPanel>
+          </TabPanel>
+          <TabPanel value="3" sx={{ padding: "1.2rem", background: "white" }}>
+            <img
+              src={`https://source.unsplash.com/random/1920x1200/?congratulations `}
+              alt=""
+              className="w-full max-h-[60vh] object-cover"
+            />
+          </TabPanel>
+        </div>
       </TabContext>
     </div>
   );
