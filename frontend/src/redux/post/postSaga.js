@@ -26,7 +26,6 @@ import {
   updatePostSagaSuccess,
   updatePostStart,
   updatePostSuccess,
-  getPostSagaSuccess,
 } from './postSlice';
 import { notifyService } from '../../services/notifyService';
 import { removeUploadImages, uploadImages } from '../apiRequest';
@@ -85,7 +84,6 @@ const getAllPostSagaRequest = async (data) => {
     });
     if (!res.data.message) {
       // dispatch(getPostSuccess(res.data));
-      dispatch(getPostSagaSuccess({ accessToken, refreshToken, id }));
       return res;
     } else {
       //  dispatch(getPostFailed());
