@@ -6,13 +6,13 @@ import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
+import { LeftbarAllFriend } from '../LeftbarMiddleItem';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 import { getAllFriendForMainUser } from '../../../../redux/friend/friendAPI';
-import { LeftbarAllFriend } from '../LeftbarMiddleItem';
 import {
-  addFriendSaga,
-  unfriendSaga,
-} from '../../../../redux/friend/friendSlice';
+  addFriendRequest,
+  unfriendRequest,
+} from '../../../../redux/friend/friendSaga';
 import '../index.css';
 
 export default function AllFriends() {
@@ -122,39 +122,36 @@ export default function AllFriends() {
                     listUnfriend={listRemoved}
                     listAdded={listAdded}
                     handleUnfriend={() => {
-                      dispatch(
-                        unfriendSaga({
-                          accessToken,
-                          refreshToken,
-                          id: x.profile_id,
-                          callRefreshProfile: profileChecked,
-                          dispatch,
-                        })
-                      );
-                      setListRemoved(old => [...old, x.profile_id])
+                      unfriendRequest({
+                        accessToken,
+                        refreshToken,
+                        id: x.profile_id,
+                        callRefreshProfile: profileChecked,
+                        dispatch,
+                      });
+
+                      setListRemoved((old) => [...old, x.profile_id]);
                     }}
                     handleAddFriend={() => {
-                      dispatch(
-                        addFriendSaga({
-                          accessToken,
-                          refreshToken,
-                          id: x.profile_id,
-                          callRefreshProfile: profileChecked,
-                          dispatch,
-                        })
-                      );
+                      addFriendRequest({
+                        accessToken,
+                        refreshToken,
+                        id: x.profile_id,
+                        callRefreshProfile: profileChecked,
+                        dispatch,
+                      });
+
                       setListAdded((old) => [...old, x.profile_id]);
                     }}
                     handleCancelRequest={() => {
-                      dispatch(
-                        addFriendSaga({
-                          accessToken,
-                          refreshToken,
-                          id: x.profile_id,
-                          callRefreshProfile: profileChecked,
-                          dispatch,
-                        })
-                      );
+                      addFriendRequest({
+                        accessToken,
+                        refreshToken,
+                        id: x.profile_id,
+                        callRefreshProfile: profileChecked,
+                        dispatch,
+                      });
+
                       var filter = listAdded.filter(
                         (e) => e !== x.profile_id
                       );
@@ -177,7 +174,12 @@ export default function AllFriends() {
       {!Helper.isNullOrEmpty(queryParams) &&
         allFriends?.data.some(
           (e) => e.profile_id.toString() === queryParams.toString()
-        ) && <UserProfile action={[setListRemoved, setListAdded]} actionList={[listRemoved, listAdded]} />}
+        ) && (
+          <UserProfile
+            action={[setListRemoved, setListAdded]}
+            actionList={[listRemoved, listAdded]}
+          />
+        )}
     </TwoColumns>
   );
 }

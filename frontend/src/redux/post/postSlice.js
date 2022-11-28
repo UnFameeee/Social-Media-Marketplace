@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { revertAll } from "../resetStore";
+import { createSlice } from '@reduxjs/toolkit';
+import { revertAll } from '../resetStore';
 const initialState = {
   get: {
     posts: null,
@@ -8,6 +8,11 @@ const initialState = {
   },
   getByProfile: {
     posts: null,
+    isFetching: false,
+    error: false,
+  },
+  getById: {
+    post: null,
     isFetching: false,
     error: false,
   },
@@ -33,7 +38,7 @@ const initialState = {
   },
 };
 export const postSlice = createSlice({
-  name: "post",
+  name: 'post',
   initialState: {
     get: {
       posts: null,
@@ -42,6 +47,11 @@ export const postSlice = createSlice({
     },
     getByProfile: {
       posts: null,
+      isFetching: false,
+      error: false,
+    },
+    getById: {
+      post: null,
       isFetching: false,
       error: false,
     },
@@ -66,7 +76,8 @@ export const postSlice = createSlice({
       error: false,
     },
   },
-  extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
+  extraReducers: (builder) =>
+    builder.addCase(revertAll, () => initialState),
   reducers: {
     createPostStart: (state) => {
       state.create.isFetching = true;
@@ -93,6 +104,7 @@ export const postSlice = createSlice({
       state.get.isFetching = false;
       state.get.error = true;
     },
+    getPostSagaSuccess() {},
 
     getPostByProfileStart: (state) => {
       state.getByProfile.isFetching = true;
@@ -104,6 +116,18 @@ export const postSlice = createSlice({
     getPostByProfileFailed: (state) => {
       state.getByProfile.isFetching = false;
       state.getByProfile.error = true;
+    },
+
+    getPostByIdStart: (state) => {
+      state.getById.isFetching = true;
+    },
+    getPostByIdSuccess: (state, action) => {
+      state.getById.isFetching = false;
+      state.getById.posts = action.payload;
+    },
+    getPostByIdFailed: (state) => {
+      state.getById.isFetching = false;
+      state.getById.error = true;
     },
 
     deletePostStart: (state) => {
@@ -162,6 +186,9 @@ export const {
   getPostByProfileStart,
   getPostByProfileSuccess,
   getPostByProfileFailed,
+  getPostByIdStart,
+  getPostByIdSuccess,
+  getPostByIdFailed,
   deletePostStart,
   deletePostSuccess,
   deletePostFailed,
@@ -180,5 +207,7 @@ export const {
   updatePostSagaSuccess,
   likePostSaga,
   likePostSagaSuccess,
+  getPostSagaSuccess,
+  
 } = postSlice.actions;
 export default postSlice.reducer;

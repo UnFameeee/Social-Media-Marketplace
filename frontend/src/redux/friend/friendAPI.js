@@ -116,7 +116,7 @@ export async function getAllSuggestions(
 }
 // #endregion
 
-// #region get all friends
+// #region get all friends for main user
 export async function getAllFriendForMainUser(
   accessToken,
   refreshToken,

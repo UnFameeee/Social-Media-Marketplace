@@ -2,16 +2,16 @@ import { useLayoutEffect, useState } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import FriendCard from './FriendCard';
-import {
-  acceptSaga,
-  addFriendSaga,
-  denySaga,
-} from '../../../../redux/friend/friendSlice';
+import { Helper } from '../../../../utils/Helper';
 import {
   getAllRequest,
   getAllSuggestions,
 } from '../../../../redux/friend/friendAPI';
-import { Helper } from '../../../../utils/Helper';
+import {
+  acceptFriendRequest,
+  addFriendRequest,
+  denyFriendRequest,
+} from '../../../../redux/friend/friendSaga';
 import '../index.css';
 
 const FriendHome = () => {
@@ -78,14 +78,13 @@ const FriendHome = () => {
                 navigate={navigate}
                 firstButtonConfig={{
                   onClick: () => {
-                    dispatch(
-                      acceptSaga({
-                        accessToken,
-                        refreshToken,
-                        id: item.profile_id,
-                        dispatch,
-                      })
-                    );
+                    acceptFriendRequest({
+                      accessToken,
+                      refreshToken,
+                      id: item.profile_id,
+                      dispatch,
+                    });
+
                     setListConfirm((old) => [
                       ...old,
                       item.profile_id,
@@ -94,14 +93,13 @@ const FriendHome = () => {
                 }}
                 secondButtonConfig={{
                   onClick: () => {
-                    dispatch(
-                      denySaga({
-                        accessToken,
-                        refreshToken,
-                        id: item.profile_id,
-                        dispatch,
-                      })
-                    );
+                    denyFriendRequest({
+                      accessToken,
+                      refreshToken,
+                      id: item.profile_id,
+                      dispatch,
+                    });
+
                     setListDeny((old) => [...old, item.profile_id]);
                   },
                 }}
@@ -145,14 +143,13 @@ const FriendHome = () => {
                   firstButtonConfig={{
                     name: 'Add Friend',
                     onClick: () => {
-                      dispatch(
-                        addFriendSaga({
-                          accessToken,
-                          refreshToken,
-                          id: item.profile_id,
-                          dispatch,
-                        })
-                      );
+                      addFriendRequest({
+                        accessToken,
+                        refreshToken,
+                        id: item.profile_id,
+                        dispatch,
+                      });
+
                       setListAdded((old) => [
                         ...old,
                         item.profile_id,
@@ -171,14 +168,13 @@ const FriendHome = () => {
                   hiddenButtonConfig={{
                     name: 'Cancel',
                     onClick: () => {
-                      dispatch(
-                        addFriendSaga({
-                          accessToken,
-                          refreshToken,
-                          id: item.profile_id,
-                          dispatch,
-                        })
-                      );
+                      addFriendRequest({
+                        accessToken,
+                        refreshToken,
+                        id: item.profile_id,
+                        dispatch,
+                      });
+
                       var filter = listAdded.filter(
                         (e) => e !== item.profile_id
                       );
