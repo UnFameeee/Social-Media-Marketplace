@@ -184,6 +184,13 @@ export const databaseProviders = [
             Profile.hasMany(Notification, { foreignKey: { name: "profile_receiver_id", field: "profile_receiver_id" } });
             Notification.belongsTo(Profile, { foreignKey: { name: "profile_receiver_id", field: "profile_receiver_id" }, as: "profile_receiver" });
 
+            Post.hasMany(Notification, { foreignKey: { name: "post_id", field: "post_id" } });
+            Notification.belongsTo(Post, { foreignKey: { name: "post_id", field: "post_id" } });
+
+            PostComment.hasMany(Notification, { foreignKey: { name: "post_comment_id", field: "post_comment_id" } });
+            Notification.belongsTo(PostComment, { foreignKey: { name: "post_comment_id", field: "post_comment_id" } });
+
+
             //initiate database  
             try {
                 const connection = mysql.createConnection({

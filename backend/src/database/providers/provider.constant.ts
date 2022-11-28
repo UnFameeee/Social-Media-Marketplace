@@ -13,6 +13,9 @@ export enum PROVIDER {
     ProfileAvatarImage = 'PROFILE_AVATAR_IMAGE_REPOSITORY',
     ProfileWallpaperImage = 'PROFILE_WALLPAPER_IMAGE_REPOSITORY',
     ProfilePostImage = 'PROFILE_POST_IMAGE_REPOSITORY',
+    
+    //Nottification
+    Notification = 'NOTIFICATION_REPOSITORY',
 
     //Merketplace
     ShopAddress = "SHOP_ADDRESS_REPOSITORY",

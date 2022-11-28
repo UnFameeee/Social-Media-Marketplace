@@ -56,14 +56,14 @@ const ImgWrapper = styled.div`
     border-radius: 50px;
 `;
 
-function IconImg({notificationType}) {
+function IconImg({notification_type}) {
     const [icon, setIcon] = useState()
     useEffect(() => {
-        if (notificationType == NOTIFICATION_TYPE.LIKE) {
+        if (notification_type == NOTIFICATION_TYPE.LIKE) {
             setIcon(<ThumbUpAlt style={{fontSize: "1.9rem"}}/>)
-        } else if (notificationType == NOTIFICATION_TYPE.COMMENT) {
+        } else if (notification_type == NOTIFICATION_TYPE.COMMENT) {
             setIcon(<CommentIcon style={{fontSize: "1.9rem"}}/>)
-        } else if (notificationType == NOTIFICATION_TYPE.FRIEND_REQUEST) {
+        } else if (notification_type == NOTIFICATION_TYPE.FRIEND_REQUEST) {
             setIcon(<PersonAddIcon style={{fontSize: "1.9rem"}}/>)
         }
     }, [])

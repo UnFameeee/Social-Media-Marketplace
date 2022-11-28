@@ -25,13 +25,10 @@ export class Notification extends Model<Notification> {
     was_seen: boolean
 
     @Column
-    profile_id: boolean
+    post_id: number
 
     @Column
-    post_id: boolean
-
-    @Column
-    comment_id: boolean
+    post_comment_id: number
 
     @Column(DataType.DATE(3))
     createdAt: string;

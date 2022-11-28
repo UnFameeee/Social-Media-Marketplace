@@ -31,9 +31,9 @@ function App() {
       });
 
       //listening to the event receiving the notification
-      socket.on(SOCKET_EVENT.RECEIVE_NOTIFICATION, (payload) => {
+      socket.on(SOCKET_EVENT.RECEIVE_NOTIFICATION, (NotificationResponseDto) => {
 
-        console.log(payload);
+        console.log(NotificationResponseDto);
 
         const notify = (avatar, profile_name, content, notification_type) => {
           toast(<Notification avatar={avatar} profile_name={profile_name} content={content} notification_type={notification_type}/>, {
@@ -47,7 +47,7 @@ function App() {
             theme: "light",
           })
         };
-        notify(payload.avatar, payload.profile_name, payload.content, payload.notification_type);
+        notify(NotificationResponseDto.avatar, NotificationResponseDto.profile_name, NotificationResponseDto.content, NotificationResponseDto.notification_type);
       });
 
       var decoded = jwt_decode(accessToken);
