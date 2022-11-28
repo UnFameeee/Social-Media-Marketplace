@@ -30,13 +30,17 @@ import {
 import { notifyService } from '../../services/notifyService';
 import { removeUploadImages, uploadImages } from '../apiRequest';
 import { getProfileSagaSuccess } from '../profile/profileSlice';
-import { commentPostSagaSuccess, getCommentPostSagaSuccess } from '../comment/commentSlice';
+import {
+  commentPostSagaSuccess,
+  getCommentPostSagaSuccess,
+} from '../comment/commentSlice';
 
 //#region reFreshPosts
 export function* reFreshPosts() {
   yield takeLatest(
     [
       getProfileSagaSuccess.type,
+
       createPostSagaSuccess.type,
       deletePostSagaSuccess.type,
       updatePostSagaSuccess.type,
@@ -50,7 +54,7 @@ function* handleReFreshPostSaga(data) {
   try {
     if (data.payload?.callRefreshPost) {
       const getAll = yield call(getAllPostSagaRequest, data);
-      if (data.payload?.id || data.payload?.mainId) {
+      if (data.payload?.id) {
         yield put(getPostByProfileSuccess(getAll.data));
       } else {
         yield put(getPostSuccess(getAll.data));
@@ -61,8 +65,7 @@ function* handleReFreshPostSaga(data) {
   }
 }
 const getAllPostSagaRequest = async (data) => {
-  const { accessToken, refreshToken, id, mainId, dispatch } =
-    data.payload;
+  const { accessToken, refreshToken, id, dispatch } = data.payload;
   // dispatch(getPostStart());
   try {
     const config = {
@@ -72,10 +75,7 @@ const getAllPostSagaRequest = async (data) => {
       page: 0,
       pageSize: 5,
     };
-    var url =
-      id || mainId
-        ? `${api.post}/getPost/${id ?? mainId}`
-        : `${api.post}/all`;
+    var url = id ? `${api.post}/getPost/${id}` : `${api.post}/all`;
 
     const res = await axiosInStanceJWT.post(url, paging, {
       headers: config,
@@ -114,7 +114,6 @@ const createPostSagaRequest = async (data) => {
     postData_written_text,
     uploadImage,
     callRefreshPost = true,
-    callRefreshGallery = false,
     dispatch,
   } = data.payload;
   dispatch(createPostStart());
@@ -149,7 +148,6 @@ const createPostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
-          callRefreshGallery,
           dispatch,
         })
       );
@@ -185,7 +183,6 @@ export const deletePostSagaRequest = async (data) => {
     refreshToken,
     postId,
     callRefreshPost = true,
-    callRefreshGallery = false,
     dispatch,
   } = data.payload;
   dispatch(deletePostStart());
@@ -207,7 +204,6 @@ export const deletePostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
-          callRefreshGallery,
           dispatch,
         })
       );
@@ -245,7 +241,6 @@ const updatePostSagaRequest = async (data) => {
     uploadImage,
     removeImages,
     callRefreshPost = true,
-    callRefreshGallery = false,
     dispatch,
   } = data.payload;
   dispatch(updatePostStart());
@@ -288,7 +283,6 @@ const updatePostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
-          callRefreshGallery,
           dispatch,
         })
       );

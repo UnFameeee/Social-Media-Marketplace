@@ -27,25 +27,25 @@ import SideBarButton from './SideBarButton';
 import SideBarLi from './SideBarLi';
 import CardPost from '../../components/Card/CardPost';
 import GridSideInfo from './GridSideInfo';
-import { Helper } from '../../utils/Helper';
-import MUI from '../../components/MUI';
-import {
-  acceptSaga,
-  addFriendSaga,
-  denySaga,
-  unfriendSaga,
-} from '../../redux/friend/friendSlice';
-import {
-  deleteAvtSaga,
-  deleteWallpaperSaga,
-  getProfileSaga,
-  updateAvtSaga,
-  updateDetailSaga,
-  updateWallpaperSaga,
-} from '../../redux/profile/profileSlice';
 import PostStatus from '../../components/PostStatus/PostStatus';
 import { ValidateForm, FormChildren } from '../../components/Form';
 import { cities } from '../../common/constants/listConstants';
+import { Helper } from '../../utils/Helper';
+import MUI from '../../components/MUI';
+import { getProfileSaga } from '../../redux/profile/profileSlice';
+import {
+  acceptFriendRequest,
+  addFriendRequest,
+  denyFriendRequest,
+  unfriendRequest,
+} from '../../redux/friend/friendSaga';
+import {
+  deleteAvtRequest,
+  deleteWallRequest,
+  updateAvtRequest,
+  updateDetailRequest,
+  updateWallRequest,
+} from '../../redux/profile/profileSaga';
 import './index.css';
 
 function UserProfile(props) {
@@ -129,15 +129,14 @@ function UserProfile(props) {
   const handleActions = (action) => {
     // accept friend requests
     if (action === 'accept') {
-      dispatch(
-        acceptSaga({
-          accessToken,
-          refreshToken,
-          id,
-          callRefreshProfile,
-          dispatch,
-        })
-      );
+      acceptFriendRequest({
+        accessToken,
+        refreshToken,
+        id,
+        callRefreshProfile,
+        dispatch,
+      });
+
       if (Helper.checkURL('requests')) {
         props.action[0]((old) => [...old, parseInt(id)]);
       }
@@ -145,15 +144,14 @@ function UserProfile(props) {
 
     // deny friend request
     else if (action === 'deny') {
-      dispatch(
-        denySaga({
-          accessToken,
-          refreshToken,
-          id,
-          callRefreshProfile,
-          dispatch,
-        })
-      );
+      denyFriendRequest({
+        accessToken,
+        refreshToken,
+        id,
+        callRefreshProfile,
+        dispatch,
+      });
+
       if (Helper.checkURL('requests')) {
         props.action[1]((old) => [...old, parseInt(id)]);
       }
@@ -161,15 +159,13 @@ function UserProfile(props) {
 
     // add friend/ cancel sent request
     else if (action === 'add' || action === 'cancel') {
-      dispatch(
-        addFriendSaga({
-          accessToken,
-          refreshToken,
-          id,
-          callRefreshProfile,
-          dispatch,
-        })
-      );
+      addFriendRequest({
+        accessToken,
+        refreshToken,
+        id,
+        callRefreshProfile,
+        dispatch,
+      });
 
       if (Helper.checkURL('suggestions') || Helper.checkURL('sent')) {
         // cancel sent request
@@ -212,15 +208,14 @@ function UserProfile(props) {
 
     // unfriend
     else if (action === 'unfriend') {
-      dispatch(
-        unfriendSaga({
-          accessToken,
-          refreshToken,
-          id,
-          callRefreshProfile,
-          dispatch,
-        })
-      );
+      unfriendRequest({
+        accessToken,
+        refreshToken,
+        id,
+        callRefreshProfile,
+        dispatch,
+      });
+
       if (Helper.checkURL('all')) {
         props.action[0]((old) => [...old, parseInt(id)]);
       }
@@ -271,15 +266,14 @@ function UserProfile(props) {
             <MUI.Button onClick={clearWallpaper}>Cancel</MUI.Button>
             <MUI.Button
               onClick={() => {
-                dispatch(
-                  updateWallpaperSaga({
-                    accessToken,
-                    refreshToken,
-                    wallpaper,
-                    id,
-                    dispatch,
-                  })
-                );
+                updateWallRequest({
+                  accessToken,
+                  refreshToken,
+                  wallpaper,
+                  id,
+                  dispatch,
+                });
+
                 clearWallpaper();
               }}
             >
@@ -363,14 +357,13 @@ function UserProfile(props) {
                   title="Remove wallpaper"
                   actionName="remove your wallpaper"
                   confirmAction={() => {
-                    dispatch(
-                      deleteWallpaperSaga({
-                        accessToken,
-                        refreshToken,
-                        id,
-                        dispatch,
-                      })
-                    );
+                    deleteWallRequest({
+                      accessToken,
+                      refreshToken,
+                      id,
+                      dispatch,
+                    });
+
                     setOpenConfirmRemove(false);
                     setWallpaper('');
                   }}
@@ -567,15 +560,14 @@ function UserProfile(props) {
                                 'profileBioEditor'
                               )?.value,
                             };
-                            dispatch(
-                              updateDetailSaga({
-                                accessToken,
-                                refreshToken,
-                                description,
-                                id,
-                                dispatch,
-                              })
-                            );
+                            updateDetailRequest({
+                              accessToken,
+                              refreshToken,
+                              description,
+                              id,
+                              dispatch,
+                            });
+
                             setEditBio(false);
                           }}
                         >
@@ -944,15 +936,14 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
           <MUI.Button
             disabled={Helper.isNullOrEmpty(imageURL)}
             onClick={() => {
-              dispatch(
-                updateAvtSaga({
-                  accessToken,
-                  refreshToken,
-                  avatar,
-                  id,
-                  dispatch,
-                })
-              );
+              updateAvtRequest({
+                accessToken,
+                refreshToken,
+                avatar,
+                id,
+                dispatch,
+              });
+
               handleReset();
             }}
           >
@@ -975,14 +966,13 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
           title="Remove avatar"
           actionName="remove your avatar"
           confirmAction={() => {
-            dispatch(
-              deleteAvtSaga({
-                accessToken,
-                refreshToken,
-                id,
-                dispatch,
-              })
-            );
+            deleteAvtRequest({
+              accessToken,
+              refreshToken,
+              id,
+              dispatch,
+            });
+
             setOpenConfirmRemove(false);
             handleReset();
           }}
@@ -1045,15 +1035,14 @@ function EditDetails({
           initialValues={descriptions}
           onSubmit={(values) => {
             var description = values;
-            dispatch(
-              updateDetailSaga({
-                accessToken,
-                refreshToken,
-                description,
-                id,
-                dispatch,
-              })
-            );
+            updateDetailRequest({
+              accessToken,
+              refreshToken,
+              description,
+              id,
+              dispatch,
+            });
+
             modalProps[1](false);
           }}
           style={{

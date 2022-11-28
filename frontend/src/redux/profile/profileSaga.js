@@ -2,27 +2,16 @@ import { put, takeLatest, call } from 'redux-saga/effects';
 import { axiosInStanceJWT } from '../axiosJWT';
 import api from '../../common/environment/environment';
 import {
-  deleteAvtSaga,
+  updateAvtSagaSuccess,
+  updateDetailSagaSuccess,
+  updateWallpaperSagaSuccess,
   deleteAvtSagaSuccess,
-  deleteWallpaperSaga,
   deleteWallpaperSagaSuccess,
-  getGalleryFailed,
-  getGallerySaga,
-  getGallerySuccess,
+
   getProfileDetailSuccess,
   getProfileSaga,
   getProfileSagaSuccess,
-  searchProfileSuccess,
-  updateAvtFailed,
-  updateAvtSaga,
-  updateAvtSagaSuccess,
-  updateAvtSuccess,
-  updateDetailSaga,
-  updateDetailSagaSuccess,
-  updateWallpaperFailed,
-  updateWallpaperSaga,
-  updateWallpaperSagaSuccess,
-  updateWallpaperSuccess,
+  getGallerySuccess,
 } from './profileSlice';
 import { notifyService } from '../../services/notifyService';
 import {
@@ -31,11 +20,6 @@ import {
   denySagaSuccess,
   unfriendSagaSuccess,
 } from '../friend/friendSlice';
-import {
-  createPostSagaSuccess,
-  deletePostSagaSuccess,
-  updatePostSagaSuccess,
-} from '../post/postSlice';
 import { galleryPaging } from '../../common/constants/apiConfig';
 
 export function* refreshProfile() {
@@ -107,19 +91,8 @@ async function getProfileDetailSaga(data) {
   }
 }
 
-// #region update profile
-export function* updateAvtReq() {
-  yield takeLatest(updateAvtSaga.type, handleUpdateAvt);
-}
-function* handleUpdateAvt(data) {
-  try {
-    const avt = yield call(updateAvtSagaRequest, data);
-    yield put(updateAvtSuccess(avt.data));
-  } catch (error) {
-    console.log(error);
-  }
-}
-async function updateAvtSagaRequest(data) {
+// #region update avatar
+export async function updateAvtRequest(data) {
   const {
     accessToken,
     refreshToken,
@@ -127,7 +100,8 @@ async function updateAvtSagaRequest(data) {
     id,
     callRefreshProfile = true,
     dispatch,
-  } = data.payload;
+  } = data;
+
   var bodyFormData = new FormData();
   bodyFormData.append('file', avatar);
 
@@ -153,33 +127,22 @@ async function updateAvtSagaRequest(data) {
           callRefreshProfile,
           callRefreshFriend: false,
           callRefreshPost: false,
-          callRefreshGallery: false,
           dispatch,
         })
       );
       return res;
     } else {
       notifyService.showError(res.data.message);
-      dispatch(updateAvtFailed());
     }
   } catch (error) {
-    notifyService.showError('Update Avatar Failed!');
-    dispatch(updateAvtFailed());
-  }
-}
-
-export function* updateWallReq() {
-  yield takeLatest(updateWallpaperSaga.type, handleUpdateWall);
-}
-function* handleUpdateWall(data) {
-  try {
-    const wall = yield call(updateWallSagaRequest, data);
-    yield put(updateWallpaperSuccess(wall.data));
-  } catch (error) {
     console.log(error);
+    notifyService.showError('Update Avatar Failed!');
   }
 }
-async function updateWallSagaRequest(data) {
+// #endregion
+
+// #region update wall paper
+export async function updateWallRequest(data) {
   const {
     accessToken,
     refreshToken,
@@ -187,7 +150,7 @@ async function updateWallSagaRequest(data) {
     id,
     callRefreshProfile = true,
     dispatch,
-  } = data.payload;
+  } = data;
 
   var bodyFormData = new FormData();
   bodyFormData.append('file', wallpaper);
@@ -214,33 +177,22 @@ async function updateWallSagaRequest(data) {
           callRefreshProfile,
           callRefreshFriend: false,
           callRefreshPost: false,
-          callRefreshGallery: false,
           dispatch,
         })
       );
       return res;
     } else {
       notifyService.showError(res.data.message);
-      dispatch(updateWallpaperFailed());
     }
   } catch (error) {
-    notifyService.showError('Update Wallpaper Failed!');
-    dispatch(updateWallpaperFailed());
-  }
-}
-
-export function* updateDetailReq() {
-  yield takeLatest(updateDetailSaga.type, handleUpdateDetail);
-}
-function* handleUpdateDetail(data) {
-  try {
-    const detail = yield call(updateDetailSagaRequest, data);
-    // yield put(updateDetailSuccess(detail.data));
-  } catch (error) {
     console.log(error);
+    notifyService.showError('Update Wallpaper Failed!');
   }
 }
-async function updateDetailSagaRequest(data) {
+// #endregion
+
+// #region update details
+export async function updateDetailRequest(data) {
   const {
     accessToken,
     refreshToken,
@@ -248,7 +200,7 @@ async function updateDetailSagaRequest(data) {
     id,
     callRefreshProfile = true,
     dispatch,
-  } = data.payload;
+  } = data;
 
   try {
     const res = await axiosInStanceJWT.put(
@@ -272,42 +224,29 @@ async function updateDetailSagaRequest(data) {
           callRefreshProfile,
           callRefreshFriend: false,
           callRefreshPost: false,
-          callRefreshGallery: false,
           dispatch,
         })
       );
       return res;
     } else {
       notifyService.showError(res.data.message);
-      // dispatch(updateWallpaperFailed());
     }
   } catch (error) {
+    console.log(error);
     notifyService.showError('Update Profile Failed!');
-    // dispatch(updateWallpaperFailed());
   }
 }
 // #endregion
 
-// #region delete images
-export function* deleteAvtReq() {
-  yield takeLatest(deleteAvtSaga.type, handleDeleteAvt);
-}
-function* handleDeleteAvt(data) {
-  try {
-    const delAvt = yield call(deleteAvtSagaRequest, data);
-    // yield put(deleteAvtSuccess(delAvt.data));
-  } catch (error) {
-    console.log(error);
-  }
-}
-async function deleteAvtSagaRequest(data) {
+// #region delete avt
+export async function deleteAvtRequest(data) {
   const {
     accessToken,
     refreshToken,
     id,
     callRefreshProfile = true,
     dispatch,
-  } = data.payload;
+  } = data;
 
   try {
     const res = await axiosInStanceJWT.delete(
@@ -330,40 +269,29 @@ async function deleteAvtSagaRequest(data) {
           callRefreshProfile,
           callRefreshFriend: false,
           callRefreshPost: false,
-          callRefreshGallery: false,
           dispatch,
         })
       );
       return res;
     } else {
       notifyService.showError(res.data.message);
-      // dispatch(deleteAvtFailed());
     }
   } catch (error) {
-    notifyService.showError('Remove Avatar Failed!');
-    // dispatch(deleteAvtFailed());
-  }
-}
-
-export function* deleteWallReq() {
-  yield takeLatest(deleteWallpaperSaga.type, handleDeleteWall);
-}
-function* handleDeleteWall(data) {
-  try {
-    const deleteWall = yield call(deleteWallSagaRequest, data);
-    // yield put(deleteWallpaperSuccess(deleteWall.data));
-  } catch (error) {
     console.log(error);
+    notifyService.showError('Remove Avatar Failed!');
   }
 }
-async function deleteWallSagaRequest(data) {
+// #endregion
+
+// #region delete wall
+export async function deleteWallRequest(data) {
   const {
     accessToken,
     refreshToken,
     id,
     callRefreshProfile = true,
     dispatch,
-  } = data.payload;
+  } = data;
 
   try {
     const res = await axiosInStanceJWT.delete(
@@ -386,47 +314,33 @@ async function deleteWallSagaRequest(data) {
           callRefreshProfile,
           callRefreshFriend: false,
           callRefreshPost: false,
-          callRefreshGallery: false,
           dispatch,
         })
       );
       return res;
     } else {
       notifyService.showError(res.data.message);
-      // dispatch(deleteWallpaperFailed());
     }
   } catch (error) {
+    console.log(error);
     notifyService.showError('Remove Wallpaper Failed!');
-    // dispatch(deleteWallpaperFailed());
   }
 }
 // #endregion
 
 export function* getGalleryImageReq() {
-  yield takeLatest(
-    [
-      getGallerySaga.type,
-
-      getProfileSagaSuccess.type,
-      createPostSagaSuccess.type,
-      deletePostSagaSuccess.type,
-      updatePostSagaSuccess.type,
-    ],
-    handleGetGallery
-  );
+  yield takeLatest([getProfileSagaSuccess.type], handleGetGallery);
 }
 function* handleGetGallery(data) {
   try {
-    if (data.payload?.callRefreshGallery) {
-      const galleryImg = yield call(getGallerySagaRequest, data);
-      yield put(getGallerySuccess(galleryImg.data.results));
-    }
+    const galleryImg = yield call(getGallerySagaRequest, data);
+    yield put(getGallerySuccess(galleryImg.data.results));
   } catch (error) {
     console.log(error);
   }
 }
 async function getGallerySagaRequest(data) {
-  const { accessToken, refreshToken, id, dispatch } = data.payload;
+  const { accessToken, refreshToken, id } = data.payload;
 
   try {
     const res = await axiosInStanceJWT.post(
@@ -443,9 +357,10 @@ async function getGallerySagaRequest(data) {
     if (!res.data.message) {
       return res;
     } else {
-      dispatch(getGalleryFailed());
+      console.log(res.data.mess);
+      notifyService.showError(res.data.message);
     }
   } catch (error) {
-    dispatch(getGalleryFailed());
+    console.log(error);
   }
 }

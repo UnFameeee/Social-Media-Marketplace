@@ -6,9 +6,9 @@ import LeftbarTitle from '../LeftbarTitle';
 import { LeftbarSentRequest } from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
-import { addFriendSaga } from '../../../../redux/friend/friendSlice';
 import { getAllSentRequest } from '../../../../redux/friend/friendAPI';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
+import { addFriendRequest } from '../../../../redux/friend/friendSaga';
 import '../index.css';
 
 export default function YourSentRequests() {
@@ -97,16 +97,15 @@ export default function YourSentRequests() {
                 cancelButtonConfig={{
                   onClick: (e) => {
                     e.stopPropagation();
-                    dispatch(
-                      addFriendSaga({
-                        accessToken,
-                        refreshToken,
-                        id: x.profile_id,
-                        callRefreshProfile: profileChecked,
-                        dispatch,
-                      })
-                    );
-                    setListCancel(old => [...old, x.profile_id])
+                    addFriendRequest({
+                      accessToken,
+                      refreshToken,
+                      id: x.profile_id,
+                      callRefreshProfile: profileChecked,
+                      dispatch,
+                    });
+
+                    setListCancel((old) => [...old, x.profile_id]);
                   },
                 }}
               />
@@ -124,7 +123,12 @@ export default function YourSentRequests() {
       {!Helper.isNullOrEmpty(queryParams) &&
         sentRequests?.data.some(
           (e) => e.profile_id.toString() === queryParams.toString()
-        ) && <UserProfile action={setListCancel} actionList={listCancel} />}
+        ) && (
+          <UserProfile
+            action={setListCancel}
+            actionList={listCancel}
+          />
+        )}
     </TwoColumns>
   );
 }

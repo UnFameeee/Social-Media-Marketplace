@@ -10,6 +10,9 @@ import {
   deletePostFailed,
   deletePostStart,
   deletePostSuccess,
+  getPostByIdFailed,
+  getPostByIdStart,
+  getPostByIdSuccess,
   getPostByProfileFailed,
   getPostByProfileStart,
   getPostByProfileSuccess,
@@ -393,6 +396,33 @@ export const getPostByProfile = async (
     }
   } catch (error) {
     dispatch(getPostByProfileFailed());
+  }
+};
+export const getPostById = async (
+  accessToken,
+  refreshToken,
+  postId,
+  dispatch
+) => {
+  dispatch(getPostByIdStart());
+  try {
+    const res = await axiosInStanceJWT.get(
+      `${api.post}/${postId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(getPostByIdSuccess(res.data));
+    } else {
+      dispatch(getPostByIdFailed());
+    }
+  } catch (error) {
+    dispatch(getPostByIdFailed());
   }
 };
 

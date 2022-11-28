@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { NOTIFICATION_DESCRIPTION } from 'src/common/constants/notification.constant';
+import { NOTIFICATION_DESCRIPTION, NOTIFICATION_TYPE } from 'src/common/constants/notification.constant';
 import { SOCKET_EVENT } from 'src/common/constants/socket.constant';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 import { Profile } from 'src/database/model/profile.model';
@@ -25,15 +25,18 @@ export class PostCommentLikeService {
             if (response.results) {
                 const profile_receiver = await this.notificationService.getProfileReceiverByCommentId(post_comment_id);
                 if (profile_receiver && profile_receiver != profile.profile_id) {
-                    const profile_sender = await this.notificationService.getProfileSenderByProfileId(profile.profile_id);
+                    const post_id = await this.notificationService.getPostByPostCommentId(post_comment_id);
 
-                    const data = {
-                        avatar: profile_sender["avatar"] ? profile_sender["avatar"] : null,
-                        profile_name: profile_sender.profile_name,
-                        content: `${profile_sender.profile_name} ${NOTIFICATION_DESCRIPTION.LIKE_COMMENT}`,
-                    }
-
-                    this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RECEIVE_NOTIFICATION, data);
+                    const NotificationResponseDto = await this.notificationService.createNotification(profile_receiver, profile.profile_id, NOTIFICATION_TYPE.LIKE, NOTIFICATION_DESCRIPTION.LIKE_COMMENT, post_id, post_comment_id);
+                    
+                    this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RECEIVE_NOTIFICATION, NotificationResponseDto);
+                }
+            } else {
+                const profile_receiver = await this.notificationService.getProfileReceiverByCommentId(post_comment_id);
+                
+                if (profile_receiver && profile_receiver != profile.profile_id) {
+                    const post_id = await this.notificationService.getPostByPostCommentId(post_comment_id);
+                    await this.notificationService.removeNotification(profile_receiver, profile.profile_id, NOTIFICATION_TYPE.LIKE, post_id, post_comment_id);
                 }
             }
 

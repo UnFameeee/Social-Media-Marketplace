@@ -7,7 +7,7 @@ import { ResponseData } from 'src/database/view-model/success-message.model';
 import { Page } from 'src/database/view-model/page-model';
 import { NotificationGateway } from 'src/notification/gateway/notification.gateway';
 import { NotificationService } from 'src/notification/service/notification.service';
-import { NOTIFICATION_DESCRIPTION } from 'src/common/constants/notification.constant';
+import { NOTIFICATION_DESCRIPTION, NOTIFICATION_TYPE } from 'src/common/constants/notification.constant';
 import { SOCKET_EVENT } from 'src/common/constants/socket.constant';
 
 @Injectable()
@@ -22,11 +22,11 @@ export class PostCommentService {
         try {
             const response = new ResponseData<boolean>();
             var res = await this.postCommentRepository.createComment(profile.profile_id, postCommentDto);
-            response.results = res;
+            response.results = res ? true : false;
 
             if (response.results) {
                 var profile_receiver: any;
-                var message: string;
+                var message: NOTIFICATION_DESCRIPTION;
                 if (postCommentDto.parent_comment_id) {
                     //Comment to comment
                     profile_receiver = await this.notificationService.getProfileReceiverByCommentId(postCommentDto.parent_comment_id);
@@ -35,22 +35,20 @@ export class PostCommentService {
                 } else {
                     //Comment to post
                     profile_receiver = await this.notificationService.getProfileReceiverByPostId(postCommentDto.post_id);
-                    
+
                     message = NOTIFICATION_DESCRIPTION.COMMENT_TO_POST;
                 }
 
                 if (profile_receiver && profile_receiver != profile.profile_id) {
-                    const profile_sender = await this.notificationService.getProfileSenderByProfileId(profile.profile_id);
+                    const NotificationResponseDto = await this.notificationService.createNotification(profile_receiver, profile.profile_id, NOTIFICATION_TYPE.COMMENT, message, postCommentDto.post_id, res.post_comment_id);
 
-                    const data = {
-                        avatar: profile_sender["avatar"] ? profile_sender["avatar"] : null,
-                        profile_name: profile_sender.profile_name,
-                        content: `${profile_sender.profile_name} ${message}`,
-                    }
-
-                    this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RECEIVE_NOTIFICATION, data);
+                    this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RECEIVE_NOTIFICATION, NotificationResponseDto);
                 }
 
+            } else {
+                if (profile_receiver && profile_receiver != profile.profile_id) {
+                    await this.notificationService.removeNotification(profile_receiver, profile.profile_id, NOTIFICATION_TYPE.COMMENT, postCommentDto.post_id, res.post_comment_id);
+                }
             }
 
             return response;
@@ -74,7 +72,7 @@ export class PostCommentService {
         try {
             const response = new ResponseData<boolean>();
             var res = await this.postCommentRepository.updateComment(post_comment_id, comment_text);
-            response.results = res;
+            response.results = res ? true : false;
             return response;
         } catch (err) {
             ExceptionResponse(err);

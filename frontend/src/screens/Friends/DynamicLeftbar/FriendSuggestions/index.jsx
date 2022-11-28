@@ -6,9 +6,9 @@ import LeftbarTitle from '../LeftbarTitle';
 import { LeftbarFriendSuggest } from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
-import { addFriendSaga } from '../../../../redux/friend/friendSlice';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 import { getAllSuggestions } from '../../../../redux/friend/friendAPI';
+import { addFriendRequest } from '../../../../redux/friend/friendSaga';
 import '../index.css';
 
 export default function FriendSuggestions() {
@@ -99,15 +99,14 @@ export default function FriendSuggestions() {
                     firstButtonConfig={{
                       onClick: (e) => {
                         e.stopPropagation();
-                        dispatch(
-                          addFriendSaga({
-                            accessToken,
-                            refreshToken,
-                            id: x.profile_id,
-                            callRefreshProfile: profileChecked,
-                            dispatch,
-                          })
-                        );
+                        addFriendRequest({
+                          accessToken,
+                          refreshToken,
+                          id: x.profile_id,
+                          callRefreshProfile: profileChecked,
+                          dispatch,
+                        });
+
                         setListAdded((old) => [...old, x.profile_id]);
                       },
                     }}
@@ -123,15 +122,14 @@ export default function FriendSuggestions() {
                     hiddenButtonConfig={{
                       onClick: (e) => {
                         e.stopPropagation();
-                        dispatch(
-                          addFriendSaga({
-                            accessToken,
-                            refreshToken,
-                            id: x.profile_id,
-                            callRefreshProfile: profileChecked,
-                            dispatch,
-                          })
-                        );
+                        addFriendRequest({
+                          accessToken,
+                          refreshToken,
+                          id: x.profile_id,
+                          callRefreshProfile: profileChecked,
+                          dispatch,
+                        });
+
                         var filter = listAdded.filter(
                           (e) => e !== x.profile_id
                         );
@@ -153,7 +151,9 @@ export default function FriendSuggestions() {
       {!Helper.isNullOrEmpty(queryParams) &&
         friendSuggestions?.data.some(
           (e) => e.profile_id.toString() === queryParams.toString()
-        ) && <UserProfile action={setListAdded} actionList={listAdded} />}
+        ) && (
+          <UserProfile action={setListAdded} actionList={listAdded} />
+        )}
     </TwoColumns>
   );
 }

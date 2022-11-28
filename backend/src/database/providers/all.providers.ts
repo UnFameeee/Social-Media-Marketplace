@@ -28,6 +28,7 @@ import { ShopAddress } from "../model/shop_address.model";
 import { ShopOrder } from "../model/shop_order.model";
 import { SubCategory } from "../model/sub_category.model";
 import { Variation } from "../model/variation.model";
+import { Notification } from "../model/notification.model";
 
 //Authentication
 export const authProviders = [
@@ -200,6 +201,14 @@ export const categoryProviders = [
         useValue: Category
     }
 ]
+
+export const notificationProviders = [
+    {
+        provide: PROVIDER.Notification,
+        useValue: Notification
+    }
+]
+
 
 export const subCategoryProviders = [
     {

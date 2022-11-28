@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { postCommentProviders, postProviders, profileProviders } from 'src/database/providers/all.providers';
+import { notificationProviders, postCommentProviders, postProviders, profileProviders } from 'src/database/providers/all.providers';
+import { NotificationController } from '../controller/notification.controller';
 import { NotificationGateway } from '../gateway/notification.gateway';
 import { NotificationRepository } from '../repository/notification.repository';
 import { NotificationService } from '../service/notification.service';
 
 @Module({
   imports: [],
+  controllers: [NotificationController],
   providers: [
     NotificationGateway, 
     NotificationService,
@@ -13,6 +15,7 @@ import { NotificationService } from '../service/notification.service';
     ...postProviders,
     ...postCommentProviders,
     ...profileProviders,
+    ...notificationProviders,
   ],
   exports: [NotificationGateway, NotificationService],
 })
