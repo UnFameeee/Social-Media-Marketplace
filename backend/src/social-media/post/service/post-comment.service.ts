@@ -84,14 +84,6 @@ export class PostCommentService {
             const response = new ResponseData<any>();
             var res = await this.postCommentRepository.deleteComment(profile_id, post_comment_id);
             response.results = res;
-
-            // if (response.results) {
-            //     if (profile_receiver && profile_receiver != profile.profile_id) {
-            //         await this.notificationService.removeNotification(profile.profile_id, profile_receiver, NOTIFICATION_TYPE.COMMENT, postCommentDto.post_id, res.post_comment_id);
-            //     }
-            // }
-
-
             return response;
         } catch (err) {
             ExceptionResponse(err);
