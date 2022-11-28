@@ -7,3 +7,9 @@ export enum NOTIFICATION_DESCRIPTION {
     ACCEPT_FRIEND_REQUEST = "accepted your friend request",
     DENY_FRIEND_REQUEST = "denied your friend request",
 }
+
+export enum NOTIFICATION_TYPE {
+    LIKE = "LIKE",
+    COMMENT = "COMMENT",
+    FRIEND_REQUEST = "FRIEND_REQUEST",
+}

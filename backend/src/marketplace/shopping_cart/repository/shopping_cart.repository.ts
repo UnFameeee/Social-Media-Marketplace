@@ -225,9 +225,12 @@ export class ShoppingCartRepository {
                 }
 
                 const queryProductData = await this.productRepository.findAll({
-                    attributes: {
-                        exclude: ["createdAt", "updatedAt", "deletedAt", "quantity_in_stock"],
-                    },
+                    // attributes: {
+                    //     exclude: ["createdAt", "updatedAt", "deletedAt", "quantity_in_stock"],
+                    // },
+                    attributes: ["product_id", "name", 'description', "price",
+                        [Sequelize.col("ShoppingCartItems.quantity"), "quantity"]
+                    ],
                     where: {
                         product_id: {
                             [Op.in]: arrayProduct,
@@ -235,12 +238,25 @@ export class ShoppingCartRepository {
                     },
                     include: [
                         {
+                            model: ShoppingCartItem,
+                            attributes: [],
+                            include: [
+                                {
+                                    model: ShoppingCart,
+                                    attributes: [],
+                                    where: {
+                                        shopping_cart_id: queryCartData.shopping_cart_id
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             model: Variation,
                             attributes: ["brand", "color"],
                         },
                         {
                             model: Profile,
-                            attributes: ["profile_name"],
+                            attributes: ["profile_id", "profile_name"],
                             include: [
                                 {
                                     model: ProfileAvatarImage,
@@ -322,16 +338,17 @@ export class ShoppingCartRepository {
                     nest: true,
                 });
 
-                console.log(queryData);
-
                 for (const element of queryData.rows) {
                     arrayProduct.push(element["product_id"]);
                 }
 
                 const queryProductData = await this.productRepository.findAll({
-                    attributes: {
-                        exclude: ["createdAt", "updatedAt", "deletedAt", "quantity_in_stock"],
-                    },
+                    // attributes: {
+                    //     exclude: ["createdAt", "updatedAt", "deletedAt", "quantity_in_stock"],
+                    // },
+                    attributes: ["product_id", "name", 'description', "price",
+                        [Sequelize.col("ShoppingCartItems.quantity"), "quantity"]
+                    ],
                     where: {
                         product_id: {
                             [Op.in]: arrayProduct,
@@ -339,12 +356,25 @@ export class ShoppingCartRepository {
                     },
                     include: [
                         {
+                            model: ShoppingCartItem,
+                            attributes: [],
+                            include: [
+                                {
+                                    model: ShoppingCart,
+                                    attributes: [],
+                                    where: {
+                                        shopping_cart_id: queryCartData.shopping_cart_id
+                                    }
+                                }
+                            ]
+                        },
+                        {
                             model: Variation,
                             attributes: ["brand", "color"],
                         },
                         {
                             model: Profile,
-                            attributes: ["profile_name"],
+                            attributes: ["profile_id", "profile_name"],
                             include: [
                                 {
                                     model: ProfileAvatarImage,

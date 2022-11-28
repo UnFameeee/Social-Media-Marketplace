@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { NOTIFICATION_DESCRIPTION } from 'src/common/constants/notification_type.constant';
+import { NOTIFICATION_DESCRIPTION } from 'src/common/constants/notification.constant';
 import { SOCKET_EVENT } from 'src/common/constants/socket.constant';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
 import { Profile } from 'src/database/model/profile.model';

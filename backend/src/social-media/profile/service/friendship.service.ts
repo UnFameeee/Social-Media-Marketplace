@@ -8,7 +8,7 @@ import { Friendship } from 'src/database/model/friendship.model';
 import { PagingData } from 'src/database/view-model/paging.model';
 import { NotificationGateway } from 'src/notification/gateway/notification.gateway';
 import { NotificationService } from 'src/notification/service/notification.service';
-import { NOTIFICATION_DESCRIPTION } from 'src/common/constants/notification_type.constant';
+import { NOTIFICATION_DESCRIPTION } from 'src/common/constants/notification.constant';
 import { SOCKET_EVENT } from 'src/common/constants/socket.constant';
 @Injectable()
 export class FriendshipService {
