@@ -104,7 +104,6 @@ export const postSlice = createSlice({
       state.get.isFetching = false;
       state.get.error = true;
     },
-    getPostSagaSuccess() {},
 
     getPostByProfileStart: (state) => {
       state.getByProfile.isFetching = true;
@@ -207,7 +206,6 @@ export const {
   updatePostSagaSuccess,
   likePostSaga,
   likePostSagaSuccess,
-  getPostSagaSuccess,
   
 } = postSlice.actions;
 export default postSlice.reducer;

@@ -4,6 +4,7 @@ import { axiosInStanceJWT } from "../axiosJWT";
 import { notifyService } from "../../services/notifyService";
 import {
   addProductToCartWithoutPagingSagaSuccess,
+  changeProductFromListCartWithoutPagingQuantitySuccess,
   createSellingProductSagaSuccess,
   deleteSellingProductSagaSuccess,
   getListCartWithoutPaging,
@@ -240,6 +241,7 @@ export function* getListCartWithoutPagingSG() {
       getListCartWithoutPagingSaga.type,
       addProductToCartWithoutPagingSagaSuccess.type,
       removeProductFromListCartWithoutPagingSuccess.type,
+      changeProductFromListCartWithoutPagingQuantitySuccess.type,
     ],
     handleGetListCartWithoutPaging
   );
@@ -346,5 +348,46 @@ export const removeProductFromListCartWithoutPagingRequest = async (
   } catch (error) {
     console.log(error);
     notifyService.showError("Remove Product To List Cart Failed");
+  }
+};
+
+export const changeProductFromListCartWithoutPagingQuantityRequest = async (
+  accessToken,
+  refreshToken,
+  product_id,
+  quantity,
+  dispatch
+) => {
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    let quantityObj={
+      quantity:quantity
+    }
+    const res = await axiosInStanceJWT.put(
+      `${api.shoppingCart}/changeQuantityProductInCart/${product_id}`,
+      quantityObj,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(
+        changeProductFromListCartWithoutPagingQuantitySuccess({
+          accessToken,
+          refreshToken,
+          dispatch,
+        })
+      );
+      return res.data.results.data;
+    } else {
+      notifyService.showError("Change Product From List Cart Quantity Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Change Product To List Cart Quantity Failed");
   }
 };

@@ -20,7 +20,6 @@ import {
   denySagaSuccess,
   unfriendSagaSuccess,
 } from '../friend/friendSlice';
-import { getPostSagaSuccess } from '../post/postSlice';
 import { galleryPaging } from '../../common/constants/apiConfig';
 
 export function* refreshProfile() {
@@ -330,7 +329,7 @@ export async function deleteWallRequest(data) {
 // #endregion
 
 export function* getGalleryImageReq() {
-  yield takeLatest([getPostSagaSuccess.type], handleGetGallery);
+  yield takeLatest([getProfileSagaSuccess.type], handleGetGallery);
 }
 function* handleGetGallery(data) {
   try {
