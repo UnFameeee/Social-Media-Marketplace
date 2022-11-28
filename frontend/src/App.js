@@ -35,8 +35,9 @@ function App() {
       });
 
       //listening to the event receiving the notification
-      socket.on(SOCKET_EVENT.RECEIVE_NOTIFICATION, (payload) => {
-        console.log(payload);
+      socket.on(SOCKET_EVENT.RECEIVE_NOTIFICATION, (NotificationResponseDto) => {
+
+        console.log(NotificationResponseDto);
 
         const notify = (
           avatar,
@@ -56,12 +57,7 @@ function App() {
             }
           );
         };
-        notify(
-          payload.avatar,
-          payload.profile_name,
-          payload.content,
-          payload.notification_type
-        );
+        notify(NotificationResponseDto.avatar, NotificationResponseDto.profile_name, NotificationResponseDto.content, NotificationResponseDto.notification_type);
       });
 
       var decoded = jwt_decode(accessToken);

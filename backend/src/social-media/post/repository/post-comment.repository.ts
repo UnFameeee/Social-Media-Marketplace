@@ -26,7 +26,7 @@ export class PostCommentRepository {
         @Inject(PROVIDER.ParentChildComment) private parentChildCommentRepository: typeof ParentChildComment,
     ) { };
 
-    async createComment(profile_id: number, postCommentDto: PostCommentDto): Promise<boolean> {
+    async createComment(profile_id: number, postCommentDto: PostCommentDto): Promise<PostComment> {
         try {
             //comment to a post
             var postCommentModel = new PostCommentEntity();
@@ -42,13 +42,13 @@ export class PostCommentRepository {
                 parentChildCommentModel.child_comment_id = queryCreateData.post_comment_id;
                 await this.parentChildCommentRepository.create(parentChildCommentModel);
             }
-            return queryCreateData ? true : false;
+            return queryCreateData;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
     }
 
-    async updateComment(post_comment_id: number, comment_text: string): Promise<boolean> {
+    async updateComment(post_comment_id: number, comment_text: string): Promise<PostComment> {
         try {
             const queryUpdateData = await this.postCommentRepository.findOne({
                 where: { post_comment_id: post_comment_id }
@@ -56,7 +56,7 @@ export class PostCommentRepository {
             queryUpdateData.comment_text = comment_text;
             const res = await queryUpdateData.save();
 
-            return res ? true : false;
+            return res;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
