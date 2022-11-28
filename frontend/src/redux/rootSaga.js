@@ -1,13 +1,12 @@
 import { all, fork } from 'redux-saga/effects';
-import { commentPost, deleteCommentPost, getCommentPost, likeCommentPost, updateCommentPost } from './comment/commentSaga';
 import {
-  acceptFriendReq,
-  addFriend,
-  denyFriendReq,
-  isFriend,
-  refreshAllFriend,
-  unfriend,
-} from './friend/friendSaga';
+  commentPost,
+  deleteCommentPost,
+  getCommentPost,
+  likeCommentPost,
+  updateCommentPost,
+} from './comment/commentSaga';
+import { refreshAllFriend } from './friend/friendSaga';
 import {
   createNewPost,
   deleteOnePost,
@@ -15,15 +14,18 @@ import {
   reFreshPosts,
   updateOnePost,
 } from './post/postSaga';
-import { addProductToListCartWithoutPaging, createSellingProduct, deleteSellingProduct, getAllSellingProduct, getAllShoppingProduct, getListCartWithoutPagingSG, updateSellingProduct } from './product/productSaga';
 import {
-  deleteAvtReq,
-  deleteWallReq,
+  addProductToListCartWithoutPaging,
+  createSellingProduct,
+  deleteSellingProduct,
+  getAllSellingProduct,
+  getAllShoppingProduct,
+  getListCartWithoutPagingSG,
+  updateSellingProduct,
+} from './product/productSaga';
+import {
   getGalleryImageReq,
   refreshProfile,
-  updateAvtReq,
-  updateDetailReq,
-  updateWallReq,
 } from './profile/profileSaga';
 
 export default function* rootSaga() {
@@ -34,33 +36,18 @@ export default function* rootSaga() {
     fork(updateOnePost),
     fork(likeOnePost),
   ]);
+  yield all([fork(refreshAllFriend)]);
+  yield all([fork(refreshProfile), fork(getGalleryImageReq)]);
   yield all([
-    fork(refreshAllFriend),
-    fork(acceptFriendReq),
-    fork(denyFriendReq),
-    fork(unfriend),
-    fork(addFriend),
-    // fork(isFriend),
-  ]);
-  yield all([
-    fork(refreshProfile),
-    fork(getGalleryImageReq),
-    fork(updateAvtReq),
-    fork(deleteAvtReq),
-    fork(updateWallReq),
-    fork(deleteWallReq),
-    fork(updateDetailReq),
-  ]);
-  yield all ([
     fork(commentPost),
     fork(getCommentPost),
     fork(deleteCommentPost),
     fork(updateCommentPost),
     fork(likeCommentPost),
-  ])
+  ]);
   yield all([
     fork(getAllSellingProduct),
     fork(getAllShoppingProduct),
     fork(getListCartWithoutPagingSG),
-  ])
+  ]);
 }

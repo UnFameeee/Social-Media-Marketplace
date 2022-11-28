@@ -8,6 +8,7 @@ const api = {
   image: apiUrl + '/image',
   product:apiUrl + '/product',
   shoppingCart: apiUrl + '/shopping_cart',
+  notification: apiUrl + '/notification',
 };
 
 export default api;

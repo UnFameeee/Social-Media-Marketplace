@@ -1,16 +1,20 @@
-import RootRoutes from "./common/routes";
+import RootRoutes from './common/routes';
 // import { ToastContainer } from "react-toastify";
 
 //Thang
 import { useSelector } from 'react-redux';
-import jwt_decode from "jwt-decode";
+import jwt_decode from 'jwt-decode';
 
-import { useEffect, useState } from "react";
-import { ToastContainer, toast, Slide, Zoom, Flip, Bounce } from "react-toastify";
+import { useEffect } from 'react';
+import {
+  ToastContainer,
+  toast,
+  Bounce,
+} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import socket from "./socket/socket";
-import { SOCKET_EVENT } from "./socket/socket.constant";
-import Notification from "./socket/Notification";
+import socket from './socket/socket';
+import { SOCKET_EVENT } from './socket/socket.constant';
+import Notification from './socket/Notification';
 
 function App() {
   // const [isConnected, setIsConnected] = useState(socket.connected);
@@ -32,22 +36,32 @@ function App() {
 
       //listening to the event receiving the notification
       socket.on(SOCKET_EVENT.RECEIVE_NOTIFICATION, (payload) => {
-
         console.log(payload);
 
-        const notify = (avatar, profile_name, content, notification_type) => {
-          toast(<Notification avatar={avatar} profile_name={profile_name} content={content} notification_type={notification_type}/>, {
-            position: "bottom-left",
-            autoClose: 3000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: "light",
-          })
+        const notify = (
+          avatar,
+          profile_name,
+          content,
+          notification_type
+        ) => {
+          toast(
+            <Notification
+              avatar={avatar}
+              profile_name={profile_name}
+              content={content}
+              notification_type={notification_type}
+            />,
+            {
+              autoClose: 3000,
+            }
+          );
         };
-        notify(payload.avatar, payload.profile_name, payload.content, payload.notification_type);
+        notify(
+          payload.avatar,
+          payload.profile_name,
+          payload.content,
+          payload.notification_type
+        );
       });
 
       var decoded = jwt_decode(accessToken);
@@ -59,7 +73,7 @@ function App() {
     }
 
     return () => {
-      //Remove the event that you listened 
+      //Remove the event that you listened
       socket.off(SOCKET_EVENT.JOIN_ROOM);
       socket.off(SOCKET_EVENT.RECEIVE_NOTIFICATION);
     };
@@ -69,10 +83,15 @@ function App() {
     <>
       <RootRoutes />
       <ToastContainer
-        pauseOnFocusLoss={false}
+        hideProgressBar
+        autoClose={1000}
         limit={6}
+        position="bottom-right"
+        pauseOnHover={false}
+        pauseOnFocusLoss={false}
         draggable={false}
-        transition={Slide}
+        transition={Bounce}
+        // theme="dark"
       />
     </>
   );

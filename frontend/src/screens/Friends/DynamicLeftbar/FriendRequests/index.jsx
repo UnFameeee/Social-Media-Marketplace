@@ -6,12 +6,12 @@ import LeftbarTitle from '../LeftbarTitle';
 import { LeftbarFriendRequest } from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
-import {
-  acceptSaga,
-  denySaga,
-} from '../../../../redux/friend/friendSlice';
 import { getAllRequest } from '../../../../redux/friend/friendAPI';
 import { getProfileSaga } from '../../../../redux/profile/profileSlice';
+import {
+  acceptFriendRequest,
+  denyFriendRequest,
+} from '../../../../redux/friend/friendSaga';
 import '../index.css';
 
 export default function FriendRequests() {
@@ -101,30 +101,28 @@ export default function FriendRequests() {
                 firstButtonConfig={{
                   onClick: (e) => {
                     e.stopPropagation();
-                    dispatch(
-                      acceptSaga({
-                        accessToken,
-                        refreshToken,
-                        id: x.profile_id,
-                        callRefreshProfile: profileChecked,
-                        dispatch,
-                      })
-                    );
+                    acceptFriendRequest({
+                      accessToken,
+                      refreshToken,
+                      id: x.profile_id,
+                      callRefreshProfile: profileChecked,
+                      dispatch,
+                    });
+
                     setListConfirm((old) => [...old, x.profile_id]);
                   },
                 }}
                 secondButtonConfig={{
                   onClick: (e) => {
                     e.stopPropagation();
-                    dispatch(
-                      denySaga({
-                        accessToken,
-                        refreshToken,
-                        id: x.profile_id,
-                        callRefreshProfile: profileChecked,
-                        dispatch,
-                      })
-                    );
+                    denyFriendRequest({
+                      accessToken,
+                      refreshToken,
+                      id: x.profile_id,
+                      callRefreshProfile: profileChecked,
+                      dispatch,
+                    });
+
                     setListDeny((old) => [...old, x.profile_id]);
                   },
                 }}

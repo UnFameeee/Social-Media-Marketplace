@@ -25,6 +25,7 @@ import CheckOut from "../../screens/Marketplace/CheckOut";
 import SearchPage from "../../screens/Home/SearchPage";
 import Shopping from "../../screens/Marketplace/Shopping";
 import Selling from "../../screens/Marketplace/Selling";
+import PostView from "../../screens/Home/PostView";
 
 export default function RootRoutes() {
   return (
@@ -46,7 +47,6 @@ export default function RootRoutes() {
               <Route path="" element={<FriendHome />} />
               <Route path="birthdays" element={<Birthday />} />
             </Route>
-
             <Route path="friends" element={<DynamicLeftbarLayout />}>
               <Route path="requests" element={<FriendRequests />} />
               <Route path="sent" element={<YourSentRequests />} />
@@ -62,6 +62,7 @@ export default function RootRoutes() {
             </Route>
 
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/post" element={<PostView />} />
 
             <Route path="/messenger" element={<Messenger />} />
           </Route>
