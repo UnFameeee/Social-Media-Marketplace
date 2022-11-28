@@ -8,16 +8,18 @@ import { PostLikeRepository } from "./post-like.repository";
 import { Page } from "src/database/view-model/page-model";
 import { PagingData } from "src/database/view-model/paging.model";
 import { Post } from "src/database/model/post.model";
-import { Profile } from "src/database/model/profile.model";
+import { Profile } from "src/database/model/profile.model"; ''
 import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
 import { ProfilePostImage } from "src/database/model/profile_post_image.model";
 import { Helper } from "src/common/utils/helper.utils";
+import { Op } from "sequelize";
 
 @Injectable()
 export class PostRepository {
     constructor(
         @Inject(PROVIDER.Post) private postRepository: typeof Post,
-        @Inject(PostLikeRepository) private postLikeRepository: PostLikeRepository
+        @Inject(PostLikeRepository) private postLikeRepository: PostLikeRepository,
+        @Inject(PROVIDER.ProfilePostImage) private profilePostImageRepository: typeof ProfilePostImage,
     ) { }
 
     async getAllPost(profile_id: number, page: Page): Promise<PagingData<Post[]>> {
@@ -72,7 +74,7 @@ export class PostRepository {
                 element["totalLike"] = totalLike;
                 element["isLiked"] = isLiked;
                 element["profile_name"] = element["post_profile"]["profile_name"];
-                if(element["post_profile"]["profile_avatar"]){
+                if (element["post_profile"]["profile_avatar"]) {
                     element["avatar"] = element["post_profile"]["profile_avatar"]["link"]
                 } else {
                     element["avatar"] = null;
@@ -138,7 +140,7 @@ export class PostRepository {
 
                 element["totalLike"] = totalLike;
                 element["isLiked"] = isLiked;
-                if(element["post_profile"]["profile_avatar"]){
+                if (element["post_profile"]["profile_avatar"]) {
                     element["avatar"] = element["post_profile"]["profile_avatar"]["link"]
                 } else {
                     element["avatar"] = null;
@@ -196,7 +198,7 @@ export class PostRepository {
 
                 objectQueryData["totalLike"] = totalLike;
                 objectQueryData["isLiked"] = isLiked;
-                if(objectQueryData["post_profile"]["profile_avatar"]){
+                if (objectQueryData["post_profile"]["profile_avatar"]) {
                     objectQueryData["avatar"] = objectQueryData["post_profile"]["profile_avatar"]["link"]
                 } else {
                     objectQueryData["avatar"] = null;
@@ -232,12 +234,47 @@ export class PostRepository {
 
     async deletePost(profile_id: number, post_id: number): Promise<Boolean> {
         try {
-            const res = await this.postRepository.destroy({
+            const queryImageData = await this.profilePostImageRepository.findAll({
+                attributes: ["profile_post_image_id"],
+                include: [
+                    {
+                        model: Post,
+                        attributes: [],
+                        where: {
+                            post_id: post_id,
+                        },
+                    }
+                ],
+                raw: true
+            })
+
+            const imageDataArray = [];
+            for (const element of queryImageData) {
+                imageDataArray.push(element.profile_post_image_id);
+            }
+
+            console.log(imageDataArray);
+
+            const resImageData = await this.profilePostImageRepository.destroy({
                 where: {
-                    post_id: post_id
+                    profile_post_image_id: {
+                        [Op.in]: imageDataArray,
+                    }
                 }
             });
-            return res ? true : false;
+
+            console.log(resImageData);
+
+            if (resImageData) {
+                const res = await this.postRepository.destroy({
+                    where: {
+                        post_id: post_id
+                    }
+                });
+                return res ? true : false;
+            }
+
+            return false;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
