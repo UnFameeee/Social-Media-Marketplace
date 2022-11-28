@@ -17,6 +17,7 @@ const initialState = {
   },
   getListCartWithoutPaging: {
     data: [],
+    totalPrice: 0,
   },
   update: {
     product: null,
@@ -41,6 +42,7 @@ export const productSlice = createSlice({
     },
     getListCartWithoutPaging: {
       data: [],
+      totalPrice: 0,
     },
     update: {
       product: null,
@@ -54,7 +56,6 @@ export const productSlice = createSlice({
     },
     createSellingProductSagaSuccess() {},
 
-
     deleteSellingProductSagaSuccess() {},
 
     updateSellingProductSagaSuccess() {},
@@ -64,15 +65,20 @@ export const productSlice = createSlice({
     getShoppingProduct: (state, action) => {
       state.getShopping.data = action.payload;
     },
-   
-    
+
     getListCartWithoutPagingSaga() {},
     getListCartWithoutPaging: (state, action) => {
+      let totalPrice = 0;
+      action.payload.map((item) => {
+        totalPrice += item.price * item.quantity;
+      });
+      state.getListCartWithoutPaging.totalPrice = totalPrice;
       state.getListCartWithoutPaging.data = action.payload;
     },
-    addProductToCartWithoutPagingSagaSuccess(){},
-    removeProductFromListCartWithoutPagingSuccess(){},
-    
+    addProductToCartWithoutPagingSagaSuccess() {},
+    removeProductFromListCartWithoutPagingSuccess() {},
+    changeProductFromListCartWithoutPagingQuantitySuccess() {},
+
     getProductDetail: (state, action) => {
       state.getProductDetail.data = action.payload;
     },
@@ -91,6 +97,7 @@ export const {
   getListCartWithoutPagingSaga,
   addProductToCartWithoutPagingSagaSuccess,
   removeProductFromListCartWithoutPagingSuccess,
+  changeProductFromListCartWithoutPagingQuantitySuccess,
 
   getShoppingProductSaga,
   getShoppingProduct,
