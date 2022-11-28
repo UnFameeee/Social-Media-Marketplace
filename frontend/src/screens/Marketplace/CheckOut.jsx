@@ -13,8 +13,16 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import MUI from "../../components/MUI";
 import macbook_example from "../../assets/macbook.jpeg";
+import notFoundImage from "../../assets/noimage_1.png";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect, useMemo } from "react";
+import debounce from "lodash.debounce";
+import MUI from "../../components/MUI";
+import {
+  changeProductFromListCartWithoutPagingQuantityRequest,
+  removeProductFromListCartWithoutPagingRequest,
+} from "../../redux/product/productSaga";
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
@@ -27,6 +35,22 @@ const rows = [
 ];
 function CheckOut() {
   const [value, setValue] = React.useState("1");
+  const [openConfirmRemove, setOpenConfirmRemove] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState(-1);
+
+  const dispatch = useDispatch();
+  const accessToken = useSelector(
+    (state) => state.auth.login.currentUser.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth.login.currentUser.refresh
+  );
+  const getShoppingCartList = useSelector(
+    (state) => state.product.getListCartWithoutPaging.data
+  );
+  const totalPrice = useSelector(
+    (state) => state.product.getListCartWithoutPaging.totalPrice
+  );
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -34,6 +58,43 @@ function CheckOut() {
   const handleChangePage = (event, value) => {
     setPage(value);
   };
+  const handleRemoveItem = (product_id) => {
+    setOpenConfirmRemove(true);
+    setDeleteItemId(product_id);
+  };
+  const handleConfirmDeleteItem = () => {
+    if (deleteItemId != -1) {
+      removeProductFromListCartWithoutPagingRequest(
+        accessToken,
+        refreshToken,
+        deleteItemId,
+        dispatch
+      );
+      setDeleteItemId(-1);
+    }
+    setOpenConfirmRemove(false);
+  };
+  const handleOnChangeQuantity = (e) => {
+    let product_id = e.target.name;
+    let quantity = e.target.value;
+    changeProductFromListCartWithoutPagingQuantityRequest(
+      accessToken,
+      refreshToken,
+      product_id,
+      quantity,
+      dispatch
+    );
+    console.log(e.target.value);
+  };
+  const debouncedChangeHandler = useMemo(
+    () => debounce(handleOnChangeQuantity, 300),
+    []
+  );
+  useEffect(() => {
+    return () => {
+      debouncedChangeHandler.cancel();
+    };
+  }, []);
   return (
     <div className="CheckOut pt-[5%] px-[10%]  ">
       <TabContext value={value}>
@@ -111,79 +172,90 @@ function CheckOut() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows.map((row) => (
-                    <TableRow
-                      key={row.name}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                    >
-                      <TableCell
-                        component="th"
-                        scope="row"
-                        style={{ fontSize: "1.5rem" }}
+                  <MUI.ConfirmDialog
+                    modalProps={[openConfirmRemove, setOpenConfirmRemove]}
+                    title="Remove Cart Item"
+                    actionName="remove this item"
+                    confirmAction={handleConfirmDeleteItem}
+                  />
+                  {getShoppingCartList &&
+                    getShoppingCartList.length > 0 &&
+                    getShoppingCartList.map((item) => (
+                      <TableRow
+                        key={item.product_id}
+                        sx={{
+                          "&:last-child td, &:last-child th": { border: 0 },
+                        }}
                       >
-                        <div className="flex gap-[1rem]">
-                          <div className="card-image mb-[1rem]">
-                            <img
-                              className="min-w-[6rem] max-h-[6rem] rounded-lg shadow-xl  brief-detail-img"
-                              src={`https://source.unsplash.com/random/1000x902/?macbook`}
-                              alt=""
+                        <TableCell
+                          component="th"
+                          scope="item"
+                          style={{ fontSize: "1.5rem" }}
+                        >
+                          <div className="flex gap-[1rem]">
+                            <div className="card-image mb-[1rem]">
+                              <img
+                                className="min-w-[8rem] max-h-[8rem] rounded-lg shadow-xl  brief-detail-img"
+                                src={item.product_image[0]}
+                                alt=""
+                                onError={({ currentTarget }) => {
+                                  currentTarget.onerror = null;
+                                  currentTarget.src = notFoundImage;
+                                }}
+                              />
+                            </div>
+                            <span className="font-bold line-clamp-2">
+                              {item.name}
+                            </span>
+                          </div>
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{ fontSize: "1.5rem", maxWidth: "10  0rem" }}
+                        >
+                          <span className=" line-clamp-3">
+                            {item.description}
+                          </span>
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{ fontSize: "1.5rem", maxWidth: "10rem" }}
+                        >
+                          <div className="w-full">
+                            <input
+                              defaultValue={item.quantity}
+                              min={0}
+                              max={9999}
+                              name={item.product_id}
+                              onChange={debouncedChangeHandler}
+                              type="number"
                             />
                           </div>
-                          <span className="font-bold line-clamp-2">
-                            Product name Lorem ipsum dolor sit amet consectetur
-                            adipisicing elit. Atque iste vitae distinctio
-                            consequuntur voluptate expedita exercitationem,
-                            fugit reiciendis? Nam, magni!
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{ fontSize: "1.5rem", maxWidth: "10  0rem" }}
-                      >
-                        <span className=" line-clamp-3">
-                          Lorem ipsum dolor sit amet consectetur adipisicing
-                          elit. Minima laudantium, suscipit veniam nobis animi
-                          voluptatibus in dolorem architecto perspiciatis? Iusto
-                        </span>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{ fontSize: "1.5rem", maxWidth: "10rem" }}
-                      >
-                        <div className="w-full">
-                          <input
-                            defaultValue={1}
-                            min={0}
-                            max={100}
-                            type="number"
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{ fontSize: "1.5rem", maxWidth: "20rem" }}
-                      >
-                        <span className=" line-clamp-2">
-                          9999999999999999999999
-                        </span>
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        style={{ fontSize: "1.5rem", maxWidth: "20rem" }}
-                      >
-                        <MUI.BetterIconButton>
-                          <DeleteForeverIcon style={{ fontSize: "3rem" }} />
-                        </MUI.BetterIconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{ fontSize: "1.5rem", maxWidth: "20rem" }}
+                        >
+                          <span className=" line-clamp-2">{item.price}</span>
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          style={{ fontSize: "1.5rem", maxWidth: "20rem" }}
+                        >
+                          <MUI.BetterIconButton
+                            onClick={() => handleRemoveItem(item.product_id)}
+                          >
+                            <DeleteForeverIcon style={{ fontSize: "3rem" }} />
+                          </MUI.BetterIconButton>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>
             <div className="total flex flex-col justify-end text-end font-semibold text-[2.2rem] mr-[2rem] ">
               <span>Total</span>
-              <span>192222222222222$</span>
+              <span>{totalPrice}$</span>
             </div>
             <div className="Pagination mt-[1rem] flex justify-end">
               <Typography>Page: {page}</Typography>
@@ -210,43 +282,74 @@ function CheckOut() {
                 order item.
               </p>
               <ul className="flex gap-[1rem] flex-col max-h-[30rem] shadow-md overflow-y-scroll mt-[1rem] list-item-order border-[0.5px] border-gray-400 p-[1.5rem] rounded-xl">
-                {[...Array(15)].map((index) => (
-                  <li
-                    key={index}
-                    className="item-orders flex gap-[1rem] items-center "
-                  >
-                    <div className="card-image mb-[1rem] rounded-[2rem]">
-                      <img
-                        className="w-[10rem] max-h-[7rem] rounded-lg shadow-md object-cover"
-                        src={macbook_example}
-                        alt=""
-                      />
-                    </div>
-                    <div className="cart-item-info w-full overflow-hidden">
-                      <span className="name line-clamp-2">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Nemo quam nihil modi aspernatur a odio, officia qui
-                      </span>
-                      <div className="cart-item-info-price flex items-center">
-                        <div className="flex-1 flex gap-[1.2rem] items-center">
-                          <span className="text-[1.5rem] font-light">999$</span>
-                          <span>x</span>
-                          <input
-                            className="border-[1px] rounded-lg outline-none border-gray-300 w-[5rem]"
-                            type="number"
-                            defaultValue={1}
-                          />
-                        </div>
-                        <div
-                          className="text-[2rem]"
-                          style={{ color: "var(--primary-color)" }}
-                        >
-                          <span>$1888</span>
+                {getShoppingCartList &&
+                  getShoppingCartList.length > 0 &&
+                  getShoppingCartList.map((item) => (
+                    <li
+                      key={item.product_id}
+                      className="item-orders flex gap-[1rem] items-center "
+                    >
+                      <div className="card-image mb-[1rem] rounded-[2rem]">
+                        <img
+                          className="w-[10rem] max-h-[8rem] rounded-lg shadow-md object-cover"
+                          src={item.product_image[0]}
+                          alt=""
+                          onError={({ currentTarget }) => {
+                            currentTarget.onerror = null;
+                            currentTarget.src = notFoundImage;
+                          }}
+                        />
+                      </div>
+                      <div className="cart-item-info w-full overflow-hidden">
+                        <span className="name line-clamp-2 font-semibold">
+                          {item.name}
+                        </span>
+                        <div className="cart-item-info-price flex items-center">
+                          <ul className="flex flex-col flex-1">
+                            {Object.entries(item.Variation).map((props) => (
+                              <li
+                                key={props[0]}
+                                className="flex-1 flex gap-[0.5rem] items-center"
+                              >
+                                <span className="text-[1.5rem] capitalize font-bold">
+                                  {props[0]}:
+                                </span>
+                                <span
+                                  className={` ${
+                                    props[0] == "brand"
+                                      ? "uppercase"
+                                      : "capitalize"
+                                  }`}
+                                >
+                                  {props[1]}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="cart-item-info-price flex items-center gap-[1rem]">
+                            <div className=" flex gap-[1.2rem] items-center">
+                              <span className="text-[1.7rem] font-light">
+                                ${item.price}
+                              </span>
+                              <span>x</span>
+                              <input
+                                className="border-[1px] rounded-lg outline-none border-gray-300 w-[5rem]"
+                                type="number"
+                                defaultValue={item.quantity}
+                                readOnly={true}
+                              />
+                            </div>
+                            <div
+                              className="flex-1 text-[2rem]"
+                              style={{ color: "var(--primary-color)" }}
+                            >
+                              <span>${item.price * item.quantity}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </li>
-                ))}
+                    </li>
+                  ))}
               </ul>
               <ul className="shipping-types mt-[1rem] flex flex-col gap-[1rem]">
                 {[...Array(2)].map((index) => (
@@ -291,6 +394,9 @@ function CheckOut() {
                 Complete your purchase item by providing your payment detail
                 order
               </p>
+              <span className="title-payment-details font-bold text-primaryColor text-[2.5rem]">
+                Total: {totalPrice}$
+              </span>
             </div>
           </div>
         </TabPanel>

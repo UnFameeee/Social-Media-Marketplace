@@ -22,10 +22,7 @@ import nothingsToSeedImage from "../../assets/nothing--to-see-here.jpg";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import {
-  getAllSellingProduct,
-  getAllShoppingCartList,
-} from "../../redux/apiRequest";
+import { getAllShoppingCartList } from "../../redux/apiRequest";
 import { useEffect } from "react";
 import { removeProductFromListCartWithoutPagingRequest } from "../../redux/product/productSaga";
 const ResponSiveButtonWrapper = styled.div`
@@ -92,9 +89,14 @@ function MarketPlaceLeftBar({ handleOpenModalCreate, ...props }) {
       navigate("/marketplace/selling");
     }
   };
-  const removeProductFromCart = (product_id) =>{
-    removeProductFromListCartWithoutPagingRequest(accessToken,refreshToken,product_id,dispatch)
-  }
+  const removeProductFromCart = (product_id) => {
+    removeProductFromListCartWithoutPagingRequest(
+      accessToken,
+      refreshToken,
+      product_id,
+      dispatch
+    );
+  };
   useEffect(() => {
     getAllShoppingCartList(accessToken, refreshToken, dispatch);
   }, []);
@@ -170,16 +172,7 @@ function MarketPlaceLeftBar({ handleOpenModalCreate, ...props }) {
               </TabList>
             </Box>
             <TabPanel value="1" className=" max-h-[60vh] overflow-y-scroll">
-              {false && (
-                <>
-                  <img src={cart_empty_image} alt="" />
-                  <div className="w-full text-center text-[2.5rem]">
-                    <span>Your cart is still empty</span>
-                  </div>
-                </>
-              )}
-
-              {true && (
+              {getShoppingCartList && getShoppingCartList.length > 0 ? (
                 <ul className="cart-list flex flex-col gap-[1rem]">
                   {getShoppingCartList &&
                     getShoppingCartList.map((cartItem) => (
@@ -197,37 +190,59 @@ function MarketPlaceLeftBar({ handleOpenModalCreate, ...props }) {
                           className="w-[8rem] rounded-xl shadow-md "
                         />
                         <div className="cart-item-info w-full overflow-hidden">
-                          <span className="name line-clamp-2">
+                          <span className="name line-clamp-2 font-semibold">
                             {cartItem.name}
                           </span>
                           <div className="cart-item-info-price flex items-center">
                             <ul className="flex flex-col flex-1">
-                              <li className="flex-1 flex gap-[0.5rem] items-center">
-                                <span className="text-[1.5rem] font-bold">Brand:</span>
-                                <span>SAMSUNG</span>
-                              </li>
-                              <li className="flex-1 flex gap-[0.5rem] items-center">
-                                <span className="text-[1.5rem] font-bold">Color:</span>
-                                <span>Black</span>
-                              </li>
+                              {Object.entries(cartItem.Variation).map(
+                                (props) => (
+                                  <li
+                                    key={props[0]}
+                                    className="flex-1 flex gap-[0.5rem] items-center"
+                                  >
+                                    <span className="text-[1.5rem] capitalize font-bold">
+                                      {props[0]}:
+                                    </span>
+                                    <span
+                                      className={` ${
+                                        props[0] == "brand"
+                                          ? "uppercase"
+                                          : "capitalize"
+                                      }`}
+                                    >
+                                      {props[1]}
+                                    </span>
+                                  </li>
+                                )
+                              )}
                             </ul>
 
-                            <div
-                              className="text-[2rem]"
-                              style={{ color: "var(--primary-color)" }}
-                            >
-                              <span>${cartItem.price}</span>
+                            <div className="flex flex-col">
+                              <span className=" text-primaryColor text-[2rem]">
+                                ${cartItem.price}
+                              </span>
+                              <span>Qty: {cartItem.quantity}</span>
                             </div>
                           </div>
                         </div>
-                        <RemoveCircleIcon 
-                          onClick={(e) =>removeProductFromCart(cartItem.product_id)}
+                        <RemoveCircleIcon
+                          onClick={(e) =>
+                            removeProductFromCart(cartItem.product_id)
+                          }
                           className="absolute cursor-pointer text-gray-400"
                           style={{ fontSize: "2.4rem", top: "0", right: "0" }}
                         />
                       </li>
                     ))}
                 </ul>
+              ) : (
+                <>
+                  <img src={cart_empty_image} alt="" />
+                  <div className="w-full text-center text-[2.5rem]">
+                    <span>Your cart is still empty</span>
+                  </div>
+                </>
               )}
             </TabPanel>
             <TabPanel value="2" className=" max-h-[60vh] overflow-y-scroll">
