@@ -20,7 +20,7 @@ function App() {
   // const [isConnected, setIsConnected] = useState(socket.connected);
 
   const accessToken = useSelector(
-    (state) => state.auth?.login?.currentUser?.access
+    (state) => state.auth?.login?.currentUser?.access 
   );
 
   const notify = (data) => toast(data);
