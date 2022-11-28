@@ -248,14 +248,12 @@ export class PostRepository {
                 raw: true
             })
 
-            const imageDataArray = [];
+            const imageDataArray: number[] = [];
             for (const element of queryImageData) {
                 imageDataArray.push(element.profile_post_image_id);
             }
 
-            console.log(imageDataArray);
-
-            const resImageData = await this.profilePostImageRepository.destroy({
+            await this.profilePostImageRepository.destroy({
                 where: {
                     profile_post_image_id: {
                         [Op.in]: imageDataArray,
@@ -263,18 +261,12 @@ export class PostRepository {
                 }
             });
 
-            console.log(resImageData);
-
-            if (resImageData) {
-                const res = await this.postRepository.destroy({
-                    where: {
-                        post_id: post_id
-                    }
-                });
-                return res ? true : false;
-            }
-
-            return false;
+            const res = await this.postRepository.destroy({
+                where: {
+                    post_id: post_id
+                }
+            });
+            return res ? true : false;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }

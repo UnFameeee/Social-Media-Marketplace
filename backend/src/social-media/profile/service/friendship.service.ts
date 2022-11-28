@@ -46,14 +46,14 @@ export class FriendshipService {
             if (response.results) {
                 const profile_receiver = profile_target_id;
                 if (profile_receiver && profile_receiver != profile.profile_id) {
-                    const NotificationResponseDto = await this.notificationService.createNotification(profile_receiver, profile.profile_id, NOTIFICATION_TYPE.FRIEND_REQUEST, NOTIFICATION_DESCRIPTION.SEND_FRIEND_REQUEST, null, null);
+                    const NotificationResponseDto = await this.notificationService.createNotification(profile.profile_id, profile_receiver, NOTIFICATION_TYPE.FRIEND_REQUEST, NOTIFICATION_DESCRIPTION.SEND_FRIEND_REQUEST, null, null);
 
                     this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RECEIVE_NOTIFICATION, NotificationResponseDto);
                 }
             } else {
                 const profile_receiver = profile_target_id;
                 if (profile_receiver && profile_receiver != profile.profile_id) {
-                    await this.notificationService.removeNotification(profile_receiver, profile.profile_id, NOTIFICATION_TYPE.FRIEND_REQUEST, null, null);
+                    await this.notificationService.removeFriendRequestNotification(profile.profile_id, profile_receiver, NOTIFICATION_TYPE.FRIEND_REQUEST);
                 }
             }
 

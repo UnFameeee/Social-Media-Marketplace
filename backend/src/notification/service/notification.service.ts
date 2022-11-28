@@ -70,6 +70,33 @@ export class NotificationService {
     }
   }
 
+  async removeFriendRequestNotification(profile_sender: number, profile_receiver: number, notification_type: NOTIFICATION_TYPE): Promise<Boolean> {
+    try {
+      const data = await this.notificationRepository.removeFriendRequestNotification(profile_sender, profile_receiver, notification_type);
+      return data;
+    } catch (err) {
+      ExceptionResponse(err);
+    }
+  }
+
+  async removePostCommentNotification(post_comment_id: number[]): Promise<Boolean> {
+    try {
+      const data = await this.notificationRepository.removePostCommentNotification(post_comment_id);
+      return data;
+    } catch (err) {
+      ExceptionResponse(err);
+    }
+  }
+
+  async removePostNotification(post_id: number): Promise<Boolean> {
+    try {
+      const data = await this.notificationRepository.removePostNotification(post_id);
+      return data;
+    } catch (err) {
+      ExceptionResponse(err);
+    }
+  }
+
   async getAllNotification(profile_id: number): Promise<ResponseData<Notification[]>> {
     try {
       const response = new ResponseData<Notification[]>();
