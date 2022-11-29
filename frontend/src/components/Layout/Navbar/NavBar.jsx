@@ -157,6 +157,7 @@ export default function NavBar() {
                       accessToken,
                       refreshToken,
                       id: item.profile_sender_id,
+                      callRefreshProfile: Helper.checkURL('profile'),
                       dispatch,
                     });
 
@@ -173,6 +174,7 @@ export default function NavBar() {
                       accessToken,
                       refreshToken,
                       id: item.profile_sender_id,
+                      callRefreshProfile: Helper.checkURL('profile'),
                       dispatch,
                     });
 
@@ -367,10 +369,7 @@ export default function NavBar() {
               onChange={(e, value) => {
                 e.preventDefault();
 
-                if (
-                  value === 'notifications' &&
-                  allNotifications.length === 0
-                ) {
+                if (value === 'notifications') {
                   getAllNotification(
                     accessToken,
                     refreshToken,
