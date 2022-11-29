@@ -21,6 +21,7 @@ axiosInStanceJWT.interceptors.request.use(
       } else {
         debugger
         socket.off(SOCKET_EVENT.JOIN_ROOM);
+        socket.off(SOCKET_EVENT.RERENDER_NOTIFICATION);
         socket.off(SOCKET_EVENT.RECEIVE_NOTIFICATION);
         store.dispatch(revertAll());
         window.location.replace("/login");

@@ -16,6 +16,8 @@ import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.mode
 import { Helper } from "src/common/utils/helper.utils";
 import { PostCommentLikeRepository } from "./post-comment-like.repository";
 import { NotificationService } from "src/notification/service/notification.service";
+import { NotificationGateway } from "src/notification/gateway/notification.gateway";
+import { SOCKET_EVENT } from "src/common/constants/socket.constant";
 
 @Injectable()
 export class PostCommentRepository {
@@ -25,6 +27,7 @@ export class PostCommentRepository {
         @Inject(PostCommentLikeRepository) private postCommentLikeRepository: PostCommentLikeRepository,
         @Inject(PROVIDER.ParentChildComment) private parentChildCommentRepository: typeof ParentChildComment,
         private readonly notificationService: NotificationService,
+        private readonly notificationGateway: NotificationGateway,
     ) { };
 
     async createComment(profile_id: number, postCommentDto: PostCommentDto): Promise<PostComment> {
@@ -133,6 +136,17 @@ export class PostCommentRepository {
                 idCommentDelete.push(queryData.post_comment_id);
 
                 await this.notificationService.removePostCommentNotification(idCommentDelete);
+                var profile_rerender: number;
+                for(const element of idCommentDelete){
+                    if(element == queryData.post_comment_id){
+                        const post_id = await this.notificationService.getPostIdByCommentId(element);
+                        profile_rerender = await this.notificationService.getProfileReceiverByPostId(post_id);
+                    }else{
+                        profile_rerender = await this.notificationService.getProfileReceiverByCommentId(element);
+                    }
+                    console.log(profile_rerender);
+                    this.notificationGateway.server.to(`${profile_rerender}`).emit(SOCKET_EVENT.RERENDER_NOTIFICATION);
+                }
 
                 const res = await this.postCommentRepository.destroy({
                     where: {
