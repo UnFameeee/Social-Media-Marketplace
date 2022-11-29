@@ -14,6 +14,8 @@ import Paper from "@mui/material/Paper";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import macbook_example from "../../assets/macbook.jpeg";
 import notFoundImage from "../../assets/noimage_1.png";
+import cart_empty_image from "../../assets/cart_empty.png";
+import NothingToSee from "./NothingToSee";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect, useMemo } from "react";
 import debounce from "lodash.debounce";
@@ -166,78 +168,84 @@ function CheckOut() {
                     actionName="remove this item"
                     confirmAction={handleConfirmDeleteItem}
                   />
-                  {getShoppingCartList &&
-                    getShoppingCartList.length > 0 &&
-                    getShoppingCartList.map((item) => (
-                      <TableRow
-                        key={item.product_id}
-                        sx={{
-                          "&:last-child td, &:last-child th": { border: 0 },
-                        }}
+                  {getShoppingCartList?.map((item) => (
+                    <TableRow
+                      key={item.product_id}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell
+                        component="th"
+                        scope="item"
+                        style={{ fontSize: "1.5rem" }}
                       >
-                        <TableCell
-                          component="th"
-                          scope="item"
-                          style={{ fontSize: "1.5rem" }}
-                        >
-                          <div className="flex gap-[1rem]">
-                            <div className="card-image mb-[1rem]">
+                        <div className="flex gap-[1rem]">
+                          <div className="card-image mb-[1rem]">
+                            {item.product_image?.length > 0 ? (
                               <img
                                 className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-xl  brief-detail-img"
-                                src={item.product_image[0].link}
+                                src={item.product_image[0]?.link}
                                 alt=""
                                 onError={({ currentTarget }) => {
                                   currentTarget.onerror = null;
                                   currentTarget.src = notFoundImage;
                                 }}
                               />
-                            </div>
-                            <span className="font-bold line-clamp-2">
-                              {item.name}
-                            </span>
+                            ) : (
+                              <img
+                                className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-xl  brief-detail-img"
+                                src={notFoundImage}
+                                alt=""
+                              />
+                            )}
                           </div>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          style={{ fontSize: "1.5rem", maxWidth: "10  0rem" }}
-                        >
-                          <span className=" line-clamp-3">
-                            {item.description}
+                          <span className="font-bold line-clamp-2">
+                            {item.name}
                           </span>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          style={{ fontSize: "1.5rem", maxWidth: "10rem" }}
+                        </div>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        style={{ fontSize: "1.5rem", maxWidth: "10  0rem" }}
+                      >
+                        <span className=" line-clamp-3">
+                          {item.description}
+                        </span>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        style={{ fontSize: "1.5rem", maxWidth: "10rem" }}
+                      >
+                        <div className="w-full">
+                          <input
+                            defaultValue={item.quantity}
+                            min={0}
+                            max={9999}
+                            name={item.product_id}
+                            onChange={debouncedChangeHandler}
+                            type="number"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        style={{ fontSize: "1.5rem", maxWidth: "20rem" }}
+                      >
+                        <span className=" line-clamp-2">{item.price}</span>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        style={{ fontSize: "1.5rem", maxWidth: "20rem" }}
+                      >
+                        <MUI.BetterIconButton
+                          onClick={() => handleRemoveItem(item.product_id)}
                         >
-                          <div className="w-full">
-                            <input
-                              defaultValue={item.quantity}
-                              min={0}
-                              max={9999}
-                              name={item.product_id}
-                              onChange={debouncedChangeHandler}
-                              type="number"
-                            />
-                          </div>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          style={{ fontSize: "1.5rem", maxWidth: "20rem" }}
-                        >
-                          <span className=" line-clamp-2">{item.price}</span>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          style={{ fontSize: "1.5rem", maxWidth: "20rem" }}
-                        >
-                          <MUI.BetterIconButton
-                            onClick={() => handleRemoveItem(item.product_id)}
-                          >
-                            <DeleteForeverIcon style={{ fontSize: "3rem" }} />
-                          </MUI.BetterIconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          <DeleteForeverIcon style={{ fontSize: "3rem" }} />
+                        </MUI.BetterIconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -245,18 +253,20 @@ function CheckOut() {
               <span>Total</span>
               <span>{totalPrice}$</span>
             </div>
-            <div className="Pagination mt-[1rem] flex justify-end">
-              <Typography>Page: {page}</Typography>
-              <Pagination
-                page={page}
-                onChange={handleChangePage}
-                count={11}
-                defaultPage={1}
-                siblingCount={0}
-                variant="outlined"
-                size="large"
-              />
-            </div>
+            {
+              //   <div className="Pagination mt-[1rem] flex justify-end">
+              //   <Typography>Page: {page}</Typography>
+              //   <Pagination
+              //     page={page}
+              //     onChange={handleChangePage}
+              //     count={11}
+              //     defaultPage={1}
+              //     siblingCount={0}
+              //     variant="outlined"
+              //     size="large"
+              //   />
+              // </div>
+            }
           </TabPanel>
           <TabPanel value="2" sx={{ padding: "1.2rem", background: "white" }}>
             <div className="payment-details-wrapper flex py-[1rem]">
@@ -269,30 +279,38 @@ function CheckOut() {
                   order item.
                 </p>
                 <ul className="flex gap-[1rem] flex-col max-h-[30rem] shadow-md overflow-y-scroll mt-[1rem] list-item-order border-[0.5px] border-gray-400 p-[1.5rem] rounded-xl">
-                  {(getShoppingCartList &&
-                    getShoppingCartList.length > 0) &&
-                    getShoppingCartList.map((item) => (
-                      <li key={item.product_id}
-                        className="item-orders flex gap-[1rem] items-center "
-                      >
-                        <div className="card-image mb-[1rem] rounded-[2rem]">
+                  {getShoppingCartList?.map((item) => (
+                    <li
+                      key={item.product_id}
+                      className="item-orders flex gap-[1rem] items-center "
+                    >
+                      <div className="card-image mb-[1rem] rounded-[2rem]">
+                        {item.product_image.length > 0 ? (
                           <img
                             className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-md "
-                            src={item.product_image[0].link}
+                            src={item.product_image[0]?.link}
                             alt=""
                             onError={({ currentTarget }) => {
                               currentTarget.onerror = null;
                               currentTarget.src = notFoundImage;
                             }}
                           />
-                        </div>
-                        <div className="cart-item-info w-full overflow-hidden">
-                          <span className="name line-clamp-2 font-semibold">
-                            {item.name}
-                          </span>
-                          <div className="cart-item-info-price flex items-center">
-                            <ul className="flex flex-col flex-1">
-                              {Object.entries(item.Variation).map((props, index) => (
+                        ) : (
+                          <img
+                            className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-md "
+                            src={notFoundImage}
+                            alt=""
+                          />
+                        )}
+                      </div>
+                      <div className="cart-item-info w-full overflow-hidden">
+                        <span className="name line-clamp-2 font-semibold">
+                          {item.name}
+                        </span>
+                        <div className="cart-item-info-price flex items-center">
+                          <ul className="flex flex-col flex-1">
+                            {Object.entries(item.Variation).map(
+                              (props, index) => (
                                 <li
                                   key={index}
                                   className="flex-1 flex gap-[0.5rem] items-center"
@@ -310,32 +328,34 @@ function CheckOut() {
                                     {props[1]}
                                   </span>
                                 </li>
-                              ))}
-                            </ul>
-                            <div className="cart-item-info-price flex items-center gap-[1rem]">
-                              <div className=" flex gap-[1.2rem] items-center">
-                                <span className="text-[1.7rem] font-light">
-                                  ${item.price}
-                                </span>
-                                <span>x</span>
-                                <input
-                                  className="border-[1px] rounded-lg outline-none border-gray-300 w-[5rem]"
-                                  type="number"
-                                  defaultValue={item.quantity}
-                                  readOnly={true}
-                                />
-                              </div>
-                              <div
-                                className="flex-1 text-[2rem]"
-                                style={{ color: "var(--primary-color)" }}
-                              >
-                                <span>${item.price * item.quantity}</span>
-                              </div>
+                              )
+                            )}
+                          </ul>
+                          <div className="cart-item-info-price flex items-center gap-[1rem]">
+                            <div className=" flex gap-[1.2rem] items-center">
+                              <span className="text-[1.7rem] font-light">
+                                ${item.price}
+                              </span>
+                              <span>x</span>
+                              <input
+                                className="border-[1px] rounded-lg outline-none border-gray-300 w-[5rem]"
+                                type="number"
+                                defaultValue={item.quantity}
+                                readOnly={true}
+                              />
+                            </div>
+                            <div
+                              className="flex-1 text-[2rem]"
+                              style={{ color: "var(--primary-color)" }}
+                            >
+                              <span>${item.price * item.quantity}</span>
                             </div>
                           </div>
                         </div>
-                      </li>
-                    ))}
+                      </div>
+                    </li>
+                  ))}
+                  <NothingToSee imgH='10rem' imgSrc={cart_empty_image} textSize='1.8rem' text="Your cart is still empty" />
                 </ul>
                 <ul className="shipping-types mt-[1rem] flex flex-col gap-[1rem]">
                   {[...Array(2)].map((index) => (

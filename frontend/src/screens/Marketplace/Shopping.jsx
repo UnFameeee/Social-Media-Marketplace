@@ -10,6 +10,7 @@ import SellIcon from "@mui/icons-material/Sell";
 import ProductCard from "./ProductCard";
 import styled from "styled-components";
 import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
+import NothingToSee from "./NothingToSee";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -19,6 +20,7 @@ import {
 } from "../../redux/apiRequest";
 import {
   addProductToCartWithoutPagingSaga,
+  changeShoppingProductPage,
   getProductDetail,
 } from "../../redux/product/productSlice";
 import { useState } from "react";
@@ -111,14 +113,12 @@ function Shopping() {
     (state) => state.product?.getShopping?.data,
     shallowEqual
   );
-  const shoppingProductPaging = useSelector((state) => state.product?.getShopping?.paging);
-  const [page, setPage] = React.useState(1);
+  const shoppingProductPaging = useSelector(
+    (state) => state.product?.getShopping?.page
+  );
+  const { totalElement, pageSize, page } = shoppingProductPaging;
   const [productDetail, setProductDetail] = useState();
-  const handleChange = (event, value) => {
-    setPage(value);
-  };
   const navigate = useNavigate();
-
   // #endregion
   //#region declare function
   const handleViewDetail = (productObj) => {
@@ -132,17 +132,28 @@ function Shopping() {
       accessToken,
       refreshToken,
       product_id,
-      dispatch,
+      dispatch
     );
   };
   const handleNavigateToCheckOut = () => {
-    navigate("/marketplace/checkout");
+    navigate("/checkout");
   };
   const handleNavigateToSelling = () => {
-    navigate("/marketplace/selling");
+    navigate("/selling");
+  };
+  const handleChange = (event, value) => {
+    let shoppingPage = value - 1;
+    let paging = { page: shoppingPage, pageSize };
+    dispatch(changeShoppingProductPage({ accessToken, refreshToken, paging }));
   };
   useEffect(() => {
-    getAllShoppingProduct(accessToken, refreshToken, dispatch);
+    let paging;
+    if (shoppingProductPaging) {
+      paging = { page, pageSize };
+    } else {
+      paging = { page: 0, pageSize: 30 };
+    }
+    getAllShoppingProduct(accessToken, refreshToken, paging, dispatch);
   }, []);
   return (
     <>
@@ -177,35 +188,45 @@ function Shopping() {
               <SellIcon style={{ fontSize: "2.5rem" }} />
             </Fab>
             <HeadSlider />
-            <div className="product-container mb-[1rem]">
-              {productList &&
-                productList.map((product) => (
-                  <ProductCard
-                    key={product.product_id}
-                    productObj={product}
-                    arrayBtn={[
-                      {
-                        pos: 0,
-                        text: "view details",
-                        handle: handleViewDetail,
-                      },
-                      { pos: 1, text: "add to cart", handle: handleAddToCart },
-                    ]}
+            {productList?.length > 0 ? (
+              <>
+                <div className="product-container mb-[1rem]">
+                  {productList &&
+                    productList.map((product) => (
+                      <ProductCard
+                        key={product.product_id}
+                        productObj={product}
+                        arrayBtn={[
+                          {
+                            pos: 0,
+                            text: "view details",
+                            handle: handleViewDetail,
+                          },
+                          {
+                            pos: 1,
+                            text: "add to cart",
+                            handle: handleAddToCart,
+                          },
+                        ]}
+                      />
+                    ))}
+                </div>
+                <div className="Pagination float-right">
+                  <Typography>Page: {page + 1}</Typography>
+                  <Pagination
+                    page={page + 1}
+                    onChange={handleChange}
+                    count={Math.round(totalElement / pageSize)}
+                    defaultPage={1}
+                    siblingCount={0}
+                    variant="outlined"
+                    size="large"
                   />
-                ))}
-            </div>
-            <div className="Pagination float-right">
-              <Typography>Page: {page}</Typography>
-              <Pagination
-                page={page}
-                onChange={handleChange}
-                count={11}
-                defaultPage={1}
-                siblingCount={0}
-                variant="outlined"
-                size="large"
-              />
-            </div>
+                </div>
+              </>
+            ) : (
+              <NothingToSee />
+            )}
           </div>
         </ThreeColumns>
       </ResponSiveDiv>

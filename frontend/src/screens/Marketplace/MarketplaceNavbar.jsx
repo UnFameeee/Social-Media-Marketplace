@@ -16,12 +16,12 @@ function MarketplaceNavbar() {
   });
   const handleNavigateToShopping = () => {
     if (!isShoppingActive) {
-      navigate("/marketplace/shopping");
+      navigate("/shopping");
     }
   };
   const handleNavigateToSelling = () => {
     if (!isSellingActive) {
-      navigate("/marketplace/selling");
+      navigate("/selling");
     }
   };
   return (
