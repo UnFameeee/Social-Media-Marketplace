@@ -19,6 +19,7 @@ import uploadImageReducer from "./uploadImage/uploadImageSlice";
 import commentReducer from "./comment/commentSlice"
 import productReducer from "./product/productSlice";
 import tabIndexReducer from "./tabIndex/tabIndexSlice";
+import notificationReducer from "./notifications/notificationSlice"
 import rootSaga from "./rootSaga";
 
 const sagaMiddleware = createSagaMiddleware();
@@ -36,7 +37,7 @@ const rootReducer = combineReducers({
   comment: commentReducer,
   product:productReducer,
   tabIndex: tabIndexReducer,
-  
+  notification: notificationReducer,
 });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({

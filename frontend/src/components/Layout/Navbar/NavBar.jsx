@@ -1,6 +1,12 @@
-import { useState, useReducer, useContext } from 'react';
+import { useState, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FacebookOutlined, Close } from '@mui/icons-material';
+import {
+  FacebookOutlined,
+  Close,
+  ThumbUpAlt,
+  Comment,
+  PersonAdd,
+} from '@mui/icons-material';
 import {
   Paper,
   Grid,
@@ -11,7 +17,7 @@ import {
 } from '@mui/material';
 import { IoLogOut } from 'react-icons/io5';
 import { RiMoreFill } from 'react-icons/ri';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import {
   middleNavIcons,
   rightNavIcons,
@@ -23,21 +29,38 @@ import { localStorageService } from '../../../services/localStorageService';
 import socket from '../../../socket/socket';
 import { SOCKET_EVENT } from '../../../socket/socket.constant';
 import MUI from '../../MUI';
+import { NOTIFICATION_TYPE } from '../../../socket/notification.constant';
+import {
+  getAllFriendNotification,
+  getAllNotification,
+  getAllUnreadNotification,
+  seenNotification,
+} from '../../../redux/notifications/notificationAPI';
+import {
+  acceptFriendRequest,
+  denyFriendRequest,
+} from '../../../redux/friend/friendSaga';
+import { LeftbarFriendRequest } from '../../../screens/Friends/DynamicLeftbar/LeftbarMiddleItem';
 import '../Layout.css';
 
 export default function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  var recentSearch = localStorageService.getItem('recentSearch');
   const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const [value, setValue] = useState('');
   const [openSearch, setOpenSearch] = useState(false);
   const [rightGroup, setRightGroup] = useState(''); //right nav bar
+
+  // #region notifications variablue
   const [notificationType, setNotificationType] = useState('all'); //notification type default is all
+  const [listConfirm, setListConfirm] = useState([]);
+  const [listDeny, setListDeny] = useState([]);
+  // #endregion
 
-  var recentSearch = localStorageService.getItem('recentSearch');
-
+  // #redux variables
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -50,6 +73,19 @@ export default function NavBar() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
+  const allNotifications = useSelector(
+    (state) => state.notification?.getAll?.data,
+    shallowEqual
+  );
+  const allFriendNotifications = useSelector(
+    (state) => state.notification?.getAllFriend?.data,
+    shallowEqual
+  );
+  const allUnreadNotifications = useSelector(
+    (state) => state.notification?.getAllUnread?.data,
+    shallowEqual
+  );
+  // #endregion
 
   const handleLogOut = () => {
     logOut(dispatch, accessToken, refreshToken);
@@ -67,6 +103,123 @@ export default function NavBar() {
     }
     setOpenSearch(false);
   }
+
+  // #region notification functions
+  function handleNotificationType(type) {
+    if (type === 'all') {
+      getAllNotification(accessToken, refreshToken, dispatch);
+    } else if (type === 'unread') {
+      getAllUnreadNotification(accessToken, refreshToken, dispatch);
+    } else {
+      getAllFriendNotification(accessToken, refreshToken, dispatch);
+    }
+  }
+  function listNotifications(list) {
+    return list?.map((item) => {
+      return {
+        left: (
+          <MUI.AvatarWithBadge
+            avatarConfig={{
+              src: item.profile_sender_avatar,
+              alt: item.profile_sender_name,
+              children: item.profile_sender_name?.at(0),
+              sx: {
+                width: '6rem',
+                height: '6rem',
+                fontSize: '3rem',
+              },
+            }}
+          >
+            {item.notification_type === NOTIFICATION_TYPE.LIKE ? (
+              <ThumbUpAlt />
+            ) : item.notification_type ===
+              NOTIFICATION_TYPE.COMMENT ? (
+              <Comment />
+            ) : (
+              <PersonAdd />
+            )}
+          </MUI.AvatarWithBadge>
+        ),
+        middle:
+          item.notification_type ===
+          NOTIFICATION_TYPE.FRIEND_REQUEST ? (
+            <div className="w-[100%]">
+              <LeftbarFriendRequest
+                profile={{
+                  profile_name: item.content,
+                  profile_id: item.profile_sender_id,
+                }}
+                listAction={[listConfirm, listDeny]}
+                firstButtonConfig={{
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    acceptFriendRequest({
+                      accessToken,
+                      refreshToken,
+                      id: item.profile_sender_id,
+                      callRefreshProfile: Helper.checkURL('profile'),
+                      dispatch,
+                    });
+
+                    setListConfirm((old) => [
+                      ...old,
+                      item.profile_sender_id,
+                    ]);
+                  },
+                }}
+                secondButtonConfig={{
+                  onClick: (e) => {
+                    e.stopPropagation();
+                    denyFriendRequest({
+                      accessToken,
+                      refreshToken,
+                      id: item.profile_sender_id,
+                      callRefreshProfile: Helper.checkURL('profile'),
+                      dispatch,
+                    });
+
+                    setListDeny((old) => [
+                      ...old,
+                      item.profile_sender_id,
+                    ]);
+                  },
+                }}
+              />
+            </div>
+          ) : (
+            item.content
+          ),
+        onClick: () => {
+          handleNotificationClicked(
+            item.notification_type,
+            item.post_id,
+            item.profile_sender_id,
+            item.notification_id
+          );
+        },
+      };
+    });
+  }
+  function handleNotificationClicked(
+    type,
+    postId,
+    profileId,
+    notificationId
+  ) {
+    seenNotification(
+      accessToken,
+      refreshToken,
+      notificationId,
+      dispatch
+    );
+
+    if (type === NOTIFICATION_TYPE.FRIEND_REQUEST) {
+      navigate(`/profile?id=${profileId}`);
+    } else {
+      navigate(`/post?id=${postId}`);
+    }
+  }
+  // #endregion
 
   return (
     <Paper className="nav-bar drop-shadow-md">
@@ -214,6 +367,16 @@ export default function NavBar() {
               value={rightGroup}
               exclusive
               onChange={(e, value) => {
+                e.preventDefault();
+
+                if (value === 'notifications') {
+                  getAllNotification(
+                    accessToken,
+                    refreshToken,
+                    dispatch
+                  );
+                }
+
                 setRightGroup(value);
               }}
             >
@@ -292,6 +455,10 @@ export default function NavBar() {
 
                 {rightGroup === 'notifications' && (
                   <MUI.Menu
+                    classNameConfig={{
+                      menuItemClass: 'nav-notification',
+                      middleClass: 'nav-notification',
+                    }}
                     sx={{ right: '4.8rem', minWidth: '40rem' }}
                     before={
                       <div style={{ padding: '0.4rem 1.6rem 0' }}>
@@ -317,17 +484,25 @@ export default function NavBar() {
                           exclusive
                           onChange={(e, value) => {
                             e.preventDefault();
-                            setNotificationType(value);
+                            if (value) {
+                              handleNotificationType(value);
+                              setNotificationType(value);
+                            }
                           }}
                           className="notification-type-wrapper"
                         >
-                          <ToggleButton value="all" className="type">
+                          <ToggleButton
+                            value="all"
+                            className="type"
+                            disabled={notificationType === 'all'}
+                          >
                             All
                           </ToggleButton>
 
                           <ToggleButton
                             value="unread"
                             className="type"
+                            disabled={notificationType === 'unread'}
                           >
                             Unread
                           </ToggleButton>
@@ -335,13 +510,20 @@ export default function NavBar() {
                           <ToggleButton
                             value="friends"
                             className="type"
+                            disabled={notificationType === 'friends'}
                           >
                             Friends
                           </ToggleButton>
                         </ToggleButtonGroup>
                       </div>
                     }
-                    list={[]}
+                    list={
+                      notificationType === 'all'
+                        ? listNotifications(allNotifications)
+                        : notificationType === 'unread'
+                        ? listNotifications(allUnreadNotifications)
+                        : listNotifications(allFriendNotifications)
+                    }
                   />
                 )}
               </div>

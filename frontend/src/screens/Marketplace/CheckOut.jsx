@@ -23,10 +23,10 @@ import MUI from "../../components/MUI";
 import {
   changeProductFromListCartWithoutPagingQuantityRequest,
   removeProductFromListCartWithoutPagingRequest,
-} from "../../redux/product/productSaga";
-import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
+} from '../../redux/product/productSaga';
+import MarketPlaceLeftBar from './MarketPlaceLeftBar';
 function CheckOut() {
-  const [value, setValue] = useState("1");
+  const [value, setValue] = useState('1');
   const [openConfirmRemove, setOpenConfirmRemove] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(-1);
   const dispatch = useDispatch();
@@ -92,19 +92,21 @@ function CheckOut() {
         <Box
           sx={{
             borderBottom: 1,
-            borderColor: "divider",
-            displayPrint: "flex",
+            borderColor: 'divider',
+            displayPrint: 'flex',
           }}
         >
           <div className="header flex items-center bg-white px-[2rem] mb-[1rem] rounded-md">
             <div className="header-title flex-1">
-              <span className=" text-[2.5rem] font-bold">Order Overview</span>
+              <span className=" text-[2.5rem] font-bold">
+                Order Overview
+              </span>
             </div>
             <TabList
               TabIndicatorProps={{
                 style: {
-                  background: "var(--primary-color)",
-                  flex: "1",
+                  background: 'var(--primary-color)',
+                  flex: '1',
                 },
               }}
               onChange={handleChange}
@@ -114,15 +116,15 @@ function CheckOut() {
                 label="Information"
                 value="1"
                 style={{
-                  color: "var(--primary-color)",
-                  textTransform: "capitalize",
-                  flex: "1",
+                  color: 'var(--primary-color)',
+                  textTransform: 'capitalize',
+                  flex: '1',
                 }}
               />
               <Tab
                 style={{
-                  color: "var(--primary-color)",
-                  textTransform: "capitalize",
+                  color: 'var(--primary-color)',
+                  textTransform: 'capitalize',
                 }}
                 className="cart flex-1"
                 label="Payment Details"
@@ -130,8 +132,8 @@ function CheckOut() {
               />
               <Tab
                 style={{
-                  color: "var(--primary-color)",
-                  textTransform: "capitalize",
+                  color: 'var(--primary-color)',
+                  textTransform: 'capitalize',
                 }}
                 className="cart flex-1"
                 label="Complete Order"
@@ -141,29 +143,49 @@ function CheckOut() {
           </div>
         </Box>
         <div className=" shadow-lg">
-          <TabPanel value="1" sx={{ padding: "1.2rem", background: "white" }}>
+          <TabPanel
+            value="1"
+            sx={{ padding: '1.2rem', background: 'white' }}
+          >
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell style={{ fontSize: "1.8rem" }}>Item</TableCell>
-                    <TableCell style={{ fontSize: "1.8rem" }} align="center">
+                    <TableCell style={{ fontSize: '1.8rem' }}>
+                      Item
+                    </TableCell>
+                    <TableCell
+                      style={{ fontSize: '1.8rem' }}
+                      align="center"
+                    >
                       Description
                     </TableCell>
-                    <TableCell style={{ fontSize: "1.8rem" }} align="center">
+                    <TableCell
+                      style={{ fontSize: '1.8rem' }}
+                      align="center"
+                    >
                       Quantity
                     </TableCell>
-                    <TableCell style={{ fontSize: "1.8rem" }} align="center">
+                    <TableCell
+                      style={{ fontSize: '1.8rem' }}
+                      align="center"
+                    >
                       Price
                     </TableCell>
-                    <TableCell style={{ fontSize: "1.8rem" }} align="center">
+                    <TableCell
+                      style={{ fontSize: '1.8rem' }}
+                      align="center"
+                    >
                       Action
                     </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   <MUI.ConfirmDialog
-                    modalProps={[openConfirmRemove, setOpenConfirmRemove]}
+                    modalProps={[
+                      openConfirmRemove,
+                      setOpenConfirmRemove,
+                    ]}
                     title="Remove Cart Item"
                     actionName="remove this item"
                     confirmAction={handleConfirmDeleteItem}
@@ -268,15 +290,18 @@ function CheckOut() {
               // </div>
             }
           </TabPanel>
-          <TabPanel value="2" sx={{ padding: "1.2rem", background: "white" }}>
+          <TabPanel
+            value="2"
+            sx={{ padding: '1.2rem', background: 'white' }}
+          >
             <div className="payment-details-wrapper flex py-[1rem]">
               <div className="summary-order flex-1 px-[2rem]">
                 <span className="title-text font-bold text-[2.5rem]">
                   Summary Order
                 </span>
                 <p className=" max-w-[35rem]">
-                  Check your item and select your shipping for better experience
-                  order item.
+                  Check your item and select your shipping for better
+                  experience order item.
                 </p>
                 <ul className="flex gap-[1rem] flex-col max-h-[30rem] shadow-md overflow-y-scroll mt-[1rem] list-item-order border-[0.5px] border-gray-400 p-[1.5rem] rounded-xl">
                   {getShoppingCartList?.map((item) => (
@@ -320,9 +345,9 @@ function CheckOut() {
                                   </span>
                                   <span
                                     className={` ${
-                                      props[0] == "brand"
-                                        ? "uppercase"
-                                        : "capitalize"
+                                      props[0] == 'brand'
+                                        ? 'uppercase'
+                                        : 'capitalize'
                                     }`}
                                   >
                                     {props[1]}
@@ -358,7 +383,7 @@ function CheckOut() {
                   <NothingToSee imgH='10rem' imgSrc={cart_empty_image} textSize='1.8rem' text="Your cart is still empty" />
                 </ul>
                 <ul className="shipping-types mt-[1rem] flex flex-col gap-[1rem]">
-                  {[...Array(2)].map((index) => (
+                  {[...Array(2)].map((item, index) => (
                     <li key={index} className="shipping-type ">
                       <span className="shipping-title capitalize font-semibold text-[2rem]">
                         Available shipping methods!
@@ -382,7 +407,9 @@ function CheckOut() {
                           </div>
                           <div className="cart-item-info-price flex justify-center items-center gap-[1rem]">
                             <div className="flex gap-[1rem]">
-                              <span className="font-semibold">Free</span>
+                              <span className="font-semibold">
+                                Free
+                              </span>
                               <input type="radio" name="shipping" />
                             </div>
                           </div>
@@ -397,8 +424,8 @@ function CheckOut() {
                   Payment Details
                 </span>
                 <p className=" max-w-[35rem]">
-                  Complete your purchase item by providing your payment detail
-                  order
+                  Complete your purchase item by providing your
+                  payment detail order
                 </p>
                 <span className="title-payment-details font-bold text-primaryColor text-[2.5rem]">
                   Total: {totalPrice}$
@@ -406,7 +433,10 @@ function CheckOut() {
               </div>
             </div>
           </TabPanel>
-          <TabPanel value="3" sx={{ padding: "1.2rem", background: "white" }}>
+          <TabPanel
+            value="3"
+            sx={{ padding: '1.2rem', background: 'white' }}
+          >
             <img
               src={`https://source.unsplash.com/random/1920x1200/?congratulations `}
               alt=""
