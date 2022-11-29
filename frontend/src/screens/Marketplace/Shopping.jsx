@@ -2,9 +2,7 @@ import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
 import { Tooltip, Pagination, Typography, Fab } from "@mui/material";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import HeadSlider from "./HeadSlider";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { ShoppingBag } from "@mui/icons-material";
@@ -15,10 +13,17 @@ import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { addProductToCart, getAllShoppingProduct } from "../../redux/apiRequest";
-import { addProductToCartWithoutPagingSaga, getProductDetail } from "../../redux/product/productSlice";
+import {
+  addProductToCart,
+  getAllShoppingProduct,
+} from "../../redux/apiRequest";
+import {
+  addProductToCartWithoutPagingSaga,
+  getProductDetail,
+} from "../../redux/product/productSlice";
 import { useState } from "react";
 import { addProductToListCartWithoutPagingRequest } from "../../redux/product/productSaga";
+import { setTabMarketPlaceLeftBarIndex } from "../../redux/tabIndex/tabIndexSlice";
 
 //#region media responsive
 const ResponSiveDiv = styled.div`
@@ -106,16 +111,8 @@ function Shopping() {
     (state) => state.product?.getShopping?.data,
     shallowEqual
   );
-  const settings = {
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 750,
-    autoplaySpeed: 5000,
-    cssEase: "linear",
-  };
   const [page, setPage] = React.useState(1);
-  const [productDetail,setProductDetail] = useState()
+  const [productDetail, setProductDetail] = useState();
   const handleChange = (event, value) => {
     setPage(value);
   };
@@ -123,17 +120,19 @@ function Shopping() {
 
   // #endregion
   //#region declare function
-  function randomNumberInRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  //#endregion
-  let randomNum = randomNumberInRange(1400, 1050);
   const handleViewDetail = (productObj) => {
-    dispatch(getProductDetail(productObj))
+    dispatch(getProductDetail(productObj));
+    dispatch(setTabMarketPlaceLeftBarIndex("2"));
   };
   const handleAddToCart = (productObj) => {
-    let product_id= productObj.product_id;
-    addProductToListCartWithoutPagingRequest(accessToken,refreshToken,product_id,dispatch)
+    let product_id = productObj.product_id;
+    dispatch(setTabMarketPlaceLeftBarIndex("1"));
+    addProductToListCartWithoutPagingRequest(
+      accessToken,
+      refreshToken,
+      product_id,
+      dispatch
+    );
   };
   const handleNavigateToCheckOut = () => {
     navigate("/marketplace/checkout");
@@ -143,7 +142,7 @@ function Shopping() {
   };
   useEffect(() => {
     getAllShoppingProduct(accessToken, refreshToken, dispatch);
-  },[]);
+  }, []);
   return (
     <>
       <ResponSiveDiv>
@@ -176,27 +175,7 @@ function Shopping() {
             >
               <SellIcon style={{ fontSize: "2.5rem" }} />
             </Fab>
-            <div className="slide-show">
-              <Slider {...settings}>
-                {
-                //   [
-                //   ...Array.from({ length: 5 }, () =>
-                //     randomNumberInRange(1400, 1050)
-                //   ),
-                // ].map((index) => (
-                //   <div key={index}>
-                //     <img
-                //       className="h-[300px] w-full object-cover rounded-xl"
-                //       src={`https://source.unsplash.com/random/1000x${
-                //         randomNum * index
-                //       }/?3D Renders`}
-                //       alt=""
-                //     />
-                //   </div>
-                // ))
-              }
-              </Slider>
-            </div>
+            <HeadSlider />
             <div className="product-container mb-[1rem]">
               {productList &&
                 productList.map((product) => (

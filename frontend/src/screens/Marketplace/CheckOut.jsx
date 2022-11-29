@@ -12,7 +12,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import macbook_example from "../../assets/macbook.jpeg";
 import notFoundImage from "../../assets/noimage_1.png";
 import { useDispatch, useSelector } from "react-redux";
