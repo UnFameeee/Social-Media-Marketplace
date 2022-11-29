@@ -134,6 +134,9 @@ function Selling() {
     (state) => state.product?.getSelling?.data,
     shallowEqual
   );
+  const sellingProductPaging = useSelector(
+    (state) => state.product?.getSelling?.page
+  );
   // #endregion
   //#region declare function
   const handleUpdate = (productObj) => {
@@ -156,24 +159,30 @@ function Selling() {
     setDeleteItemId(product_id);
   };
   const handleConfirmDeleteProduct = () => {
+    const { page, pageSize } = sellingProductPaging;
+    let paging = { page, pageSize };
     if (deleteItemId != -1) {
       deleteSellingProductRequest(
         accessToken,
         refreshToken,
         dispatch,
-        deleteItemId
+        deleteItemId,
+        paging
       );
       setDeleteItemId(-1);
     }
     setOpenConfirmRemove(false);
   };
   const handleSubmitCreateProduct = (product, uploadImages) => {
+    const { page, pageSize } = sellingProductPaging;
+    let paging = { page, pageSize };
     createSellingProductRequest(
       accessToken,
       refreshToken,
       dispatch,
       product,
-      uploadImages
+      uploadImages,
+      paging
     );
   };
   const handleSaveUpdateProduct = (
@@ -184,6 +193,8 @@ function Selling() {
   ) => {
     let removeImages = removeUploadImages;
     let product_id = productId;
+    const { page, pageSize } = sellingProductPaging;
+    let paging = { page, pageSize };
     updateSellingProductRequest(
       accessToken,
       refreshToken,
@@ -191,7 +202,8 @@ function Selling() {
       product,
       product_id,
       uploadImages,
-      removeImages
+      removeImages,
+      paging
     );
   };
   useEffect(() => {

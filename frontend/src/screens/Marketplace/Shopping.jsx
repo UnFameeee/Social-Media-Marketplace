@@ -111,6 +111,7 @@ function Shopping() {
     (state) => state.product?.getShopping?.data,
     shallowEqual
   );
+  const shoppingProductPaging = useSelector((state) => state.product?.getShopping?.paging);
   const [page, setPage] = React.useState(1);
   const [productDetail, setProductDetail] = useState();
   const handleChange = (event, value) => {
@@ -131,7 +132,7 @@ function Shopping() {
       accessToken,
       refreshToken,
       product_id,
-      dispatch
+      dispatch,
     );
   };
   const handleNavigateToCheckOut = () => {

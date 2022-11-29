@@ -1,9 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { revertAll } from "../resetStore";
 const initialState = {
-  getSelling: {
-    data: [],
-  },
+  getSelling: null,
   createSelling: {
     isFetching: false,
     isError: false,
@@ -11,6 +9,10 @@ const initialState = {
   },
   getShopping: {
     data: [],
+    paging: {
+      page: 0,
+      pageSize: 30,
+    },
   },
   getProductDetail: {
     data: null,
@@ -26,9 +28,7 @@ const initialState = {
 export const productSlice = createSlice({
   name: "product",
   initialState: {
-    getSelling: {
-      data: [],
-    },
+    getSelling: null,
     createSelling: {
       isFetching: false,
       isError: false,
@@ -36,6 +36,10 @@ export const productSlice = createSlice({
     },
     getShopping: {
       data: [],
+      paging: {
+        page: 0,
+        pageSize: 30,
+      },
     },
     getProductDetail: {
       data: null,
@@ -52,7 +56,7 @@ export const productSlice = createSlice({
   reducers: {
     getSellingProductSaga() {},
     getSellingProduct: (state, action) => {
-      state.getSelling.data = action.payload;
+      state.getSelling = action.payload;
     },
     createSellingProductSagaSuccess() {},
 
