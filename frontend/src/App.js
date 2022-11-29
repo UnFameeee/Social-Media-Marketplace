@@ -49,11 +49,18 @@ function App() {
         notify(payload);
       });
 
+      //listening on the event rerender notification popup
+      socket.on(SOCKET_EVENT.RERENDER_NOTIFICATION, () => {
+        // setIsConnected(true);
+        notify("RERENDER");
+      });
+
+
       //listening to the event receiving the notification
       socket.on(
         SOCKET_EVENT.RECEIVE_NOTIFICATION,
         (NotificationResponseDto) => {
-          console.log(NotificationResponseDto);
+          // console.log(NotificationResponseDto);
           handleNotificationType(
             NotificationResponseDto.notification_type
           );
@@ -72,7 +79,7 @@ function App() {
                 notification_type={notification_type}
               />,
               {
-                autoClose: false,
+                autoClose: 3000,
               }
             );
           };
@@ -96,6 +103,7 @@ function App() {
     return () => {
       //Remove the event that you listened
       socket.off(SOCKET_EVENT.JOIN_ROOM);
+      socket.off(SOCKET_EVENT.RERENDER_NOTIFICATION);
       socket.off(SOCKET_EVENT.RECEIVE_NOTIFICATION);
     };
   }, [accessToken]);
@@ -112,7 +120,7 @@ function App() {
         pauseOnFocusLoss={false}
         draggable={false}
         transition={Bounce}
-        // theme="dark"
+      // theme="dark"
       />
     </>
   );

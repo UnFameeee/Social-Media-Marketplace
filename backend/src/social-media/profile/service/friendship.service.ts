@@ -54,6 +54,7 @@ export class FriendshipService {
                 const profile_receiver = profile_target_id;
                 if (profile_receiver && profile_receiver != profile.profile_id) {
                     await this.notificationService.removeFriendRequestNotification(profile.profile_id, profile_receiver, NOTIFICATION_TYPE.FRIEND_REQUEST);
+                    this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RERENDER_NOTIFICATION);
                 }
             }
 
@@ -87,6 +88,13 @@ export class FriendshipService {
         try {
             var response = new ResponseData<boolean>();
             response.results = await this.friendshipRepository.acceptFriendRequest(profile.profile_id, profile_request_id);
+
+            if (response.results) {
+                const profile_receiver = profile.profile_id;
+                await this.notificationService.removeFriendRequestNotification(profile_request_id, profile_receiver, NOTIFICATION_TYPE.FRIEND_REQUEST);
+                this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RERENDER_NOTIFICATION);
+            }
+
             return response;
         } catch (err) {
             ExceptionResponse(err);
@@ -97,6 +105,14 @@ export class FriendshipService {
         try {
             var response = new ResponseData<boolean>();
             response.results = await this.friendshipRepository.denyFriendRequest(profile.profile_id, profile_request_id);
+
+            if (!response.results) {
+                const profile_receiver = profile.profile_id;
+                console.log(profile_receiver);
+                await this.notificationService.removeFriendRequestNotification(profile_request_id, profile_receiver, NOTIFICATION_TYPE.FRIEND_REQUEST);
+                this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RERENDER_NOTIFICATION);
+            }
+
             return response;
         } catch (err) {
             ExceptionResponse(err);

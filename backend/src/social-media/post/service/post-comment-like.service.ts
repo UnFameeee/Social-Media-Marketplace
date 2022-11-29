@@ -37,6 +37,7 @@ export class PostCommentLikeService {
                 if (profile_receiver && profile_receiver != profile.profile_id) {
                     const post_id = await this.notificationService.getPostByPostCommentId(post_comment_id);
                     await this.notificationService.removeNotification(profile.profile_id, profile_receiver, NOTIFICATION_TYPE.LIKE, post_id, post_comment_id);
+                    this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RERENDER_NOTIFICATION);
                 }
             }
 
