@@ -9,19 +9,23 @@ export class ShopOrder extends Model<ShopOrder> {
     @PrimaryKey
     @AllowNull(false)
     @Column
-    order_id: number
+    order_id: number;
  
     //profile_id
     //shipping_address_id
 
+    //10.000.000.000.000.000
     @Column
-    order_date: string
+    order_price: number;
 
     @Column
-    payment_method: string 
+    order_date: string;
 
     @Column
-    order_status: string
+    payment_method: string;
+
+    @Column
+    order_status: string;
 
     @Column(DataType.DATE(3))
     createdAt: string;

@@ -14,6 +14,7 @@ import { ProductImageModule } from './marketplace/image/module/product_image.mod
 import { ShoppingCartModule } from './marketplace/shopping_cart/module/shopping_cart.module';
 import { PostCommentLikeModule } from './social-media/post/module/post-comment-like.module';
 import { NotificationModule } from './notification/module/notification.module';
+import { ShopOrderModule } from './marketplace/shop_order/module/shop_order.module';
 
 
 @Module({
@@ -33,6 +34,7 @@ import { NotificationModule } from './notification/module/notification.module';
     ProductModule,
     ProductImageModule,
     ShoppingCartModule,
+    ShopOrderModule,
 
     //Notification
     NotificationModule,
