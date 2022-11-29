@@ -11,7 +11,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import socket from './socket/socket';
 import { SOCKET_EVENT } from './socket/socket.constant';
 import Notification from './socket/Notification';
-import { getAllNotification } from './redux/notifications/notificationAPI';
+import {
+  getAllNotification,
+  getAllUnreadNotification,
+  getAllFriendNotification,
+} from './redux/notifications/notificationAPI';
 
 function App() {
   // const [isConnected, setIsConnected] = useState(socket.connected);
@@ -25,6 +29,16 @@ function App() {
   );
 
   const notify = (data) => toast(data);
+
+  function handleNotificationType(type) {
+    if (type === 'all') {
+      getAllNotification(accessToken, refreshToken, dispatch);
+    } else if (type === 'unread') {
+      getAllUnreadNotification(accessToken, refreshToken, dispatch);
+    } else {
+      getAllFriendNotification(accessToken, refreshToken, dispatch);
+    }
+  }
 
   useEffect(() => {
     if (accessToken) {
@@ -40,7 +54,9 @@ function App() {
         SOCKET_EVENT.RECEIVE_NOTIFICATION,
         (NotificationResponseDto) => {
           console.log(NotificationResponseDto);
-          getAllNotification(accessToken, refreshToken, dispatch);
+          handleNotificationType(
+            NotificationResponseDto.notification_type
+          );
 
           const notify = (
             avatar,
