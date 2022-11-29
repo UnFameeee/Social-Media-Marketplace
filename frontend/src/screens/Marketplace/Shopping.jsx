@@ -10,6 +10,7 @@ import SellIcon from "@mui/icons-material/Sell";
 import ProductCard from "./ProductCard";
 import styled from "styled-components";
 import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
+import NothingToSee from "./NothingToSee";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -187,35 +188,45 @@ function Shopping() {
               <SellIcon style={{ fontSize: "2.5rem" }} />
             </Fab>
             <HeadSlider />
-            <div className="product-container mb-[1rem]">
-              {productList &&
-                productList.map((product) => (
-                  <ProductCard
-                    key={product.product_id}
-                    productObj={product}
-                    arrayBtn={[
-                      {
-                        pos: 0,
-                        text: "view details",
-                        handle: handleViewDetail,
-                      },
-                      { pos: 1, text: "add to cart", handle: handleAddToCart },
-                    ]}
+            {productList?.length > 0 ? (
+              <>
+                <div className="product-container mb-[1rem]">
+                  {productList &&
+                    productList.map((product) => (
+                      <ProductCard
+                        key={product.product_id}
+                        productObj={product}
+                        arrayBtn={[
+                          {
+                            pos: 0,
+                            text: "view details",
+                            handle: handleViewDetail,
+                          },
+                          {
+                            pos: 1,
+                            text: "add to cart",
+                            handle: handleAddToCart,
+                          },
+                        ]}
+                      />
+                    ))}
+                </div>
+                <div className="Pagination float-right">
+                  <Typography>Page: {page + 1}</Typography>
+                  <Pagination
+                    page={page + 1}
+                    onChange={handleChange}
+                    count={Math.round(totalElement / pageSize)}
+                    defaultPage={1}
+                    siblingCount={0}
+                    variant="outlined"
+                    size="large"
                   />
-                ))}
-            </div>
-            <div className="Pagination float-right">
-              <Typography>Page: {page + 1}</Typography>
-              <Pagination
-                page={page + 1}
-                onChange={handleChange}
-                count={Math.round(totalElement / pageSize)}
-                defaultPage={1}
-                siblingCount={0}
-                variant="outlined"
-                size="large"
-              />
-            </div>
+                </div>
+              </>
+            ) : (
+              <NothingToSee />
+            )}
           </div>
         </ThreeColumns>
       </ResponSiveDiv>

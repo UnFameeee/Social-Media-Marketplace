@@ -14,6 +14,8 @@ import Paper from "@mui/material/Paper";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import macbook_example from "../../assets/macbook.jpeg";
 import notFoundImage from "../../assets/noimage_1.png";
+import cart_empty_image from "../../assets/cart_empty.png";
+import NothingToSee from "./NothingToSee";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect, useMemo } from "react";
 import debounce from "lodash.debounce";
@@ -353,6 +355,7 @@ function CheckOut() {
                       </div>
                     </li>
                   ))}
+                  <NothingToSee imgH='10rem' imgSrc={cart_empty_image} textSize='1.8rem' text="Your cart is still empty" />
                 </ul>
                 <ul className="shipping-types mt-[1rem] flex flex-col gap-[1rem]">
                   {[...Array(2)].map((index) => (

@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ManagerProductModal from "./ManagerProductModa";
 import MUI from "../../components/MUI";
+import NothingToSee from "./NothingToSee";
 import { getAllSellingProduct } from "../../redux/apiRequest";
 import { useEffect } from "react";
 import {
@@ -244,37 +245,43 @@ function Selling() {
               <ShoppingBag style={{ fontSize: "2.5rem" }} />
             </Fab>
             <HeadSlider />
-            <div className="product-container mb-[1rem]">
-              <MUI.ConfirmDialog
-                modalProps={[openConfirmRemove, setOpenConfirmRemove]}
-                title="Remove Selling Product"
-                actionName="remove this product"
-                confirmAction={handleConfirmDeleteProduct}
-              />
-              {productList &&
-                productList.map((product) => (
-                  <ProductCard
-                    key={product.product_id}
-                    productObj={product}
-                    arrayBtn={[
-                      { pos: 0, text: "update", handle: handleUpdate },
-                      { pos: 1, text: "delete", handle: handleDelete },
-                    ]}
+            {productList?.length > 0 ? (
+              <>
+                <div className="product-container mb-[1rem]">
+                  <MUI.ConfirmDialog
+                    modalProps={[openConfirmRemove, setOpenConfirmRemove]}
+                    title="Remove Selling Product"
+                    actionName="remove this product"
+                    confirmAction={handleConfirmDeleteProduct}
                   />
-                ))}
-            </div>
-            <div className="Pagination float-right">
-              <Typography>Page: {page + 1}</Typography>
-              <Pagination
-                page={page + 1}
-                onChange={handleChange}
-                count={Math.round(totalElement / pageSize)}
-                defaultPage={1}
-                siblingCount={0}
-                variant="outlined"
-                size="large"
-              />
-            </div>
+                  {productList &&
+                    productList?.map((product) => (
+                      <ProductCard
+                        key={product.product_id}
+                        productObj={product}
+                        arrayBtn={[
+                          { pos: 0, text: "update", handle: handleUpdate },
+                          { pos: 1, text: "delete", handle: handleDelete },
+                        ]}
+                      />
+                    ))}
+                </div>
+                <div className="Pagination float-right">
+                  <Typography>Page: {page + 1}</Typography>
+                  <Pagination
+                    page={page + 1}
+                    onChange={handleChange}
+                    count={Math.round(totalElement / pageSize)}
+                    defaultPage={1}
+                    siblingCount={0}
+                    variant="outlined"
+                    size="large"
+                  />
+                </div>
+              </>
+            ) : (
+              <NothingToSee text="You don't have any product yet" />
+            )}
           </div>
         </ThreeColumns>
       </ResponSiveDiv>
