@@ -5,6 +5,8 @@ import { notifyService } from "../../services/notifyService";
 import {
   addProductToCartWithoutPagingSagaSuccess,
   changeProductFromListCartWithoutPagingQuantitySuccess,
+  changeSellingProductPage,
+  changeShoppingProductPage,
   createSellingProductSagaSuccess,
   deleteSellingProductSagaSuccess,
   getListCartWithoutPaging,
@@ -26,6 +28,7 @@ export function* getAllSellingProduct() {
       createSellingProductSagaSuccess.type,
       deleteSellingProductSagaSuccess.type,
       updateSellingProductSagaSuccess.type,
+      changeSellingProductPage.type,
     ],
     handleGetSellingProduct
   );
@@ -43,10 +46,6 @@ const getSellingProductSagaRequest = async (data) => {
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
-    };
-    let pagingObj = {
-      page: 0,
-      pageSize: 30,
     };
     const res = await axiosInStanceJWT.post(
       `${api.product}/selling/all`,
@@ -200,7 +199,10 @@ export const updateSellingProductRequest = async (
 };
 
 export function* getAllShoppingProduct() {
-  yield takeLatest([getShoppingProductSaga.type], handleGetShoppingProduct);
+  yield takeLatest(
+    [getShoppingProductSaga.type, changeShoppingProductPage.type],
+    handleGetShoppingProduct
+  );
 }
 function* handleGetShoppingProduct(data) {
   try {
@@ -211,18 +213,14 @@ function* handleGetShoppingProduct(data) {
   }
 }
 const getShoppingProductSagaRequest = async (data) => {
-  const { accessToken, refreshToken, dispatch } = data.payload;
+  const { accessToken, refreshToken, paging } = data.payload;
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
-    let pagingObj = {
-      page: 0,
-      pageSize: 30,
-    };
     const res = await axiosInStanceJWT.post(
       `${api.product}/shopping/all`,
-      pagingObj,
+      paging,
       {
         headers: config,
         ACCESS_PARAM: accessToken,
@@ -230,8 +228,7 @@ const getShoppingProductSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
-      dispatch(getShoppingProductSagaSuccess());
-      return res.data.results.data;
+      return res.data.results;
     } else {
       notifyService.showError("Get List Shopping Product Failed");
     }

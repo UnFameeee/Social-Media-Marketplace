@@ -13,6 +13,9 @@ import {
   getAllUnreadNotificationFailed,
   getAllUnreadNotificationStart,
   getAllUnreadNotificationSuccess,
+  seenNotificationFailed,
+  seenNotificationStart,
+  seenNotificationSuccess,
 } from './notificationSlice';
 
 // #region get all notifications
@@ -23,9 +26,8 @@ export const getAllNotification = async (
 ) => {
   dispatch(getAllNotificationStart());
   try {
-    const res = await axiosInStanceJWT.post(
+    const res = await axiosInStanceJWT.get(
       `${api.notification}/all`,
-      { page: 0, pageSize: 10 },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -38,12 +40,12 @@ export const getAllNotification = async (
       dispatch(getAllNotificationSuccess(res.data.results));
     } else {
       notifyService.showError(res.data.message);
-      dispatch(getAllNotificationFailed())
+      dispatch(getAllNotificationFailed());
     }
   } catch (error) {
     console.log(error);
     notifyService.showError(error.message);
-    dispatch(getAllNotificationFailed())
+    dispatch(getAllNotificationFailed());
   }
 };
 // #endregion
@@ -56,9 +58,8 @@ export const getAllUnreadNotification = async (
 ) => {
   dispatch(getAllUnreadNotificationStart());
   try {
-    const res = await axiosInStanceJWT.post(
-      `${api.notification}/unread/all`,
-      { page: 0, pageSize: 10 },
+    const res = await axiosInStanceJWT.get(
+      `${api.notification}/all/unread`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -71,12 +72,12 @@ export const getAllUnreadNotification = async (
       dispatch(getAllUnreadNotificationSuccess(res.data.results));
     } else {
       notifyService.showError(res.data.message);
-      dispatch(getAllUnreadNotificationFailed())
+      dispatch(getAllUnreadNotificationFailed());
     }
   } catch (error) {
     console.log(error);
     notifyService.showError(error.message);
-    dispatch(getAllUnreadNotificationFailed())
+    dispatch(getAllUnreadNotificationFailed());
   }
 };
 // #endregion
@@ -89,9 +90,8 @@ export const getAllFriendNotification = async (
 ) => {
   dispatch(getAllFriendNotificationStart());
   try {
-    const res = await axiosInStanceJWT.post(
-      `${api.notification}/friend/all`,
-      { page: 0, pageSize: 10 },
+    const res = await axiosInStanceJWT.get(
+      `${api.notification}/all/friend_request`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -104,12 +104,12 @@ export const getAllFriendNotification = async (
       dispatch(getAllFriendNotificationSuccess(res.data.results));
     } else {
       notifyService.showError(res.data.message);
-      dispatch(getAllFriendNotificationFailed())
+      dispatch(getAllFriendNotificationFailed());
     }
   } catch (error) {
     console.log(error);
     notifyService.showError(error.message);
-    dispatch(getAllFriendNotificationFailed())
+    dispatch(getAllFriendNotificationFailed());
   }
 };
 // #endregion
@@ -118,13 +118,14 @@ export const getAllFriendNotification = async (
 export const seenNotification = async (
   accessToken,
   refreshToken,
-  dispatch,
-  product
+  id,
+  dispatch
 ) => {
+  dispatch(seenNotificationStart());
   try {
-    const res = await axiosInStanceJWT.post(
-      `${api.notification}/seen`,
-      product,
+    const res = await axiosInStanceJWT.put(
+      `${api.notification}/read/${id}`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -134,21 +135,15 @@ export const seenNotification = async (
       }
     );
     if (!res.data.message) {
-      dispatch(
-        seenNotificationSagaSuccess({
-          accessToken,
-          refreshToken,
-          dispatch,
-        })
-      );
-      notifyService.showSuccess('Create Selling Product Success');
-      return res;
+      dispatch(seenNotificationSuccess());
     } else {
-      notifyService.showError('Create Selling Product Failed');
+      notifyService.showError(res.data.message);
+      dispatch(seenNotificationFailed());
     }
   } catch (error) {
     console.log(error);
-    notifyService.showError('Create Selling Product Failed');
+    notifyService.showError(error.message);
+    dispatch(seenNotificationFailed());
   }
 };
 // #endregion

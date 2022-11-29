@@ -55,11 +55,10 @@ export default function RootRoutes() {
             </Route>
 
             {/* marketplace screens */}
-            <Route path="marketplace" element={<Marketplace />}>
-              <Route path="shopping" element={<Shopping />} />
-              <Route path="selling" element={<Selling />} />
-              <Route path="checkout" element={<CheckOut />} />
-            </Route>
+            <Route path="shopping" element={<Shopping />} />
+            <Route path="selling" element={<Selling />} />
+            <Route path="checkout" element={<CheckOut />} />
+            <Route path="marketplace" element={<Marketplace />}></Route>
 
             <Route path="/search" element={<SearchPage />} />
             <Route path="/post" element={<PostView />} />

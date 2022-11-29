@@ -39,6 +39,10 @@ export const notificationSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    seen: {
+      isFetching: false,
+      error: false,
+    },
   },
   extraReducers: (builder) =>
     builder.addCase(revertAll, () => initialState),
@@ -78,6 +82,17 @@ export const notificationSlice = createSlice({
       state.getAllFriend.isFetching = false;
       state.getAllFriend.error = true;
     },
+
+    seenNotificationStart: (state) => {
+      state.seen.isFetching = true;
+    },
+    seenNotificationSuccess: (state) => {
+      state.seen.isFetching = false;
+    },
+    seenNotificationFailed: (state) => {
+      state.seen.isFetching = false;
+      state.seen.error = true;
+    },
   },
 });
 export const {
@@ -92,6 +107,10 @@ export const {
     getAllFriendNotificationStart,
     getAllFriendNotificationSuccess,
     getAllFriendNotificationFailed,
+
+    seenNotificationStart,
+    seenNotificationSuccess,
+    seenNotificationFailed,
 
 } = notificationSlice.actions;
 

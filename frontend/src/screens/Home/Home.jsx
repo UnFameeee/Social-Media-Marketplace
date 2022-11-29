@@ -1,15 +1,15 @@
-import React from "react";
-import CardPost from "../../components/Card/CardPost";
-import { Avatar } from "@mui/material";
-import PostStatus from "../../components/PostStatus/PostStatus";
-import PostModal from "./PostModal";
-import { useState } from "react";
-import { useDispatch, useSelector,shallowEqual } from "react-redux";
-import { getAllPost } from "../../redux/apiRequest";
-import { useEffect } from "react";
-import ThreeColumns from "../../components/Layout/ThreeColumns";
-import { homeLeftbar } from "../../common/layoutConfigs/homeLeftbar";
-import styled from "styled-components";
+import React from 'react';
+import CardPost from '../../components/Card/CardPost';
+import { Avatar } from '@mui/material';
+import PostStatus from '../../components/PostStatus/PostStatus';
+import PostModal from './PostModal';
+import { useState } from 'react';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { getAllPost } from '../../redux/apiRequest';
+import { useEffect } from 'react';
+import ThreeColumns from '../../components/Layout/ThreeColumns';
+import { homeLeftbar } from '../../common/layoutConfigs/homeLeftbar';
+import styled from 'styled-components';
 
 const ResponSiveDiv = styled.div`
   @media screen and (max-width: 1620px) {
@@ -20,15 +20,15 @@ const ResponSiveDiv = styled.div`
       width: 25rem;
     }
   }
-  
+
   @media screen and (max-width: 1400px) {
     .threeColumn-wrapper {
       padding-left: 15%;
     }
     .left-bar {
       width: 80px;
-      ul{
-        overflow-x:hidden;
+      ul {
+        overflow-x: hidden;
       }
     }
     .threeColumn-wrapper .left-bar-text {
@@ -41,8 +41,8 @@ const ResponSiveDiv = styled.div`
     }
   }
   @media only screen and (max-width: 1240px) {
-    .cardPost{
-      width:60rem;
+    .cardPost {
+      width: 60rem;
     }
   }
   @media only screen and (max-width: 1124px) {
@@ -53,10 +53,10 @@ const ResponSiveDiv = styled.div`
       display: none;
     }
   }
-  
+
   @media only screen and (max-width: 1068px) {
-    .cardPost{
-      width:50rem;
+    .cardPost {
+      width: 50rem;
     }
   }
   @media only screen and (max-width: 956px) {
@@ -66,8 +66,8 @@ const ResponSiveDiv = styled.div`
     .threeColumn-wrapper {
       padding-left: 11%;
     }
-    .post-status-wrapper{
-      width:65rem;
+    .post-status-wrapper {
+      width: 65rem;
     }
     .cardPost {
       width: 65rem;
@@ -81,7 +81,7 @@ const ResponSiveDiv = styled.div`
     .cardPost {
       width: 100%;
     }
-    .post-status-wrapper{
+    .post-status-wrapper {
       width: 100%;
     }
   }
@@ -89,7 +89,10 @@ const ResponSiveDiv = styled.div`
 function Home() {
   //#region Declare variables
   const dispatch = useDispatch();
-  const posts = useSelector((state) => state.post.get.posts?.results?.data,shallowEqual );
+  const posts = useSelector(
+    (state) => state.post.get.posts?.results?.data,
+    shallowEqual
+  );
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
   );
@@ -110,7 +113,7 @@ function Home() {
   //#region UseEffect
   useEffect(() => {
     let onDestroy = false;
-    
+
     if (!onDestroy) {
       getAllPost(accessToken, refreshToken, dispatch);
     }
@@ -130,15 +133,16 @@ function Home() {
                 left: (
                   <Avatar
                     style={{
-                      width: "3.6rem",
-                      height: "3.6rem",
-                      fontSize: "2rem",
+                      width: '3.6rem',
+                      height: '3.6rem',
+                      fontSize: '2rem',
                     }}
                     alt={userData.profile.profile_name}
                     src={
-                        userData.profile?.profile_id == profileData?.profile_id
-                          ? profileData?.avatar
-                          : userData.profile?.avatar
+                      userData.profile?.profile_id ==
+                      profileData?.profile_id
+                        ? profileData?.avatar
+                        : userData.profile?.avatar
                     }
                   >
                     {userData.profile.profile_name?.at(0)}

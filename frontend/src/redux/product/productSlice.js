@@ -1,7 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { revertAll } from "../resetStore";
 const initialState = {
-  getSelling: null,
+  getSelling: {
+    data: [],
+    page: {
+      page: 0,
+      pageSize: 30,
+      totalElement: 30,
+    },
+  },
   createSelling: {
     isFetching: false,
     isError: false,
@@ -9,10 +16,11 @@ const initialState = {
   },
   getShopping: {
     data: [],
-    paging: {
-      page: 0,
-      pageSize: 30,
-    },
+      page: {
+        page: 0,
+        pageSize: 30,
+        totalElement: 30,
+      },
   },
   getProductDetail: {
     data: null,
@@ -28,7 +36,14 @@ const initialState = {
 export const productSlice = createSlice({
   name: "product",
   initialState: {
-    getSelling: null,
+    getSelling: {
+      data: [],
+      page: {
+        page: 0,
+        pageSize: 30,
+        totalElement: 30,
+      },
+    },
     createSelling: {
       isFetching: false,
       isError: false,
@@ -36,9 +51,10 @@ export const productSlice = createSlice({
     },
     getShopping: {
       data: [],
-      paging: {
+      page: {
         page: 0,
         pageSize: 30,
+        totalElement: 30,
       },
     },
     getProductDetail: {
@@ -64,16 +80,23 @@ export const productSlice = createSlice({
 
     updateSellingProductSagaSuccess() {},
 
+    changeSellingProductPage: (state, action) => {
+      state.getSelling.page.page = action.payload.paging.page;
+    },
+
     getShoppingProductSaga() {},
     getShoppingProductSagaSuccess() {},
     getShoppingProduct: (state, action) => {
-      state.getShopping.data = action.payload;
+      state.getShopping = action.payload;
+    },
+    changeShoppingProductPage: (state, action) => {
+      state.getShopping.page.page = action.payload.paging.page;
     },
 
     getListCartWithoutPagingSaga() {},
     getListCartWithoutPaging: (state, action) => {
       let totalPrice = 0;
-      action.payload.map((item) => {
+      action.payload?.map((item) => {
         totalPrice += item.price * item.quantity;
       });
       state.getListCartWithoutPaging.totalPrice = totalPrice;
@@ -106,12 +129,14 @@ export const {
   getShoppingProductSaga,
   getShoppingProduct,
   getShoppingProductSagaSuccess,
+  changeShoppingProductPage,
 
   getSellingProductSaga,
   getSellingProduct,
   createSellingProductSagaSuccess,
   deleteSellingProductSagaSuccess,
   updateSellingProductSagaSuccess,
+  changeSellingProductPage,
 
   updateProduct,
   resetUpdateProduct,

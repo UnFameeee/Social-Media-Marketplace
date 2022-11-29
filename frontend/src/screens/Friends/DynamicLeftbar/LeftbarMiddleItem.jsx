@@ -44,14 +44,16 @@ export function LeftbarFriendRequest({
     listAction[1],
     profile?.profile_id
   );
-
+  
   return (
     <>
       <div className="friend-left-bar-middle title">
         <span className="flex-1">{profile?.profile_name}</span>
-        <span className="unimportant-text">
-          {format(profile?.createdAt)}
-        </span>
+        {profile?.createdAt && (
+          <span className="unimportant-text">
+            {format(profile?.createdAt)}
+          </span>
+        )}
       </div>
 
       {confirmed || denied ? (
