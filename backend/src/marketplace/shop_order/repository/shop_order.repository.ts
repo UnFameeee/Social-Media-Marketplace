@@ -9,6 +9,23 @@ export class ShopOrderRepository {
         @Inject(PROVIDER.ShopOrder) private readonly shopOrderRepository: typeof ShopOrderRepository
     ) { }
 
+    async getOrderPurchased(profile_id: number) {
+        try {
+            return null;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    
+    async getOrderSold(profile_id: Number) {
+        try {
+            return null;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
     async createOrder(profile_id: number, listProduct: Product[]) {
         try {
             return listProduct;

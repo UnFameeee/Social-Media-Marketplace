@@ -13,6 +13,21 @@ export class ShopOrderController {
         private readonly shopOrderService: ShopOrderService
     ) { }
 
+
+    @Post("/purchased")
+    async getOrderPurchased(@Request() request: any, @Body() body: Product[]) {
+        const profile = <Profile>request.user;
+        const listProduct = body["data"];
+        return await this.shopOrderService.getOrderSold(profile.profile_id);
+    }
+
+    @Post("/sold")
+    async getOrderSold(@Request() request: any, @Body() body: Product[]) {
+        const profile = <Profile>request.user;
+        const listProduct = body["data"];
+        return await this.shopOrderService.getOrderSold(profile.profile_id);
+    }
+
     @Post("")
     async createOrder(@Request() request: any, @Body() body: Product[]) {
         const profile = <Profile>request.user;
@@ -22,6 +37,13 @@ export class ShopOrderController {
 
     @Put("/status")
     async updateOrderStatus(@Request() request: any, @Body() body: Product[]) {
+        const profile = <Profile>request.user;
+        const listProduct = body["data"];
+        return await this.shopOrderService.createOrder(profile.profile_id, listProduct);
+    }
+
+    @Put("/item/status")
+    async updateOrderLineStatus(@Request() request: any, @Body() body: Product[]) {
         const profile = <Profile>request.user;
         const listProduct = body["data"];
         return await this.shopOrderService.createOrder(profile.profile_id, listProduct);

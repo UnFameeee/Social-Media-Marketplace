@@ -10,7 +10,25 @@ export class ShopOrderService {
         private readonly shopOrderRepository: ShopOrderRepository,
     ) { }
 
+    async getOrderPurchased(profile_id: number) {
+        try {
+            //Shopping
+            //Order (include Profile) -> Order_item
+            return await this.shopOrderRepository.getOrderPurchased(profile_id);
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
 
+    async getOrderSold(profile_id: number) {
+        try {
+            //Selling
+            //OrderItem -> Product -> Profile
+            return await this.shopOrderRepository.getOrderSold(profile_id);
+        } catch (err) {
+            ExceptionResponse(err);
+        }
+    }
 
     async createOrder(profile_id: number, listProduct: Product[]) {
         try {
