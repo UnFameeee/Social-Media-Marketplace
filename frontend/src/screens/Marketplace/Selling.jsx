@@ -17,6 +17,7 @@ import MUI from "../../components/MUI";
 import { getAllSellingProduct } from "../../redux/apiRequest";
 import { useEffect } from "react";
 import {
+  changeSellingProductPage,
   resetUpdateProduct,
   updateProduct,
 } from "../../redux/product/productSlice";
@@ -101,20 +102,6 @@ const ResponSiveDiv = styled.div`
 `;
 function Selling() {
   //#region declare variables
-  const userData = useSelector((state) => state.auth.user.userData);
-  const settings = {
-    arrows: false,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 750,
-    autoplaySpeed: 5000,
-    cssEase: "linear",
-  };
-  const [page, setPage] = React.useState(1);
-  const handleChange = (event, value) => {
-    setPage(value);
-  };
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showManagerModal, setShowManagerModal] = useState({
@@ -137,6 +124,7 @@ function Selling() {
   const sellingProductPaging = useSelector(
     (state) => state.product?.getSelling?.page
   );
+  const { totalElement, pageSize, page } = sellingProductPaging;
   // #endregion
   //#region declare function
   const handleUpdate = (productObj) => {
@@ -148,10 +136,10 @@ function Selling() {
     dispatch(resetUpdateProduct());
   };
   const handleNavigateToCheckOut = () => {
-    navigate("/marketplace/checkout");
+    navigate("/checkout");
   };
   const handleNavigateToShopping = () => {
-    navigate("/marketplace/shopping");
+    navigate("/shopping");
   };
   const handleDelete = (productObj) => {
     setOpenConfirmRemove(true);
@@ -159,7 +147,6 @@ function Selling() {
     setDeleteItemId(product_id);
   };
   const handleConfirmDeleteProduct = () => {
-    const { page, pageSize } = sellingProductPaging;
     let paging = { page, pageSize };
     if (deleteItemId != -1) {
       deleteSellingProductRequest(
@@ -174,7 +161,6 @@ function Selling() {
     setOpenConfirmRemove(false);
   };
   const handleSubmitCreateProduct = (product, uploadImages) => {
-    const { page, pageSize } = sellingProductPaging;
     let paging = { page, pageSize };
     createSellingProductRequest(
       accessToken,
@@ -193,7 +179,6 @@ function Selling() {
   ) => {
     let removeImages = removeUploadImages;
     let product_id = productId;
-    const { page, pageSize } = sellingProductPaging;
     let paging = { page, pageSize };
     updateSellingProductRequest(
       accessToken,
@@ -206,10 +191,20 @@ function Selling() {
       paging
     );
   };
+  const handleChange = (event, value) => {
+    let sellingPage = value - 1;
+    let paging = { page: sellingPage, pageSize };
+    dispatch(changeSellingProductPage({ accessToken, refreshToken, paging }));
+  };
   useEffect(() => {
-    getAllSellingProduct(accessToken, refreshToken, dispatch);
+    let paging;
+    if (sellingProductPaging) {
+      paging = { page, pageSize };
+    } else {
+      paging = { page: 0, pageSize: 30 };
+    }
+    getAllSellingProduct(accessToken, refreshToken, paging, dispatch);
   }, []);
-
   return (
     <>
       <ManagerProductModal
@@ -269,11 +264,11 @@ function Selling() {
                 ))}
             </div>
             <div className="Pagination float-right">
-              <Typography>Page: {page}</Typography>
+              <Typography>Page: {page + 1}</Typography>
               <Pagination
-                page={page}
+                page={page + 1}
                 onChange={handleChange}
-                count={11}
+                count={Math.round(totalElement / pageSize)}
                 defaultPage={1}
                 siblingCount={0}
                 variant="outlined"

@@ -19,6 +19,7 @@ import {
 } from "../../redux/apiRequest";
 import {
   addProductToCartWithoutPagingSaga,
+  changeShoppingProductPage,
   getProductDetail,
 } from "../../redux/product/productSlice";
 import { useState } from "react";
@@ -111,14 +112,12 @@ function Shopping() {
     (state) => state.product?.getShopping?.data,
     shallowEqual
   );
-  const shoppingProductPaging = useSelector((state) => state.product?.getShopping?.paging);
-  const [page, setPage] = React.useState(1);
+  const shoppingProductPaging = useSelector(
+    (state) => state.product?.getShopping?.page
+  );
+  const { totalElement, pageSize, page } = shoppingProductPaging;
   const [productDetail, setProductDetail] = useState();
-  const handleChange = (event, value) => {
-    setPage(value);
-  };
   const navigate = useNavigate();
-
   // #endregion
   //#region declare function
   const handleViewDetail = (productObj) => {
@@ -132,17 +131,28 @@ function Shopping() {
       accessToken,
       refreshToken,
       product_id,
-      dispatch,
+      dispatch
     );
   };
   const handleNavigateToCheckOut = () => {
-    navigate("/marketplace/checkout");
+    navigate("/checkout");
   };
   const handleNavigateToSelling = () => {
-    navigate("/marketplace/selling");
+    navigate("/selling");
+  };
+  const handleChange = (event, value) => {
+    let shoppingPage = value - 1;
+    let paging = { page: shoppingPage, pageSize };
+    dispatch(changeShoppingProductPage({ accessToken, refreshToken, paging }));
   };
   useEffect(() => {
-    getAllShoppingProduct(accessToken, refreshToken, dispatch);
+    let paging;
+    if (shoppingProductPaging) {
+      paging = { page, pageSize };
+    } else {
+      paging = { page: 0, pageSize: 30 };
+    }
+    getAllShoppingProduct(accessToken, refreshToken, paging, dispatch);
   }, []);
   return (
     <>
@@ -195,11 +205,11 @@ function Shopping() {
                 ))}
             </div>
             <div className="Pagination float-right">
-              <Typography>Page: {page}</Typography>
+              <Typography>Page: {page + 1}</Typography>
               <Pagination
-                page={page}
+                page={page + 1}
                 onChange={handleChange}
-                count={11}
+                count={Math.round(totalElement / pageSize)}
                 defaultPage={1}
                 siblingCount={0}
                 variant="outlined"

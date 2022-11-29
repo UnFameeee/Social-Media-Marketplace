@@ -66,7 +66,7 @@ function MarketPlaceLeftBarTab() {
     dispatch(setTabMarketPlaceLeftBarIndex(newValue));
   };
   const handleNavigateToCheckOut = () => {
-    navigate("/marketplace/checkout");
+    navigate("/checkout");
   };
   const removeProductFromCart = (product_id) => {
     removeProductFromListCartWithoutPagingRequest(
