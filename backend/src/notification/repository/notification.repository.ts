@@ -10,6 +10,7 @@ import { Post } from "src/database/model/post.model";
 import { Profile } from "src/database/model/profile.model";
 import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
 import { PROVIDER } from "src/database/providers/provider.constant";
+import { NotificationGateway } from "../gateway/notification.gateway";
 
 @Injectable()
 export class NotificationRepository {
@@ -17,7 +18,7 @@ export class NotificationRepository {
         @Inject(PROVIDER.Notification) private readonly notificationRepository: typeof Notification,
         @Inject(PROVIDER.Post) private readonly postRepository: typeof Post,
         @Inject(PROVIDER.PostComment) private readonly postCommentRepository: typeof PostComment,
-        @Inject(PROVIDER.Profile) private readonly profileRepository: typeof Profile
+        @Inject(PROVIDER.Profile) private readonly profileRepository: typeof Profile,
     ) { };
 
     async getProfileReceiverByPostId(post_id: number): Promise<Post> {
@@ -36,6 +37,26 @@ export class NotificationRepository {
                 ]
             })
 
+            return queryData;
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async getPostIdByCommentId(post_comment_id: number): Promise<PostComment> {
+        try {
+            const queryData = await this.postCommentRepository.findOne({
+                attributes: ["post_id"],
+                where: {
+                    post_comment_id: post_comment_id,
+                },
+                include: [
+                    {
+                        model: Post,
+                        attributes: [],
+                    }
+                ]
+            })
             return queryData;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
@@ -303,6 +324,9 @@ export class NotificationRepository {
                     }
                 }
             })
+
+
+
             return deleteEffected ? true : false;
         } catch (err) {
             throw new InternalServerErrorException(err.message);

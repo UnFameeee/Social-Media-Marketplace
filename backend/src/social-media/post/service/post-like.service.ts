@@ -33,6 +33,7 @@ export class PostLikeService {
                 const profile_receiver = await this.notificationService.getProfileReceiverByPostId(post_id);
                 if (profile_receiver && profile_receiver != profile.profile_id) {
                     await this.notificationService.removeNotification(profile.profile_id, profile_receiver, NOTIFICATION_TYPE.LIKE, post_id, null);
+                    this.notificationGateway.server.to(`${profile_receiver}`).emit(SOCKET_EVENT.RERENDER_NOTIFICATION);
                 }
             }
 
