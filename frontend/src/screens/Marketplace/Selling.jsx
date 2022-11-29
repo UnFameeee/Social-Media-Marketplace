@@ -2,9 +2,7 @@ import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
 import { Tooltip, Pagination, Typography, Fab } from "@mui/material";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import HeadSlider from "./HeadSlider";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { ShoppingBag } from "@mui/icons-material";
 import SellIcon from "@mui/icons-material/Sell";
@@ -15,18 +13,14 @@ import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ManagerProductModal from "./ManagerProductModa";
-import {
-  createProduct,
-  deleteProduct,
-  getAllSellingProduct,
-} from "../../redux/apiRequest";
+import MUI from "../../components/MUI";
+import NothingToSee from "./NothingToSee";
+import { getAllSellingProduct } from "../../redux/apiRequest";
 import { useEffect } from "react";
 import {
-  createSellingProductSaga,
-  deleteSellingProductSaga,
+  changeSellingProductPage,
   resetUpdateProduct,
   updateProduct,
-  updateSellingProductSaga,
 } from "../../redux/product/productSlice";
 import {
   createSellingProductRequest,
@@ -109,26 +103,14 @@ const ResponSiveDiv = styled.div`
 `;
 function Selling() {
   //#region declare variables
-  const userData = useSelector((state) => state.auth.user.userData);
-  const settings = {
-    arrows: false,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 750,
-    autoplaySpeed: 5000,
-    cssEase: "linear",
-  };
-  const [page, setPage] = React.useState(1);
-  const handleChange = (event, value) => {
-    setPage(value);
-  };
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showManagerModal, setShowManagerModal] = useState({
     isShow: false,
     action: 0,
   });
+  const [openConfirmRemove, setOpenConfirmRemove] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState(-1);
 
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
@@ -140,13 +122,12 @@ function Selling() {
     (state) => state.product?.getSelling?.data,
     shallowEqual
   );
+  const sellingProductPaging = useSelector(
+    (state) => state.product?.getSelling?.page
+  );
+  const { totalElement, pageSize, page } = sellingProductPaging;
   // #endregion
   //#region declare function
-  function randomNumberInRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  //#endregion
-  let randomNum = randomNumberInRange(1400, 1050);
   const handleUpdate = (productObj) => {
     dispatch(updateProduct(productObj));
     setShowManagerModal({ isShow: true, action: 2 });
@@ -155,29 +136,40 @@ function Selling() {
     setShowManagerModal({ isShow: true, action: 1 });
     dispatch(resetUpdateProduct());
   };
-
   const handleNavigateToCheckOut = () => {
-    navigate("/marketplace/checkout");
+    navigate("/checkout");
   };
   const handleNavigateToShopping = () => {
-    navigate("/marketplace/shopping");
+    navigate("/shopping");
   };
   const handleDelete = (productObj) => {
+    setOpenConfirmRemove(true);
     let product_id = productObj.product_id;
-    deleteSellingProductRequest(
-      accessToken,
-      refreshToken,
-      dispatch,
-      product_id
-    );
+    setDeleteItemId(product_id);
+  };
+  const handleConfirmDeleteProduct = () => {
+    let paging = { page, pageSize };
+    if (deleteItemId != -1) {
+      deleteSellingProductRequest(
+        accessToken,
+        refreshToken,
+        dispatch,
+        deleteItemId,
+        paging
+      );
+      setDeleteItemId(-1);
+    }
+    setOpenConfirmRemove(false);
   };
   const handleSubmitCreateProduct = (product, uploadImages) => {
+    let paging = { page, pageSize };
     createSellingProductRequest(
       accessToken,
       refreshToken,
       dispatch,
       product,
-      uploadImages
+      uploadImages,
+      paging
     );
   };
   const handleSaveUpdateProduct = (
@@ -188,6 +180,7 @@ function Selling() {
   ) => {
     let removeImages = removeUploadImages;
     let product_id = productId;
+    let paging = { page, pageSize };
     updateSellingProductRequest(
       accessToken,
       refreshToken,
@@ -195,13 +188,24 @@ function Selling() {
       product,
       product_id,
       uploadImages,
-      removeImages
+      removeImages,
+      paging
     );
   };
+  const handleChange = (event, value) => {
+    let sellingPage = value - 1;
+    let paging = { page: sellingPage, pageSize };
+    dispatch(changeSellingProductPage({ accessToken, refreshToken, paging }));
+  };
   useEffect(() => {
-    getAllSellingProduct(accessToken, refreshToken, dispatch);
+    let paging;
+    if (sellingProductPaging) {
+      paging = { page, pageSize };
+    } else {
+      paging = { page: 0, pageSize: 30 };
+    }
+    getAllSellingProduct(accessToken, refreshToken, paging, dispatch);
   }, []);
-
   return (
     <>
       <ManagerProductModal
@@ -240,50 +244,44 @@ function Selling() {
             >
               <ShoppingBag style={{ fontSize: "2.5rem" }} />
             </Fab>
-            <div className="slide-show">
-              <Slider {...settings}>
-                {[
-                  ...Array.from({ length: 5 }, () =>
-                    randomNumberInRange(1400, 1050)
-                  ),
-                ].map((index) => (
-                  <div key={index}>
-                    <img
-                      className="h-[300px] w-full object-cover rounded-xl"
-                      src={`https://source.unsplash.com/random/1000x${
-                        randomNum * index
-                      }/?3D Renders`}
-                      alt=""
-                    />
-                  </div>
-                ))}
-              </Slider>
-            </div>
-            <div className="product-container mb-[1rem]">
-              {productList &&
-                productList.map((product) => (
-                  <ProductCard
-                    key={product.product_id}
-                    productObj={product}
-                    arrayBtn={[
-                      { pos: 0, text: "update", handle: handleUpdate },
-                      { pos: 1, text: "delete", handle: handleDelete },
-                    ]}
+            <HeadSlider />
+            {productList?.length > 0 ? (
+              <>
+                <div className="product-container mb-[1rem]">
+                  <MUI.ConfirmDialog
+                    modalProps={[openConfirmRemove, setOpenConfirmRemove]}
+                    title="Remove Selling Product"
+                    actionName="remove this product"
+                    confirmAction={handleConfirmDeleteProduct}
                   />
-                ))}
-            </div>
-            <div className="Pagination float-right">
-              <Typography>Page: {page}</Typography>
-              <Pagination
-                page={page}
-                onChange={handleChange}
-                count={11}
-                defaultPage={1}
-                siblingCount={0}
-                variant="outlined"
-                size="large"
-              />
-            </div>
+                  {productList &&
+                    productList?.map((product) => (
+                      <ProductCard
+                        key={product.product_id}
+                        productObj={product}
+                        arrayBtn={[
+                          { pos: 0, text: "update", handle: handleUpdate },
+                          { pos: 1, text: "delete", handle: handleDelete },
+                        ]}
+                      />
+                    ))}
+                </div>
+                <div className="Pagination float-right">
+                  <Typography>Page: {page + 1}</Typography>
+                  <Pagination
+                    page={page + 1}
+                    onChange={handleChange}
+                    count={Math.round(totalElement / pageSize)}
+                    defaultPage={1}
+                    siblingCount={0}
+                    variant="outlined"
+                    size="large"
+                  />
+                </div>
+              </>
+            ) : (
+              <NothingToSee text="You don't have any product yet" />
+            )}
           </div>
         </ThreeColumns>
       </ResponSiveDiv>

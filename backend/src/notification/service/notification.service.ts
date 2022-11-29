@@ -70,17 +70,25 @@ export class NotificationService {
     }
   }
 
-  async removePostCommentNotification(post_comment_id: number[]): Promise<Boolean> {
+  async removeFriendRequestNotification(profile_sender: number, profile_receiver: number, notification_type: NOTIFICATION_TYPE): Promise<Boolean> {
     try {
-      // const data = await this.notificationRepository.removePostCommentNotification(post_comment_id);
-      // return data;
-      return null;
+      const data = await this.notificationRepository.removeFriendRequestNotification(profile_sender, profile_receiver, notification_type);
+      return data;
     } catch (err) {
       ExceptionResponse(err);
     }
   }
 
-  async removePostNotification(post_id: number[]): Promise<Boolean> {
+  async removePostCommentNotification(post_comment_id: number[]): Promise<Boolean> {
+    try {
+      const data = await this.notificationRepository.removePostCommentNotification(post_comment_id);
+      return data;
+    } catch (err) {
+      ExceptionResponse(err);
+    }
+  }
+
+  async removePostNotification(post_id: number): Promise<Boolean> {
     try {
       const data = await this.notificationRepository.removePostNotification(post_id);
       return data;

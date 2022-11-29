@@ -1,5 +1,5 @@
-import React, {  useMemo } from "react";
-import { Avatar, Button, Box,  } from "@mui/material";
+import React, { useMemo } from "react";
+import { Avatar, Button, Box } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -66,7 +66,7 @@ function MarketPlaceLeftBarTab() {
     dispatch(setTabMarketPlaceLeftBarIndex(newValue));
   };
   const handleNavigateToCheckOut = () => {
-    navigate("/marketplace/checkout");
+    navigate("/checkout");
   };
   const removeProductFromCart = (product_id) => {
     removeProductFromListCartWithoutPagingRequest(
@@ -127,15 +127,24 @@ function MarketPlaceLeftBarTab() {
                     key={cartItem.product_id}
                     className="cart-item relative flex items-center gap-[1.2rem] p-[1.2rem] rounded-xl border-[0.5px] border-gray-400"
                   >
-                    <img
-                      src={cartItem?.product_image[0]?.link}
-                      onError={({ currentTarget }) => {
-                        currentTarget.onerror = null; // prevents looping
-                        currentTarget.src = notFoundImage;
-                      }}
-                      alt="not found"
-                      className="w-[10rem] h-[10rem] object-cover rounded-xl shadow-md "
-                    />
+                    {cartItem.product_image[0]?.link ? (
+                      <img
+                        src={cartItem.product_image[0]?.link}
+                        onError={({ currentTarget }) => {
+                          currentTarget.onerror = null; // prevents looping
+                          currentTarget.src = notFoundImage;
+                        }}
+                        alt="not found"
+                        className="w-[10rem] h-[10rem] object-cover rounded-xl shadow-md "
+                      />
+                    ) : (
+                      <img
+                        src={notFoundImage}
+                        alt="not found"
+                        className="w-[10rem] h-[10rem] object-cover rounded-xl shadow-md "
+                      />
+                    )}
+
                     <div className="cart-item-info w-full overflow-hidden">
                       <span className="name line-clamp-2 font-semibold">
                         {cartItem.name}
@@ -195,7 +204,7 @@ function MarketPlaceLeftBarTab() {
             <>
               <div className="slide-show rounded-lg shadow-lg mb-[1rem]">
                 <Slider {...settings}>
-                  {getProductDetail?.product_image &&
+                  {getProductDetail?.product_image.length > 0 ? (
                     getProductDetail?.product_image.map((image) => (
                       <img
                         key={image.link}
@@ -207,15 +216,14 @@ function MarketPlaceLeftBarTab() {
                           currentTarget.src = notFoundImage;
                         }}
                       />
-                    ))}
-                  {getProductDetail?.product_image.length == 0 ||
-                    (!getProductDetail && (
-                      <img
-                        alt="not found"
-                        className="w-full object-cover rounded-lg h-[250px]"
-                        src={notFoundImage}
-                      />
-                    ))}
+                    ))
+                  ) : (
+                    <img
+                      alt="not found"
+                      className="w-full object-cover rounded-lg h-[250px]"
+                      src={notFoundImage}
+                    />
+                  )}
                 </Slider>
               </div>
               <div className="card-info flex items-center gap-[0.5rem] mb-[1rem]">

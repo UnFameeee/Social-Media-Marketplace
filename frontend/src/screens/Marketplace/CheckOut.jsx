@@ -1,24 +1,25 @@
-import React from 'react';
-import { Box, Typography, Pagination } from '@mui/material';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import macbook_example from '../../assets/macbook.jpeg';
-import notFoundImage from '../../assets/noimage_1.png';
-import { useDispatch, useSelector } from 'react-redux';
-import { useState, useEffect, useMemo } from 'react';
-import debounce from 'lodash.debounce';
-import MUI from '../../components/MUI';
+import React from "react";
+import { Box, Typography, Pagination } from "@mui/material";
+import Tab from "@mui/material/Tab";
+import TabContext from "@mui/lab/TabContext";
+import TabList from "@mui/lab/TabList";
+import TabPanel from "@mui/lab/TabPanel";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import macbook_example from "../../assets/macbook.jpeg";
+import notFoundImage from "../../assets/noimage_1.png";
+import cart_empty_image from "../../assets/cart_empty.png";
+import NothingToSee from "./NothingToSee";
+import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect, useMemo } from "react";
+import debounce from "lodash.debounce";
+import MUI from "../../components/MUI";
 import {
   changeProductFromListCartWithoutPagingQuantityRequest,
   removeProductFromListCartWithoutPagingRequest,
@@ -189,97 +190,84 @@ function CheckOut() {
                     actionName="remove this item"
                     confirmAction={handleConfirmDeleteItem}
                   />
-                  {
-                    getShoppingCartList?.map((item) => (
-                      <TableRow
-                        key={item.product_id}
-                        sx={{
-                          '&:last-child td, &:last-child th': {
-                            border: 0,
-                          },
-                        }}
+                  {getShoppingCartList?.map((item) => (
+                    <TableRow
+                      key={item.product_id}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
+                    >
+                      <TableCell
+                        component="th"
+                        scope="item"
+                        style={{ fontSize: "1.5rem" }}
                       >
-                        <TableCell
-                          component="th"
-                          scope="item"
-                          style={{ fontSize: '1.5rem' }}
-                        >
-                          <div className="flex gap-[1rem]">
-                            <div className="card-image mb-[1rem]">
+                        <div className="flex gap-[1rem]">
+                          <div className="card-image mb-[1rem]">
+                            {item.product_image?.length > 0 ? (
                               <img
                                 className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-xl  brief-detail-img"
-                                src={item?.product_image[0]?.link}
+                                src={item.product_image[0]?.link}
                                 alt=""
                                 onError={({ currentTarget }) => {
                                   currentTarget.onerror = null;
                                   currentTarget.src = notFoundImage;
                                 }}
                               />
-                            </div>
-                            <span className="font-bold line-clamp-2">
-                              {item.name}
-                            </span>
+                            ) : (
+                              <img
+                                className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-xl  brief-detail-img"
+                                src={notFoundImage}
+                                alt=""
+                              />
+                            )}
                           </div>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          style={{
-                            fontSize: '1.5rem',
-                            maxWidth: '10  0rem',
-                          }}
-                        >
-                          <span className=" line-clamp-3">
-                            {item.description}
+                          <span className="font-bold line-clamp-2">
+                            {item.name}
                           </span>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          style={{
-                            fontSize: '1.5rem',
-                            maxWidth: '10rem',
-                          }}
+                        </div>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        style={{ fontSize: "1.5rem", maxWidth: "10  0rem" }}
+                      >
+                        <span className=" line-clamp-3">
+                          {item.description}
+                        </span>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        style={{ fontSize: "1.5rem", maxWidth: "10rem" }}
+                      >
+                        <div className="w-full">
+                          <input
+                            defaultValue={item.quantity}
+                            min={0}
+                            max={9999}
+                            name={item.product_id}
+                            onChange={debouncedChangeHandler}
+                            type="number"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        style={{ fontSize: "1.5rem", maxWidth: "20rem" }}
+                      >
+                        <span className=" line-clamp-2">{item.price}</span>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        style={{ fontSize: "1.5rem", maxWidth: "20rem" }}
+                      >
+                        <MUI.BetterIconButton
+                          onClick={() => handleRemoveItem(item.product_id)}
                         >
-                          <div className="w-full">
-                            <input
-                              defaultValue={item.quantity}
-                              min={0}
-                              max={9999}
-                              name={item.product_id}
-                              onChange={debouncedChangeHandler}
-                              type="number"
-                            />
-                          </div>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          style={{
-                            fontSize: '1.5rem',
-                            maxWidth: '20rem',
-                          }}
-                        >
-                          <span className=" line-clamp-2">
-                            {item.price}
-                          </span>
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          style={{
-                            fontSize: '1.5rem',
-                            maxWidth: '20rem',
-                          }}
-                        >
-                          <MUI.BetterIconButton
-                            onClick={() =>
-                              handleRemoveItem(item.product_id)
-                            }
-                          >
-                            <DeleteForeverIcon
-                              style={{ fontSize: '3rem' }}
-                            />
-                          </MUI.BetterIconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                          <DeleteForeverIcon style={{ fontSize: "3rem" }} />
+                        </MUI.BetterIconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -287,18 +275,20 @@ function CheckOut() {
               <span>Total</span>
               <span>{totalPrice}$</span>
             </div>
-            <div className="Pagination mt-[1rem] flex justify-end">
-              <Typography>Page: {page}</Typography>
-              <Pagination
-                page={page}
-                onChange={handleChangePage}
-                count={11}
-                defaultPage={1}
-                siblingCount={0}
-                variant="outlined"
-                size="large"
-              />
-            </div>
+            {
+              //   <div className="Pagination mt-[1rem] flex justify-end">
+              //   <Typography>Page: {page}</Typography>
+              //   <Pagination
+              //     page={page}
+              //     onChange={handleChangePage}
+              //     count={11}
+              //     defaultPage={1}
+              //     siblingCount={0}
+              //     variant="outlined"
+              //     size="large"
+              //   />
+              // </div>
+            }
           </TabPanel>
           <TabPanel
             value="2"
@@ -314,21 +304,29 @@ function CheckOut() {
                   experience order item.
                 </p>
                 <ul className="flex gap-[1rem] flex-col max-h-[30rem] shadow-md overflow-y-scroll mt-[1rem] list-item-order border-[0.5px] border-gray-400 p-[1.5rem] rounded-xl">
-                  {getShoppingCartList?.map((item, index) => (
+                  {getShoppingCartList?.map((item) => (
                     <li
                       key={item.product_id}
                       className="item-orders flex gap-[1rem] items-center "
                     >
                       <div className="card-image mb-[1rem] rounded-[2rem]">
-                        <img
-                          className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-md "
-                          src={item?.product_image[0]?.link}
-                          alt=""
-                          onError={({ currentTarget }) => {
-                            currentTarget.onerror = null;
-                            currentTarget.src = notFoundImage;
-                          }}
-                        />
+                        {item.product_image.length > 0 ? (
+                          <img
+                            className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-md "
+                            src={item.product_image[0]?.link}
+                            alt=""
+                            onError={({ currentTarget }) => {
+                              currentTarget.onerror = null;
+                              currentTarget.src = notFoundImage;
+                            }}
+                          />
+                        ) : (
+                          <img
+                            className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-md "
+                            src={notFoundImage}
+                            alt=""
+                          />
+                        )}
                       </div>
                       <div className="cart-item-info w-full overflow-hidden">
                         <span className="name line-clamp-2 font-semibold">
@@ -373,19 +371,16 @@ function CheckOut() {
                             </div>
                             <div
                               className="flex-1 text-[2rem]"
-                              style={{
-                                color: 'var(--primary-color)',
-                              }}
+                              style={{ color: "var(--primary-color)" }}
                             >
-                              <span>
-                                ${item.price * item.quantity}
-                              </span>
+                              <span>${item.price * item.quantity}</span>
                             </div>
                           </div>
                         </div>
                       </div>
                     </li>
                   ))}
+                  <NothingToSee imgH='10rem' imgSrc={cart_empty_image} textSize='1.8rem' text="Your cart is still empty" />
                 </ul>
                 <ul className="shipping-types mt-[1rem] flex flex-col gap-[1rem]">
                   {[...Array(2)].map((item, index) => (

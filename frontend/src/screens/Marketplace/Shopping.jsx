@@ -2,9 +2,7 @@ import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
 import { Tooltip, Pagination, Typography, Fab } from "@mui/material";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import HeadSlider from "./HeadSlider";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { ShoppingBag } from "@mui/icons-material";
@@ -12,13 +10,22 @@ import SellIcon from "@mui/icons-material/Sell";
 import ProductCard from "./ProductCard";
 import styled from "styled-components";
 import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
+import NothingToSee from "./NothingToSee";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { addProductToCart, getAllShoppingProduct } from "../../redux/apiRequest";
-import { addProductToCartWithoutPagingSaga, getProductDetail } from "../../redux/product/productSlice";
+import {
+  addProductToCart,
+  getAllShoppingProduct,
+} from "../../redux/apiRequest";
+import {
+  addProductToCartWithoutPagingSaga,
+  changeShoppingProductPage,
+  getProductDetail,
+} from "../../redux/product/productSlice";
 import { useState } from "react";
 import { addProductToListCartWithoutPagingRequest } from "../../redux/product/productSaga";
+import { setTabMarketPlaceLeftBarIndex } from "../../redux/tabIndex/tabIndexSlice";
 
 //#region media responsive
 const ResponSiveDiv = styled.div`
@@ -106,44 +113,48 @@ function Shopping() {
     (state) => state.product?.getShopping?.data,
     shallowEqual
   );
-  const settings = {
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    speed: 750,
-    autoplaySpeed: 5000,
-    cssEase: "linear",
-  };
-  const [page, setPage] = React.useState(1);
-  const [productDetail,setProductDetail] = useState()
-  const handleChange = (event, value) => {
-    setPage(value);
-  };
+  const shoppingProductPaging = useSelector(
+    (state) => state.product?.getShopping?.page
+  );
+  const { totalElement, pageSize, page } = shoppingProductPaging;
+  const [productDetail, setProductDetail] = useState();
   const navigate = useNavigate();
-
   // #endregion
   //#region declare function
-  function randomNumberInRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  //#endregion
-  let randomNum = randomNumberInRange(1400, 1050);
   const handleViewDetail = (productObj) => {
-    dispatch(getProductDetail(productObj))
+    dispatch(getProductDetail(productObj));
+    dispatch(setTabMarketPlaceLeftBarIndex("2"));
   };
   const handleAddToCart = (productObj) => {
-    let product_id= productObj.product_id;
-    addProductToListCartWithoutPagingRequest(accessToken,refreshToken,product_id,dispatch)
+    let product_id = productObj.product_id;
+    dispatch(setTabMarketPlaceLeftBarIndex("1"));
+    addProductToListCartWithoutPagingRequest(
+      accessToken,
+      refreshToken,
+      product_id,
+      dispatch
+    );
   };
   const handleNavigateToCheckOut = () => {
-    navigate("/marketplace/checkout");
+    navigate("/checkout");
   };
   const handleNavigateToSelling = () => {
-    navigate("/marketplace/selling");
+    navigate("/selling");
+  };
+  const handleChange = (event, value) => {
+    let shoppingPage = value - 1;
+    let paging = { page: shoppingPage, pageSize };
+    dispatch(changeShoppingProductPage({ accessToken, refreshToken, paging }));
   };
   useEffect(() => {
-    getAllShoppingProduct(accessToken, refreshToken, dispatch);
-  },[]);
+    let paging;
+    if (shoppingProductPaging) {
+      paging = { page, pageSize };
+    } else {
+      paging = { page: 0, pageSize: 30 };
+    }
+    getAllShoppingProduct(accessToken, refreshToken, paging, dispatch);
+  }, []);
   return (
     <>
       <ResponSiveDiv>
@@ -176,56 +187,46 @@ function Shopping() {
             >
               <SellIcon style={{ fontSize: "2.5rem" }} />
             </Fab>
-            <div className="slide-show">
-              <Slider {...settings}>
-                {
-                //   [
-                //   ...Array.from({ length: 5 }, () =>
-                //     randomNumberInRange(1400, 1050)
-                //   ),
-                // ].map((index) => (
-                //   <div key={index}>
-                //     <img
-                //       className="h-[300px] w-full object-cover rounded-xl"
-                //       src={`https://source.unsplash.com/random/1000x${
-                //         randomNum * index
-                //       }/?3D Renders`}
-                //       alt=""
-                //     />
-                //   </div>
-                // ))
-              }
-              </Slider>
-            </div>
-            <div className="product-container mb-[1rem]">
-              {productList &&
-                productList.map((product) => (
-                  <ProductCard
-                    key={product.product_id}
-                    productObj={product}
-                    arrayBtn={[
-                      {
-                        pos: 0,
-                        text: "view details",
-                        handle: handleViewDetail,
-                      },
-                      { pos: 1, text: "add to cart", handle: handleAddToCart },
-                    ]}
+            <HeadSlider />
+            {productList?.length > 0 ? (
+              <>
+                <div className="product-container mb-[1rem]">
+                  {productList &&
+                    productList.map((product) => (
+                      <ProductCard
+                        key={product.product_id}
+                        productObj={product}
+                        arrayBtn={[
+                          {
+                            pos: 0,
+                            text: "view details",
+                            handle: handleViewDetail,
+                          },
+                          {
+                            pos: 1,
+                            text: "add to cart",
+                            handle: handleAddToCart,
+                          },
+                        ]}
+                      />
+                    ))}
+                </div>
+                <div className="Pagination float-right">
+                  <Typography>Page: {page + 1}</Typography>
+                  <Pagination
+                    page={page + 1}
+                    onChange={handleChange}
+                    count={Math.round(totalElement / pageSize)}
+                    defaultPage={1}
+                    siblingCount={0}
+                    variant="outlined"
+                    size="large"
                   />
-                ))}
-            </div>
-            <div className="Pagination float-right">
-              <Typography>Page: {page}</Typography>
-              <Pagination
-                page={page}
-                onChange={handleChange}
-                count={11}
-                defaultPage={1}
-                siblingCount={0}
-                variant="outlined"
-                size="large"
-              />
-            </div>
+                </div>
+              </>
+            ) : (
+              <NothingToSee />
+            )}
           </div>
         </ThreeColumns>
       </ResponSiveDiv>

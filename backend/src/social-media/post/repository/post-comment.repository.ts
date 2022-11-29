@@ -14,8 +14,8 @@ import { PagingData } from "src/database/view-model/paging.model";
 import { Profile } from "src/database/model/profile.model";
 import { ProfileAvatarImage } from "src/database/model/profile_avatar_image.model";
 import { Helper } from "src/common/utils/helper.utils";
-import { PostCommentLike } from "src/database/model/post-comment-like.model";
 import { PostCommentLikeRepository } from "./post-comment-like.repository";
+import { NotificationService } from "src/notification/service/notification.service";
 
 @Injectable()
 export class PostCommentRepository {
@@ -24,6 +24,7 @@ export class PostCommentRepository {
         @Inject(PROVIDER.PostComment) private postCommentRepository: typeof PostComment,
         @Inject(PostCommentLikeRepository) private postCommentLikeRepository: PostCommentLikeRepository,
         @Inject(PROVIDER.ParentChildComment) private parentChildCommentRepository: typeof ParentChildComment,
+        private readonly notificationService: NotificationService,
     ) { };
 
     async createComment(profile_id: number, postCommentDto: PostCommentDto): Promise<PostComment> {
@@ -122,7 +123,6 @@ export class PostCommentRepository {
                     }
 
                     
-
                     await this.parentChildCommentRepository.destroy({
                         where: {
                             parent_child_comment_id: { [Op.in]: idAssociationDelete },
@@ -131,6 +131,8 @@ export class PostCommentRepository {
                 }
 
                 idCommentDelete.push(queryData.post_comment_id);
+
+                await this.notificationService.removePostCommentNotification(idCommentDelete);
 
                 const res = await this.postCommentRepository.destroy({
                     where: {

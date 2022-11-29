@@ -3,6 +3,11 @@ import { revertAll } from "../resetStore";
 const initialState = {
   getSelling: {
     data: [],
+    page: {
+      page: 0,
+      pageSize: 30,
+      totalElement: 30,
+    },
   },
   createSelling: {
     isFetching: false,
@@ -11,6 +16,11 @@ const initialState = {
   },
   getShopping: {
     data: [],
+      page: {
+        page: 0,
+        pageSize: 30,
+        totalElement: 30,
+      },
   },
   getProductDetail: {
     data: null,
@@ -28,6 +38,11 @@ export const productSlice = createSlice({
   initialState: {
     getSelling: {
       data: [],
+      page: {
+        page: 0,
+        pageSize: 30,
+        totalElement: 30,
+      },
     },
     createSelling: {
       isFetching: false,
@@ -36,6 +51,11 @@ export const productSlice = createSlice({
     },
     getShopping: {
       data: [],
+      page: {
+        page: 0,
+        pageSize: 30,
+        totalElement: 30,
+      },
     },
     getProductDetail: {
       data: null,
@@ -52,7 +72,7 @@ export const productSlice = createSlice({
   reducers: {
     getSellingProductSaga() {},
     getSellingProduct: (state, action) => {
-      state.getSelling.data = action.payload;
+      state.getSelling = action.payload;
     },
     createSellingProductSagaSuccess() {},
 
@@ -60,10 +80,17 @@ export const productSlice = createSlice({
 
     updateSellingProductSagaSuccess() {},
 
+    changeSellingProductPage: (state, action) => {
+      state.getSelling.page.page = action.payload.paging.page;
+    },
+
     getShoppingProductSaga() {},
     getShoppingProductSagaSuccess() {},
     getShoppingProduct: (state, action) => {
-      state.getShopping.data = action.payload;
+      state.getShopping = action.payload;
+    },
+    changeShoppingProductPage: (state, action) => {
+      state.getShopping.page.page = action.payload.paging.page;
     },
 
     getListCartWithoutPagingSaga() {},
@@ -102,12 +129,14 @@ export const {
   getShoppingProductSaga,
   getShoppingProduct,
   getShoppingProductSagaSuccess,
+  changeShoppingProductPage,
 
   getSellingProductSaga,
   getSellingProduct,
   createSellingProductSagaSuccess,
   deleteSellingProductSagaSuccess,
   updateSellingProductSagaSuccess,
+  changeSellingProductPage,
 
   updateProduct,
   resetUpdateProduct,
