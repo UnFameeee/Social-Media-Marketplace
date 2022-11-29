@@ -39,7 +39,7 @@ function* handleGetSellingProduct(data) {
   }
 }
 const getSellingProductSagaRequest = async (data) => {
-  const { accessToken, refreshToken, dispatch } = data.payload;
+  const { accessToken, refreshToken, paging } = data.payload;
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -50,7 +50,7 @@ const getSellingProductSagaRequest = async (data) => {
     };
     const res = await axiosInStanceJWT.post(
       `${api.product}/selling/all`,
-      pagingObj,
+      paging,
       {
         headers: config,
         ACCESS_PARAM: accessToken,
@@ -58,7 +58,8 @@ const getSellingProductSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
-      return res.data.results.data;
+      console.log(res.data.results);
+      return res.data.results;
     } else {
       notifyService.showError("Get List Selling Product Failed");
     }
@@ -67,12 +68,14 @@ const getSellingProductSagaRequest = async (data) => {
     notifyService.showError("Get List Selling Product Failed");
   }
 };
+
 export const createSellingProductRequest = async (
   accessToken,
   refreshToken,
   dispatch,
   product,
-  uploadImages
+  uploadImages,
+  paging
 ) => {
   try {
     const config = {
@@ -95,7 +98,7 @@ export const createSellingProductRequest = async (
         console.log(resImages);
       }
       dispatch(
-        createSellingProductSagaSuccess({ accessToken, refreshToken, dispatch })
+        createSellingProductSagaSuccess({ accessToken, refreshToken, paging })
       );
       notifyService.showSuccess("Create Selling Product Success");
       return res;
@@ -111,7 +114,8 @@ export const deleteSellingProductRequest = async (
   accessToken,
   refreshToken,
   dispatch,
-  product_id
+  product_id,
+  paging
 ) => {
   try {
     const config = {
@@ -127,7 +131,7 @@ export const deleteSellingProductRequest = async (
     );
     if (!res.data.message) {
       dispatch(
-        deleteSellingProductSagaSuccess({ accessToken, refreshToken, dispatch })
+        deleteSellingProductSagaSuccess({ accessToken, refreshToken, paging })
       );
       notifyService.showSuccess("Delete Selling Product Success");
       return res;
@@ -146,7 +150,8 @@ export const updateSellingProductRequest = async (
   product,
   product_id,
   uploadImages,
-  removeImages
+  removeImages,
+  paging
 ) => {
   try {
     const config = {
@@ -181,7 +186,7 @@ export const updateSellingProductRequest = async (
         console.log(resImages);
       }
       dispatch(
-        updateSellingProductSagaSuccess({ accessToken, refreshToken, dispatch })
+        updateSellingProductSagaSuccess({ accessToken, refreshToken, paging })
       );
       notifyService.showSuccess("Update Selling Product Success");
       return res;
@@ -193,6 +198,7 @@ export const updateSellingProductRequest = async (
     notifyService.showError("Update Selling Product Failed");
   }
 };
+
 export function* getAllShoppingProduct() {
   yield takeLatest([getShoppingProductSaga.type], handleGetShoppingProduct);
 }
@@ -278,6 +284,7 @@ const getListCartWithoutPagingRequest = async (data) => {
     notifyService.showError("Get List Cart Product Failed");
   }
 };
+
 export const addProductToListCartWithoutPagingRequest = async (
   accessToken,
   refreshToken,
@@ -350,7 +357,6 @@ export const removeProductFromListCartWithoutPagingRequest = async (
     notifyService.showError("Remove Product To List Cart Failed");
   }
 };
-
 export const changeProductFromListCartWithoutPagingQuantityRequest = async (
   accessToken,
   refreshToken,
@@ -362,9 +368,9 @@ export const changeProductFromListCartWithoutPagingQuantityRequest = async (
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
-    let quantityObj={
-      quantity:quantity
-    }
+    let quantityObj = {
+      quantity: quantity,
+    };
     const res = await axiosInStanceJWT.put(
       `${api.shoppingCart}/changeQuantityProductInCart/${product_id}`,
       quantityObj,

@@ -1,16 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { Avatar, Button, Modal } from "@mui/material";
-import { AiFillHeart } from "react-icons/ai";
+import { Avatar, Button } from "@mui/material";
 import { useSelector } from "react-redux";
 import "./ProductCard.scss";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import styled from "styled-components";
 import ProductCartDetailModal from "./ProductCartDetailModal";
 import notFoundImage from "../../assets/noimage_1.png";
-import ManagerProductModal from "./ManagerProductModa";
-import macbook_example from "../../assets/macbook.jpeg";
+
 function ProductCard({ arrayBtn, productObj, ...props }) {
   const userData = useSelector((state) => state.auth.user.userData);
   const [showModal, setShowModal] = useState(false);
@@ -33,7 +30,6 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
     };
     return result;
   });
-  const [showManagerModal, setShowManagerModal] = useState(false);
 
   return (
     <>
@@ -45,27 +41,25 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
         <div className="card-image relative mb-[1rem]">
           <div className="slide-show rounded-lg  shadow-lg">
             <Slider {...settings}>
-              {productObj?.product_image &&
-                productObj?.product_image.map((image) => (
-                  <img
-                    key={image.link}
-                    alt="not found"
-                    className="w-full object-cover rounded-lg h-[228px]"
-                    src={image.link}
-                    onError={({ currentTarget }) => {
-                      currentTarget.onerror = null; // prevents looping
-                      currentTarget.src = notFoundImage;
-                    }}
-                  />
-                ))}
-              {productObj?.product_image.length == 0 ||
-                (!productObj && (
-                  <img
-                    alt="not found"
-                    className="w-full object-cover rounded-lg h-[228px]"
-                    src={notFoundImage}
-                  />
-                ))}
+              {productObj?.product_image.map((image) => (
+                <img
+                  key={image.link}
+                  alt="not found"
+                  className="w-full object-cover rounded-lg h-[228px]"
+                  src={image.link}
+                  onError={({ currentTarget }) => {
+                    currentTarget.onerror = null; // prevents looping
+                    currentTarget.src = notFoundImage;
+                  }}
+                />
+              ))}
+              {productObj?.product_image.length == 0 && (
+                <img
+                  alt="not found"
+                  className="w-full object-cover rounded-lg h-[228px]"
+                  src={notFoundImage}
+                />
+              )}
             </Slider>
           </div>
           {
