@@ -2,9 +2,7 @@ import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
 import { Tooltip, Pagination, Typography, Fab } from "@mui/material";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import HeadSlider from "./HeadSlider";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import { ShoppingBag } from "@mui/icons-material";
 import SellIcon from "@mui/icons-material/Sell";
@@ -15,18 +13,12 @@ import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ManagerProductModal from "./ManagerProductModa";
-import {
-  createProduct,
-  deleteProduct,
-  getAllSellingProduct,
-} from "../../redux/apiRequest";
+import MUI from "../../components/MUI";
+import { getAllSellingProduct } from "../../redux/apiRequest";
 import { useEffect } from "react";
 import {
-  createSellingProductSaga,
-  deleteSellingProductSaga,
   resetUpdateProduct,
   updateProduct,
-  updateSellingProductSaga,
 } from "../../redux/product/productSlice";
 import {
   createSellingProductRequest,
@@ -129,6 +121,8 @@ function Selling() {
     isShow: false,
     action: 0,
   });
+  const [openConfirmRemove, setOpenConfirmRemove] = useState(false);
+  const [deleteItemId, setDeleteItemId] = useState(-1);
 
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
@@ -140,13 +134,11 @@ function Selling() {
     (state) => state.product?.getSelling?.data,
     shallowEqual
   );
+  const sellingProductPaging = useSelector(
+    (state) => state.product?.getSelling?.page
+  );
   // #endregion
   //#region declare function
-  function randomNumberInRange(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  //#endregion
-  let randomNum = randomNumberInRange(1400, 1050);
   const handleUpdate = (productObj) => {
     dispatch(updateProduct(productObj));
     setShowManagerModal({ isShow: true, action: 2 });
@@ -155,7 +147,6 @@ function Selling() {
     setShowManagerModal({ isShow: true, action: 1 });
     dispatch(resetUpdateProduct());
   };
-
   const handleNavigateToCheckOut = () => {
     navigate("/marketplace/checkout");
   };
@@ -163,21 +154,35 @@ function Selling() {
     navigate("/marketplace/shopping");
   };
   const handleDelete = (productObj) => {
+    setOpenConfirmRemove(true);
     let product_id = productObj.product_id;
-    deleteSellingProductRequest(
-      accessToken,
-      refreshToken,
-      dispatch,
-      product_id
-    );
+    setDeleteItemId(product_id);
+  };
+  const handleConfirmDeleteProduct = () => {
+    const { page, pageSize } = sellingProductPaging;
+    let paging = { page, pageSize };
+    if (deleteItemId != -1) {
+      deleteSellingProductRequest(
+        accessToken,
+        refreshToken,
+        dispatch,
+        deleteItemId,
+        paging
+      );
+      setDeleteItemId(-1);
+    }
+    setOpenConfirmRemove(false);
   };
   const handleSubmitCreateProduct = (product, uploadImages) => {
+    const { page, pageSize } = sellingProductPaging;
+    let paging = { page, pageSize };
     createSellingProductRequest(
       accessToken,
       refreshToken,
       dispatch,
       product,
-      uploadImages
+      uploadImages,
+      paging
     );
   };
   const handleSaveUpdateProduct = (
@@ -188,6 +193,8 @@ function Selling() {
   ) => {
     let removeImages = removeUploadImages;
     let product_id = productId;
+    const { page, pageSize } = sellingProductPaging;
+    let paging = { page, pageSize };
     updateSellingProductRequest(
       accessToken,
       refreshToken,
@@ -195,7 +202,8 @@ function Selling() {
       product,
       product_id,
       uploadImages,
-      removeImages
+      removeImages,
+      paging
     );
   };
   useEffect(() => {
@@ -240,26 +248,14 @@ function Selling() {
             >
               <ShoppingBag style={{ fontSize: "2.5rem" }} />
             </Fab>
-            <div className="slide-show">
-              <Slider {...settings}>
-                {[
-                  ...Array.from({ length: 5 }, () =>
-                    randomNumberInRange(1400, 1050)
-                  ),
-                ].map((index) => (
-                  <div key={index}>
-                    <img
-                      className="h-[300px] w-full object-cover rounded-xl"
-                      src={`https://source.unsplash.com/random/1000x${
-                        randomNum * index
-                      }/?3D Renders`}
-                      alt=""
-                    />
-                  </div>
-                ))}
-              </Slider>
-            </div>
+            <HeadSlider />
             <div className="product-container mb-[1rem]">
+              <MUI.ConfirmDialog
+                modalProps={[openConfirmRemove, setOpenConfirmRemove]}
+                title="Remove Selling Product"
+                actionName="remove this product"
+                confirmAction={handleConfirmDeleteProduct}
+              />
               {productList &&
                 productList.map((product) => (
                   <ProductCard

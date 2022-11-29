@@ -548,7 +548,7 @@ export const getAllSellingProduct = async (
       }
     );
     if (!res.data.message) {
-      dispatch(getSellingProduct(res.data.results.data))
+      dispatch(getSellingProduct(res.data.results))
     } else {
      
     }
