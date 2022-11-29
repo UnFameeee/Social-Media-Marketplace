@@ -23,6 +23,7 @@ import { localStorageService } from '../../../services/localStorageService';
 import socket from '../../../socket/socket';
 import { SOCKET_EVENT } from '../../../socket/socket.constant';
 import MUI from '../../MUI';
+import { NOTIFICATION_TYPE } from '../../../socket/notification.constant';
 import '../Layout.css';
 
 export default function NavBar() {
@@ -50,6 +51,15 @@ export default function NavBar() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
+  const allNotifications = useSelector(
+    (state) => state.notification?.getAll?.data
+  );
+  const allFriendNotifications = useSelector(
+    (state) => state.notification?.getAllFriend?.data
+  );
+  const allUnreadNotifications = useSelector(
+    (state) => state.notification?.getAllUnread?.data
+  );
 
   const handleLogOut = () => {
     logOut(dispatch, accessToken, refreshToken);
@@ -66,6 +76,32 @@ export default function NavBar() {
       document.getElementById('searchBar').blur();
     }
     setOpenSearch(false);
+  }
+
+  function listNotifications(list) {
+    return list?.map((item) => {
+      return {
+        left: {
+          url: item.profile_sender_avatar,
+          name: item.profile_sender_name,
+        },
+        middle: item.content,
+        onClick: () => {
+          handleNotifications(
+            item.notification_type,
+            item.post_id,
+            item.profile_sender_id
+          );
+        },
+      };
+    });
+  }
+  function handleNotifications(type, postId, profileId) {
+    if (type === NOTIFICATION_TYPE.FRIEND_REQUEST) {
+      navigate(`/profile?id=${profileId}`);
+    } else {
+      navigate(`/post?id=${postId}`);
+    }
   }
 
   return (
@@ -292,6 +328,10 @@ export default function NavBar() {
 
                 {rightGroup === 'notifications' && (
                   <MUI.Menu
+                    classNameConfig={{
+                      menuItemClass: 'nav-notification',
+                      middleClass: 'nav-notification',
+                    }}
                     sx={{ right: '4.8rem', minWidth: '40rem' }}
                     before={
                       <div style={{ padding: '0.4rem 1.6rem 0' }}>
@@ -341,7 +381,13 @@ export default function NavBar() {
                         </ToggleButtonGroup>
                       </div>
                     }
-                    list={[]}
+                    list={
+                      notificationType === 'all'
+                        ? listNotifications(allNotifications)
+                        : notificationType === 'unread'
+                        ? listNotifications(allUnreadNotifications)
+                        : listNotifications(allFriendNotifications)
+                    }
                   />
                 )}
               </div>

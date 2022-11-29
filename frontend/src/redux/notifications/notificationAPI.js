@@ -23,9 +23,8 @@ export const getAllNotification = async (
 ) => {
   dispatch(getAllNotificationStart());
   try {
-    const res = await axiosInStanceJWT.post(
+    const res = await axiosInStanceJWT.get(
       `${api.notification}/all`,
-      { page: 0, pageSize: 10 },
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -56,9 +55,8 @@ export const getAllUnreadNotification = async (
 ) => {
   dispatch(getAllUnreadNotificationStart());
   try {
-    const res = await axiosInStanceJWT.post(
-      `${api.notification}/unread/all`,
-      { page: 0, pageSize: 10 },
+    const res = await axiosInStanceJWT.get(
+      `${api.notification}/all/unread`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -89,9 +87,8 @@ export const getAllFriendNotification = async (
 ) => {
   dispatch(getAllFriendNotificationStart());
   try {
-    const res = await axiosInStanceJWT.post(
-      `${api.notification}/friend/all`,
-      { page: 0, pageSize: 10 },
+    const res = await axiosInStanceJWT.get(
+      `${api.notification}/all/friend_request`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -115,40 +112,40 @@ export const getAllFriendNotification = async (
 // #endregion
 
 // #region seen notification
-export const seenNotification = async (
-  accessToken,
-  refreshToken,
-  dispatch,
-  product
-) => {
-  try {
-    const res = await axiosInStanceJWT.post(
-      `${api.notification}/seen`,
-      product,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        ACCESS_PARAM: accessToken,
-        REFRESH_PARAM: refreshToken,
-      }
-    );
-    if (!res.data.message) {
-      dispatch(
-        seenNotificationSagaSuccess({
-          accessToken,
-          refreshToken,
-          dispatch,
-        })
-      );
-      notifyService.showSuccess('Create Selling Product Success');
-      return res;
-    } else {
-      notifyService.showError('Create Selling Product Failed');
-    }
-  } catch (error) {
-    console.log(error);
-    notifyService.showError('Create Selling Product Failed');
-  }
-};
+// export const seenNotification = async (
+//   accessToken,
+//   refreshToken,
+//   dispatch,
+//   product
+// ) => {
+//   try {
+//     const res = await axiosInStanceJWT.post(
+//       `${api.notification}/seen`,
+//       product,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${accessToken}`,
+//         },
+//         ACCESS_PARAM: accessToken,
+//         REFRESH_PARAM: refreshToken,
+//       }
+//     );
+//     if (!res.data.message) {
+//       dispatch(
+//         seenNotificationSagaSuccess({
+//           accessToken,
+//           refreshToken,
+//           dispatch,
+//         })
+//       );
+//       notifyService.showSuccess('Create Selling Product Success');
+//       return res;
+//     } else {
+//       notifyService.showError('Create Selling Product Failed');
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     notifyService.showError('Create Selling Product Failed');
+//   }
+// };
 // #endregion

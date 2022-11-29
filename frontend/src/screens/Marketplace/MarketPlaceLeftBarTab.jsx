@@ -128,7 +128,7 @@ function MarketPlaceLeftBarTab() {
                     className="cart-item relative flex items-center gap-[1.2rem] p-[1.2rem] rounded-xl border-[0.5px] border-gray-400"
                   >
                     <img
-                      src={cartItem.product_image[0].link}
+                      src={cartItem?.product_image[0]?.link}
                       onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
                         currentTarget.src = notFoundImage;

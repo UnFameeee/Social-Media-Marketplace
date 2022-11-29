@@ -131,10 +131,8 @@ const FriendHome = () => {
             return Helper.checkValueExistInArray(
               listRemoved,
               item.profile_id
-            ) ? (
-              <></>
-            ) : (
-              <div key={index}>
+            ) ? null : (
+              <div key={item.profile_id}>
                 <FriendCard
                   profileDetails={item}
                   type="suggestions"

@@ -2,25 +2,26 @@ import RootRoutes from './common/routes';
 // import { ToastContainer } from "react-toastify";
 
 //Thang
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 
 import { useEffect } from 'react';
-import {
-  ToastContainer,
-  toast,
-  Bounce,
-} from 'react-toastify';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import socket from './socket/socket';
 import { SOCKET_EVENT } from './socket/socket.constant';
 import Notification from './socket/Notification';
+import { getAllNotification } from './redux/notifications/notificationAPI';
 
 function App() {
   // const [isConnected, setIsConnected] = useState(socket.connected);
+  const dispatch = useDispatch();
 
   const accessToken = useSelector(
-    (state) => state.auth?.login?.currentUser?.access 
+    (state) => state.auth?.login?.currentUser?.access
+  );
+  const refreshToken = useSelector(
+    (state) => state.auth?.login?.currentUser?.refresh
   );
 
   const notify = (data) => toast(data);
@@ -35,30 +36,38 @@ function App() {
       });
 
       //listening to the event receiving the notification
-      socket.on(SOCKET_EVENT.RECEIVE_NOTIFICATION, (NotificationResponseDto) => {
+      socket.on(
+        SOCKET_EVENT.RECEIVE_NOTIFICATION,
+        (NotificationResponseDto) => {
+          console.log(NotificationResponseDto);
+          getAllNotification(accessToken, refreshToken, dispatch);
 
-        console.log(NotificationResponseDto);
-
-        const notify = (
-          avatar,
-          profile_name,
-          content,
-          notification_type
-        ) => {
-          toast(
-            <Notification
-              avatar={avatar}
-              profile_name={profile_name}
-              content={content}
-              notification_type={notification_type}
-            />,
-            {
-              autoClose: 3000,
-            }
+          const notify = (
+            avatar,
+            profile_name,
+            content,
+            notification_type
+          ) => {
+            toast(
+              <Notification
+                avatar={avatar}
+                profile_name={profile_name}
+                content={content}
+                notification_type={notification_type}
+              />,
+              {
+                autoClose: false,
+              }
+            );
+          };
+          notify(
+            NotificationResponseDto.avatar,
+            NotificationResponseDto.profile_name,
+            NotificationResponseDto.content,
+            NotificationResponseDto.notification_type
           );
-        };
-        notify(NotificationResponseDto.avatar, NotificationResponseDto.profile_name, NotificationResponseDto.content, NotificationResponseDto.notification_type);
-      });
+        }
+      );
 
       var decoded = jwt_decode(accessToken);
       // COMPULSORY

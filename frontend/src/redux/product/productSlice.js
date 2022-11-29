@@ -69,7 +69,7 @@ export const productSlice = createSlice({
     getListCartWithoutPagingSaga() {},
     getListCartWithoutPaging: (state, action) => {
       let totalPrice = 0;
-      action.payload.map((item) => {
+      action.payload?.map((item) => {
         totalPrice += item.price * item.quantity;
       });
       state.getListCartWithoutPaging.totalPrice = totalPrice;

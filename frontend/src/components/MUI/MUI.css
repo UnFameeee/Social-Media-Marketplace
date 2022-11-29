@@ -16,6 +16,23 @@
   padding: 0.6rem 0.8rem;
   min-height: 4.6rem;
 }
+.MuiMenuItem-root .left-menu {
+  width: 4rem;
+  height: 4rem;
+  margin-right: 0.8rem;
+}
+.MuiMenuItem-root .middle-menu {
+  width: 16.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: none;
+}
+.MuiMenuItem-root .right-menu {
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0.4rem;
+}
 
 /* #region recent search in navbar */
 .MuiList-root.menu.navbar-search {
@@ -61,23 +78,14 @@
 }
 /* #endregion */
 
-.MuiMenuItem-root .left-menu {
-  width: 4rem;
-  height: 4rem;
-  margin-right: 0.8rem;
+/* #region notification */
+.MuiMenuItem-root.menu-item.nav-notification {
+  justify-content: start;
 }
-.MuiMenuItem-root .middle-menu {
-  width: 16.5rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-transform: none;
+.MuiMenuItem-root .middle-menu.nav-notification {
+  width: auto;
 }
-.MuiMenuItem-root .right-menu {
-  width: 3.5rem;
-  height: 3.5rem;
-  padding: 0.4rem;
-}
+/* #endregion */
 
 /*#endregion */
 
