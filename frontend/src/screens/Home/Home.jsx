@@ -10,11 +10,6 @@ import { useEffect } from 'react';
 import ThreeColumns from '../../components/Layout/ThreeColumns';
 import { homeLeftbar } from '../../common/layoutConfigs/homeLeftbar';
 import styled from 'styled-components';
-import {
-  getAllFriendNotification,
-  getAllNotification,
-  getAllUnreadNotification,
-} from '../../redux/notifications/notificationAPI';
 
 const ResponSiveDiv = styled.div`
   @media screen and (max-width: 1620px) {
@@ -121,10 +116,6 @@ function Home() {
 
     if (!onDestroy) {
       getAllPost(accessToken, refreshToken, dispatch);
-      
-      getAllNotification(accessToken, refreshToken, dispatch);
-      getAllUnreadNotification(accessToken, refreshToken, dispatch);
-      getAllFriendNotification(accessToken, refreshToken, dispatch);
     }
     return () => {
       onDestroy = true;

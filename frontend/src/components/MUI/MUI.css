@@ -80,10 +80,12 @@
 
 /* #region notification */
 .MuiMenuItem-root.menu-item.nav-notification {
+  height: 8rem;
   justify-content: start;
 }
 .MuiMenuItem-root .middle-menu.nav-notification {
-  width: auto;
+  padding-left: 1rem;
+  flex: 1;
 }
 /* #endregion */
 
