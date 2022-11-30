@@ -33,6 +33,16 @@ export class NotificationService {
     }
   }
 
+  async getPostIdByCommentId(post_comment_id: number): Promise<number> {
+    try {
+      const data = await this.notificationRepository.getPostIdByCommentId(post_comment_id);
+      return data["post_id"];
+    } catch (err) {
+      ExceptionResponse(err);
+    }
+  }
+
+
   async getProfileSenderByProfileId(profile_id: number): Promise<Profile> {
     try {
       const data = await this.notificationRepository.getProfileSenderByProfileId(profile_id);

@@ -92,6 +92,7 @@ export default function NavBar() {
     dispatch(revertAll());
 
     socket.off(SOCKET_EVENT.JOIN_ROOM);
+    socket.off(SOCKET_EVENT.RERENDER_NOTIFICATION);
     socket.off(SOCKET_EVENT.RECEIVE_NOTIFICATION);
     socket.disconnect();
   };
