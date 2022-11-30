@@ -35,11 +35,13 @@ export default function PostView() {
 
   return (
     <ThreeColumns className="post-view">
-      <CardPost
-        postData={post}
-        key={queryParams}
-        profile={userData}
-      />
+      {post && (
+        <CardPost
+          postData={post}
+          key={queryParams}
+          profile={userData}
+        />
+      )}
     </ThreeColumns>
   );
 }
