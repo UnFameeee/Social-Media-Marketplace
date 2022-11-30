@@ -167,4 +167,12 @@ a[disabled] {
   padding-left: calc(var(--sidebar-width) + var(--padding-layout));
   padding-right: calc(var(--sidebar-width) + var(--padding-layout));
 }
+.three-column.post-view {
+  padding: 2rem 32% 0;
+  display: flex;
+  justify-content: center;
+}
+.three-column.post-view .cardPost {
+  width: 100%;
+}
 /* #endregion */

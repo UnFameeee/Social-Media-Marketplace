@@ -122,7 +122,7 @@ export const postSlice = createSlice({
     },
     getPostByIdSuccess: (state, action) => {
       state.getById.isFetching = false;
-      state.getById.posts = action.payload;
+      state.getById.post = action.payload;
     },
     getPostByIdFailed: (state) => {
       state.getById.isFetching = false;

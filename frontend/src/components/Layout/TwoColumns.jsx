@@ -2,7 +2,7 @@ import LeftBar from './SideBar/LeftBar';
 import './Layout.css';
 
 export default function TwoColumns(props) {
-  const { leftBarConfig, children, className } = props;
+  const { leftBarConfig, children, className = '' } = props;
 
   return (
     <div className="layout-wrapper">
