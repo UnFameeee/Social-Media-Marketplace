@@ -212,7 +212,7 @@ function CheckOut() {
                         </div>
                       </TableCell>
                       <TableCell
-                        align="center"
+                        align=""
                         style={{ fontSize: "1.5rem", maxWidth: "10  0rem" }}
                       >
                         <span className=" line-clamp-3">
