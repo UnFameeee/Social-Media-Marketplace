@@ -52,9 +52,9 @@ function App() {
       //listening on the event rerender notification popup
       socket.on(SOCKET_EVENT.RERENDER_NOTIFICATION, () => {
         // setIsConnected(true);
-        notify("RERENDER");
-      });
 
+        getAllFriendNotification(accessToken, refreshToken, dispatch);
+      });
 
       //listening to the event receiving the notification
       socket.on(
@@ -120,7 +120,7 @@ function App() {
         pauseOnFocusLoss={false}
         draggable={false}
         transition={Bounce}
-      // theme="dark"
+        // theme="dark"
       />
     </>
   );
