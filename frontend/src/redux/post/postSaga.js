@@ -114,6 +114,7 @@ const createPostSagaRequest = async (data) => {
     postData_written_text,
     uploadImage,
     callRefreshPost = true,
+    id,
     dispatch,
   } = data.payload;
   dispatch(createPostStart());
@@ -148,6 +149,7 @@ const createPostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
+          id,
           dispatch,
         })
       );
@@ -241,6 +243,7 @@ const updatePostSagaRequest = async (data) => {
     uploadImage,
     removeImages,
     callRefreshPost = true,
+    id,
     dispatch,
   } = data.payload;
   dispatch(updatePostStart());
@@ -283,6 +286,7 @@ const updatePostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
+          id,
           dispatch,
         })
       );

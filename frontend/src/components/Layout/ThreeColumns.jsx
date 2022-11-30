@@ -1,9 +1,14 @@
 import RightBar from './SideBar/RightBar';
 import LeftBar from './SideBar/LeftBar';
-import './Layout.css'
+import './Layout.css';
 
 export default function ThreeColumns(props) {
-  const { leftBarConfig, rightBarConfig, children, className } = props;
+  const {
+    leftBarConfig,
+    rightBarConfig,
+    children,
+    className = '',
+  } = props;
   return (
     <div className="layout-wrapper">
       {leftBarConfig && <LeftBar {...leftBarConfig} />}

@@ -69,7 +69,7 @@ export function IconImg({ notification_type }) {
       setIcon(<PersonAddIcon style={{ fontSize: '1.9rem' }} />);
     }
   }, []);
-  console.log(icon);
+
   return <ImgWrapper>{icon}</ImgWrapper>;
 }
 

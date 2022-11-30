@@ -25,12 +25,13 @@ import CommentList from "../Comment/CommentList";
 import CommentForm from "../Comment/CommentForm";
 import PostModal from "../../screens/Home/PostModal";
 import { getCommentPostSaga } from "../../redux/comment/commentSlice";
+import { Helper } from "../../utils/Helper";
 function CardPost(props) {
   //#region Declare variables
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
-  const [showComment, setShowComment] = useState(false);
+  const [showComment, setShowComment] = useState(Helper.checkURL('post'));
   const { postData } = props;
   const { post_id, profile_id, written_text, post_image, isLiked, totalLike } =
     postData;
@@ -141,7 +142,7 @@ function CardPost(props) {
         showModal={showPostModal}
         setShowPostModal={setShowPostModal}
         postUpdateData={postUpdateData}
-        profile={userData}
+        profile={profile ?? userData}
       />
       {/* {(!Helper.checkURL("") || props.profile?.profile_id === props.postData.profile_id) && ( */}
       <div className="cardPost bg-white pt-[1.5rem] pb-[1.5rem] mb-[2rem] drop-shadow-md rounded-xl border-2 w-[70rem]">

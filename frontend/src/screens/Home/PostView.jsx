@@ -16,7 +16,12 @@ export default function PostView() {
   const refreshToken = useSelector(
     (state) => state.auth?.login?.currentUser?.refresh
   );
-  const post = useSelector((state) => state.post?.getById?.post);
+  const userData = useSelector(
+    (state) => state.auth?.user?.userData.profile
+  );
+  const post = useSelector(
+    (state) => state.post?.getById?.post?.results
+  );
 
   useLayoutEffect(() => {
     let onDestroy = false;
@@ -29,8 +34,14 @@ export default function PostView() {
   }, [queryParams]);
 
   return (
-    <ThreeColumns>
-      <CardPost />
+    <ThreeColumns className="post-view">
+      {post && (
+        <CardPost
+          postData={post}
+          key={queryParams}
+          profile={userData}
+        />
+      )}
     </ThreeColumns>
   );
 }
