@@ -247,7 +247,7 @@ function Selling() {
             <HeadSlider />
             {productList?.length > 0 ? (
               <>
-                <div className="product-container mb-[1rem]">
+                <div className="product-container my-[1rem]">
                   <MUI.ConfirmDialog
                     modalProps={[openConfirmRemove, setOpenConfirmRemove]}
                     title="Remove Selling Product"

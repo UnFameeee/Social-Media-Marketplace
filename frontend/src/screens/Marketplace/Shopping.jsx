@@ -190,7 +190,7 @@ function Shopping() {
             <HeadSlider />
             {productList?.length > 0 ? (
               <>
-                <div className="product-container mb-[1rem]">
+                <div className="product-container my-[1rem]">
                   {productList &&
                     productList.map((product) => (
                       <ProductCard
