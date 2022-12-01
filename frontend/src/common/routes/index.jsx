@@ -27,6 +27,7 @@ import Shopping from "../../screens/Marketplace/Shopping";
 import Selling from "../../screens/Marketplace/Selling";
 import PostView from "../../screens/Home/PostView";
 import OrderPurchased from "../../screens/Marketplace/OrderPurchased";
+import OrderSold from "../../screens/Marketplace/OrderSold";
 
 export default function RootRoutes() {
   return (
@@ -60,6 +61,7 @@ export default function RootRoutes() {
             <Route path="selling" element={<Selling />} />
             <Route path="checkout" element={<CheckOut />} />
             <Route path="orderpurchased" element={<OrderPurchased />} />
+            <Route path="ordersold" element={<OrderSold />} />
 
             <Route path="marketplace" element={<Marketplace />}></Route>
 

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ShoppingBag } from "@mui/icons-material";
 import SellIcon from "@mui/icons-material/Sell";
 import InventoryIcon from "@mui/icons-material/Inventory";
+import ViewListIcon from "@mui/icons-material/ViewList";
 import MUI from "../../components/MUI/index";
 import { Helper } from "../../utils/Helper";
 function MarketplaceNavbar() {
@@ -19,6 +20,10 @@ function MarketplaceNavbar() {
     var result = Helper.checkURL("orderpurchased", {}, true);
     return result;
   });
+  const isOrderSoldActive = useMemo(() => {
+    var result = Helper.checkURL("ordersold", {}, true);
+    return result;
+  });
 
   const handleNavigateToShopping = () => {
     if (!isShoppingActive) {
@@ -33,6 +38,11 @@ function MarketplaceNavbar() {
   const handleNavigateToOrderPurchased = () => {
     if (!isOrderPurchasedActive) {
       navigate("/orderpurchased");
+    }
+  };
+  const handleNavigateToOrderSold = () => {
+    if (!isOrderSoldActive) {
+      navigate("/ordersold");
     }
   };
 
@@ -79,6 +89,20 @@ function MarketplaceNavbar() {
           style={{ fontSize: "2.5rem", color: "var(--primary-color)" }}
         />
         <span className=" text-[2rem]">Order Purchased</span>
+      </MUI.ButtonWithIcon>
+      <MUI.ButtonWithIcon
+        onClick={handleNavigateToOrderSold}
+        style={{
+          display: "flex",
+          gap: "10px",
+          justifyContent: "start",
+          border: isOrderSoldActive ? "2px solid var(--primary-color)" : 0,
+        }}
+      >
+        <ViewListIcon
+          style={{ fontSize: "2.5rem", color: "var(--primary-color)" }}
+        />
+        <span className=" text-[2rem]">Order Sold</span>
       </MUI.ButtonWithIcon>
     </div>
   );
