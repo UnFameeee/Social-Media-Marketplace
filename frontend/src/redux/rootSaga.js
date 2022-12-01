@@ -8,6 +8,11 @@ import {
 } from './comment/commentSaga';
 import { refreshAllFriend } from './friend/friendSaga';
 import {
+  refreshAllNotifications,
+  refreshAllUnreadNotifications,
+  seenNotification,
+} from './notifications/notificationSaga';
+import {
   createNewPost,
   deleteOnePost,
   likeOnePost,
@@ -49,5 +54,10 @@ export default function* rootSaga() {
     fork(getAllSellingProduct),
     fork(getAllShoppingProduct),
     fork(getListCartWithoutPagingSG),
+  ]);
+  yield all([
+    fork(refreshAllNotifications),
+    fork(refreshAllUnreadNotifications),
+    fork(seenNotification),
   ]);
 }

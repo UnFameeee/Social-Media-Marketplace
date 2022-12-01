@@ -48,15 +48,15 @@ export const middleNavIcons = [
 ];
 
 export const rightNavIcons = [
-  {
-    icon: <CgMenuGridO style={{ fontSize: '3.2rem' }} />,
-    tooltip: 'Menu',
-  },
-  {
-    icon: <IoChatbubbleEllipses style={{ fontSize: '2.4rem' }} />,
-    tooltip: 'Chat',
-    navigate: 'messenger'
-  },
+  // {
+  //   icon: <CgMenuGridO style={{ fontSize: '3.2rem' }} />,
+  //   tooltip: 'Menu',
+  // },
+  // {
+  //   icon: <IoChatbubbleEllipses style={{ fontSize: '2.4rem' }} />,
+  //   tooltip: 'Chat',
+  //   navigate: 'messenger'
+  // },
   {
     icon: <IoNotifications style={{ fontSize: '2.4rem' }} />,
     tooltip: 'Notifications',
