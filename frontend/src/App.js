@@ -16,7 +16,8 @@ import {
   getAllUnreadNotification,
   getAllFriendNotification,
 } from './redux/notifications/notificationAPI';
-import {PayPalScriptProvider} from "@paypal/react-paypal-js"
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { NOTIFICATION_TYPE } from './socket/notification.constant';
 function App() {
   // const [isConnected, setIsConnected] = useState(socket.connected);
   const dispatch = useDispatch();
@@ -31,12 +32,11 @@ function App() {
   const notify = (data) => toast(data);
 
   function handleNotificationType(type) {
-    if (type === 'all') {
-      getAllNotification(accessToken, refreshToken, dispatch);
-    } else if (type === 'unread') {
-      getAllUnreadNotification(accessToken, refreshToken, dispatch);
-    } else {
+    if (type === NOTIFICATION_TYPE.FRIEND_REQUEST) {
       getAllFriendNotification(accessToken, refreshToken, dispatch);
+    } else {
+      getAllNotification(accessToken, refreshToken, dispatch);
+      getAllUnreadNotification(accessToken, refreshToken, dispatch);
     }
   }
 
@@ -53,6 +53,8 @@ function App() {
       socket.on(SOCKET_EVENT.RERENDER_NOTIFICATION, () => {
         // setIsConnected(true);
 
+        getAllNotification(accessToken, refreshToken, dispatch);
+        getAllUnreadNotification(accessToken, refreshToken, dispatch);
         getAllFriendNotification(accessToken, refreshToken, dispatch);
       });
 
@@ -108,7 +110,11 @@ function App() {
     };
   }, [accessToken]);
   return (
-    <PayPalScriptProvider options={{"client-id":process.env.REACT_APP_PAYPAL_CLIENT_ID}} >
+    <PayPalScriptProvider
+      options={{
+        'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
+      }}
+    >
       <RootRoutes />
       <ToastContainer
         hideProgressBar

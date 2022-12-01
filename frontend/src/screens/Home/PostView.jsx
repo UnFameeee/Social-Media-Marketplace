@@ -1,6 +1,6 @@
 import { useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import ThreeColumns from '../../components/Layout/ThreeColumns';
 import CardPost from '../../components/Card/CardPost';
 import { getPostById } from '../../redux/apiRequest';
@@ -20,7 +20,8 @@ export default function PostView() {
     (state) => state.auth?.user?.userData.profile
   );
   const post = useSelector(
-    (state) => state.post?.getById?.post?.results
+    (state) => state.post?.getById?.post?.results,
+    shallowEqual
   );
 
   useLayoutEffect(() => {

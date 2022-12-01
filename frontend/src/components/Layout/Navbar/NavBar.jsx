@@ -17,6 +17,7 @@ import {
 } from '@mui/material';
 import { IoLogOut } from 'react-icons/io5';
 import { RiMoreFill } from 'react-icons/ri';
+import { GoPrimitiveDot } from 'react-icons/go';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import {
   middleNavIcons,
@@ -42,6 +43,7 @@ import {
 } from '../../../redux/friend/friendSaga';
 import { LeftbarFriendRequest } from '../../../screens/Friends/DynamicLeftbar/LeftbarMiddleItem';
 import '../Layout.css';
+import { seenNotificationSaga } from '../../../redux/notifications/notificationSlice';
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -190,8 +192,17 @@ export default function NavBar() {
           ) : (
             item.content
           ),
+        right: !item.was_seen && (
+          <GoPrimitiveDot
+            style={{
+              color: 'var(--primary-color)',
+              fontSize: '2rem',
+            }}
+          />
+        ),
         onClick: () => {
           handleNotificationClicked(
+            item.was_seen,
             item.notification_type,
             item.post_id,
             item.profile_sender_id,
@@ -202,17 +213,22 @@ export default function NavBar() {
     });
   }
   function handleNotificationClicked(
+    seen,
     type,
     postId,
     profileId,
     notificationId
   ) {
-    seenNotification(
-      accessToken,
-      refreshToken,
-      notificationId,
-      dispatch
-    );
+    if (!seen) {
+      dispatch(
+        seenNotificationSaga({
+          accessToken,
+          refreshToken,
+          notificationId,
+          dispatch,
+        })
+      );
+    }
 
     if (type === NOTIFICATION_TYPE.FRIEND_REQUEST) {
       navigate(`/profile?id=${profileId}`);
@@ -405,6 +421,19 @@ export default function NavBar() {
                     >
                       {userData?.profile_name?.at(0)}
                     </Avatar>
+                  ) : item.tooltip === 'Notifications' ? (
+                    <MUI.BadgeIconButton
+                      iconButtonConfig={{
+                        tooltip: item.tooltip,
+                        className: 'right-nav-icon',
+                      }}
+                      badgeConfig={{
+                        badgeContent: allUnreadNotifications.length,
+                        max: 999,
+                      }}
+                    >
+                      {item.icon}
+                    </MUI.BadgeIconButton>
                   ) : (
                     <MUI.BetterIconButton
                       hasBackground
@@ -497,16 +526,16 @@ export default function NavBar() {
                             className="type"
                             disabled={notificationType === 'all'}
                           >
-                            All
+                            Posts
                           </ToggleButton>
 
-                          <ToggleButton
+                          {/* <ToggleButton
                             value="unread"
                             className="type"
                             disabled={notificationType === 'unread'}
                           >
-                            Unread
-                          </ToggleButton>
+                            Unread Posts
+                          </ToggleButton> */}
 
                           <ToggleButton
                             value="friends"

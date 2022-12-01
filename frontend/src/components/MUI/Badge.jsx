@@ -5,7 +5,18 @@ export function BadgeIconButton(props) {
   const { badgeConfig = {}, iconButtonConfig = {} } = props;
 
   return (
-    <Badge {...badgeConfig}>
+    <Badge
+      {...badgeConfig}
+      sx={{
+        '& .MuiBadge-badge': {
+          backgroundColor: 'var(--primary-color)',
+          color: 'white',
+          fontSize: '1.4rem',
+          top: '0.4rem',
+          right: '0.4rem',
+        },
+      }}
+    >
       <BetterIconButton hasBackground {...iconButtonConfig}>
         {props.children}
       </BetterIconButton>
