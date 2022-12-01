@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import ViewListIcon from "@mui/icons-material/ViewList";
 import MUI from "../../components/MUI/index";
 import { Helper } from "../../utils/Helper";
 import "slick-carousel/slick/slick.css";
@@ -33,9 +32,6 @@ function MarketPlaceLeftBar({ handleOpenModalCreate, ...props }) {
     var result = Helper.checkURL("checkout", {}, true);
     return result;
   });
-  const handleNavigateToOrderSold = () => {
-    navigate("/ordersold");
-  };
   useEffect(() => {
     getAllShoppingCartList(accessToken, refreshToken, dispatch);
   }, []);
@@ -70,19 +66,6 @@ function MarketPlaceLeftBar({ handleOpenModalCreate, ...props }) {
               style={{ fontSize: "2.5rem", color: "var(--primary-color)" }}
             />
             <span className=" text-[2rem]">Create Product</span>
-          </MUI.ButtonWithIcon>
-          <MUI.ButtonWithIcon
-            onClick={(e) => handleNavigateToOrderSold()}
-            style={{
-              display: "flex",
-              gap: "10px",
-              justifyContent: "start",
-            }}
-          >
-            <ViewListIcon
-              style={{ fontSize: "2.5rem", color: "var(--primary-color)" }}
-            />
-            <span className=" text-[2rem]">Order Sold</span>
           </MUI.ButtonWithIcon>
         </div>
       </div>
