@@ -1,0 +1,3 @@
+export enum STRING_RESPONSE {
+    SUCCESS = 'SUCCESS'
+}

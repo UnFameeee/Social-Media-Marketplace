@@ -11,8 +11,8 @@ export class Variation extends Model<Variation> {
     @AllowNull(false)
     @Column
     variation_id: number;
-    
-    @Column
+
+    @Column(DataType.TEXT)
     brand: string;
 
     @Column
@@ -24,7 +24,7 @@ export class Variation extends Model<Variation> {
     @Column
     type: string;
 
-    @Column
+    @Column(DataType.TEXT)
     specification: string;
 
     @Column
@@ -32,7 +32,7 @@ export class Variation extends Model<Variation> {
 
     @Column(DataType.DATE(3))
     createdAt: string;
-    
+
     @Column(DataType.DATE(3))
     updatedAt: string;
 

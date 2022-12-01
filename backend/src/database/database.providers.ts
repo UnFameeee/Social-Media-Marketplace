@@ -142,8 +142,8 @@ export const databaseProviders = [
             Product.hasOne(ShopAddress, { foreignKey: { name: "product_id", field: "product_id" } });
             ShopAddress.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
-            ShopOrder.hasOne(ShippingAddress, { foreignKey: { name: "shipping_address_id", field: "shipping_address_id" } });
-            ShippingAddress.belongsTo(ShopOrder, { foreignKey: { name: "shipping_address_id", field: "shipping_address_id" } });
+            ShopOrder.hasOne(ShippingAddress, { foreignKey: { name: "order_id", field: "order_id" } });
+            ShippingAddress.belongsTo(ShopOrder, { foreignKey: { name: "order_id", field: "order_id" } });
 
             Profile.hasOne(ShoppingCart, { foreignKey: { name: "profile_id", field: "profile_id" } });
             ShoppingCart.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
@@ -154,11 +154,17 @@ export const databaseProviders = [
             ShoppingCart.hasMany(ShoppingCartItem, { foreignKey: { name: "shopping_cart_id", field: "shopping_cart_id" } });
             ShoppingCartItem.belongsTo(ShoppingCart, { foreignKey: { name: "shopping_cart_id", field: "shopping_cart_id" } });
 
-            Profile.hasMany(PaymentMethod, { foreignKey: { name: "profile_id", field: "profile_id" } });
-            PaymentMethod.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            // Profile.hasMany(PaymentMethod, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            // PaymentMethod.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
+
+            ShopOrder.hasMany(PaymentMethod, { foreignKey: { name: "order_id", field: "order_id" } });
+            PaymentMethod.belongsTo(ShopOrder, { foreignKey: { name: "order_id", field: "order_id" } });
 
             ShopOrder.hasMany(OrderLine, { foreignKey: { name: "order_id", field: "order_id" } });
             OrderLine.belongsTo(ShopOrder, { foreignKey: { name: "order_id", field: "order_id" } });
+
+            Profile.hasMany(ShopOrder, { foreignKey: { name: "profile_id", field: "profile_id" } });
+            ShopOrder.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" }});
 
             Profile.hasMany(Product, { foreignKey: { name: "profile_id", field: "profile_id" } });
             Product.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
