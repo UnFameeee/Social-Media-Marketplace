@@ -163,6 +163,7 @@ export class PostRepository {
                 where: { post_id: post_id },
                 attributes: [
                     "post_id", "written_text", "createdAt", "updatedAt", "totalLike", "profile_id",
+                    [Sequelize.col("post_profile.profile_name"), "profile_name"]
                 ],
                 include: [
                     {
