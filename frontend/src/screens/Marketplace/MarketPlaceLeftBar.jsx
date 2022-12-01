@@ -87,6 +87,12 @@ function MarketPlaceLeftBar({ handleOpenModalCreate, ...props }) {
         </div>
       </div>
     );
+  } else {
+    return (
+      <div className="marketPlaceHomeLeftBar fixed top-[76px] left-[1%] w-[400px]">
+        <MarketplaceNavbar />
+      </div>
+    );
   }
 }
 export default MarketPlaceLeftBar;

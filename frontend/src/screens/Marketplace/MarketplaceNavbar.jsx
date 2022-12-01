@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { ShoppingBag } from "@mui/icons-material";
 import SellIcon from "@mui/icons-material/Sell";
+import InventoryIcon from "@mui/icons-material/Inventory";
 import MUI from "../../components/MUI/index";
 import { Helper } from "../../utils/Helper";
 function MarketplaceNavbar() {
@@ -74,7 +75,7 @@ function MarketplaceNavbar() {
           border: isOrderPurchasedActive ? "2px solid var(--primary-color)" : 0,
         }}
       >
-        <SellIcon
+        <InventoryIcon
           style={{ fontSize: "2.5rem", color: "var(--primary-color)" }}
         />
         <span className=" text-[2rem]">Order Purchased</span>
