@@ -92,7 +92,7 @@ function CheckOut() {
     };
   }, []);
   return (
-    <div className="CheckOut pt-[4%] pl-[430px] rounded-xl  ">
+    <div className="CheckOut pt-[4%] px-[430px] rounded-xl  ">
       <MarketPlaceLeftBar />
       <TabContext value={value}>
         <Box
@@ -259,20 +259,6 @@ function CheckOut() {
               <span>Total</span>
               <span>{totalPrice}$</span>
             </div>
-            {
-              //   <div className="Pagination mt-[1rem] flex justify-end">
-              //   <Typography>Page: {page}</Typography>
-              //   <Pagination
-              //     page={page}
-              //     onChange={handleChangePage}
-              //     count={11}
-              //     defaultPage={1}
-              //     siblingCount={0}
-              //     variant="outlined"
-              //     size="large"
-              //   />
-              // </div>
-            }
           </TabPanel>
           <TabPanel value="2" sx={{ padding: "1.2rem", background: "white" }}>
             <div className="payment-details-wrapper flex py-[1rem]">
