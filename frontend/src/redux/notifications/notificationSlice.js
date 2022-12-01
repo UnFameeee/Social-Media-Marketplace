@@ -93,6 +93,8 @@ export const notificationSlice = createSlice({
       state.seen.isFetching = false;
       state.seen.error = true;
     },
+    seenNotificationSaga() {},
+    seenNotificationSagaSuccess() {},
   },
 });
 export const {
@@ -111,6 +113,8 @@ export const {
     seenNotificationStart,
     seenNotificationSuccess,
     seenNotificationFailed,
+    seenNotificationSaga,
+    seenNotificationSagaSuccess,
 
 } = notificationSlice.actions;
 

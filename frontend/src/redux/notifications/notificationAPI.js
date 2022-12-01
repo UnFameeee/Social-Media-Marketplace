@@ -13,9 +13,6 @@ import {
   getAllUnreadNotificationFailed,
   getAllUnreadNotificationStart,
   getAllUnreadNotificationSuccess,
-  seenNotificationFailed,
-  seenNotificationStart,
-  seenNotificationSuccess,
 } from './notificationSlice';
 
 // #region get all notifications
@@ -110,40 +107,6 @@ export const getAllFriendNotification = async (
     console.log(error);
     notifyService.showError(error.message);
     dispatch(getAllFriendNotificationFailed());
-  }
-};
-// #endregion
-
-// #region seen notification
-export const seenNotification = async (
-  accessToken,
-  refreshToken,
-  id,
-  dispatch
-) => {
-  dispatch(seenNotificationStart());
-  try {
-    const res = await axiosInStanceJWT.put(
-      `${api.notification}/read/${id}`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-        ACCESS_PARAM: accessToken,
-        REFRESH_PARAM: refreshToken,
-      }
-    );
-    if (!res.data.message) {
-      dispatch(seenNotificationSuccess());
-    } else {
-      notifyService.showError(res.data.message);
-      dispatch(seenNotificationFailed());
-    }
-  } catch (error) {
-    console.log(error);
-    notifyService.showError(error.message);
-    dispatch(seenNotificationFailed());
   }
 };
 // #endregion
