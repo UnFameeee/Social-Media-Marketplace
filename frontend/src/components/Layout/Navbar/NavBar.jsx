@@ -328,7 +328,15 @@ export default function NavBar() {
                 Helper.checkURL(item.tooltip?.toLowerCase(), {
                   url: 'home',
                   path: '',
-                })
+                }) ||
+                (item.tooltip === 'Marketplace' &&
+                  Helper.checkURL('shopping')) ||
+                (item.tooltip === 'Marketplace' &&
+                  Helper.checkURL('selling')) ||
+                (item.tooltip === 'Marketplace' &&
+                  Helper.checkURL('orderpurchased')) ||
+                (item.tooltip === 'Marketplace' &&
+                  Helper.checkURL('ordersold'))
                   ? {
                       marginBottom: '-0.4rem',
                       borderBottomLeftRadius: 0,
