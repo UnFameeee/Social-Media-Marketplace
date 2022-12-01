@@ -25,7 +25,7 @@ export class ShopOrderController {
     @Post("/sold")
     async getOrderSold(@Request() request: any, @Body() page: Page) {
         const profile = <Profile>request.user;
-        return await this.shopOrderService.getOrderSold(profile.profile_id);
+        return await this.shopOrderService.getOrderSold(profile.profile_id, page);
     }
 
     @Post("")
