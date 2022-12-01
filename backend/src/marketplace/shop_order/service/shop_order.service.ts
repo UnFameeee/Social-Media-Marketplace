@@ -27,18 +27,20 @@ export class ShopOrderService {
             //Shopping
             //Order (include Profile) -> Order_item
             var response = new ResponseData<PagingData<OrderLine[]>>();
-            response.results =  await this.shopOrderRepository.getOrderPurchased(profile_id, page);
+            response.results = await this.shopOrderRepository.getOrderPurchased(profile_id, page);
             return response;
         } catch (err) {
             ExceptionResponse(err);
         }
     }
 
-    async getOrderSold(profile_id: number) {
+    async getOrderSold(profile_id: number, page: Page): Promise<ResponseData<PagingData<OrderLine[]>>> {
         try {
             //Selling
             //OrderItem -> Product -> Profile
-            return await this.shopOrderRepository.getOrderSold(profile_id);
+            var response = new ResponseData<PagingData<OrderLine[]>>();
+            response.results = await await this.shopOrderRepository.getOrderSold(profile_id, page);
+            return response;
         } catch (err) {
             ExceptionResponse(err);
         }
@@ -74,17 +76,17 @@ export class ShopOrderService {
         }
     }
 
-    async updateOrderLinePaymentStatus(order_line_id: number): Promise<ResponseData<boolean>>  {
+    async updateOrderLinePaymentStatus(order_line_id: number): Promise<ResponseData<boolean>> {
         try {
             var response = new ResponseData<boolean>();
             //WAITING_FOR_PAYMENT -> Purchased
             //Update order line too
             response.results = await this.shopOrderRepository.updateOrderLinePaymentStatus(order_line_id);
-            if(!response.results){
+            if (!response.results) {
                 response.results = null;
                 response.message = `This product is already paid!`;
             }
-            return response; 
+            return response;
         } catch (err) {
             ExceptionResponse(err);
         }

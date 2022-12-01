@@ -1,5 +1,5 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
-import { Op, Sequelize } from "sequelize";
+import { Op } from "sequelize";
 import { PAYMENT_STATUS, SHIPPING_STATUS } from "src/common/constants/order.constant";
 import { Helper } from "src/common/utils/helper.utils";
 import { paginate } from "src/common/utils/paginate.utils";
@@ -43,9 +43,7 @@ export class ShopOrderRepository {
 
             const queryData = await this.orderLineRepository.findAndCountAll({
                 attributes: [
-                    "quantity", "price", "payment_status", "shipping_status", "createdAt",
-                    // [Sequelize.col("Product.name"), "name"],
-                    // [Sequelize.col("Product.product_image.link"), "link"],
+                    "order_line_id", "quantity", "price", "payment_status", "shipping_status", "createdAt",
                 ],
                 include: [
                     {
@@ -93,9 +91,56 @@ export class ShopOrderRepository {
     }
 
 
-    async getOrderSold(profile_id: Number) {
+    async getOrderSold(profile_id: number, page: Page) {
         try {
-            return null;
+            var result = new PagingData<OrderLine[]>();
+
+            const queryData = await this.orderLineRepository.findAndCountAll({
+                attributes: [
+                    "order_line_id", "quantity", "price", "payment_status", "shipping_status", "createdAt",
+                ],
+                where: {
+                    "$Product.Profile.profile_id$": profile_id,
+                },
+                include: [
+                    {
+                        model: Product,
+                        attributes: ["product_id", "name", "profile_id"],
+                        include: [
+                            {
+                                model: Profile,
+                                attributes: [],
+                                where: {
+                                    profile_id: profile_id
+                                }
+                            },
+                            {
+                                model: ProductImage,
+                                as: "product_image",
+                                attributes: ["link"]
+                            },
+                        ]
+                    }
+                ],
+                order: [
+                    ['createdAt', 'DESC']
+                ],
+                raw: false,
+                ...paginate({ page })
+            })
+
+            const order_line = await Helper.SQLobjectToObject(queryData.rows);
+            for (const element of order_line) {
+                element["name"] = element["Product"]["name"];
+                element["product_image"] = element["Product"]["product_image"];
+                delete element["Product"];
+            }
+
+            result.data = order_line;
+            page.totalElement = queryData.count;
+            result.page = page;
+            return result;
+
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
@@ -158,8 +203,13 @@ export class ShopOrderRepository {
         }
     }
 
-    async deleteOrder(profile_id: number) {
+    async deleteOrder(order_line_id: number) {
         try {
+            const queryData = await this.orderLineRepository.findOne({
+                where: {
+                    
+                }
+            })
             return null;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
