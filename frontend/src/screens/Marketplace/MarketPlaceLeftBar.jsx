@@ -10,7 +10,9 @@ import { useEffect } from "react";
 import MarketplaceNavbar from "./MarketplaceNavbar";
 import MarketPlaceLeftBarTab from "./MarketPlaceLeftBarTab";
 import { removeProductFromListCartWithoutPagingRequest } from "../../redux/product/productSaga";
+import { useNavigate } from "react-router-dom";
 function MarketPlaceLeftBar({ handleOpenModalCreate, ...props }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const accessToken = useSelector(
     (state) => state.auth.login.currentUser.access
@@ -68,7 +70,12 @@ function MarketPlaceLeftBar({ handleOpenModalCreate, ...props }) {
         </div>
       </div>
     );
+  } else {
+    return (
+      <div className="marketPlaceHomeLeftBar fixed top-[76px] left-[1%] w-[400px]">
+        <MarketplaceNavbar />
+      </div>
+    );
   }
 }
-
 export default MarketPlaceLeftBar;

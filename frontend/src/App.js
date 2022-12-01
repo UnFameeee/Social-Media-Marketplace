@@ -16,7 +16,7 @@ import {
   getAllUnreadNotification,
   getAllFriendNotification,
 } from './redux/notifications/notificationAPI';
-
+import {PayPalScriptProvider} from "@paypal/react-paypal-js"
 function App() {
   // const [isConnected, setIsConnected] = useState(socket.connected);
   const dispatch = useDispatch();
@@ -107,9 +107,8 @@ function App() {
       socket.off(SOCKET_EVENT.RECEIVE_NOTIFICATION);
     };
   }, [accessToken]);
-
   return (
-    <>
+    <PayPalScriptProvider options={{"client-id":process.env.REACT_APP_PAYPAL_CLIENT_ID}} >
       <RootRoutes />
       <ToastContainer
         hideProgressBar
@@ -122,7 +121,7 @@ function App() {
         transition={Bounce}
         // theme="dark"
       />
-    </>
+    </PayPalScriptProvider>
   );
 }
 
