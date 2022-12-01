@@ -69,7 +69,12 @@ function PostModal(props) {
         refreshToken,
         postData_written_text,
         uploadImage,
-        callRefreshGallery: uploadImage.length > 0,
+        callRefreshGallery:
+          uploadImage.length > 0 &&
+          !Helper.checkURL('home', {
+            url: 'home',
+            path: '',
+          }),
         id: !Helper.checkURL('home', {
           url: 'home',
           path: '',
@@ -97,7 +102,12 @@ function PostModal(props) {
         updatePost,
         uploadImage,
         removeImages,
-        callRefreshGallery: uploadImage.length > 0,
+        callRefreshGallery:
+          uploadImage.length > 0 &&
+          !Helper.checkURL('home', {
+            url: 'home',
+            path: '',
+          }),
         id: !Helper.checkURL('home', {
           url: 'home',
           path: '',
@@ -211,21 +221,22 @@ function PostModal(props) {
               {({ imageList, onImageUpload, onImageRemove }) => (
                 // write your building UI
                 <div className="upload__image-wrapper">
-                  {!imageList.length > 0 && !post_image.length > 0 && (
-                    <div
-                      onClick={onImageUpload}
-                      className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer mb-[2rem]"
-                    >
-                      <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
-                        <div className="bg-gray-300 p-[1rem] rounded-[50%]">
-                          <PhotoLibrary
-                            className=" "
-                            style={{ fontSize: '3rem' }}
-                          />
+                  {!imageList.length > 0 &&
+                    !post_image.length > 0 && (
+                      <div
+                        onClick={onImageUpload}
+                        className="h-[20rem] rounded-[1rem] p-[0.8rem] border-[0.1rem] border-gray-300 cursor-pointer mb-[2rem]"
+                      >
+                        <div className="rounded-[1rem] bg-gray-100 flex justify-center items-center h-full hover:bg-gray-200 relative">
+                          <div className="bg-gray-300 p-[1rem] rounded-[50%]">
+                            <PhotoLibrary
+                              className=" "
+                              style={{ fontSize: '3rem' }}
+                            />
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                   {((imageList && imageList.length > 0) ||
                     (post_image && post_image.length > 0)) && (
                     <div className="relative shadow-lg bg-slate-100 border-[0.1rem] border-gray-300  rounded-xl p-[0.2rem] h-[250px] overflow-y-scroll mb-[2rem]  ">

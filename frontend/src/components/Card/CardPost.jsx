@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect } from 'react';
 import {
   ThumbUpOutlined,
   ThumbUpAlt,
@@ -6,35 +6,46 @@ import {
   ChatBubbleOutline,
   ArrowDropDown,
   MoreHoriz,
-} from "@mui/icons-material";
+} from '@mui/icons-material';
 import {
   Avatar,
   Button,
   ClickAwayListener,
   CircularProgress,
-} from "@mui/material";
-import MUI from "../MUI";
-import "react-toastify/dist/ReactToastify.css";
-import { useDispatch, useSelector, shallowEqual } from "react-redux";
-import { format } from "timeago.js";
-import ShowMoreText from "react-show-more-text";
-import { deletePostSaga, likePostSaga } from "../../redux/post/postSlice";
-import notFoundImage from "../../assets/noimage_1.png";
-import styled from "styled-components";
-import CommentList from "../Comment/CommentList";
-import CommentForm from "../Comment/CommentForm";
-import PostModal from "../../screens/Home/PostModal";
-import { getCommentPostSaga } from "../../redux/comment/commentSlice";
-import { Helper } from "../../utils/Helper";
+} from '@mui/material';
+import MUI from '../MUI';
+import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { format } from 'timeago.js';
+import ShowMoreText from 'react-show-more-text';
+import {
+  deletePostSaga,
+  likePostSaga,
+} from '../../redux/post/postSlice';
+import notFoundImage from '../../assets/noimage_1.png';
+import styled from 'styled-components';
+import CommentList from '../Comment/CommentList';
+import CommentForm from '../Comment/CommentForm';
+import PostModal from '../../screens/Home/PostModal';
+import { getCommentPostSaga } from '../../redux/comment/commentSlice';
+import { Helper } from '../../utils/Helper';
 function CardPost(props) {
   //#region Declare variables
   const dispatch = useDispatch();
   const [showAction, setShowAction] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
-  const [showComment, setShowComment] = useState(Helper.checkURL('post'));
+  const [showComment, setShowComment] = useState(
+    Helper.checkURL('post')
+  );
   const { postData } = props;
-  const { post_id, profile_id, written_text, post_image, isLiked, totalLike } =
-    postData;
+  const {
+    post_id,
+    profile_id,
+    written_text,
+    post_image,
+    isLiked,
+    totalLike,
+  } = postData;
   const { profile } = props;
   const postUpdateData = {
     post_id: post_id,
@@ -49,14 +60,23 @@ function CardPost(props) {
   const refreshToken = useSelector(
     (state) => state.auth.login.currentUser.refresh
   );
-  const userData = useSelector((state) => state.auth?.user?.userData.profile);
+  const userData = useSelector(
+    (state) => state.auth?.user?.userData.profile
+  );
   const comments = useSelector(
     (state) => state.comment?.get?.data,
     shallowEqual
   );
-  const isLoadingCreateComment = useSelector((state) => state.comment?.create);
-  const isLoadingGetComment = useSelector((state) => state.comment?.get);
-  const [commentPaging, setCommentPaging] = useState({ page: 0, pageSize: 10 });
+  const isLoadingCreateComment = useSelector(
+    (state) => state.comment?.create
+  );
+  const isLoadingGetComment = useSelector(
+    (state) => state.comment?.get
+  );
+  const [commentPaging, setCommentPaging] = useState({
+    page: 0,
+    pageSize: 10,
+  });
   const [seeAllComment, setSeeAllComment] = useState(false);
   //#endregion
 
@@ -67,16 +87,59 @@ function CardPost(props) {
   };
   const handleDeletePost = () => {
     let postId = post_id;
-    dispatch(deletePostSaga({ accessToken, refreshToken, dispatch, postId }));
+    dispatch(
+      deletePostSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        postId,
+        callRefreshGallery:
+          post_image.length > 0 &&
+          !Helper.checkURL('home', {
+            url: 'home',
+            path: '',
+          }),
+        id: !Helper.checkURL('home', {
+          url: 'home',
+          path: '',
+        })
+          ? props?.profile?.profile_id
+          : null,
+      })
+    );
     setShowAction(!showAction);
   };
   const handleLikePost = () => {
     let postId = post_id;
-    dispatch(likePostSaga({ accessToken, refreshToken, dispatch, postId }));
+    dispatch(
+      likePostSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        postId,
+        callRefreshGallery:
+          post_image.length > 0 &&
+          !Helper.checkURL('home', {
+            url: 'home',
+            path: '',
+          }),
+        id: !Helper.checkURL('home', {
+          url: 'home',
+          path: '',
+        })
+          ? props?.profile?.profile_id
+          : null,
+      })
+    );
   };
   const handleShowComment = () => {
     dispatch(
-      getCommentPostSaga({ accessToken, refreshToken, dispatch, post_id })
+      getCommentPostSaga({
+        accessToken,
+        refreshToken,
+        dispatch,
+        post_id,
+      })
     );
     setShowComment(true);
   };
@@ -150,14 +213,20 @@ function CardPost(props) {
           <div className="card-header flex items-center gap-[0.8rem] w-full mb-[1rem] px-[2rem] relative">
             <div className="flex flex-1 gap-[1rem]">
               <Avatar
-                style={{ fontSize: "2rem" }}
+                style={{ fontSize: '2rem' }}
                 alt={props.postData.profile_name}
-                src={props.postData?.avatar ? props.postData?.avatar : null}
+                src={
+                  props.postData?.avatar
+                    ? props.postData?.avatar
+                    : null
+                }
               >
                 {props.postData.profile_name?.at(0)}
               </Avatar>
               <div>
-                <p className=" font-[500]">{props.postData.profile_name}</p>
+                <p className=" font-[500]">
+                  {props.postData.profile_name}
+                </p>
                 <span className=" font-light text-[1.4rem] ">
                   {format(props.postData.createdAt)}
                 </span>
@@ -167,18 +236,21 @@ function CardPost(props) {
               <div className="relative">
                 <MoreHoriz
                   className=" right-[2rem] Icon"
-                  style={{ fontSize: "2.5rem" }}
+                  style={{ fontSize: '2.5rem' }}
                   onClick={() => setShowAction((prev) => !prev)}
                 />
                 {showAction && (
-                  <ClickAwayListener onClickAway={(e) => setShowAction(false)}>
+                  <ClickAwayListener
+                    onClickAway={(e) => setShowAction(false)}
+                  >
                     <div className="bg-white floatingAction absolute z-10 right-0 shadow-md rounded-xl border-[0.1rem] ">
                       <ul className="flex flex-col ">
                         <li className="rounded-md p-[0.5rem] cursor-pointer">
                           <Button
                             style={{
-                              color: "var(--primary-color)",
-                              border: "1px solid var(--primary-color) ",
+                              color: 'var(--primary-color)',
+                              border:
+                                '1px solid var(--primary-color) ',
                             }}
                             onClick={handleShowModal}
                           >
@@ -188,8 +260,9 @@ function CardPost(props) {
                         <li className=" rounded-md p-[0.5rem] cursor-pointer">
                           <Button
                             style={{
-                              color: "var(--primary-color)",
-                              border: "1px solid var(--primary-color) ",
+                              color: 'var(--primary-color)',
+                              border:
+                                '1px solid var(--primary-color) ',
                             }}
                             onClick={handleDeletePost}
                           >
@@ -207,7 +280,7 @@ function CardPost(props) {
         <div>
           <div
             className="card-paragraph px-[2rem] mb-[1rem] "
-            style={{ overflowWrap: "anywhere" }}
+            style={{ overflowWrap: 'anywhere' }}
           >
             <ShowMoreText
               lines={3}
@@ -216,7 +289,7 @@ function CardPost(props) {
               anchorClass="show-more-less-clickable"
               expanded={false}
               width={0}
-              truncatedEndingComponent={"... "}
+              truncatedEndingComponent={'... '}
             >
               {written_text}
             </ShowMoreText>
@@ -242,7 +315,10 @@ function CardPost(props) {
           <div className="card-react-button mb-[0.5rem] px-[2rem] flex gap-[0.5rem]">
             <ThumbUpOutlined
               className="Icon"
-              style={{ fontSize: "2rem", color: "var(--primary-color)" }}
+              style={{
+                fontSize: '2rem',
+                color: 'var(--primary-color)',
+              }}
             />
             <span className="text-grey1f">{totalLike}</span>
           </div>
@@ -255,14 +331,17 @@ function CardPost(props) {
               {isLiked ? (
                 <ThumbUpAlt
                   style={{
-                    fontSize: "2.5rem",
-                    marginRight: "0.5rem",
-                    color: "var(--primary-color)",
+                    fontSize: '2.5rem',
+                    marginRight: '0.5rem',
+                    color: 'var(--primary-color)',
                   }}
                 />
               ) : (
                 <ThumbUpOutlined
-                  style={{ fontSize: "2.5rem", marginRight: "0.5rem" }}
+                  style={{
+                    fontSize: '2.5rem',
+                    marginRight: '0.5rem',
+                  }}
                 />
               )}
               <span className=" leading-[1.3rem]">Like</span>
@@ -273,14 +352,14 @@ function CardPost(props) {
             >
               <ChatBubbleOutline
                 className=" outline-none"
-                style={{ fontSize: "2.5rem", marginRight: "0.5rem" }}
+                style={{ fontSize: '2.5rem', marginRight: '0.5rem' }}
               />
               <span className=" leading-[1.3rem]">Comment</span>
             </MUI.ButtonWithIcon>
             <MUI.ButtonWithIcon className="button-with-icon flex gap-[0.5rem] w-full">
               <Send
                 className=""
-                style={{ fontSize: "2.5rem", marginRight: "0.5rem" }}
+                style={{ fontSize: '2.5rem', marginRight: '0.5rem' }}
               />
               <span className=" leading-[1.3rem]">Send</span>
             </MUI.ButtonWithIcon>
@@ -289,13 +368,13 @@ function CardPost(props) {
           {showComment && (
             <div className="card-comment-section mt-[1rem]">
               <div className="GroupUserCommenting px-[2rem] [&>*]:mb-[1rem] ">
-                  <CommentForm
-                    formWidth={"100%"}
-                    placeholder={"write a comment...."}
-                    post_id={post_id}
-                    seeAllComment={seeAllComment}
-                    totalElement={totalComment?.totalElement}
-                  />
+                <CommentForm
+                  formWidth={'100%'}
+                  placeholder={'write a comment....'}
+                  post_id={post_id}
+                  seeAllComment={seeAllComment}
+                  totalElement={totalComment?.totalElement}
+                />
                 <CommentList
                   comments={rootComments}
                   post_id={post_id}

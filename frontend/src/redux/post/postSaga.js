@@ -114,6 +114,7 @@ const createPostSagaRequest = async (data) => {
     postData_written_text,
     uploadImage,
     callRefreshPost = true,
+    callRefreshGallery = false,
     id,
     dispatch,
   } = data.payload;
@@ -149,6 +150,7 @@ const createPostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
+          callRefreshGallery,
           id,
           dispatch,
         })
@@ -185,6 +187,8 @@ export const deletePostSagaRequest = async (data) => {
     refreshToken,
     postId,
     callRefreshPost = true,
+    callRefreshGallery = false,
+    id,
     dispatch,
   } = data.payload;
   dispatch(deletePostStart());
@@ -206,6 +210,8 @@ export const deletePostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
+          callRefreshGallery,
+          id,
           dispatch,
         })
       );
@@ -243,6 +249,7 @@ const updatePostSagaRequest = async (data) => {
     uploadImage,
     removeImages,
     callRefreshPost = true,
+    callRefreshGallery = false,
     id,
     dispatch,
   } = data.payload;
@@ -286,6 +293,7 @@ const updatePostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
+          callRefreshGallery,
           id,
           dispatch,
         })
@@ -322,6 +330,7 @@ const likePostSagaRequest = async (data) => {
     refreshToken,
     postId,
     callRefreshPost = true,
+    id,
     dispatch,
   } = data.payload;
   dispatch(likePostStart());
@@ -345,6 +354,8 @@ const likePostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
+          id,
+          dispatch,
         })
       );
       return res;
