@@ -1,20 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { ORDER_STATUS } from 'src/common/constants/order.constant';
+import { STRING_RESPONSE } from 'src/common/constants/string-success.constant';
 import { ExceptionResponse } from 'src/common/utils/custom-exception.filter';
-import { Product } from 'src/database/model/product.model';
+import { OrderFullDetailDto } from 'src/database/dtos/order-full-detail.dto';
+import { OrderLine } from 'src/database/model/order_line.model';
+import { Page } from 'src/database/view-model/page-model';
+import { PagingData } from 'src/database/view-model/paging.model';
+import { ResponseData } from 'src/database/view-model/success-message.model';
+import { ProductRepository } from 'src/marketplace/product/repository/product.repository';
+import { ShippingAddressRepository } from 'src/marketplace/shipping_address/repository/shipping_address.repository';
+import { OrderLineRepository } from '../repository/order_line.repository';
+import { PaymentMethodRepository } from '../repository/payment_method.repository';
 import { ShopOrderRepository } from '../repository/shop_order.repository';
 
 @Injectable()
 export class ShopOrderService {
     constructor(
         private readonly shopOrderRepository: ShopOrderRepository,
+        private readonly productRepository: ProductRepository,
+        private readonly paymentMethodRepository: PaymentMethodRepository,
+        private readonly orderLineRepository: OrderLineRepository,
+        private readonly shippingAddressRepository: ShippingAddressRepository,
     ) { }
 
-    async getOrderPurchased(profile_id: number) {
+    async getOrderPurchased(profile_id: number, page: Page): Promise<ResponseData<PagingData<OrderLine[]>>> {
         try {
             //Shopping
             //Order (include Profile) -> Order_item
-            return await this.shopOrderRepository.getOrderPurchased(profile_id);
+            var response = new ResponseData<PagingData<OrderLine[]>>();
+            response.results =  await this.shopOrderRepository.getOrderPurchased(profile_id, page);
+            return response;
         } catch (err) {
             ExceptionResponse(err);
         }
@@ -30,37 +44,67 @@ export class ShopOrderService {
         }
     }
 
-    async createOrder(profile_id: number, listProduct: Product[]) {
+    async createOrder(profile_id: number, orderFullDetail: OrderFullDetailDto): Promise<ResponseData<boolean>> {
         try {
-            return await this.shopOrderRepository.createOrder(profile_id, listProduct);
+            var response = new ResponseData<boolean>();
+            //Check if the quantity in stock is > quantity of product
+            //AND Change the quantity in product stock
+            const checkQuantityFlag = await this.productRepository.checkQuantityAndChangeQuantityStock(orderFullDetail.OrderLine);
+
+            if (checkQuantityFlag == STRING_RESPONSE.SUCCESS) {
+                //Create order
+                const orderQueryData = await this.shopOrderRepository.createOrder(profile_id, orderFullDetail.total_price);
+
+                var payment_method = orderFullDetail.PaymentMethod;
+                await this.paymentMethodRepository.createPaymentMethod(orderQueryData.order_id, payment_method);
+
+                await this.shippingAddressRepository.createShippingAddress(orderQueryData.order_id, orderFullDetail.ShippingAddress);
+
+                var orderLineArray = orderFullDetail.OrderLine;
+                await this.orderLineRepository.createOrderLine(orderQueryData.order_id, payment_method.payment_type, orderLineArray);
+
+                response.results = true;
+            }
+            else {
+                response.message = checkQuantityFlag;
+            }
+            return response;
         } catch (err) {
             ExceptionResponse(err);
         }
     }
 
-    async updateOrderStatus(order_id: number, status: ORDER_STATUS) {
+    async updateOrderLinePaymentStatus(order_line_id: number): Promise<ResponseData<boolean>>  {
         try {
+            var response = new ResponseData<boolean>();
             //WAITING_FOR_PAYMENT -> Purchased
             //Update order line too
-            return await this.shopOrderRepository.updateOrderStatus(order_id, status);
+            response.results = await this.shopOrderRepository.updateOrderLinePaymentStatus(order_line_id);
+            if(!response.results){
+                response.results = null;
+                response.message = `This product is already paid!`;
+            }
+            return response; 
         } catch (err) {
             ExceptionResponse(err);
         }
     }
 
-    async updateOrderLineStatus(order_line_id: number, status: ORDER_STATUS) {
+    async updateOrderLineShippingStatus(order_line_id: number) {
         try {
             //Purchased -> Shipping -> Delivered
-            return await this.shopOrderRepository.updateOrderLineStatus(order_line_id, status);
+            var response = new ResponseData<boolean>();
+            response.results = await this.shopOrderRepository.updateOrderLineShippingStatus(order_line_id);
+            return response;
         } catch (err) {
             ExceptionResponse(err);
         }
     }
 
-    async deleteOrder(profile_id: number, listProduct: Product[]) {
+    async deleteOrder(profile_id: number) {
         try {
             //check if the order was created > than 7 days, remove it
-            return await this.shopOrderRepository.deleteOrder(profile_id, listProduct);
+            return await this.shopOrderRepository.deleteOrder(profile_id);
         } catch (err) {
             ExceptionResponse(err);
         }

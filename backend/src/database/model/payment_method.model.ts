@@ -16,14 +16,14 @@ export class PaymentMethod extends Model<PaymentMethod> {
     @Column
     payment_type: string
 
-    @Column
-    provider: string 
+    // @Column
+    // provider: string 
 
-    @Column
-    account_number: string 
+    // @Column
+    // account_number: string 
 
-    @Column
-    expiry_date: string 
+    // @Column
+    // expiry_date: string 
 
     @Column(DataType.DATE(3))
     createdAt: string;

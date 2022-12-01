@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Post, Put, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { OrderFullDetailDto } from 'src/database/dtos/order-full-detail.dto';
 import { Product } from 'src/database/model/product.model';
 import { Profile } from 'src/database/model/profile.model';
+import { Page } from 'src/database/view-model/page-model';
 import { ShopOrderService } from '../service/shop_order.service';
 
 @UseGuards(JwtAuthGuard)
@@ -15,44 +17,39 @@ export class ShopOrderController {
 
 
     @Post("/purchased")
-    async getOrderPurchased(@Request() request: any, @Body() body: Product[]) {
+    async getOrderPurchased(@Request() request: any, @Body() page: Page) {
         const profile = <Profile>request.user;
-        const listProduct = body["data"];
-        return await this.shopOrderService.getOrderSold(profile.profile_id);
+        return await this.shopOrderService.getOrderPurchased(profile.profile_id, page);
     }
 
     @Post("/sold")
-    async getOrderSold(@Request() request: any, @Body() body: Product[]) {
+    async getOrderSold(@Request() request: any, @Body() page: Page) {
         const profile = <Profile>request.user;
-        const listProduct = body["data"];
         return await this.shopOrderService.getOrderSold(profile.profile_id);
     }
 
     @Post("")
-    async createOrder(@Request() request: any, @Body() body: Product[]) {
+    async createOrder(@Request() request: any, @Body() body: OrderFullDetailDto) {
         const profile = <Profile>request.user;
-        const listProduct = body["data"];
-        return await this.shopOrderService.createOrder(profile.profile_id, listProduct);
+        const orderFullDetailDto = body;
+        return await this.shopOrderService.createOrder(profile.profile_id, orderFullDetailDto);
     }
 
-    @Put("/status")
-    async updateOrderStatus(@Request() request: any, @Body() body: Product[]) {
-        const profile = <Profile>request.user;
-        const listProduct = body["data"];
-        return await this.shopOrderService.createOrder(profile.profile_id, listProduct);
+    @Put("/item/payment/status/:order_line_id")
+    async updateOrderLinePaymentStatus(@Request() request: any, @Param("order_line_id") order_line_id: number) {
+        // const profile = <Profile>request.user;
+        return await this.shopOrderService.updateOrderLinePaymentStatus(order_line_id);
     }
 
-    @Put("/item/status")
-    async updateOrderLineStatus(@Request() request: any, @Body() body: Product[]) {
-        const profile = <Profile>request.user;
-        const listProduct = body["data"];
-        return await this.shopOrderService.createOrder(profile.profile_id, listProduct);
+    @Put("/item/shipping/status/:order_line_id")
+    async updateOrderLineShippingStatus(@Request() request: any, @Param("order_line_id") order_line_id: number) {
+        // const profile = <Profile>request.user;
+        return await this.shopOrderService.updateOrderLineShippingStatus(order_line_id);
     }
 
     @Delete()
-    async deleteOrder(@Request() request: any, @Body() body: Product[]) {
+    async deleteOrder(@Request() request: any) {
         const profile = <Profile>request.user;
-        const listProduct = body["data"];
-        return await this.shopOrderService.createOrder(profile.profile_id, listProduct);
+        return await this.shopOrderService.deleteOrder(profile.profile_id);
     }
 }

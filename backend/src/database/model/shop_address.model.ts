@@ -20,7 +20,7 @@ export class ShopAddress extends Model<ShopAddress> {
     @Column
     ward: string
 
-    @Column
+    @Column(DataType.TEXT)
     detail_address: string
 
     @Column(DataType.DATE(3))

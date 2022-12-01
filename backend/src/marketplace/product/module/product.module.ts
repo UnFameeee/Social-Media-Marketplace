@@ -17,6 +17,6 @@ import { ShopAddressModule } from 'src/marketplace/shop_address/module/shop_addr
     ...productProviders,
   ],
   controllers: [ProductController],
-  exports: [],
+  exports: [ProductRepository],
 })
 export class ProductModule {}

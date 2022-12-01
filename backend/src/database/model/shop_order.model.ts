@@ -16,16 +16,16 @@ export class ShopOrder extends Model<ShopOrder> {
 
     //10.000.000.000.000.000
     @Column
-    order_price: number;
+    total_price: number;
 
     @Column
     order_date: string;
 
-    @Column
-    payment_method: string;
+    // @Column
+    // payment_method: string;
 
-    @Column
-    order_status: string;
+    // @Column
+    // order_status: string;
 
     @Column(DataType.DATE(3))
     createdAt: string;

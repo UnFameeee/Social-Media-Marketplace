@@ -14,6 +14,10 @@ import { Variation } from "src/database/model/variation.model";
 import { PROVIDER } from "src/database/providers/provider.constant";
 import { Page } from "src/database/view-model/page-model";
 import { PagingData } from "src/database/view-model/paging.model";
+import { ExceptionResponse } from "src/common/utils/custom-exception.filter";
+import { OrderLineEntity } from "src/database/entity/order_line";
+import { number } from "joi";
+import { STRING_RESPONSE } from "src/common/constants/string-success.constant";
 
 @Injectable()
 export class ProductRepository {
@@ -321,6 +325,52 @@ export class ProductRepository {
             return result;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
+        }
+    }
+
+    async checkQuantityAndChangeQuantityStock(orderLineArray: OrderLineEntity[]): Promise<string> {
+        try {
+            var productIdArray: number[] = [];
+            var quantityArray: number[] = [];
+            for (const element of orderLineArray) {
+                productIdArray.push(element.product_id);
+                quantityArray.push(element.quantity);
+            }
+
+            const queryData = await this.productRepository.findAll({
+                where: {
+                    product_id: {
+                        [Op.in]: productIdArray
+                    }
+                },
+            })
+
+            var invalidQuantityFlag = false;
+            var quantity: number;
+            for (const element of queryData) {
+                quantity = quantityArray[productIdArray.indexOf(element.product_id)];
+                if (element.quantity_in_stock < quantity) {
+                    invalidQuantityFlag = true;
+                    const queryProductInvalidData = await this.productRepository.findOne({
+                        attributes: ["name"],
+                        where: {
+                            product_id: element.product_id,
+                        }
+                    })
+
+                    return `Product: ${queryProductInvalidData.name} only have ${element.quantity_in_stock} left but you choose ${quantity}. Please modify the quantity to finish the payment!`
+                } else {
+                    element.quantity_in_stock -= quantity;
+                }
+            }
+
+            for (const element of queryData) {
+                await element.save();
+            }
+
+            return STRING_RESPONSE.SUCCESS;
+        } catch (err) {
+            ExceptionResponse(err);
         }
     }
 }

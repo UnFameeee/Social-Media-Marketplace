@@ -11,10 +11,11 @@ export class Product extends Model<Product> {
     @Column
     product_id: number
 
+    @Column(DataType.TEXT)
     @Column
     name: string
 
-    @Column
+    @Column(DataType.TEXT)
     description: string
 
     @Column(DataType.INTEGER)
