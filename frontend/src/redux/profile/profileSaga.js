@@ -21,6 +21,11 @@ import {
   unfriendSagaSuccess,
 } from '../friend/friendSlice';
 import { galleryPaging } from '../../common/constants/apiConfig';
+import {
+  createPostSagaSuccess,
+  deletePostSagaSuccess,
+  updatePostSagaSuccess,
+} from '../post/postSlice';
 
 export function* refreshProfile() {
   yield takeLatest(
@@ -328,13 +333,25 @@ export async function deleteWallRequest(data) {
 }
 // #endregion
 
+// #region refresh gallery images
 export function* getGalleryImageReq() {
-  yield takeLatest([getProfileSagaSuccess.type], handleGetGallery);
+  yield takeLatest(
+    [
+      getProfileSagaSuccess.type,
+
+      createPostSagaSuccess.type,
+      updatePostSagaSuccess.type,
+      deletePostSagaSuccess.type,
+    ],
+    handleGetGallery
+  );
 }
 function* handleGetGallery(data) {
   try {
-    const galleryImg = yield call(getGallerySagaRequest, data);
-    yield put(getGallerySuccess(galleryImg.data.results));
+    if (data.payload?.callRefreshGallery) {
+      const galleryImg = yield call(getGallerySagaRequest, data);
+      yield put(getGallerySuccess(galleryImg.data.results));
+    }
   } catch (error) {
     console.log(error);
   }
@@ -364,3 +381,4 @@ async function getGallerySagaRequest(data) {
     console.log(error);
   }
 }
+// #endregion
