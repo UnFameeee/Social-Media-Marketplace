@@ -356,13 +356,13 @@ function CardPost(props) {
               />
               <span className=" leading-[1.3rem]">Comment</span>
             </MUI.ButtonWithIcon>
-            <MUI.ButtonWithIcon className="button-with-icon flex gap-[0.5rem] w-full">
+            {/* <MUI.ButtonWithIcon className="button-with-icon flex gap-[0.5rem] w-full">
               <Send
                 className=""
                 style={{ fontSize: '2.5rem', marginRight: '0.5rem' }}
               />
               <span className=" leading-[1.3rem]">Send</span>
-            </MUI.ButtonWithIcon>
+            </MUI.ButtonWithIcon> */}
           </div>
           <hr className="mb-[0.5rem] " />
           {showComment && (

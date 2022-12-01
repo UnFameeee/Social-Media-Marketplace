@@ -750,49 +750,43 @@ function ProfileAction({
         }}
       >
         <div>
-          <MUI.Button
-            className="gap-[0.8rem]"
-            style={{ minWidth: '14rem' }}
-            onClick={handleFirstAction}
-          >
-            {isMainUser ? (
-              <>
-                <AddCircle style={{ fontSize: '2.2rem' }} />
-                <span className=" text-[1.6rem] font-semibold">
-                  Add to story
-                </span>
-              </>
-            ) : isFriend ? (
-              <>
-                <FaUserCheck style={{ fontSize: '2.2rem' }} />
-                <span className=" text-[1.6rem] font-semibold">
-                  Friends
-                </span>
-              </>
-            ) : isSentFriendReq === 'NONE' ? (
-              <>
-                <FaUserPlus style={{ fontSize: '2.2rem' }} />
-                <span className=" text-[1.6rem] font-semibold">
-                  Add Friend
-                </span>
-              </>
-            ) : isSentFriendReq === 'REQUEST' ? (
-              <>
-                <FaUserTimes style={{ fontSize: '2.2rem' }} />
-                <span className=" text-[1.6rem] font-semibold">
-                  Cancel
-                </span>
-              </>
-            ) : isSentFriendReq === 'TARGET' ? (
-              <>
-                <FaUserCheck style={{ fontSize: '2.2rem' }} />
-                <span className=" text-[1.6rem] font-semibold">
-                  Respond
-                </span>
-              </>
-            ) : null}
-          </MUI.Button>
-
+          {!isMainUser && (
+            <MUI.Button
+              className="gap-[0.8rem]"
+              style={{ minWidth: '14rem' }}
+              onClick={handleFirstAction}
+            >
+              {isFriend ? (
+                <>
+                  <FaUserCheck style={{ fontSize: '2.2rem' }} />
+                  <span className=" text-[1.6rem] font-semibold">
+                    Friends
+                  </span>
+                </>
+              ) : isSentFriendReq === 'NONE' ? (
+                <>
+                  <FaUserPlus style={{ fontSize: '2.2rem' }} />
+                  <span className=" text-[1.6rem] font-semibold">
+                    Add Friend
+                  </span>
+                </>
+              ) : isSentFriendReq === 'REQUEST' ? (
+                <>
+                  <FaUserTimes style={{ fontSize: '2.2rem' }} />
+                  <span className=" text-[1.6rem] font-semibold">
+                    Cancel
+                  </span>
+                </>
+              ) : isSentFriendReq === 'TARGET' ? (
+                <>
+                  <FaUserCheck style={{ fontSize: '2.2rem' }} />
+                  <span className=" text-[1.6rem] font-semibold">
+                    Respond
+                  </span>
+                </>
+              ) : null}
+            </MUI.Button>
+          )}
           {menuClicked && (
             <MUI.Menu
               style={{
@@ -805,7 +799,7 @@ function ProfileAction({
         </div>
       </ClickAwayListener>
 
-      <MUI.Button
+      {/* <MUI.Button
         className="gap-[0.8rem]"
         style={{ minWidth: '14rem' }}
         onClick={handleSecondAction}
@@ -825,7 +819,7 @@ function ProfileAction({
             </span>
           </>
         )}
-      </MUI.Button>
+      </MUI.Button> */}
     </>
   );
 }

@@ -526,16 +526,16 @@ export default function NavBar() {
                             className="type"
                             disabled={notificationType === 'all'}
                           >
-                            All
+                            Posts
                           </ToggleButton>
 
-                          <ToggleButton
+                          {/* <ToggleButton
                             value="unread"
                             className="type"
                             disabled={notificationType === 'unread'}
                           >
-                            Unread
-                          </ToggleButton>
+                            Unread Posts
+                          </ToggleButton> */}
 
                           <ToggleButton
                             value="friends"
