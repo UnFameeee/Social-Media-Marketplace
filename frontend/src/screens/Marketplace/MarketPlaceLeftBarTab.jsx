@@ -62,6 +62,7 @@ function MarketPlaceLeftBarTab() {
   const tabIndex = useSelector(
     (state) => state.tabIndex.tabMarketPlaceLeftBar.currentIndex
   );
+
   const handleChange = (event, newValue) => {
     dispatch(setTabMarketPlaceLeftBarIndex(newValue));
   };
@@ -356,11 +357,12 @@ function MarketPlaceLeftBarTab() {
           className="w-full h-full"
           style={{
             color: "white",
-            background: "var(--primary-color)",
+            background:`${getShoppingCartList.length == 0 ? "gray" : "var(--primary-color)" }`, 
             borderRadius: "0px 0px 15px 15px",
             textTransform: "capitalize",
             fontSize: "2.4rem",
           }}
+          disabled={getShoppingCartList.length == 0}
           onClick={handleNavigateToCheckOut}
         >
           Proceed Check Out

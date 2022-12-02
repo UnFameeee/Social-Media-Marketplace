@@ -1,17 +1,19 @@
 import React from "react";
 import { PayPalButtons } from "@paypal/react-paypal-js";
 import { notifyService } from "../../services/notifyService";
-function PayPalCheckOutButton({ product, ...props }) {
-  const handleApprove = (orderID) => {
-    notifyService.showInfo(
-      "purchase order with Id of ",
-      orderID,
-      " successfully"
-    );
+import { createOrder } from "../../redux/product/productSaga";
+function PayPalCheckOutButton({
+  handlePayPalApprove,
+  product,
+  disable,
+  ...props
+}) {
+  const handleApprove = () => {
+    handlePayPalApprove("PAYPAL");
   };
-  console.log("product",product)
   return (
     <PayPalButtons
+      disabled={disable}
       style={{
         layout: "horizontal",
         color: "silver",
@@ -21,7 +23,7 @@ function PayPalCheckOutButton({ product, ...props }) {
       onClick={(data, actions) => {
         const hasAlreadyBoughtTheProduct = false;
         if (hasAlreadyBoughtTheProduct) {
-          alert(" Transaction Error: You 've already purchased this product");
+          alert("Transaction Error: You've already purchased this product");
           return actions.reject();
         } else {
           return actions.resolve();
@@ -45,10 +47,10 @@ function PayPalCheckOutButton({ product, ...props }) {
         handleApprove(data.orderID);
       }}
       onCancel={() => {
-        alert(" The Transaction of checkout is cancel");
+        alert("The transaction of checkout is cancel");
       }}
       onError={(err) => {
-        alert(" Transaction Error: ", err);
+        alert("Transaction Error: ", err);
       }}
     />
   );

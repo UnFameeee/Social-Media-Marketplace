@@ -16,11 +16,11 @@ const initialState = {
   },
   getShopping: {
     data: [],
-      page: {
-        page: 0,
-        pageSize: 30,
-        totalElement: 30,
-      },
+    page: {
+      page: 0,
+      pageSize: 30,
+      totalElement: 30,
+    },
   },
   getProductDetail: {
     data: null,
@@ -32,6 +32,12 @@ const initialState = {
   update: {
     product: null,
   },
+  getOrderPurchased: null,
+  createOrder: {
+    isFetching: false,
+    isError: false,
+  },
+  getOrderSold: null,
 };
 export const productSlice = createSlice({
   name: "product",
@@ -67,6 +73,11 @@ export const productSlice = createSlice({
     update: {
       product: null,
     },
+    getOrderPurchased: null,
+    createOrder: {
+      isFetching: false,
+    },
+    getOrderSold: null,
   },
   extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
@@ -115,10 +126,31 @@ export const productSlice = createSlice({
     resetUpdateProduct: (state) => {
       state.update.product = null;
     },
+
+    getOrderPurchased: (state, action) => {
+      state.getOrderPurchased = action.payload;
+    },
+    createOrderStart: (state) => {
+      state.createOrder.isFetching = true;
+    },
+    createOrderSuccess: (state) => {
+      state.createOrder.isFetching = false;
+    },
+    deleteOrderSuccess() {},
+
+    getOrderSold: (state, action) => {
+      state.getOrderSold = action.payload;
+    },
   },
 });
 export const {
   getProductDetail,
+  getOrderSold,
+
+  getOrderPurchased,
+  createOrderStart,
+  createOrderSuccess,
+  deleteOrderSuccess,
 
   getListCartWithoutPaging,
   getListCartWithoutPagingSaga,
