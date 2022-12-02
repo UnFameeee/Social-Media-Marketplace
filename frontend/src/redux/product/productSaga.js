@@ -495,7 +495,6 @@ export const getAllOrderPurchased = async (
     notifyService.showError("Get Order Purchased Failed");
   }
 };
-
 export const getAllOrderSold = async (accessToken, refreshToken, dispatch) => {
   try {
     const config = {

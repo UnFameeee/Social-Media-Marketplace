@@ -39,6 +39,7 @@ import NothingToSee from "./NothingToSee";
 import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import PayPalCheckOutButton from "./PayPalCheckOutButton";
 import { useNavigate } from "react-router-dom";
+import { resetListCartWithoutPaging } from "../../redux/product/productSlice";
 function CheckOut() {
   // #region declare variables
   const [value, setValue] = useState("1");
@@ -142,6 +143,7 @@ function CheckOut() {
       OrderLine: orderLine,
     };
     createOrder(accessToken, refreshToken, dispatch, navigate, paymentObj);
+    dispatch(resetListCartWithoutPaging());
   };
   //#endregion
   //#region declare useEffect

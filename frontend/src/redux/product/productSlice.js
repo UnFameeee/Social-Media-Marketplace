@@ -113,6 +113,13 @@ export const productSlice = createSlice({
       state.getListCartWithoutPaging.totalPrice = totalPrice;
       state.getListCartWithoutPaging.data = action.payload;
     },
+    resetListCartWithoutPaging: (state) => {
+      let initialState = {
+        data: [],
+        totalPrice: 0,
+      };
+      state.getListCartWithoutPaging = initialState;
+    },
     addProductToCartWithoutPagingSagaSuccess() {},
     removeProductFromListCartWithoutPagingSuccess() {},
     changeProductFromListCartWithoutPagingQuantitySuccess() {},
@@ -154,6 +161,7 @@ export const {
 
   getListCartWithoutPaging,
   getListCartWithoutPagingSaga,
+  resetListCartWithoutPaging,
   addProductToCartWithoutPagingSagaSuccess,
   removeProductFromListCartWithoutPagingSuccess,
   changeProductFromListCartWithoutPagingQuantitySuccess,
