@@ -5,4 +5,5 @@ export class ShippingAddressEntity {
     district: string;
     ward: string;
     detail_address: string;
+    createdAt: string;
 }

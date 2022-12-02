@@ -408,4 +408,54 @@ export class ShoppingCartRepository {
             throw new InternalServerErrorException(err.message);
         }
     }
+
+    async removeAllCart(profile_id: number) {
+        try {
+            const queryCartData = await this.shoppingCartRepository.findOne({
+                attributes: {
+                    exclude: ["createdAt", "updatedAt", "deletedAt"]
+                },
+                include: [
+                    {
+                        model: Profile,
+                        attributes: [],
+                        where: {
+                            profile_id: profile_id,
+                        }
+                    }
+                ]
+            })
+
+            if (queryCartData) {
+                const queryData = await this.shoppingCartItemRepository.findAndCountAll({
+                    attributes: [
+                        [Sequelize.col("Product.product_id"), "product_id"],
+                    ],
+                    include: [
+                        {
+                            model: Product,
+                            attributes: [],
+                        },
+                        {
+                            model: ShoppingCart,
+                            where: {
+                                shopping_cart_id: queryCartData.shopping_cart_id,
+                            },
+                            attributes: [],
+                        }
+                    ],
+                    order: [
+                        ['createdAt', 'DESC']
+                    ],
+                });
+
+                for (const element of queryData.rows) {
+                    await element.destroy();
+                }
+            }
+            
+        } catch (err) {
+            throw new InternalServerErrorException(err.message);
+        }
+    }
 }

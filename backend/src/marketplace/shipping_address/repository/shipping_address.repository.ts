@@ -11,9 +11,10 @@ export class ShippingAddressRepository {
         @Inject(PROVIDER.ShippingAddress) private readonly shippingAddressRepository: typeof ShippingAddress,
     ) { }
 
-    async createShippingAddress(order_id: number, data: ShippingAddressEntity): Promise<Boolean> {
+    async createShippingAddress(order_id: number, order_date: string, data: ShippingAddressEntity): Promise<Boolean> {
         try {
             data.order_id = order_id;
+            // data.createdAt = order_date;
             const queryCreateData = await this.shippingAddressRepository.create(data);
             return queryCreateData ? true : false;
         } catch (err) {

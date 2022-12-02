@@ -8,6 +8,7 @@ import { PagingData } from 'src/database/view-model/paging.model';
 import { ResponseData } from 'src/database/view-model/success-message.model';
 import { ProductRepository } from 'src/marketplace/product/repository/product.repository';
 import { ShippingAddressRepository } from 'src/marketplace/shipping_address/repository/shipping_address.repository';
+import { ShoppingCartRepository } from 'src/marketplace/shopping_cart/repository/shopping_cart.repository';
 import { OrderLineRepository } from '../repository/order_line.repository';
 import { PaymentMethodRepository } from '../repository/payment_method.repository';
 import { ShopOrderRepository } from '../repository/shop_order.repository';
@@ -20,6 +21,7 @@ export class ShopOrderService {
         private readonly paymentMethodRepository: PaymentMethodRepository,
         private readonly orderLineRepository: OrderLineRepository,
         private readonly shippingAddressRepository: ShippingAddressRepository,
+        private readonly shoppingCartRepository: ShoppingCartRepository,
     ) { }
 
     async getOrderPurchased(profile_id: number, page: Page): Promise<ResponseData<PagingData<OrderLine[]>>> {
@@ -39,7 +41,7 @@ export class ShopOrderService {
             //Selling
             //OrderItem -> Product -> Profile
             var response = new ResponseData<PagingData<OrderLine[]>>();
-            response.results = await await this.shopOrderRepository.getOrderSold(profile_id, page);
+            response.results = await this.shopOrderRepository.getOrderSold(profile_id, page);
             return response;
         } catch (err) {
             ExceptionResponse(err);
@@ -58,12 +60,15 @@ export class ShopOrderService {
                 const orderQueryData = await this.shopOrderRepository.createOrder(profile_id, orderFullDetail.total_price);
 
                 var payment_method = orderFullDetail.PaymentMethod;
-                await this.paymentMethodRepository.createPaymentMethod(orderQueryData.order_id, payment_method);
+                await this.paymentMethodRepository.createPaymentMethod(orderQueryData.order_id, orderQueryData.order_date, payment_method);
 
-                await this.shippingAddressRepository.createShippingAddress(orderQueryData.order_id, orderFullDetail.ShippingAddress);
+                await this.shippingAddressRepository.createShippingAddress(orderQueryData.order_id, orderQueryData.order_date, orderFullDetail.ShippingAddress);
 
                 var orderLineArray = orderFullDetail.OrderLine;
-                await this.orderLineRepository.createOrderLine(orderQueryData.order_id, payment_method.payment_type, orderLineArray);
+                await this.orderLineRepository.createOrderLine(orderQueryData.order_id, orderQueryData.order_date, payment_method.payment_type, orderLineArray);
+
+                //Only for this TLCN logic
+                await this.shoppingCartRepository.removeAllCart(profile_id);
 
                 response.results = true;
             }
@@ -103,10 +108,17 @@ export class ShopOrderService {
         }
     }
 
-    async deleteOrder(profile_id: number) {
+    async deleteOrder(order_line_id: number): Promise<ResponseData<boolean>> {
         try {
-            //check if the order was created > than 7 days, remove it
-            return await this.shopOrderRepository.deleteOrder(profile_id);
+            var response = new ResponseData<boolean>();
+            //check if the order was created > than 3 days, remove it
+            const res = await this.shopOrderRepository.deleteOrder(order_line_id);
+            if(res == STRING_RESPONSE.SUCCESS){
+                response.results = true;
+            } else {
+                response.message = res;
+            }
+            return response;
         } catch (err) {
             ExceptionResponse(err);
         }
