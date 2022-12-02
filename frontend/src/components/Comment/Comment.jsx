@@ -12,8 +12,6 @@ import { useEffect } from "react";
 import { format } from "timeago.js";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ShowMoreText from "react-show-more-text";
-
-
 import {
   deleteCommentPostSaga,
   likeCommentPostSaga,
