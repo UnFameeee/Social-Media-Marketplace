@@ -15,7 +15,7 @@ export class OrderLineRepository {
         try {
             for (const element of orderLineArray) {
                 element.order_id = order_id;
-                // element.createdAt = order_date;
+                element.createdAt = order_date;
                 element.payment_status = payment_method == PAYMENT_METHOD.PAYPAL ? PAYMENT_STATUS.PURCHASED : PAYMENT_STATUS.WAITING_FOR_PAYMENT;
                 element.shipping_status = SHIPPING_STATUS.WAITING_FOR_SHIPPER
                 await this.orderLineRepository.create(element);

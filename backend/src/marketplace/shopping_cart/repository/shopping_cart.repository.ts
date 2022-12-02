@@ -428,14 +428,7 @@ export class ShoppingCartRepository {
 
             if (queryCartData) {
                 const queryData = await this.shoppingCartItemRepository.findAndCountAll({
-                    attributes: [
-                        [Sequelize.col("Product.product_id"), "product_id"],
-                    ],
                     include: [
-                        {
-                            model: Product,
-                            attributes: [],
-                        },
                         {
                             model: ShoppingCart,
                             where: {
@@ -444,16 +437,13 @@ export class ShoppingCartRepository {
                             attributes: [],
                         }
                     ],
-                    order: [
-                        ['createdAt', 'DESC']
-                    ],
                 });
 
                 for (const element of queryData.rows) {
                     await element.destroy();
                 }
             }
-            
+
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }

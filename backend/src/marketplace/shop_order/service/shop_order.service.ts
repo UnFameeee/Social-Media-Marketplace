@@ -60,12 +60,12 @@ export class ShopOrderService {
                 const orderQueryData = await this.shopOrderRepository.createOrder(profile_id, orderFullDetail.total_price);
 
                 var payment_method = orderFullDetail.PaymentMethod;
-                await this.paymentMethodRepository.createPaymentMethod(orderQueryData.order_id, orderQueryData.order_date, payment_method);
+                await this.paymentMethodRepository.createPaymentMethod(orderQueryData.order_id, orderQueryData.createdAt, payment_method);
 
-                await this.shippingAddressRepository.createShippingAddress(orderQueryData.order_id, orderQueryData.order_date, orderFullDetail.ShippingAddress);
+                await this.shippingAddressRepository.createShippingAddress(orderQueryData.order_id, orderQueryData.createdAt, orderFullDetail.ShippingAddress);
 
                 var orderLineArray = orderFullDetail.OrderLine;
-                await this.orderLineRepository.createOrderLine(orderQueryData.order_id, orderQueryData.order_date, payment_method.payment_type, orderLineArray);
+                await this.orderLineRepository.createOrderLine(orderQueryData.order_id, orderQueryData.createdAt, payment_method.payment_type, orderLineArray);
 
                 //Only for this TLCN logic
                 await this.shoppingCartRepository.removeAllCart(profile_id);

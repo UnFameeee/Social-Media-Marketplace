@@ -16,7 +16,7 @@ export class PaymentMethodRepository {
                 payment_method_id: null,
                 order_id: order_id,
                 payment_type: payment_method.payment_type,
-                // createdAt: order_date
+                createdAt: order_date
             }
             return await this.paymentMethodRepository.create(paymentMethodData);
         } catch (err) {
