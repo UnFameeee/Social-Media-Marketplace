@@ -8,4 +8,5 @@ export class OrderLineEntity {
     price: number;
     payment_status: PAYMENT_STATUS;
     shipping_status: SHIPPING_STATUS;
+    createdAt: string;
 }

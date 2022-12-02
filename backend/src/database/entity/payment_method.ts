@@ -4,4 +4,5 @@ export class PaymentMethodEntity {
     payment_method_id: number;
     order_id: number;
     payment_type: PAYMENT_METHOD;
+    createdAt: string;
 }

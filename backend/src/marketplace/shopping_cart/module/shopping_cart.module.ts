@@ -16,4 +16,4 @@ import { productProviders, shoppingCartItemProviders, shoppingCartProviders } fr
   controllers: [ShoppingCartController],
   exports: [ShoppingCartRepository],
 })
-export class ShoppingCartModule {}
+export class ShoppingCartModule { }

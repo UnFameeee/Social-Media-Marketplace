@@ -5,12 +5,12 @@ import RootRoutes from "./common/routes";
 import { useDispatch, useSelector } from "react-redux";
 import jwt_decode from "jwt-decode";
 
-import { useEffect, useState } from "react";
-import { ToastContainer, toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import socket from "./socket/socket";
-import { SOCKET_EVENT } from "./socket/socket.constant";
-import Notification from "./socket/Notification";
+import { useEffect } from 'react';
+import { ToastContainer, toast, Slide, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import socket from './socket/socket';
+import { SOCKET_EVENT } from './socket/socket.constant';
+import Notification from './socket/Notification';
 import {
   getAllNotification,
   getAllUnreadNotification,
@@ -73,6 +73,7 @@ function App() {
                 profile_name={profile_name}
                 content={content}
                 notification_type={notification_type}
+                transition={Slide}
               />,
               {
                 autoClose: 3000,

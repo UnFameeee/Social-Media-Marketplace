@@ -9,13 +9,14 @@ export class PaymentMethodRepository {
         @Inject(PROVIDER.PaymentMethod) private readonly paymentMethodRepository: typeof PaymentMethod,
     ) { }
 
-    async createPaymentMethod(order_id: number, payment_method: PaymentMethodEntity): Promise<PaymentMethod> {
+    async createPaymentMethod(order_id: number, order_date: string, payment_method: PaymentMethodEntity): Promise<PaymentMethod> {
         try {
             var paymentMethodData = new PaymentMethodEntity();
             paymentMethodData = {
                 payment_method_id: null,
                 order_id: order_id,
                 payment_type: payment_method.payment_type,
+                createdAt: order_date
             }
             return await this.paymentMethodRepository.create(paymentMethodData);
         } catch (err) {

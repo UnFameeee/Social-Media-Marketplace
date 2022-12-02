@@ -47,9 +47,9 @@ export class ShopOrderController {
         return await this.shopOrderService.updateOrderLineShippingStatus(order_line_id);
     }
 
-    @Delete()
-    async deleteOrder(@Request() request: any) {
+    @Delete("/item/:order_line_id")
+    async deleteOrder(@Request() request: any, @Param("order_line_id")order_line_id: number) {
         const profile = <Profile>request.user;
-        return await this.shopOrderService.deleteOrder(profile.profile_id);
+        return await this.shopOrderService.deleteOrder(order_line_id);
     }
 }

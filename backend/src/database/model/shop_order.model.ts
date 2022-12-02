@@ -18,8 +18,8 @@ export class ShopOrder extends Model<ShopOrder> {
     @Column
     total_price: number;
 
-    @Column
-    order_date: string;
+    // @Column
+    // order_date: string;
 
     // @Column
     // payment_method: string;

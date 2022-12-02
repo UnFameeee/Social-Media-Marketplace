@@ -1,6 +1,7 @@
 import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { Op } from "sequelize";
 import { PAYMENT_STATUS, SHIPPING_STATUS } from "src/common/constants/order.constant";
+import { STRING_RESPONSE } from "src/common/constants/string-success.constant";
 import { Helper } from "src/common/utils/helper.utils";
 import { paginate } from "src/common/utils/paginate.utils";
 import { ShopOrderEntity } from "src/database/entity/shop_order";
@@ -18,6 +19,7 @@ export class ShopOrderRepository {
     constructor(
         @Inject(PROVIDER.ShopOrder) private readonly shopOrderRepository: typeof ShopOrder,
         @Inject(PROVIDER.OrderLine) private readonly orderLineRepository: typeof OrderLine,
+        @Inject(PROVIDER.Product) private readonly productRepository: typeof Product
     ) { }
 
     async getOrderPurchased(profile_id: number, page: Page): Promise<PagingData<OrderLine[]>> {
@@ -203,14 +205,38 @@ export class ShopOrderRepository {
         }
     }
 
-    async deleteOrder(order_line_id: number) {
+    async deleteOrder(order_line_id: number): Promise<string> {
         try {
             const queryData = await this.orderLineRepository.findOne({
+                // attributes: ["order_line_id", "createdAt", "quantity", "product_id"],
                 where: {
-                    
-                }
+                    order_line_id: order_line_id,
+                },
             })
-            return null;
+
+            if (queryData.shipping_status != SHIPPING_STATUS.SHIPPING) {
+                return `You only can delete the order when shipper return the product`;
+            }
+
+            const time = new Date(queryData.createdAt);
+            // console.log(new Date(queryData.createdAt).toLocaleString());
+            // console.log(new Date(new Date(queryData.createdAt).getTime() + (7 * 24 * 60 * 60 * 1000)).toLocaleString());
+
+            if (new Date(time.getTime() + (3 * 24 * 60 * 60 * 1000)) < new Date()) {
+                //return the quantity in stock to that product
+                var queryProductData = await this.productRepository.findOne({
+                    where: {
+                        product_id: queryData["product_id"]
+                    }
+                })
+                queryProductData.quantity_in_stock += queryData.quantity;
+                await queryProductData.save();
+                //remove order item
+                queryData.payment_status = PAYMENT_STATUS.CANCEL;
+                await queryData.save();
+                await queryData.destroy();
+                return STRING_RESPONSE.SUCCESS;
+            } else return `You only can delete the order product was hold after 3 days`;
         } catch (err) {
             throw new InternalServerErrorException(err.message);
         }
