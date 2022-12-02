@@ -32,9 +32,6 @@ function MarketPlaceLeftBar({ handleOpenModalCreate, ...props }) {
     var result = Helper.checkURL("checkout", {}, true);
     return result;
   });
-  useEffect(() => {
-    getAllShoppingCartList(accessToken, refreshToken, dispatch);
-  }, []);
   if (isCheckOutActive) {
     return (
       <div className="marketPlaceHomeLeftBar fixed top-[76px] left-[1%] w-[400px]">

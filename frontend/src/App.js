@@ -1,23 +1,24 @@
-import RootRoutes from './common/routes';
+import RootRoutes from "./common/routes";
 // import { ToastContainer } from "react-toastify";
 
 //Thang
-import { useDispatch, useSelector } from 'react-redux';
-import jwt_decode from 'jwt-decode';
+import { useDispatch, useSelector } from "react-redux";
+import jwt_decode from "jwt-decode";
 
-import { useEffect } from 'react';
-import { ToastContainer, toast, Bounce } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import socket from './socket/socket';
-import { SOCKET_EVENT } from './socket/socket.constant';
-import Notification from './socket/Notification';
+import { useEffect, useState } from "react";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import socket from "./socket/socket";
+import { SOCKET_EVENT } from "./socket/socket.constant";
+import Notification from "./socket/Notification";
 import {
   getAllNotification,
   getAllUnreadNotification,
   getAllFriendNotification,
-} from './redux/notifications/notificationAPI';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { NOTIFICATION_TYPE } from './socket/notification.constant';
+} from "./redux/notifications/notificationAPI";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { NOTIFICATION_TYPE } from "./socket/notification.constant";
+
 function App() {
   // const [isConnected, setIsConnected] = useState(socket.connected);
   const dispatch = useDispatch();
@@ -63,16 +64,9 @@ function App() {
         SOCKET_EVENT.RECEIVE_NOTIFICATION,
         (NotificationResponseDto) => {
           // console.log(NotificationResponseDto);
-          handleNotificationType(
-            NotificationResponseDto.notification_type
-          );
+          handleNotificationType(NotificationResponseDto.notification_type);
 
-          const notify = (
-            avatar,
-            profile_name,
-            content,
-            notification_type
-          ) => {
+          const notify = (avatar, profile_name, content, notification_type) => {
             toast(
               <Notification
                 avatar={avatar}
@@ -112,7 +106,7 @@ function App() {
   return (
     <PayPalScriptProvider
       options={{
-        'client-id': process.env.REACT_APP_PAYPAL_CLIENT_ID,
+        "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID,
       }}
     >
       <RootRoutes />

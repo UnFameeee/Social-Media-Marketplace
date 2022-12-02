@@ -7,10 +7,15 @@ import {
   changeProductFromListCartWithoutPagingQuantitySuccess,
   changeSellingProductPage,
   changeShoppingProductPage,
+  createOrderStart,
+  createOrderSuccess,
   createSellingProductSagaSuccess,
+  deleteOrderSuccess,
   deleteSellingProductSagaSuccess,
   getListCartWithoutPaging,
   getListCartWithoutPagingSaga,
+  getOrderPurchased,
+  getOrderSold,
   getSellingProduct,
   getSellingProductSaga,
   getShoppingProduct,
@@ -392,5 +397,128 @@ export const changeProductFromListCartWithoutPagingQuantityRequest = async (
   } catch (error) {
     console.log(error);
     notifyService.showError("Change Product To List Cart Quantity Failed");
+  }
+};
+export function* getAllOrderPurchasedSaga() {
+  yield takeLatest([deleteOrderSuccess.type], handleGetOrderPurchased);
+}
+function* handleGetOrderPurchased(data) {
+  try {
+    const getOrderPurchasedSG = yield call(getAllOrderPurchased, data);
+    yield put(getOrderPurchased(getOrderPurchasedSG));
+  } catch (error) {
+    console.log(error);
+  }
+}
+export const createOrder = async (
+  accessToken,
+  refreshToken,
+  dispatch,
+  navigate,
+  paymentObj
+) => {
+  dispatch(createOrderStart());
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const res = await axiosInStanceJWT.post(`${api.order}`, paymentObj, {
+      headers: config,
+      ACCESS_PARAM: accessToken,
+      REFRESH_PARAM: refreshToken,
+    });
+    if (!res.data.message) {
+      console.log(res.data.results.data);
+      dispatch(createOrderSuccess());
+      navigate("/orderpurchased");
+      return res.data.results.data;
+    } else {
+      notifyService.showError("Create Order Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Create Order Failed");
+  }
+};
+export const deleteOrder = async (accessToken, refreshToken, oderLine_id) => {
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const res = await axiosInStanceJWT.delete(
+      `${api.order}/item/${oderLine_id}`,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      console.log(res.data.results.data);
+      put(deleteOrderSuccess);
+      return res.data.results.data;
+    } else {
+      notifyService.showError("Delete Order Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Delete Order Failed");
+  }
+};
+export const getAllOrderPurchased = async (
+  accessToken,
+  refreshToken,
+  dispatch
+) => {
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const paging = {
+      page: 0,
+      pageSize: 1000,
+    };
+    const res = await axiosInStanceJWT.post(`${api.order}/purchased`, paging, {
+      headers: config,
+      ACCESS_PARAM: accessToken,
+      REFRESH_PARAM: refreshToken,
+    });
+    if (!res.data.message) {
+      console.log(res.data.results.data);
+      dispatch(getOrderPurchased(res.data.results.data));
+      return res.data.results.data;
+    } else {
+      notifyService.showError("Get Order Purchased Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Get Order Purchased Failed");
+  }
+};
+
+export const getAllOrderSold = async (accessToken, refreshToken, dispatch) => {
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const paging = {
+      page: 0,
+      pageSize: 1000,
+    };
+    const res = await axiosInStanceJWT.post(`${api.order}/sold`, paging, {
+      headers: config,
+      ACCESS_PARAM: accessToken,
+      REFRESH_PARAM: refreshToken,
+    });
+    if (!res.data.message) {
+      console.log(res.data.results.data);
+      dispatch(getOrderSold(res.data.results.data));
+      return res.data.results.data;
+    } else {
+      notifyService.showError("Get Order Sold Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Get Order Sold Failed");
   }
 };

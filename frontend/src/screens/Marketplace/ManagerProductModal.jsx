@@ -36,6 +36,7 @@ function ManagerProductModal({
   handleSaveUpdateProduct,
   ...props
 }) {
+  // #region declare variables
   const dispatch = useDispatch();
   const updateProductData = useSelector(
     (state) => state.product?.update?.product
@@ -78,7 +79,8 @@ function ManagerProductModal({
     var result = xBrands.sort((a, b) => a.localeCompare(b));
     return result;
   });
-
+  // #endregion
+  // #region declare function
   const handleOnChangeVariation = (event) => {
     setVariation({ ...variation, [event.target.name]: event.target.value });
   };
@@ -114,7 +116,7 @@ function ManagerProductModal({
     for (let i = 0; i < images.length; i++) {
       uploadImages.push({ files: images[i].file });
     }
-    handleSaveUpdateProduct(submitObj, uploadImages,removeImages,productId);
+    handleSaveUpdateProduct(submitObj, uploadImages, removeImages, productId);
     handleCloseModal();
   };
   const resetModal = () => {
@@ -157,6 +159,8 @@ function ManagerProductModal({
     setUpdateImages([...filter_product_image]);
     setRemoveImages([...removeImages, imageKey]);
   };
+  // #endregion
+  // #region declare useEffect
   useEffect(() => {
     if (updateProductData?.ShopAddress) {
       setShopAddress(updateProductData?.ShopAddress);
@@ -175,14 +179,14 @@ function ManagerProductModal({
     if (updateProductData?.product_image) {
       setUpdateImages(updateProductData.product_image);
     }
-    if(updateProductData?.product_id){
-      setProductId(updateProductData?.product_id)
+    if (updateProductData?.product_id) {
+      setProductId(updateProductData?.product_id);
     }
     if (!updateProductData) {
       resetModal();
     }
   }, [updateProductData, showManagerModal]);
-
+  // #endregion
   return (
     <Modal open={showManagerModal.isShow} onClose={closeModal}>
       <div className="managerProductModal border-[1px] w-[80%] border-gray-400 rounded-xl gap-[2rem] fixed p-[2rem] top-[50%] left-[50%]  bg-white translate-x-[-50%] translate-y-[-50%]">

@@ -54,7 +54,9 @@
   --shadow-5: rgba(0, 0, 0, 0.5);
   --shadow-8: rgba(0, 0, 0, 0.8);
 }
-
+::-webkit-scrollbar {
+  display: none;
+}
 * {
   box-sizing: inherit;
 }
@@ -88,6 +90,6 @@ body {
 .PrivatePickersYear-root button,
 .PrivatePickersFadeTransitionGroup-root,
 .MuiAutocomplete-option,
-.MuiAutocomplete-noOptions  {
+.MuiAutocomplete-noOptions {
   font-size: 1.6rem !important;
 }

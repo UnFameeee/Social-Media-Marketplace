@@ -12,7 +12,7 @@ import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import { Outlet } from "react-router";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import ManagerProductModal from "./ManagerProductModa";
+import ManagerProductModal from "./ManagerProductModal";
 import MUI from "../../components/MUI";
 import NothingToSee from "./NothingToSee";
 import { getAllSellingProduct } from "../../redux/apiRequest";
