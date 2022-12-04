@@ -159,7 +159,6 @@ function CheckOut() {
     }
   };
   const handleCheckFormIsValid = () => {
-    debugger
     if (city === "" || district === "" || ward == "" || detail_address == "") {
       setAddressValidation({
         city: city !== "" ? true : false,
