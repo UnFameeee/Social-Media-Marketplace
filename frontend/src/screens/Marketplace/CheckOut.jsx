@@ -81,6 +81,13 @@ function CheckOut() {
   const isLoadingCreateOrder = useSelector(
     (state) => state.product.createOrder.isFetching
   );
+  const [isFormValid, setIsFormValid] = useState(true);
+  const [addressValidation, setAddressValidation] = useState({
+    city: true,
+    district: true,
+    ward: true,
+    detail_address: true,
+  });
   //#endregion
   //#region declare function
   const handleChangeTab = (event, newValue) => {
@@ -88,6 +95,7 @@ function CheckOut() {
   };
   const handleOnChangeShopAddress = (event) => {
     setShopAddress({ ...shopAddress, [event.target.name]: event.target.value });
+    setAddressValidation({...addressValidation,[event.target.name]: event.target.value !=='' ? true: false})
   };
   const handleRemoveItem = (product_id, isReduceQuantityToZero) => {
     setOpenConfirmRemove(true);
@@ -109,7 +117,7 @@ function CheckOut() {
     let product_id = e.target.name;
     let quantity = e.target.value;
     if (e.target.value == 0) {
-      handleRemoveItem(product_id,true);
+      handleRemoveItem(product_id, true);
     } else {
       changeProductFromListCartWithoutPagingQuantityRequest(
         accessToken,
@@ -128,26 +136,43 @@ function CheckOut() {
     setShippingMethod(newValue);
   };
   const handlePayment = (method) => {
-    let orderLine = [];
-    getShoppingCartList.map((item) => {
-      orderLine.push({
-        product_id: item.product_id,
-        price: item.price,
-        quantity: item.quantity,
+    if (handleCheckFormIsValid()) {
+      setIsFormValid(true);
+      let orderLine = [];
+      getShoppingCartList.map((item) => {
+        orderLine.push({
+          product_id: item.product_id,
+          price: item.price,
+          quantity: item.quantity,
+        });
       });
-    });
-    let paymentObj = {
-      total_price: totalPrice,
-      order_status: "WAITING FOR PAYMENT",
-      PaymentMethod: {
-        payment_type: method,
-      },
-      ShippingAddress: shopAddress,
-      OrderLine: orderLine,
-    };
-    createOrder(accessToken, refreshToken, dispatch, navigate, paymentObj);
+      let paymentObj = {
+        total_price: totalPrice,
+        order_status: "WAITING FOR PAYMENT",
+        PaymentMethod: {
+          payment_type: method,
+        },
+        ShippingAddress: shopAddress,
+        OrderLine: orderLine,
+      };
+      createOrder(accessToken, refreshToken, dispatch, navigate, paymentObj);
+    }
   };
-
+  const handleCheckFormIsValid = () => {
+    debugger
+    if (city === "" || district === "" || ward == "" || detail_address == "") {
+      setAddressValidation({
+        city: city !== "" ? true : false,
+        district: district !== "" ? true : false,
+        ward: ward !== "" ? true : false,
+        detail_address: detail_address !== "" ? true : false,
+      });
+      setIsFormValid(false);
+      return false;
+    }
+    setIsFormValid(true);
+    return true;
+  };
   //#endregion
   //#region declare useEffect
 
@@ -487,7 +512,7 @@ function CheckOut() {
                   <div className="fourth-col-info flex flex-col gap-[2rem] flex-1">
                     <TextField
                       variant="standard"
-                      defaultValue="Shipping Address"
+                      defaultValue="Shipping Address for Pay With Cash"
                       InputProps={{
                         readOnly: true,
                       }}
@@ -495,6 +520,7 @@ function CheckOut() {
                     <FormControl className="City">
                       <InputLabel id="select-label-city">City</InputLabel>
                       <Select
+                        error={!addressValidation.city}
                         value={city}
                         name="city"
                         labelId="select-label-city"
@@ -514,6 +540,7 @@ function CheckOut() {
                         District
                       </InputLabel>
                       <Select
+                        error={!addressValidation.district}
                         value={district}
                         name="district"
                         labelId="select-label-district"
@@ -531,6 +558,7 @@ function CheckOut() {
                     <FormControl className="Ward">
                       <InputLabel id="select-label-ward">Ward</InputLabel>
                       <Select
+                        error={!addressValidation.ward}
                         value={ward}
                         name="ward"
                         labelId="select-label-ward"
@@ -547,6 +575,10 @@ function CheckOut() {
                     </FormControl>
                     <FormControl className="Detail Address">
                       <TextField
+                        error={!addressValidation.detail_address}
+                        helperText={
+                          !isFormValid ? "This field is required" : ""
+                        }
                         value={detail_address}
                         label="Detail Address"
                         name="detail_address"
@@ -574,7 +606,7 @@ function CheckOut() {
                       disabled={getShoppingCartList?.length == 0}
                       onClick={() => handlePayment("CASH")}
                     >
-                      Pay with cash
+                      Pay With Cash
                     </MUI.Button>
                     <PayPalCheckOutButton
                       handlePayPalApprove={handlePayment}
@@ -583,6 +615,7 @@ function CheckOut() {
                         profile_id: userData.profile_id,
                         totalPrice: totalPrice,
                       }}
+                      // handleCheckFormIsValid= {handleCheckFormIsValid}
                     />
                   </div>
                 </div>
