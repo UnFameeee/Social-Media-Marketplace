@@ -48,7 +48,7 @@ function OrderTableScreen({ orderLine, actionBtns, ...props }) {
                 >
                   <div className="flex gap-[1rem]">
                     <div className="card-image mb-[1rem]">
-                      {item?.product_image.length > 0 ? (
+                      {item?.product_image?.length > 0 ? (
                         <img
                           className="w-[10rem] h-[10rem] object-cover rounded-lg shadow-xl  brief-detail-img"
                           src={item?.product_image[0]?.link}
