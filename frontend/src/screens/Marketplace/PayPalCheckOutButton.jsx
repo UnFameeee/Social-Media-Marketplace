@@ -4,6 +4,7 @@ import { notifyService } from "../../services/notifyService";
 import { createOrder } from "../../redux/product/productSaga";
 function PayPalCheckOutButton({
   handlePayPalApprove,
+  handleCheckFormIsValid,
   product,
   disable,
   ...props
@@ -21,13 +22,11 @@ function PayPalCheckOutButton({
         label: "paypal",
       }}
       onClick={(data, actions) => {
-        const hasAlreadyBoughtTheProduct = false;
-        if (hasAlreadyBoughtTheProduct) {
-          alert("Transaction Error: You've already purchased this product");
-          return actions.reject();
-        } else {
-          return actions.resolve();
-        }
+        // if (handleCheckFormIsValid()) {
+        //   return actions.resolve();
+        // } else {
+        //   return actions.reject();
+        // }
       }}
       createOrder={(data, actions) => {
         return actions.order.create({
