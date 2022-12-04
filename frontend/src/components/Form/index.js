@@ -1,4 +1,5 @@
-import { Form, Formik } from 'formik';
+import { Form, Formik, useFormikContext } from 'formik';
+import { useEffect } from 'react';
 import InputForm from './InputForm';
 import SelectForm from './SelectForm';
 import DatePickerForm from './DatePickerForm';
@@ -20,10 +21,25 @@ export function ValidateForm(props) {
     onSubmit,
     children,
     style = {},
+    handleValid,
     className,
-    handleValid = () => {},
     ...other
   } = props;
+
+  const Valid = () => {
+    const formStatus = useFormikContext();
+    useEffect(() => {
+      let onDestroy = false;
+      if (!onDestroy) {
+        handleValid(formStatus.isValid && formStatus.dirty);
+      }
+      return () => {
+        onDestroy = true;
+      };
+    }, [formStatus.isValid && formStatus.dirty]);
+
+    return null;
+  };
 
   return (
     <Formik
@@ -34,14 +50,10 @@ export function ValidateForm(props) {
       }}
       {...other}
     >
-      {(props) => {
-        handleValid(props);
-        return (
-          <Form style={style} className={className}>
-            {children}
-          </Form>
-        );
-      }}
+      <Form style={style} className={className}>
+        {children}
+        <Valid />
+      </Form>
     </Formik>
   );
 }

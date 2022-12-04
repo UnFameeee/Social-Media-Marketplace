@@ -27,10 +27,8 @@ export default function Register() {
             onSubmit={(values) => {
               register(values, dispatch, navigate, from);
             }}
-            handleValid={(props) => {
-              if (Object.keys(props.touched).length) {
-                setValid(props.isValid && props.dirty);
-              }
+            handleValid={(data) => {
+              setValid(data);
             }}
           >
             <h1 className="form-title">Register</h1>
