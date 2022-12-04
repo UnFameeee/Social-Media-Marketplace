@@ -26,6 +26,7 @@ import {
   createSellingProduct,
   deleteSellingProduct,
   getAllOrderPurchasedSaga,
+  getAllOrderSoldSaga,
   getAllSellingProduct,
   getAllShoppingProduct,
   getListCartWithoutPagingSG,
@@ -59,6 +60,7 @@ export default function* rootSaga() {
     fork(getAllShoppingProduct),
     fork(getListCartWithoutPagingSG),
     fork(getAllOrderPurchasedSaga),
+    fork(getAllOrderSoldSaga)
   ]);
   yield all([
     fork(refreshAllNotifications),

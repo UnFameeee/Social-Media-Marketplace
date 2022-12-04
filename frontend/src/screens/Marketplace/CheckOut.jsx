@@ -95,7 +95,10 @@ function CheckOut() {
   };
   const handleOnChangeShopAddress = (event) => {
     setShopAddress({ ...shopAddress, [event.target.name]: event.target.value });
-    setAddressValidation({...addressValidation,[event.target.name]: event.target.value !=='' ? true: false})
+    setAddressValidation({
+      ...addressValidation,
+      [event.target.name]: event.target.value !== "" ? true : false,
+    });
   };
   const handleRemoveItem = (product_id, isReduceQuantityToZero) => {
     setOpenConfirmRemove(true);
@@ -136,8 +139,28 @@ function CheckOut() {
     setShippingMethod(newValue);
   };
   const handlePayment = (method) => {
-    if (handleCheckFormIsValid()) {
+    debugger;
+    if (method == "CASH" && handleCheckFormIsValid()) {
       setIsFormValid(true);
+      let orderLine = [];
+      getShoppingCartList.map((item) => {
+        orderLine.push({
+          product_id: item.product_id,
+          price: item.price,
+          quantity: item.quantity,
+        });
+      });
+      let paymentObj = {
+        total_price: totalPrice,
+        order_status: "WAITING FOR PAYMENT",
+        PaymentMethod: {
+          payment_type: method,
+        },
+        ShippingAddress: shopAddress,
+        OrderLine: orderLine,
+      };
+      createOrder(accessToken, refreshToken, dispatch, navigate, paymentObj);
+    } else if (method == "PAYPAL") {
       let orderLine = [];
       getShoppingCartList.map((item) => {
         orderLine.push({
@@ -159,7 +182,6 @@ function CheckOut() {
     }
   };
   const handleCheckFormIsValid = () => {
-    debugger
     if (city === "" || district === "" || ward == "" || detail_address == "") {
       setAddressValidation({
         city: city !== "" ? true : false,

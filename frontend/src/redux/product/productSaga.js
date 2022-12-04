@@ -2,6 +2,7 @@ import { put, takeLatest, call, fork } from "redux-saga/effects";
 import api from "../../common/environment/environment";
 import { axiosInStanceJWT } from "../axiosJWT";
 import { notifyService } from "../../services/notifyService";
+import { browserHistory } from "react-router-dom";
 import {
   addProductToCartWithoutPagingSagaSuccess,
   changeProductFromListCartWithoutPagingQuantitySuccess,
@@ -10,6 +11,7 @@ import {
   createOrderStart,
   createOrderSuccess,
   createSellingProductSagaSuccess,
+  deleteOrderSoldSuccess,
   deleteOrderSuccess,
   deleteSellingProductSagaSuccess,
   getListCartWithoutPaging,
@@ -21,7 +23,11 @@ import {
   getShoppingProduct,
   getShoppingProductSaga,
   getShoppingProductSagaSuccess,
+  paidOrderSoldSuccess,
+  receiveOrderPurchasedSuccess,
   removeProductFromListCartWithoutPagingSuccess,
+  resetListCartWithoutPaging,
+  shippingOrderSoldSuccess,
   updateSellingProductSagaSuccess,
 } from "./productSlice";
 import { removeUploadProductImages, uploadProductImages } from "../apiRequest";
@@ -399,17 +405,6 @@ export const changeProductFromListCartWithoutPagingQuantityRequest = async (
     notifyService.showError("Change Product To List Cart Quantity Failed");
   }
 };
-export function* getAllOrderPurchasedSaga() {
-  yield takeLatest([deleteOrderSuccess.type], handleGetOrderPurchased);
-}
-function* handleGetOrderPurchased(data) {
-  try {
-    const getOrderPurchasedSG = yield call(getAllOrderPurchased, data);
-    yield put(getOrderPurchased(getOrderPurchasedSG));
-  } catch (error) {
-    console.log(error);
-  }
-}
 export const createOrder = async (
   accessToken,
   refreshToken,
@@ -430,6 +425,7 @@ export const createOrder = async (
     if (!res.data.message) {
       console.log(res.data.results.data);
       dispatch(createOrderSuccess());
+      dispatch(resetListCartWithoutPaging());
       navigate("/orderpurchased");
       return res.data.results.data;
     } else {
@@ -440,31 +436,27 @@ export const createOrder = async (
     notifyService.showError("Create Order Failed");
   }
 };
-export const deleteOrder = async (accessToken, refreshToken, oderLine_id) => {
+
+export function* getAllOrderPurchasedSaga() {
+  yield takeLatest(
+    [receiveOrderPurchasedSuccess.type],
+    handleGetOrderPurchased
+  );
+}
+function* handleGetOrderPurchased(data) {
   try {
-    const config = {
-      Authorization: `Bearer ${accessToken}`,
-    };
-    const res = await axiosInStanceJWT.delete(
-      `${api.order}/item/${oderLine_id}`,
-      {
-        headers: config,
-        ACCESS_PARAM: accessToken,
-        REFRESH_PARAM: refreshToken,
-      }
+    let resData = data.payload;
+    const getOrderPurchasedSG = yield call(
+      getAllOrderPurchased,
+      resData.accessToken,
+      resData.refreshToken,
+      resData.dispatch
     );
-    if (!res.data.message) {
-      console.log(res.data.results.data);
-      put(deleteOrderSuccess);
-      return res.data.results.data;
-    } else {
-      notifyService.showError("Delete Order Failed");
-    }
+    yield put(getOrderPurchased(getOrderPurchasedSG));
   } catch (error) {
     console.log(error);
-    notifyService.showError("Delete Order Failed");
   }
-};
+}
 export const getAllOrderPurchased = async (
   accessToken,
   refreshToken,
@@ -495,7 +487,64 @@ export const getAllOrderPurchased = async (
     notifyService.showError("Get Order Purchased Failed");
   }
 };
+export const receiveOrderPurchasedRequest = async (
+  accessToken,
+  refreshToken,
+  oderLine_id,
+  dispatch
+) => {
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const res = await axiosInStanceJWT.put(
+      `${api.order}/item/shipping/status/${oderLine_id}`,
+      {},
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      console.log(res.data.results.data);
+      dispatch(
+        receiveOrderPurchasedSuccess({ accessToken, refreshToken, dispatch })
+      );
+      return res.data.results.data;
+    } else {
+      notifyService.showError("Change Shipping Status Of Order Sold Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Change Shipping Status Of Order Sold Failed");
+  }
+};
 
+export function* getAllOrderSoldSaga() {
+  yield takeLatest(
+    [
+      deleteOrderSoldSuccess.type,
+      paidOrderSoldSuccess.type,
+      shippingOrderSoldSuccess.type,
+    ],
+    handleGetOrderSold
+  );
+}
+function* handleGetOrderSold(data) {
+  try {
+    let resData = data.payload;
+    const getOrderSoldSG = yield call(
+      getAllOrderSold,
+      resData.accessToken,
+      resData.refreshToken,
+      resData.dispatch
+    );
+    yield put(getOrderSold(getOrderSoldSG));
+  } catch (error) {
+    console.log(error);
+  }
+}
 export const getAllOrderSold = async (accessToken, refreshToken, dispatch) => {
   try {
     const config = {
@@ -520,5 +569,99 @@ export const getAllOrderSold = async (accessToken, refreshToken, dispatch) => {
   } catch (error) {
     console.log(error);
     notifyService.showError("Get Order Sold Failed");
+  }
+};
+export const deleteOrderSoldRequest = async (
+  accessToken,
+  refreshToken,
+  oderLine_id,
+  dispatch
+) => {
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const res = await axiosInStanceJWT.delete(
+      `${api.order}/item/${oderLine_id}`,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      console.log(res.data.results.data);
+      dispatch(deleteOrderSoldSuccess({ accessToken, refreshToken, dispatch }));
+      return res.data.results.data;
+    } else {
+      notifyService.showError("Delete Order Sold Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Delete Order Sold Failed");
+  }
+};
+export const shippingOrderSoldRequest = async (
+  accessToken,
+  refreshToken,
+  oderLine_id,
+  dispatch
+) => {
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const res = await axiosInStanceJWT.put(
+      `${api.order}/item/shipping/status/${oderLine_id}`,
+      {},
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      console.log(res.data.results.data);
+      dispatch(
+        shippingOrderSoldSuccess({ accessToken, refreshToken, dispatch })
+      );
+      return res.data.results.data;
+    } else {
+      notifyService.showError("Change Shipping Status Of Order Sold Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Change Shipping Status Of Order Sold Failed");
+  }
+};
+export const paidOrderSoldRequest = async (
+  accessToken,
+  refreshToken,
+  oderLine_id,
+  dispatch
+) => {
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const res = await axiosInStanceJWT.put(
+      `${api.order}/item/payment/status/${oderLine_id}`,
+      {},
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      console.log(res.data.results.data);
+      dispatch(paidOrderSoldSuccess({ accessToken, refreshToken, dispatch }));
+      return res.data.results.data;
+    } else {
+      notifyService.showError("Change Payment Status Of Order Sold Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Change Payment Status Of Order Sold Failed");
   }
 };
