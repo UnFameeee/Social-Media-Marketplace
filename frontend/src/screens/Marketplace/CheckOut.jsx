@@ -83,13 +83,13 @@ function CheckOut() {
   );
   //#endregion
   //#region declare function
-  const handleChange = (event, newValue) => {
+  const handleChangeTab = (event, newValue) => {
     setValue(newValue);
   };
   const handleOnChangeShopAddress = (event) => {
     setShopAddress({ ...shopAddress, [event.target.name]: event.target.value });
   };
-  const handleRemoveItem = (product_id) => {
+  const handleRemoveItem = (product_id, isReduceQuantityToZero) => {
     setOpenConfirmRemove(true);
     setDeleteItemId(product_id);
   };
@@ -108,13 +108,17 @@ function CheckOut() {
   const handleOnChangeQuantity = (e) => {
     let product_id = e.target.name;
     let quantity = e.target.value;
-    changeProductFromListCartWithoutPagingQuantityRequest(
-      accessToken,
-      refreshToken,
-      product_id,
-      quantity,
-      dispatch
-    );
+    if (e.target.value == 0) {
+      handleRemoveItem(product_id,true);
+    } else {
+      changeProductFromListCartWithoutPagingQuantityRequest(
+        accessToken,
+        refreshToken,
+        product_id,
+        quantity,
+        dispatch
+      );
+    }
   };
   const debouncedChangeHandler = useMemo(
     () => debounce(handleOnChangeQuantity, 300),
@@ -143,6 +147,7 @@ function CheckOut() {
     };
     createOrder(accessToken, refreshToken, dispatch, navigate, paymentObj);
   };
+
   //#endregion
   //#region declare useEffect
 
@@ -186,7 +191,7 @@ function CheckOut() {
                     flex: "1",
                   },
                 }}
-                onChange={handleChange}
+                onChange={handleChangeTab}
               >
                 <Tab
                   className="brief-details flex-1"
@@ -298,7 +303,7 @@ function CheckOut() {
                           <div className="w-full">
                             <input
                               defaultValue={item.quantity}
-                              min={0}
+                              min={1}
                               max={9999}
                               name={item.product_id}
                               onChange={debouncedChangeHandler}
