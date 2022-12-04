@@ -12,6 +12,8 @@ import {
   deletePostSagaSuccess,
   deletePostStart,
   deletePostSuccess,
+  getPostByIdFailed,
+  getPostByIdSuccess,
   getPostByProfileSuccess,
   getPostFailed,
   getPostStart,
@@ -94,6 +96,48 @@ const getAllPostSagaRequest = async (data) => {
   }
 };
 //#endregion
+
+// #region refresh one post
+export function* reFreshOnePost() {
+  yield takeLatest(
+    [updatePostSagaSuccess.type, likePostSagaSuccess.type],
+    handleRefreshOnePostSaga
+  );
+}
+function* handleRefreshOnePostSaga(data) {
+  try {
+    if (data.payload?.callRefreshOnePost) {
+      const getAll = yield call(getOnePostSagaRequest, data);
+      yield put(getPostByIdSuccess(getAll.data));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+const getOnePostSagaRequest = async (data) => {
+  const { accessToken, refreshToken, postId, dispatch } =
+    data.payload;
+  // dispatch(getPostStart());
+  try {
+    const res = await axiosInStanceJWT.get(`${api.post}/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      ACCESS_PARAM: accessToken,
+      REFRESH_PARAM: refreshToken,
+    });
+    if (!res.data.message) {
+      return res;
+    } else {
+      console.log(res.data.message);
+      dispatch(getPostByIdFailed());
+    }
+  } catch (error) {
+    console.log(error);
+    dispatch(getPostByIdFailed());
+  }
+};
+// #endregion
 
 //#region createNewPost
 export function* createNewPost() {
@@ -190,6 +234,8 @@ export const deletePostSagaRequest = async (data) => {
     callRefreshGallery = false,
     id,
     dispatch,
+    navigate,
+    postUrl,
   } = data.payload;
   dispatch(deletePostStart());
   try {
@@ -205,16 +251,21 @@ export const deletePostSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
-      dispatch(
-        deletePostSagaSuccess({
-          accessToken,
-          refreshToken,
-          callRefreshPost,
-          callRefreshGallery,
-          id,
-          dispatch,
-        })
-      );
+      if (postUrl) {
+        navigate('/', { replace: true });
+      } else {
+        dispatch(
+          deletePostSagaSuccess({
+            accessToken,
+            refreshToken,
+            callRefreshPost,
+            callRefreshGallery,
+            postId,
+            id,
+            dispatch,
+          })
+        );
+      }
       notifyService.showSuccess('Delete Post Successfully');
       return res;
     } else {
@@ -249,6 +300,7 @@ const updatePostSagaRequest = async (data) => {
     uploadImage,
     removeImages,
     callRefreshPost = true,
+    callRefreshOnePost = false,
     callRefreshGallery = false,
     id,
     dispatch,
@@ -293,7 +345,9 @@ const updatePostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
+          callRefreshOnePost,
           callRefreshGallery,
+          postId: updatePost.post_id,
           id,
           dispatch,
         })
@@ -330,6 +384,7 @@ const likePostSagaRequest = async (data) => {
     refreshToken,
     postId,
     callRefreshPost = true,
+    callRefreshOnePost = false,
     id,
     dispatch,
   } = data.payload;
@@ -354,6 +409,8 @@ const likePostSagaRequest = async (data) => {
           accessToken,
           refreshToken,
           callRefreshPost,
+          callRefreshOnePost,
+          postId,
           id,
           dispatch,
         })

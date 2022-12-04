@@ -2,6 +2,7 @@ import { put, takeLatest, call } from 'redux-saga/effects';
 import { axiosInStanceJWT } from '../axiosJWT';
 import api from '../../common/environment/environment';
 import {
+  getAllFriendNotificationSuccess,
   getAllNotificationSuccess,
   getAllUnreadNotificationSuccess,
   seenNotificationSaga,
@@ -68,6 +69,45 @@ async function getAllUnreadNotificatonSaga(data) {
   try {
     const res = await axiosInStanceJWT.get(
       `${api.notification}/all/unread`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      return res;
+    } else {
+      console.log(res.data.message);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+// #endregion
+
+// #region get all unread notification
+export function* refreshAllFriendNotifications() {
+  yield takeLatest(
+    [seenNotificationSagaSuccess.type],
+    handleRefreshAllFriendNotificationSaga
+  );
+}
+function* handleRefreshAllFriendNotificationSaga(data) {
+  try {
+    const getAll = yield call(getAllFriendNotificatonSaga, data);
+    yield put(getAllFriendNotificationSuccess(getAll.data.results));
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function getAllFriendNotificatonSaga(data) {
+  const { accessToken, refreshToken } = data.payload;
+  try {
+    const res = await axiosInStanceJWT.get(
+      `${api.notification}/all/friend_request`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
