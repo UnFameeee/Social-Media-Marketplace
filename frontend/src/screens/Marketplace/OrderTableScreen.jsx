@@ -103,7 +103,20 @@ function OrderTableScreen({ orderLine, actionBtns, ...props }) {
                 >
                   <div className=" flex flex-col gap-[1rem]">
                     {actionBtns?.map((btn) => (
-                      <MUI.Button onClick={() =>btn.handle(item.order_line_id)}>
+                      <MUI.Button
+                        disabled={
+                          (btn.text == "Delete" &&
+                            item.shipping_status != "SHIPPING") ||
+                          (btn.text == "Receive" &&
+                            item.shipping_status != "SHIPPING") ||
+                          (btn.text == "Paid" &&
+                            (item.shipping_status != "DELIVERED" ||
+                              item.payment_status == "PURCHASED")) ||
+                          (btn.text == "Shipping" &&
+                            item.shipping_status != "WAITING FOR SHIPPER")
+                        }
+                        onClick={() => btn.handle(item.order_line_id)}
+                      >
                         <span>{btn.text}</span>
                       </MUI.Button>
                     ))}

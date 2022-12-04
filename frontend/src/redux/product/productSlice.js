@@ -113,6 +113,13 @@ export const productSlice = createSlice({
       state.getListCartWithoutPaging.totalPrice = totalPrice;
       state.getListCartWithoutPaging.data = action.payload;
     },
+    resetListCartWithoutPaging: (state) => {
+      let initialState = {
+        data: [],
+        totalPrice: 0,
+      };
+      state.getListCartWithoutPaging = initialState;
+    },
     addProductToCartWithoutPagingSagaSuccess() {},
     removeProductFromListCartWithoutPagingSuccess() {},
     changeProductFromListCartWithoutPagingQuantitySuccess() {},
@@ -130,33 +137,43 @@ export const productSlice = createSlice({
     getOrderPurchased: (state, action) => {
       state.getOrderPurchased = action.payload;
     },
+    receiveOrderPurchasedSuccess() {},
+
     createOrderStart: (state) => {
       state.createOrder.isFetching = true;
     },
     createOrderSuccess: (state) => {
       state.createOrder.isFetching = false;
     },
-    deleteOrderSuccess() {},
 
     getOrderSold: (state, action) => {
       state.getOrderSold = action.payload;
     },
+    deleteOrderSoldSuccess() {},
+    shippingOrderSoldSuccess() {},
+    paidOrderSoldSuccess() {},
   },
 });
 export const {
   getProductDetail,
+
   getOrderSold,
+  deleteOrderSoldSuccess,
+  shippingOrderSoldSuccess,
+  paidOrderSoldSuccess,
 
   getOrderPurchased,
+  receiveOrderPurchasedSuccess,
+
   createOrderStart,
   createOrderSuccess,
-  deleteOrderSuccess,
 
   getListCartWithoutPaging,
   getListCartWithoutPagingSaga,
   addProductToCartWithoutPagingSagaSuccess,
   removeProductFromListCartWithoutPagingSuccess,
   changeProductFromListCartWithoutPagingQuantitySuccess,
+  resetListCartWithoutPaging,
 
   getShoppingProductSaga,
   getShoppingProduct,
