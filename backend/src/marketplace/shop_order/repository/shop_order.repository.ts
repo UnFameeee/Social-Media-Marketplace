@@ -9,6 +9,7 @@ import { OrderLine } from "src/database/model/order_line.model";
 import { Product } from "src/database/model/product.model";
 import { ProductImage } from "src/database/model/product_image.model";
 import { Profile } from "src/database/model/profile.model";
+import { ShippingAddress } from "src/database/model/shipping_address.model";
 import { ShopOrder } from "src/database/model/shop_order.model";
 import { PROVIDER } from "src/database/providers/provider.constant";
 import { Page } from "src/database/view-model/page-model";
@@ -61,12 +62,21 @@ export class ShopOrderRepository {
                     },
                     {
                         model: ShopOrder,
-                        attributes: [],
+                        attributes: ["order_id"],
                         where: {
                             order_id: {
                                 [Op.in]: orderArray
                             }
-                        }
+                        },
+                        include: [
+                            {
+                                model: ShippingAddress,
+                                // attributes: {
+                                //     exclude: ["shipping_address_id", "order_id", "createdAt", "updatedAt", "deletedAt"]
+                                // },
+                                attributes: ["city", "district", "ward", "detail_address"],
+                            }
+                        ]
                     }
                 ],
                 order: [
@@ -81,6 +91,9 @@ export class ShopOrderRepository {
                 element["name"] = element["Product"]["name"];
                 element["product_image"] = element["Product"]["product_image"];
                 delete element["Product"];
+
+                element["ShippingAddress"] = element["ShopOrder"]["ShippingAddress"];
+                delete element["ShopOrder"];
             }
 
             result.data = order_line;
@@ -97,6 +110,8 @@ export class ShopOrderRepository {
         try {
             var result = new PagingData<OrderLine[]>();
 
+            console.log(profile_id);
+
             const queryData = await this.orderLineRepository.findAndCountAll({
                 attributes: [
                     "order_line_id", "quantity", "price", "payment_status", "shipping_status", "createdAt",
@@ -105,6 +120,17 @@ export class ShopOrderRepository {
                     "$Product.Profile.profile_id$": profile_id,
                 },
                 include: [
+                    {
+                        model: ShopOrder,
+                        attributes: ["order_id"],
+                        include: [
+                            {
+                                model: ShippingAddress,
+                                attributes: ["city", "district", "ward", "detail_address"],
+                            }
+                        ],
+                        required: false,
+                    },
                     {
                         model: Product,
                         attributes: ["product_id", "name", "profile_id"],
@@ -122,7 +148,8 @@ export class ShopOrderRepository {
                                 attributes: ["link"]
                             },
                         ]
-                    }
+                    },
+
                 ],
                 order: [
                     ['createdAt', 'DESC']
@@ -136,9 +163,13 @@ export class ShopOrderRepository {
                 element["name"] = element["Product"]["name"];
                 element["product_image"] = element["Product"]["product_image"];
                 delete element["Product"];
+
+                element["ShippingAddress"] = element["ShopOrder"]["ShippingAddress"];
+                delete element["ShopOrder"];
             }
 
             result.data = order_line;
+            // result.data = queryData.rows;
             page.totalElement = queryData.count;
             result.page = page;
             return result;
