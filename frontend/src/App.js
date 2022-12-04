@@ -33,11 +33,11 @@ function App() {
   const notify = (data) => toast(data);
 
   function handleNotificationType(type) {
+    getAllUnreadNotification(accessToken, refreshToken, dispatch);
     if (type === NOTIFICATION_TYPE.FRIEND_REQUEST) {
       getAllFriendNotification(accessToken, refreshToken, dispatch);
     } else {
       getAllNotification(accessToken, refreshToken, dispatch);
-      getAllUnreadNotification(accessToken, refreshToken, dispatch);
     }
   }
 
@@ -47,7 +47,10 @@ function App() {
       //listening on the event connect to server's socket
       socket.on(SOCKET_EVENT.JOIN_ROOM, (payload) => {
         // setIsConnected(true);
-        notify(payload);
+        getAllNotification(accessToken, refreshToken, dispatch);
+        getAllUnreadNotification(accessToken, refreshToken, dispatch);
+        getAllFriendNotification(accessToken, refreshToken, dispatch);
+        // notify(payload);
       });
 
       //listening on the event rerender notification popup
@@ -73,9 +76,10 @@ function App() {
                 profile_name={profile_name}
                 content={content}
                 notification_type={notification_type}
-                transition={Slide}
               />,
               {
+                transition: Slide,
+                position: "bottom-left",
                 autoClose: 3000,
               }
             );

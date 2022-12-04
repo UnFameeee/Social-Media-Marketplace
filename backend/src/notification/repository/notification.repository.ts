@@ -475,9 +475,9 @@ export class NotificationRepository {
                 ],
                 where: {
                     was_seen: false,
-                    notification_type: {
-                        [Op.ne]: NOTIFICATION_TYPE.FRIEND_REQUEST
-                    }
+                    // notification_type: {
+                    //     [Op.ne]: NOTIFICATION_TYPE.FRIEND_REQUEST
+                    // }
                 },
                 include: [
                     {
