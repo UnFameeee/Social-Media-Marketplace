@@ -38,6 +38,7 @@ export class ShoppingCartRepository {
 
     async addProductToCart(profile_id: number, product_id: number): Promise<boolean> {
         try {
+            console.log("add: ", profile_id);
             var queryCartData = await this.shoppingCartRepository.findOne({
                 include: [
                     {
@@ -53,6 +54,9 @@ export class ShoppingCartRepository {
 
             if (queryCartData) {
                 var queryCartItemData = await this.shoppingCartItemRepository.findOne({
+                    where: {
+                        "$ShoppingCart.Profile.profile_id$": profile_id,
+                    },
                     include: [
                         {
                             model: ShoppingCart,
