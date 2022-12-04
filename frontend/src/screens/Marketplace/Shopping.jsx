@@ -146,6 +146,7 @@ function Shopping() {
     let paging = { page: shoppingPage, pageSize };
     dispatch(changeShoppingProductPage({ accessToken, refreshToken, paging }));
   };
+  //#endregion
   useEffect(() => {
     let paging;
     if (shoppingProductPaging) {

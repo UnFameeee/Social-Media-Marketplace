@@ -119,7 +119,7 @@ function MarketPlaceLeftBarTab() {
             />
           </TabList>
         </Box>
-        <TabPanel value="1" className=" max-h-[60vh] overflow-y-scroll">
+        <TabPanel value="1" className="max-h-[55vh]  overflow-y-scroll">
           {getShoppingCartList && getShoppingCartList.length > 0 ? (
             <ul className="cart-list flex flex-col gap-[1rem]">
               {getShoppingCartList &&
@@ -200,7 +200,7 @@ function MarketPlaceLeftBarTab() {
             </>
           )}
         </TabPanel>
-        <TabPanel value="2" className=" max-h-[60vh] overflow-y-scroll">
+        <TabPanel value="2" className="max-h-[55vh] overflow-y-scroll">
           {getProductDetail ? (
             <>
               <div className="slide-show rounded-lg shadow-lg mb-[1rem]">
@@ -357,7 +357,9 @@ function MarketPlaceLeftBarTab() {
           className="w-full h-full"
           style={{
             color: "white",
-            background:`${getShoppingCartList.length == 0 ? "gray" : "var(--primary-color)" }`, 
+            background: `${
+              getShoppingCartList.length == 0 ? "gray" : "var(--primary-color)"
+            }`,
             borderRadius: "0px 0px 15px 15px",
             textTransform: "capitalize",
             fontSize: "2.4rem",
