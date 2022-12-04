@@ -45,7 +45,7 @@ function ManagerProductModal({
     name: "",
     description: "",
     price: 0,
-    quantity_in_stock: 0,
+    quantity_in_stock: 1,
   });
   const [variation, setVariation] = useState({
     brand: "",
@@ -79,52 +79,85 @@ function ManagerProductModal({
     var result = xBrands.sort((a, b) => a.localeCompare(b));
     return result;
   });
+  const [isFormValid, setIsFormValid] = useState(true);
+  const [createProductValidation, setCreateProductValidation] = useState({
+    name: true,
+    description: true,
+    brand: true,
+    color: true,
+    condition: true,
+    type: true,
+    warranty: true,
+    specification: true,
+    city: true,
+    district: true,
+    ward: true,
+    detail_address: true,
+  });
   // #endregion
   // #region declare function
   const handleOnChangeVariation = (event) => {
     setVariation({ ...variation, [event.target.name]: event.target.value });
+    setCreateProductValidation({
+      ...createProductValidation,
+      [event.target.name]: event.target.value !== "" ? true : false,
+    });
   };
   const handleOnChangeProductInfo = (event) => {
     setProduct({ ...product, [event.target.name]: event.target.value });
+    setCreateProductValidation({
+      ...createProductValidation,
+      [event.target.name]: event.target.value !== "" ? true : false,
+    });
   };
   const handleOnChangeShopAddress = (event) => {
     setShopAddress({ ...shopAddress, [event.target.name]: event.target.value });
+    setCreateProductValidation({
+      ...createProductValidation,
+      [event.target.name]: event.target.value !== "" ? true : false,
+    });
   };
   const onChange = (imageList) => {
     setImages(imageList);
   };
   const handleSubmit = () => {
-    let submitObj = {
-      ...product,
-      Variation: variation,
-      ShopAddress: shopAddress,
-    };
-    var uploadImages = [];
-    for (let i = 0; i < images.length; i++) {
-      uploadImages.push({ files: images[i].file });
+    if (handleCheckFormIsValid()) {
+      setIsFormValid(true);
+      let submitObj = {
+        ...product,
+        Variation: variation,
+        ShopAddress: shopAddress,
+      };
+      var uploadImages = [];
+      for (let i = 0; i < images.length; i++) {
+        uploadImages.push({ files: images[i].file });
+      }
+      handleSubmitCreateProduct(submitObj, uploadImages);
+      handleCloseModal();
     }
-    handleSubmitCreateProduct(submitObj, uploadImages);
-    handleCloseModal();
   };
   const handleSave = () => {
-    let submitObj = {
-      ...product,
-      Variation: variation,
-      ShopAddress: shopAddress,
-    };
-    var uploadImages = [];
-    for (let i = 0; i < images.length; i++) {
-      uploadImages.push({ files: images[i].file });
+    if (handleCheckFormIsValid()) {
+      setIsFormValid(true);
+      let submitObj = {
+        ...product,
+        Variation: variation,
+        ShopAddress: shopAddress,
+      };
+      var uploadImages = [];
+      for (let i = 0; i < images.length; i++) {
+        uploadImages.push({ files: images[i].file });
+      }
+      handleSaveUpdateProduct(submitObj, uploadImages, removeImages, productId);
+      handleCloseModal();
     }
-    handleSaveUpdateProduct(submitObj, uploadImages, removeImages, productId);
-    handleCloseModal();
   };
   const resetModal = () => {
     setProduct({
       name: "",
       description: "",
       price: 0,
-      quantity_in_stock: 0,
+      quantity_in_stock: 1,
     });
     setShopAddress({
       city: "",
@@ -158,6 +191,41 @@ function ManagerProductModal({
     let filter_product_image = updateImages.filter((x) => x.link !== imageKey);
     setUpdateImages([...filter_product_image]);
     setRemoveImages([...removeImages, imageKey]);
+  };
+  const handleCheckFormIsValid = () => {
+    if (
+      name === "" ||
+      description === "" ||
+      city === "" ||
+      district === "" ||
+      ward == "" ||
+      detail_address == "" ||
+      brand === "" ||
+      color === "" ||
+      condition === "" ||
+      type === "" ||
+      warranty === "" ||
+      specification === ""
+    ) {
+      setCreateProductValidation({
+        name: name !== "" ? true : false,
+        description: description !== "" ? true : false,
+        brand: brand !== "" ? true : false,
+        color: color !== "" ? true : false,
+        condition: condition !== "" ? true : false,
+        type: type !== "" ? true : false,
+        warranty: warranty !== "" ? true : false,
+        specification: specification !== "" ? true : false,
+        city: city !== "" ? true : false,
+        district: district !== "" ? true : false,
+        ward: ward !== "" ? true : false,
+        detail_address: detail_address !== "" ? true : false,
+      });
+      setIsFormValid(false);
+      return false;
+    }
+    setIsFormValid(true);
+    return true;
   };
   // #endregion
   // #region declare useEffect
@@ -320,6 +388,8 @@ function ManagerProductModal({
             <FormControl className="Name">
               <TextField
                 value={name}
+                error={!createProductValidation.name}
+                helperText={!isFormValid ? "This field is required" : ""}
                 label="Name"
                 name="name"
                 variant="outlined"
@@ -329,6 +399,8 @@ function ManagerProductModal({
             <FormControl className="Description">
               <TextField
                 value={description}
+                error={!createProductValidation.description}
+                helperText={!isFormValid ? "This field is required" : ""}
                 multiline
                 rows={4.3}
                 label="Description"
@@ -361,6 +433,7 @@ function ManagerProductModal({
               <InputLabel id="select-label-color">Color</InputLabel>
               <Select
                 value={color}
+                error={!createProductValidation.color}
                 name="color"
                 labelId="select-label-color"
                 label="Color"
@@ -378,6 +451,7 @@ function ManagerProductModal({
               <InputLabel id="select-label-brand">Brand</InputLabel>
               <Select
                 value={brand}
+                error={!createProductValidation.brand}
                 name="brand"
                 labelId="select-label-brand"
                 label="Brand"
@@ -395,6 +469,7 @@ function ManagerProductModal({
               <InputLabel id="select-label-condition">Condition</InputLabel>
               <Select
                 value={condition}
+                error={!createProductValidation.condition}
                 name="condition"
                 labelId="select-label-condition"
                 label="Condition"
@@ -412,6 +487,7 @@ function ManagerProductModal({
               <InputLabel id="select-label-warranty">Warranty</InputLabel>
               <Select
                 value={warranty}
+                error={!createProductValidation.warranty}
                 name="warranty"
                 labelId="select-label-warranty"
                 label="Warranty"
@@ -432,13 +508,15 @@ function ManagerProductModal({
                 label="Quantity"
                 variant="outlined"
                 name="quantity_in_stock"
-                InputProps={{ inputProps: { min: 0, max: 100 } }}
+                InputProps={{ inputProps: { min: 1, max: 100 } }}
                 onChange={handleOnChangeProductInfo}
               />
             </FormControl>
             <FormControl className="Type">
               <TextField
                 value={type}
+                error={!createProductValidation.type}
+                helperText={!isFormValid ? "This field is required" : ""}
                 label="Type"
                 name="type"
                 variant="outlined"
@@ -448,6 +526,7 @@ function ManagerProductModal({
             <FormControl className="Specification">
               <TextField
                 value={specification}
+                error={!createProductValidation.specification}
                 multiline
                 rows={4.3}
                 label="Specification"
@@ -469,6 +548,7 @@ function ManagerProductModal({
               <InputLabel id="select-label-city">City</InputLabel>
               <Select
                 value={city}
+                error={!createProductValidation.city}
                 name="city"
                 labelId="select-label-city"
                 label="City"
@@ -486,6 +566,7 @@ function ManagerProductModal({
               <InputLabel id="select-label-district">District</InputLabel>
               <Select
                 value={district}
+                error={!createProductValidation.district}
                 name="district"
                 labelId="select-label-district"
                 label="District"
@@ -503,6 +584,7 @@ function ManagerProductModal({
               <InputLabel id="select-label-ward">Ward</InputLabel>
               <Select
                 value={ward}
+                error={!createProductValidation.ward}
                 name="ward"
                 labelId="select-label-ward"
                 label="Ward"
@@ -519,6 +601,8 @@ function ManagerProductModal({
             <FormControl className="Detail Address">
               <TextField
                 value={detail_address}
+                error={!createProductValidation.detail_address}
+                helperText={!isFormValid ? "This field is required" : ""}
                 label="Detail Address"
                 name="detail_address"
                 multiline
