@@ -29,9 +29,11 @@ import CommentForm from '../Comment/CommentForm';
 import PostModal from '../../screens/Home/PostModal';
 import { getCommentPostSaga } from '../../redux/comment/commentSlice';
 import { Helper } from '../../utils/Helper';
+import { useNavigate } from 'react-router-dom';
 function CardPost(props) {
   //#region Declare variables
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showAction, setShowAction] = useState(false);
   const [showPostModal, setShowPostModal] = useState(false);
   const [showComment, setShowComment] = useState(
@@ -99,12 +101,15 @@ function CardPost(props) {
             url: 'home',
             path: '',
           }),
-        id: !Helper.checkURL('home', {
-          url: 'home',
-          path: '',
-        })
-          ? props?.profile?.profile_id
-          : null,
+        id:
+          !Helper.checkURL('home', {
+            url: 'home',
+            path: '',
+          }) && !Helper.checkURL('post')
+            ? props?.profile?.profile_id
+            : null,
+        navigate: navigate,
+        postUrl: Helper.checkURL('post')
       })
     );
     setShowAction(!showAction);
@@ -117,6 +122,8 @@ function CardPost(props) {
         refreshToken,
         dispatch,
         postId,
+        callRefreshPost: !Helper.checkURL('post'),
+        callRefreshOnePost: Helper.checkURL('post'),
         callRefreshGallery:
           post_image.length > 0 &&
           !Helper.checkURL('home', {

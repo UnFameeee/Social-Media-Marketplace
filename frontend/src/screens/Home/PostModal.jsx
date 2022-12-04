@@ -101,7 +101,9 @@ function PostModal(props) {
         refreshToken,
         updatePost,
         uploadImage,
-        removeImages,
+        removeImages,       
+        callRefreshPost: !Helper.checkURL('post'), 
+        callRefreshOnePost: Helper.checkURL('post'),
         callRefreshGallery:
           uploadImage.length > 0 &&
           !Helper.checkURL('home', {
