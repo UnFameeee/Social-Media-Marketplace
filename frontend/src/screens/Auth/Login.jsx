@@ -27,10 +27,8 @@ export default function Login() {
             onSubmit={(values) => {
               login(values, dispatch, navigate, from);
             }}
-            handleValid={(props) => {
-              if (Object.keys(props.touched).length) {
-                setValid(props.isValid && props.dirty);
-              }
+            handleValid={(data) => {
+              setValid(data);
             }}
           >
             <h1 className="form-title">Login</h1>
