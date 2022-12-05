@@ -321,22 +321,6 @@ function MarketPlaceLeftBarTab() {
                   <span>{getProductDetail?.price} USD</span>
                 </div>
               </div>
-              <ResponSiveButtonWrapper>
-                <Button
-                  style={{
-                    color: "var(--primary-color)",
-                    background: "white",
-                    border: "1px solid var(--primary-color)",
-                    borderRadius: "8px",
-                    MozBorderRadius: "8px",
-                    WebkitBorderRadius: "8px",
-                    flex: "1",
-                    textTransform: "capitalize",
-                  }}
-                >
-                  <span className="w-full">Add to cart</span>
-                </Button>
-              </ResponSiveButtonWrapper>
             </>
           ) : (
             <>
