@@ -21,7 +21,7 @@ export function ValidateForm(props) {
     onSubmit,
     children,
     style = {},
-    handleValid,
+    handleValid = () => {},
     className,
     ...other
   } = props;
