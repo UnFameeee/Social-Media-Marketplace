@@ -36,6 +36,7 @@ import {
   commentPostSagaSuccess,
   getCommentPostSagaSuccess,
 } from '../comment/commentSlice';
+import { postPaging } from '../../common/constants/apiConfig';
 
 //#region reFreshPosts
 export function* reFreshPosts() {
@@ -73,13 +74,9 @@ const getAllPostSagaRequest = async (data) => {
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
-    const paging = {
-      page: 0,
-      pageSize: 5,
-    };
     var url = id ? `${api.post}/getPost/${id}` : `${api.post}/all`;
 
-    const res = await axiosInStanceJWT.post(url, paging, {
+    const res = await axiosInStanceJWT.post(url, postPaging, {
       headers: config,
       ACCESS_PARAM: accessToken,
       REFRESH_PARAM: refreshToken,

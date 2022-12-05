@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
 import { apiUrl } from "../common/environment/environment";
 import api from "../common/environment/environment";
+import { leftBarPaging, postPaging } from "../common/constants/apiConfig";
 import {
   createPostFailed,
   createPostStart,
@@ -44,41 +45,6 @@ import {
   uploadImagePostSuccess,
 } from "./uploadImage/uploadImageSlice";
 import {
-  acceptFailed,
-  acceptStart,
-  acceptSuccess,
-  addFriendFailed,
-  addFriendStart,
-  addFriendSuccess,
-  denyFailed,
-  denyStart,
-  denySuccess,
-  getAllFriendFailed,
-  getAllFriendForMainUserFailed,
-  getAllFriendForMainUserStart,
-  getAllFriendForMainUserSuccess,
-  getAllFriendStart,
-  getAllFriendSuccess,
-  getRequestFailed,
-  getRequestStart,
-  getRequestSuccess,
-  getMutualFriendFailed,
-  getMutualFriendStart,
-  getMutualFriendSuccess,
-  isFriendFailed,
-  isFriendStart,
-  isFriendSuccess,
-  isSentRequestFailed,
-  isSentRequestStart,
-  isSentRequestSuccess,
-  getSuggestionStart,
-  getSuggestionSuccess,
-  getSuggestionFailed,
-} from "./friend/friendSlice";
-import {
-  getProfileDetailStart,
-  getProfileDetailSuccess,
-  getProfileDetailFailed,
   searchProfileStart,
   searchProfileSuccess,
   searchProfileFailed,
@@ -118,7 +84,7 @@ export const register = async (model, dispatch, navigate) => {
     const res = await axios.post(`${apiUrl}/auth/register`, model);
     if (res) {
       dispatch(registerSuccess(res.data));
-
+      notifyService.showSuccess("Register Successfully!");
       navigate("/login");
     } else {
       notifyService.showError("Register Failed!");
@@ -138,6 +104,7 @@ export const login = async (model, dispatch, navigate, from) => {
       var decoded = jwt_decode(token);
       dispatch(loginSuccess(res.data));
       dispatch(userDataAssign(decoded));
+      notifyService.showSuccess("Login Successfully!");
       navigate(from, { replace: true });
     } else {
       notifyService.showError("Login Failed!");
@@ -329,11 +296,7 @@ export const getAllPost = async (accessToken, refreshToken, dispatch) => {
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
-    const paging = {
-      page: 0,
-      pageSize: 5,
-    };
-    const res = await axiosInStanceJWT.post(`${apiUrl}/post/all`, paging, {
+    const res = await axiosInStanceJWT.post(`${apiUrl}/post/all`, postPaging, {
       headers: config,
       ACCESS_PARAM: accessToken,
       REFRESH_PARAM: refreshToken,
@@ -359,13 +322,9 @@ export const getPostByProfile = async (
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
-    const paging = {
-      page: 0,
-      pageSize: 5,
-    };
     const res = await axiosInStanceJWT.post(
       `${api.post}/getPost/${profileId}`,
-      paging,
+      postPaging,
       {
         headers: config,
         ACCESS_PARAM: accessToken,
@@ -480,13 +439,9 @@ export const searchProfile = async (
 ) => {
   dispatch(searchProfileStart());
   try {
-    const paging = {
-      page: 0,
-      pageSize: 7,
-    };
     const res = await axiosInStanceJWT.post(
       `${api.profile}/search?name=${value}`,
-      paging,
+      leftBarPaging,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

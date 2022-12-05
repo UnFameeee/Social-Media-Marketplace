@@ -1,6 +1,6 @@
 export const paging = {
   page: 0,
-  pageSize: 5,
+  pageSize: 100000,
 };
 
 export const galleryPaging = {
@@ -10,5 +10,10 @@ export const galleryPaging = {
 
 export const leftBarPaging = {
   page: 0,
-  pageSize: 12,
+  pageSize: 100000,
 };
+
+export const postPaging = {
+  page: 0,
+  pageSize: 100000,
+}
