@@ -259,15 +259,17 @@ function CheckOut() {
                   label="Payment Details"
                   value="2"
                 />
-                <Tab
-                  style={{
-                    color: "var(--primary-color)",
-                    textTransform: "capitalize",
-                  }}
-                  className="cart flex-1"
-                  label="Complete Order"
-                  value="3"
-                />
+                {
+                  //  <Tab
+                  //   style={{
+                  //     color: "var(--primary-color)",
+                  //     textTransform: "capitalize",
+                  //   }}
+                  //   className="cart flex-1"
+                  //   label="Complete Order"
+                  //   value="3"
+                  // />
+                }
               </TabList>
             </div>
           </Box>
@@ -643,13 +645,15 @@ function CheckOut() {
                 </div>
               </div>
             </TabPanel>
-            <TabPanel value="3" sx={{ padding: "1.2rem", background: "white" }}>
-              <img
-                src={`https://source.unsplash.com/random/1920x1200/?congratulations `}
-                alt=""
-                className="w-full max-h-[60vh] object-cover"
-              />
-            </TabPanel>
+            {
+              // <TabPanel value="3" sx={{ padding: "1.2rem", background: "white" }}>
+              //   <img
+              //     src={`https://source.unsplash.com/random/1920x1200/?congratulations `}
+              //     alt=""
+              //     className="w-full max-h-[60vh] object-cover"
+              //   />
+              // </TabPanel>
+            }
           </div>
         </TabContext>
       </div>
