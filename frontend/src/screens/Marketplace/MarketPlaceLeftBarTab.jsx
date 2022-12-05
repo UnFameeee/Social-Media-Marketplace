@@ -314,10 +314,9 @@ function MarketPlaceLeftBarTab() {
                       );
                   })}
               </ul>
-              <div className="card-price mb-[1rem]  text-[2.4rem]">
-                <span className="text-[#9a6de1] font-bold">Price</span>
+              <div className="card-price mb-[1rem] flex  text-[2.4rem]">
+                <span className="text-[#9a6de1] font-bold flex-1">Price</span>
                 <div className="flex gap-[1rem] font-bold justify-between">
-                  <span>20 Sold</span>
                   <span>{getProductDetail?.price} USD</span>
                 </div>
               </div>
