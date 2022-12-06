@@ -145,6 +145,9 @@ export const productSlice = createSlice({
     createOrderSuccess: (state) => {
       state.createOrder.isFetching = false;
     },
+    createOrderFail: (state) => {
+      state.createOrder.isFetching = false;
+    },
 
     getOrderSold: (state, action) => {
       state.getOrderSold = action.payload;
@@ -167,6 +170,7 @@ export const {
 
   createOrderStart,
   createOrderSuccess,
+  createOrderFail,
 
   getListCartWithoutPaging,
   getListCartWithoutPagingSaga,

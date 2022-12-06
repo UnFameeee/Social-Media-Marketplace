@@ -88,6 +88,7 @@ function CheckOut() {
     ward: true,
     detail_address: true,
   });
+  const [orderTimeout,setOrderTimeOut]=useState(false)
   //#endregion
   //#region declare function
   const handleChangeTab = (event, newValue) => {
@@ -139,7 +140,6 @@ function CheckOut() {
     setShippingMethod(newValue);
   };
   const handlePayment = (method) => {
-    debugger;
     if (method == "CASH" && handleCheckFormIsValid()) {
       setIsFormValid(true);
       let orderLine = [];
@@ -206,11 +206,11 @@ function CheckOut() {
   //#endregion
   return (
     <>
-      {isLoadingCreateOrder ? (
+      {isLoadingCreateOrder ?  (
         <div className="sweet-loading absolute z-30 h-screen w-screen inset-0 items-center flex justify-center">
           <ClipLoader
             color="#9a6de1"
-            loading={isLoadingCreateOrder}
+            loading={isLoadingCreateOrder }
             size={150}
             aria-label="Loading Spinner"
             data-testid="loader"

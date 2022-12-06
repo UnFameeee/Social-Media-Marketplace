@@ -8,6 +8,7 @@ import {
   changeProductFromListCartWithoutPagingQuantitySuccess,
   changeSellingProductPage,
   changeShoppingProductPage,
+  createOrderFail,
   createOrderStart,
   createOrderSuccess,
   createSellingProductSagaSuccess,
@@ -429,7 +430,8 @@ export const createOrder = async (
       navigate("/orderpurchased");
       return res.data.results.data;
     } else {
-      notifyService.showError("Create Order Failed");
+      dispatch(createOrderFail());
+      notifyService.showError(res.data.message);
     }
   } catch (error) {
     console.log(error);

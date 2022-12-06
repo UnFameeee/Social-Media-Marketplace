@@ -203,6 +203,9 @@ export class ProductRepository {
                 attributes: {
                     exclude: ["quantity_in_stock", "createdAt", "deletedAt", "updatedAt", "profile_id"],
                 },
+                where: {
+                    quantity_in_stock: { [Op.gt]: 0 }
+                },
                 include: [
                     {
                         model: Profile,
