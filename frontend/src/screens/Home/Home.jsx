@@ -163,11 +163,11 @@ function Home() {
           {getPostIsLoading
             ? [...Array(2)].map((index) => (
                 <div key={index} className="flex flex-col gap-[1rem]">
-                  <div className=" flex items-center gap-[1rem] pr-[1rem]">
+                  <div className=" flex items-center gap-[1rem] pl-[1rem] w-[70rem]">
                     <div>
                       <Skeleton variant="circular" width={40} height={40} />
                     </div>
-                    <div className=" w-full">
+                    <div className=" flex-1">
                       <Skeleton variant="text" sx={{ fontSize: "3rem" }} />
                     </div>
                   </div>
