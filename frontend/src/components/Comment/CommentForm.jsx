@@ -111,7 +111,6 @@ function CommentForm({
           </Avatar>
 
           <TextareaAutosize
-            autoFocus
             value={replyInput}
             maxRows={5}
             placeholder={placeholder ? placeholder : "write a reply..."}
