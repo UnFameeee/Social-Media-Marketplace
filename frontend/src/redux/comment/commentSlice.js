@@ -5,26 +5,26 @@ import { revertAll } from "../resetStore";
 const initialState = {
   get: {
     data: [],
-    isFetching:false,
+    isFetching: false,
   },
-  create:{
-    isFetching:false,
-    isError:false,
-    isSuccess:false,
-  }
+  create: {
+    isFetching: false,
+    isError: false,
+    isSuccess: false,
+  },
 };
 export const commentSlice = createSlice({
   name: "comment",
   initialState: {
     get: {
       data: [],
-      isFetching:false,
+      isFetching: false,
     },
-    create:{
-      isFetching:false,
-      isError:false,
-      isSuccess:false,
-    }
+    create: {
+      isFetching: false,
+      isError: false,
+      isSuccess: false,
+    },
   },
   extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
@@ -47,22 +47,28 @@ export const commentSlice = createSlice({
     likeCommentPostSaga() {},
     likeCommentPostSagaSuccess() {},
 
-    getCommentPostSaga:(state)=> {
-      state.get.isFetching =true;
+    getCommentPostSaga: (state) => {
+      state.get.isFetching = true;
     },
     getCommentPostSagaSuccess(state) {
       state.create.isFetching = false;
     },
     getCommentPostSuccess: (state, action) => {
-      if(action.payload.data.results.data.length >0){
+      if (action.payload.data.results.data.length > 0) {
         const post_id = action.payload.data.results.data[0].post_id;
         const totalComment = action.payload.data.results.page;
+        let totalCurrentShowComment = action.payload.data.results.data.length;
+        action.payload.data.results.data.map((item) => {
+          if (item?.all_child_comment?.length > 0) {
+            totalCurrentShowComment += item?.all_child_comment.length;
+          }
+        });
         const group_comment = {
           post_id: post_id,
           list_comment: [...action.payload.data.results.data],
           page: {
             ...totalComment,
-            totalCurrentShowComment:action.payload.data.results.data.length
+            totalCurrentShowComment: totalCurrentShowComment,
           },
         };
         const preState = state.get.data;
@@ -70,20 +76,25 @@ export const commentSlice = createSlice({
           const pos = state.get.data.map((e) => e.post_id).indexOf(post_id);
           if (pos > -1 && !action.payload.paging) {
             state.get.data[pos].list_comment = action.payload.data.results.data;
-            state.get.data[pos].page ={...state.get.data[pos].page,...action.payload.data.results.page};
-          }
-          else if (pos > -1 && action.payload.paging){
-            state.get.data[pos].list_comment = [...state.get.data[pos].list_comment,...action.payload.data.results.data]
-            state.get.data[pos].page.totalCurrentShowComment +=action.payload.data.results.data.length;
-          }
-          else {
+            state.get.data[pos].page = {
+              ...state.get.data[pos].page,
+              ...action.payload.data.results.page,
+              totalCurrentShowComment: totalCurrentShowComment,
+            };
+          } else if (pos > -1 && action.payload.paging) {
+            state.get.data[pos].list_comment = [
+              ...state.get.data[pos].list_comment,
+              ...action.payload.data.results.data,
+            ];
+            state.get.data[pos].page.totalCurrentShowComment +=
+              action.payload.data.results.data.length;
+          } else {
             state.get.data = [...preState, group_comment];
           }
         } else {
           state.get.data = [...preState, group_comment];
         }
-      }
-      else{
+      } else {
         const post_id = action.payload.post_id;
         if (state.get.data.length > 0) {
           const pos = state.get.data.map((e) => e.post_id).indexOf(post_id);
@@ -93,11 +104,11 @@ export const commentSlice = createSlice({
           }
         }
       }
-      state.get.isFetching =false;
+      state.get.isFetching = false;
     },
-    getCommentPostFail:(state)=>{
+    getCommentPostFail: (state) => {
       state.create.isFetching = false;
-    }
+    },
   },
 });
 export const {

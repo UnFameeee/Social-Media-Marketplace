@@ -183,8 +183,8 @@ function CardPost(props) {
       comments.map((comment) => {
         if (comment.post_id === post_id) {
           result = {
-            totalCurrentShowComment: comment?.list_comment
-              ? comment?.list_comment?.length
+            totalCurrentShowComment: comment?.page.totalCurrentShowComment
+              ? comment?.page.totalCurrentShowComment
               : null,
             totalElement: comment?.page?.totalElement
               ? comment?.page?.totalElement
