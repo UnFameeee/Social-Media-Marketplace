@@ -7,11 +7,14 @@ import {
   updateWallpaperSagaSuccess,
   deleteAvtSagaSuccess,
   deleteWallpaperSagaSuccess,
-
   getProfileDetailSuccess,
   getProfileSaga,
   getProfileSagaSuccess,
   getGallerySuccess,
+  getProfileDetailStart,
+  getProfileDetailFailed,
+  getGalleryStart,
+  getGalleryFailed,
 } from './profileSlice';
 import { notifyService } from '../../services/notifyService';
 import {
@@ -26,6 +29,7 @@ import {
   deletePostSagaSuccess,
   updatePostSagaSuccess,
 } from '../post/postSlice';
+import { updateUserAvt, updateUserWall } from '../auth/authSlice';
 
 export function* refreshProfile() {
   yield takeLatest(
@@ -65,6 +69,7 @@ async function getProfileDetailSaga(data) {
     callRefreshGallery = true,
     dispatch,
   } = data.payload;
+  dispatch(getProfileDetailStart());
   try {
     const res = await axiosInStanceJWT.get(
       `${api.profile}/getProfileDetailById/${id}`,
@@ -90,9 +95,14 @@ async function getProfileDetailSaga(data) {
       );
       return res;
     } else {
+      console.log(res.data.message);
+      dispatch(getProfileDetailFailed());
+      notifyService.showError(res.data.message);
     }
   } catch (error) {
     console.log(error);
+    dispatch(getProfileDetailFailed());
+    notifyService.showError(error.message);
   }
 }
 
@@ -135,6 +145,7 @@ export async function updateAvtRequest(data) {
           dispatch,
         })
       );
+      dispatch(updateUserAvt(res.data.results));
       return res;
     } else {
       notifyService.showError(res.data.message);
@@ -185,6 +196,7 @@ export async function updateWallRequest(data) {
           dispatch,
         })
       );
+      dispatch(updateUserWall(res.data.results));
       return res;
     } else {
       notifyService.showError(res.data.message);
@@ -277,6 +289,7 @@ export async function deleteAvtRequest(data) {
           dispatch,
         })
       );
+      dispatch(updateUserAvt(''));
       return res;
     } else {
       notifyService.showError(res.data.message);
@@ -322,6 +335,7 @@ export async function deleteWallRequest(data) {
           dispatch,
         })
       );
+      dispatch(updateUserWall(''));
       return res;
     } else {
       notifyService.showError(res.data.message);
@@ -357,8 +371,8 @@ function* handleGetGallery(data) {
   }
 }
 async function getGallerySagaRequest(data) {
-  const { accessToken, refreshToken, id } = data.payload;
-
+  const { accessToken, refreshToken, id, dispatch } = data.payload;
+  dispatch(getGalleryStart());
   try {
     const res = await axiosInStanceJWT.post(
       `${api.profile}/galleryImage/${id}`,
@@ -376,9 +390,12 @@ async function getGallerySagaRequest(data) {
     } else {
       console.log(res.data.mess);
       notifyService.showError(res.data.message);
+      dispatch(getGalleryFailed());
     }
   } catch (error) {
     console.log(error);
+    notifyService.showError(error.message);
+    dispatch(getGalleryFailed());
   }
 }
 // #endregion

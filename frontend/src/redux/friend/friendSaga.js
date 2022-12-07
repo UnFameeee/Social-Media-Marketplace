@@ -6,6 +6,8 @@ import {
   acceptSagaSuccess,
   addFriendSagaSuccess,
   denySagaSuccess,
+  getAllFriendFailed,
+  getAllFriendStart,
   getAllFriendSuccess,
   unfriendSagaSuccess,
 } from './friendSlice';
@@ -30,7 +32,8 @@ function* handleRefreshAllSaga(data) {
   }
 }
 async function getAllSaga(data) {
-  const { accessToken, refreshToken, id } = data.payload;
+  const { accessToken, refreshToken, id, dispatch } = data.payload;
+  dispatch(getAllFriendStart());
   try {
     const res = await axiosInStanceJWT.post(
       `${api.friend}/all/${id}`,
@@ -47,9 +50,13 @@ async function getAllSaga(data) {
       return res;
     } else {
       console.log(res.data.message);
+      notifyService.showError(res.data.message);
+      dispatch(getAllFriendFailed());
     }
   } catch (error) {
     console.log(error);
+    notifyService.showError(error.message);
+    dispatch(getAllFriendFailed());
   }
 }
 // #endregion

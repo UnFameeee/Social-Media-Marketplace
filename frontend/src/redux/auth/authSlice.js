@@ -1,27 +1,27 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { refreshToken } from "../apiRequest";
-import { revertAll } from "../resetStore";
+import { createSlice } from '@reduxjs/toolkit';
+import { refreshToken } from '../apiRequest';
+import { revertAll } from '../resetStore';
 const initialState = {
-    login: {
-      currentUser: null,
-      isFetching: false,
-      error: false,
-    },
-    register: {
-      isFetching: false,
-      error: false,
-      success: false,
-    },
-    logout: {
-      isFetching: false,
-      error: false,
-    },
-    user:{
-      userData:null,
-    },
-}
+  login: {
+    currentUser: null,
+    isFetching: false,
+    error: false,
+  },
+  register: {
+    isFetching: false,
+    error: false,
+    success: false,
+  },
+  logout: {
+    isFetching: false,
+    error: false,
+  },
+  user: {
+    userData: null,
+  },
+};
 export const authSlice = createSlice({
-  name: "auth",
+  name: 'auth',
   initialState: {
     login: {
       currentUser: null,
@@ -37,11 +37,12 @@ export const authSlice = createSlice({
       isFetching: false,
       error: false,
     },
-    user:{
-      userData:null,
-    }
+    user: {
+      userData: null,
+    },
   },
-  extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
+  extraReducers: (builder) =>
+    builder.addCase(revertAll, () => initialState),
   reducers: {
     loginStart: (state) => {
       state.login.isFetching = true;
@@ -80,26 +81,34 @@ export const authSlice = createSlice({
       state.logout.isFetching = false;
       state.logout.error = true;
     },
-    userDataAssign:(state, action) =>{
+    userDataAssign: (state, action) => {
       state.user.userData = action.payload;
     },
-    refreshTokenSuccess:(state, action) =>{
-      state.login.currentUser = action.payload
-    }
+    updateUserAvt: (state, action) => {
+      state.user.userData.profile.avatar = action.payload;
+    },
+    updateUserWall: (state, action) => {
+      state.user.userData.profile.wallpaper = action.payload;
+    },
+    refreshTokenSuccess: (state, action) => {
+      state.login.currentUser = action.payload;
+    },
   },
 });
 export const {
-    loginStart,
-    loginSuccess,
-    loginFailed,
-    registerStart,
-    registerFailed,
-    registerSuccess,
-    logOutFailed,
-    logOutStart,
-    logOutSuccess,
-    userDataAssign,
-    refreshTokenSuccess,
-} = authSlice.actions
+  loginStart,
+  loginSuccess,
+  loginFailed,
+  registerStart,
+  registerFailed,
+  registerSuccess,
+  logOutFailed,
+  logOutStart,
+  logOutSuccess,
+  userDataAssign,
+  refreshTokenSuccess,
+  updateUserAvt,
+  updateUserWall,
+} = authSlice.actions;
 
-export default authSlice.reducer
+export default authSlice.reducer;

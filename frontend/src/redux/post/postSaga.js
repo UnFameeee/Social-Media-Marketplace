@@ -14,6 +14,8 @@ import {
   deletePostSuccess,
   getPostByIdFailed,
   getPostByIdSuccess,
+  getPostByProfileFailed,
+  getPostByProfileStart,
   getPostByProfileSuccess,
   getPostFailed,
   getPostStart,
@@ -69,7 +71,11 @@ function* handleReFreshPostSaga(data) {
 }
 const getAllPostSagaRequest = async (data) => {
   const { accessToken, refreshToken, id, dispatch } = data.payload;
-  // dispatch(getPostStart());
+  if (data.payload?.id) {
+    dispatch(getPostByProfileStart());
+  } else {
+    // dispatch(getPostStart());
+  }
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -85,11 +91,20 @@ const getAllPostSagaRequest = async (data) => {
       // dispatch(getPostSuccess(res.data));
       return res;
     } else {
-      //  dispatch(getPostFailed());
+      if (data.payload?.id) {
+        dispatch(getPostByProfileFailed());
+      } else {
+        //  dispatch(getPostFailed());
+      }
     }
   } catch (error) {
     console.log(error);
-    dispatch(getPostFailed());
+
+    if (data.payload?.id) {
+      dispatch(getPostByProfileFailed());
+    } else {
+      dispatch(getPostFailed());
+    }
   }
 };
 //#endregion

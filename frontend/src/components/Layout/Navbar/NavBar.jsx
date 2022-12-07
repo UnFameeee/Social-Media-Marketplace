@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'react';
+import { useState, useReducer, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   FacebookOutlined,
@@ -14,6 +14,7 @@ import {
   ClickAwayListener,
   ToggleButtonGroup,
   ToggleButton,
+  CircularProgress,
 } from '@mui/material';
 import { IoLogOut } from 'react-icons/io5';
 import { RiMoreFill } from 'react-icons/ri';
@@ -41,9 +42,9 @@ import {
   acceptFriendRequest,
   denyFriendRequest,
 } from '../../../redux/friend/friendSaga';
+import { seenNotificationSaga } from '../../../redux/notifications/notificationSlice';
 import { LeftbarFriendRequest } from '../../../screens/Friends/DynamicLeftbar/LeftbarMiddleItem';
 import '../Layout.css';
-import { seenNotificationSaga } from '../../../redux/notifications/notificationSlice';
 
 export default function NavBar() {
   const navigate = useNavigate();
@@ -87,6 +88,47 @@ export default function NavBar() {
     (state) => state.notification?.getAllUnread?.data,
     shallowEqual
   );
+  const isFetchingAllNotification = useSelector(
+    (state) => state.notification?.getAll?.isFetching
+  );
+  const isFetchingUnreadNotification = useSelector(
+    (state) => state.notification?.getAllUnread?.isFetching
+  );
+  const isFetchingFriendNotification = useSelector(
+    (state) => state.notification?.getAllFriend?.isFetching
+  );
+  // #endregion
+
+  // #region loading variables
+  var isLoadingAllNotifications = useMemo(() => {
+    var result = false;
+    if (isFetchingAllNotification) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingAllNotification]);
+
+  var isLoadingUnreadNotifications = useMemo(() => {
+    var result = false;
+    if (isFetchingUnreadNotification) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingUnreadNotification]);
+
+  var isLoadingFriendNotifications = useMemo(() => {
+    var result = false;
+    if (isFetchingFriendNotification) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingFriendNotification]);
   // #endregion
 
   const handleLogOut = () => {
@@ -510,11 +552,11 @@ export default function NavBar() {
                           >
                             Notifications
                           </span>
-                          <MUI.BetterIconButton>
+                          {/* <MUI.BetterIconButton>
                             <RiMoreFill
                               style={{ fontSize: '1.8rem' }}
                             />
-                          </MUI.BetterIconButton>
+                          </MUI.BetterIconButton> */}
                         </div>
 
                         <ToggleButtonGroup
@@ -555,12 +597,27 @@ export default function NavBar() {
                         </ToggleButtonGroup>
                       </div>
                     }
+                    after={
+                      (isLoadingAllNotifications ||
+                        isLoadingFriendNotifications ||
+                        isLoadingUnreadNotifications) && (
+                        <div className="text-center pt-[2rem]">
+                          <CircularProgress
+                            style={{ color: 'var(--primary-color)' }}
+                          />
+                        </div>
+                      )
+                    }
                     list={
-                      notificationType === 'all'
+                      notificationType === 'all' &&
+                      !isLoadingAllNotifications
                         ? listNotifications(allNotifications)
-                        : notificationType === 'unread'
+                        : notificationType === 'unread' &&
+                          !isLoadingUnreadNotifications
                         ? listNotifications(allUnreadNotifications)
-                        : listNotifications(allFriendNotifications)
+                        : !isLoadingFriendNotifications
+                        ? listNotifications(allFriendNotifications)
+                        : []
                     }
                   />
                 )}

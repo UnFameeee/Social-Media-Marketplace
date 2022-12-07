@@ -1,6 +1,7 @@
-import { useLayoutEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useLayoutEffect, useMemo, useState } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import { LeftbarSentRequest } from '../LeftbarMiddleItem';
@@ -17,20 +18,61 @@ export default function YourSentRequests() {
   const location = useLocation();
   const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
 
-  const [listCancel, setListCancel] = useState([]);
-
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
   const refreshToken = useSelector(
     (state) => state.auth?.login?.currentUser?.refresh
   );
-  const sentRequests = useSelector(
-    (state) => state.friends?.getSentRequests?.data
-  );
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
+  const sentRequests = useSelector(
+    (state) => state.friends?.getSentRequests?.data,
+    shallowEqual
+  );
+  const isFetchingSent = useSelector(
+    (state) => state.friends?.getSentRequests?.isFetching
+  );
+  const isFetchingProfileDetail = useSelector(
+    (state) => state.profile?.profileDetails?.isFetching
+  );
+
+  const [listCancel, setListCancel] = useState([]);
+
+  var sentList = useMemo(() => {
+    return sentRequests;
+  }, [sentRequests]);
+
+  var isLoadingSent = useMemo(() => {
+    var result = false;
+    if (isFetchingSent) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingSent]);
+
+  var checkId = useMemo(() => {
+    return sentList?.data?.some(
+      (e) => e.profile_id.toString() === queryParams.toString()
+    );
+  }, [queryParams]);
+
+  var checkQueryParam = useMemo(() => {
+    return Helper.isNullOrEmpty(queryParams);
+  }, [queryParams]);
+
+  var isLoadingProfileDetail = useMemo(() => {
+    var result = false;
+    if (isFetchingProfileDetail) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingProfileDetail]);
 
   // call get all sent requests once
   useLayoutEffect(() => {
@@ -47,7 +89,7 @@ export default function YourSentRequests() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      if (!Helper.isNullOrEmpty(queryParams)) {
+      if (!checkQueryParam) {
         dispatch(
           getProfileSaga({
             accessToken,
@@ -73,62 +115,74 @@ export default function YourSentRequests() {
         before: (
           <LeftbarTitle
             title="Sent Requests"
-            subTitle={Helper.isMultiple(
-              'Sent Request',
-              sentRequests?.page?.totalElement,
-              'You Have Not Sent Any Request'
-            )}
+            subTitle={
+              isLoadingSent
+                ? null
+                : Helper.isMultiple(
+                    'Sent Request',
+                    sentList?.page?.totalElement,
+                    'You Have Not Sent Any Request'
+                  )
+            }
           />
         ),
-        leftBarList: sentRequests?.data?.map((x) => {
-          var profileChecked =
-            !Helper.isNullOrEmpty(queryParams) &&
-            x.profile_id === profileData?.profile_id;
+        after: isLoadingSent && (
+          <div className="text-center pt-[4rem]">
+            <CircularProgress
+              style={{ color: 'var(--primary-color)' }}
+            />
+          </div>
+        ),
+        leftBarList: isLoadingSent
+          ? null
+          : sentList?.data?.map((x) => {
+              var profileChecked =
+                !checkQueryParam &&
+                x.profile_id === profileData?.profile_id;
 
-          return {
-            left: {
-              url: x.avatar,
-              name: x.profile_name,
-            },
-            middle: (
-              <LeftbarSentRequest
-                profile={x}
-                listCancel={listCancel}
-                cancelButtonConfig={{
-                  onClick: (e) => {
-                    e.stopPropagation();
-                    addFriendRequest({
-                      accessToken,
-                      refreshToken,
-                      id: x.profile_id,
-                      callRefreshProfile: profileChecked,
-                      dispatch,
-                    });
+              return {
+                left: {
+                  url: x.avatar,
+                  name: x.profile_name,
+                },
+                middle: (
+                  <LeftbarSentRequest
+                    profile={x}
+                    listCancel={listCancel}
+                    cancelButtonConfig={{
+                      onClick: (e) => {
+                        e.stopPropagation();
+                        addFriendRequest({
+                          accessToken,
+                          refreshToken,
+                          id: x.profile_id,
+                          callRefreshProfile: profileChecked,
+                          dispatch,
+                        });
 
-                    setListCancel((old) => [...old, x.profile_id]);
-                  },
-                }}
-              />
-            ),
-            onClick: () => {
-              navigate(`?id=${x.profile_id}`);
-            },
-            selected: profileChecked,
-            disabled: profileChecked,
-          };
-        }),
+                        setListCancel((old) => [
+                          ...old,
+                          x.profile_id,
+                        ]);
+                      },
+                    }}
+                  />
+                ),
+                onClick: () => {
+                  navigate(`?id=${x.profile_id}`);
+                },
+                selected: !isLoadingProfileDetail && profileChecked,
+                disabled: isLoadingProfileDetail
+                  ? true
+                  : profileChecked,
+              };
+            }),
         leftBarColor: 'white',
       }}
     >
-      {!Helper.isNullOrEmpty(queryParams) &&
-        sentRequests?.data.some(
-          (e) => e.profile_id.toString() === queryParams.toString()
-        ) && (
-          <UserProfile
-            action={setListCancel}
-            actionList={listCancel}
-          />
-        )}
+      {!checkQueryParam && checkId && (
+        <UserProfile action={setListCancel} actionList={listCancel} />
+      )}
     </TwoColumns>
   );
 }

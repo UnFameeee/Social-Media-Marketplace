@@ -1,6 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
 import { searchProfile } from '../../redux/apiRequest';
 import TwoColumns from '../../components/Layout/TwoColumns';
 import { Helper } from '../../utils/Helper';
@@ -8,13 +9,11 @@ import LeftbarTitle from '../Friends/DynamicLeftbar/LeftbarTitle';
 import UserProfile from '../UserProfile/UserProfile';
 import { getProfileSaga } from '../../redux/profile/profileSlice';
 import { localStorageService } from '../../services/localStorageService';
+import { useMemo } from 'react';
 
 export default function SearchPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const [searchParams] = useSearchParams();
-  const queryParams = Object.fromEntries([...searchParams]);
 
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
@@ -22,18 +21,67 @@ export default function SearchPage() {
   const refreshToken = useSelector(
     (state) => state.auth?.login?.currentUser?.refresh
   );
-  const profiles = useSelector(
-    (state) => state.profile?.profileSearch?.data
-  );
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data,
     shallowEqual
   );
+  const profileSearch = useSelector(
+    (state) => state.profile?.profileSearch?.data,
+    shallowEqual
+  );
+  const isFetchingProfileSearch = useSelector(
+    (state) => state.profile?.profileSearch?.isFetching,
+    shallowEqual
+  );
+  const isFetchingProfileDetail = useSelector(
+    (state) => state.profile?.profileDetails?.isFetching,
+    shallowEqual
+  );
+
+  const [searchParams] = useSearchParams();
+  const queryParams = Object.fromEntries([...searchParams]);
+
+  var profileList = useMemo(() => {
+    return profileSearch;
+  }, [profileSearch]);
+
+  var isLoadingProfileSearch = useMemo(() => {
+    var result = false;
+    if (isFetchingProfileSearch) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingProfileSearch]);
+
+  var checkId = useMemo(() => {
+    return Helper.isNullOrEmpty(queryParams.id);
+  }, [queryParams.id]);
+
+  var checkValue = useMemo(() => {
+    return Helper.isNullOrEmpty(queryParams.value);
+  }, [queryParams.value]);
+
+  var checkQueryParam = useMemo(() => {
+    return Helper.isEmptyObject(queryParams, true);
+  }, [queryParams]);
+
+  // loading profile details
+  var isLoadingProfileDetail = useMemo(() => {
+    var result = false;
+    if (isFetchingProfileDetail) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingProfileDetail]);
 
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      if (!Helper.isNullOrEmpty(queryParams.value)) {
+      if (!checkValue) {
         searchProfile(
           accessToken,
           refreshToken,
@@ -50,7 +98,7 @@ export default function SearchPage() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      if (!Helper.isNullOrEmpty(queryParams.id)) {
+      if (!checkId) {
         dispatch(
           getProfileSaga({
             accessToken,
@@ -77,10 +125,12 @@ export default function SearchPage() {
           <LeftbarTitle
             title="Search results"
             subTitle={
-              !Helper.isEmptyObject(queryParams, true)
+              isLoadingProfileSearch
+                ? null
+                : !checkQueryParam
                 ? Helper.isMultiple(
                     'Result',
-                    profiles?.page?.totalElement,
+                    profileList?.page?.totalElement,
                     `Can't find ${queryParams.value}`
                   )
                 : `Can't find any profile`
@@ -88,11 +138,19 @@ export default function SearchPage() {
             backTo="/"
           />
         ),
-        leftBarList: !Helper.isEmptyObject(queryParams, true)
-          ? profiles?.data?.map((x) => {
+        after: isLoadingProfileSearch && (
+          <div className="text-center pt-[4rem]">
+            <CircularProgress
+              style={{ color: 'var(--primary-color)' }}
+            />
+          </div>
+        ),
+        leftBarList: isLoadingProfileSearch
+          ? null
+          : !checkQueryParam
+          ? profileList?.data?.map((x) => {
               var profileChecked =
-                !Helper.isNullOrEmpty(queryParams.id) &&
-                x.profile_id === profileData?.profile_id;
+                !checkId && x.profile_id === profileData?.profile_id;
 
               return {
                 left: {
@@ -108,15 +166,17 @@ export default function SearchPage() {
                     `?value=${queryParams.value}&id=${x.profile_id}`
                   );
                 },
-                selected: profileChecked,
-                disabled: profileChecked,
+                selected: !isLoadingProfileDetail && profileChecked,
+                disabled: isLoadingProfileDetail
+                  ? true
+                  : profileChecked,
               };
             })
           : null,
         leftBarColor: 'white',
       }}
     >
-      {!Helper.isNullOrEmpty(queryParams.id) && <UserProfile />}
+      {!checkId && <UserProfile />}
     </TwoColumns>
   );
 }

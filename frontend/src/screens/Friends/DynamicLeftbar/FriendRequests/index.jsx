@@ -1,6 +1,7 @@
-import { useLayoutEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useLayoutEffect, useMemo, useState } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CircularProgress } from '@mui/material';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import { LeftbarFriendRequest } from '../LeftbarMiddleItem';
@@ -20,9 +21,6 @@ export default function FriendRequests() {
   const location = useLocation();
   const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
 
-  const [listConfirm, setListConfirm] = useState([]);
-  const [listDeny, setListDeny] = useState([]);
-
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -33,8 +31,52 @@ export default function FriendRequests() {
     (state) => state.profile?.profileDetails?.data
   );
   const friendRequests = useSelector(
-    (state) => state.friends?.getRequests?.data
+    (state) => state.friends?.getRequests?.data,
+    shallowEqual
   );
+  const isFetchingRequest = useSelector(
+    (state) => state.friends?.getRequests?.isFetching
+  );
+  const isFetchingProfileDetail = useSelector(
+    (state) => state.profile?.profileDetails?.isFetching
+  );
+
+  const [listConfirm, setListConfirm] = useState([]);
+  const [listDeny, setListDeny] = useState([]);
+
+  var requestList = useMemo(() => {
+    return friendRequests;
+  }, [friendRequests]);
+
+  var isLoadingRequest = useMemo(() => {
+    var result = false;
+    if (isFetchingRequest) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingRequest]);
+
+  var checkId = useMemo(() => {
+    return requestList?.data?.some(
+      (e) => e.profile_id.toString() === queryParams.toString()
+    );
+  }, [queryParams]);
+
+  var checkQueryParam = useMemo(() => {
+    return Helper.isNullOrEmpty(queryParams);
+  }, [queryParams]);
+
+  var isLoadingProfileDetail = useMemo(() => {
+    var result = false;
+    if (isFetchingProfileDetail) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingProfileDetail]);
 
   // call get all friend requests once
   useLayoutEffect(() => {
@@ -51,7 +93,7 @@ export default function FriendRequests() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      if (!Helper.isNullOrEmpty(queryParams)) {
+      if (!checkQueryParam) {
         dispatch(
           getProfileSaga({
             accessToken,
@@ -66,7 +108,7 @@ export default function FriendRequests() {
     return () => {
       onDestroy = true;
     };
-  }, [location]);
+  }, [queryParams]);
 
   return (
     <TwoColumns
@@ -77,76 +119,91 @@ export default function FriendRequests() {
         before: (
           <LeftbarTitle
             title="Friend Requests"
-            subTitle={Helper.isMultiple(
-              'Friend Request',
-              friendRequests?.page?.totalElement,
-              'You Have No Friend Requests'
-            )}
+            subTitle={
+              isLoadingRequest
+                ? null
+                : Helper.isMultiple(
+                    'Friend Request',
+                    requestList?.page?.totalElement,
+                    'You Have No Friend Requests'
+                  )
+            }
           />
         ),
-        leftBarList: friendRequests?.data?.map((x) => {
-          var profileChecked =
-            !Helper.isNullOrEmpty(queryParams) &&
-            x.profile_id === profileData?.profile_id;
+        after: isLoadingRequest && (
+          <div className="text-center pt-[4rem]">
+            <CircularProgress
+              style={{ color: 'var(--primary-color)' }}
+            />
+          </div>
+        ),
+        leftBarList: isLoadingRequest
+          ? null
+          : requestList?.data?.map((x) => {
+              var profileChecked =
+                !checkQueryParam &&
+                x.profile_id === profileData?.profile_id;
 
-          return {
-            left: {
-              url: x.avatar,
-              name: x.profile_name,
-            },
-            middle: (
-              <LeftbarFriendRequest
-                profile={x}
-                listAction={[listConfirm, listDeny]}
-                firstButtonConfig={{
-                  onClick: (e) => {
-                    e.stopPropagation();
-                    acceptFriendRequest({
-                      accessToken,
-                      refreshToken,
-                      id: x.profile_id,
-                      callRefreshProfile: profileChecked,
-                      dispatch,
-                    });
+              return {
+                left: {
+                  url: x.avatar,
+                  name: x.profile_name,
+                },
+                middle: (
+                  <LeftbarFriendRequest
+                    profile={x}
+                    listAction={[listConfirm, listDeny]}
+                    firstButtonConfig={{
+                      onClick: (e) => {
+                        e.stopPropagation();
+                        acceptFriendRequest({
+                          accessToken,
+                          refreshToken,
+                          id: x.profile_id,
+                          callRefreshProfile: profileChecked,
+                          dispatch,
+                        });
 
-                    setListConfirm((old) => [...old, x.profile_id]);
-                  },
-                }}
-                secondButtonConfig={{
-                  onClick: (e) => {
-                    e.stopPropagation();
-                    denyFriendRequest({
-                      accessToken,
-                      refreshToken,
-                      id: x.profile_id,
-                      callRefreshProfile: profileChecked,
-                      dispatch,
-                    });
+                        setListConfirm((old) => [
+                          ...old,
+                          x.profile_id,
+                        ]);
+                      },
+                    }}
+                    secondButtonConfig={{
+                      onClick: (e) => {
+                        e.stopPropagation();
+                        denyFriendRequest({
+                          accessToken,
+                          refreshToken,
+                          id: x.profile_id,
+                          callRefreshProfile: profileChecked,
+                          dispatch,
+                        });
 
-                    setListDeny((old) => [...old, x.profile_id]);
-                  },
-                }}
-              />
-            ),
-            onClick: () => {
-              navigate(`?id=${x.profile_id}`);
-            },
-            selected: profileChecked,
-            disabled: profileChecked,
-          };
-        }),
+                        setListDeny((old) => [...old, x.profile_id]);
+                      },
+                    }}
+                  />
+                ),
+                onClick: () => {
+                  navigate(`?id=${x.profile_id}`);
+                },
+                selected: !isLoadingProfileDetail && profileChecked,
+                disabled: isLoadingProfileDetail
+                  ? true
+                  : profileChecked,
+              };
+            }),
         leftBarColor: 'white',
       }}
     >
-      {!Helper.isNullOrEmpty(queryParams) &&
-        friendRequests?.data.some(
-          (e) => e.profile_id.toString() === queryParams.toString()
-        ) && (
-          <UserProfile
-            action={[setListConfirm, setListDeny]}
-            actionList={[listConfirm, listDeny]}
-          />
-        )}
+      {!checkQueryParam && checkId && (
+        <UserProfile
+          action={[setListConfirm, setListDeny]}
+          actionList={[listConfirm, listDeny]}
+        />
+      )}
     </TwoColumns>
   );
 }

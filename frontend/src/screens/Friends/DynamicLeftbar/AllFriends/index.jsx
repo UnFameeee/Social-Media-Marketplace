@@ -1,7 +1,7 @@
-import { useLayoutEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useLayoutEffect, useState, useMemo } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ClickAwayListener } from '@mui/material';
+import { CircularProgress, ClickAwayListener } from '@mui/material';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import UserProfile from '../../../UserProfile/UserProfile';
@@ -21,18 +21,11 @@ export default function AllFriends() {
   const location = useLocation();
   const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
 
-  const [openOptions, setOpenOptions] = useState('');
-  const [listRemoved, setListRemoved] = useState([]);
-  const [listAdded, setListAdded] = useState([]);
-
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
   const refreshToken = useSelector(
     (state) => state.auth?.login?.currentUser?.refresh
-  );
-  const allFriends = useSelector(
-    (state) => state.friends?.getAllForMainUser?.data
   );
   const userData = useSelector(
     (state) => state.auth?.user?.userData?.profile
@@ -40,7 +33,56 @@ export default function AllFriends() {
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
+  const allFriends = useSelector(
+    (state) => state.friends?.getAllForMainUser?.data,
+    shallowEqual
+  );
+  const isFetchingAllFriend = useSelector(
+    (state) => state.friends?.getAllForMainUser?.isFetching
+  );
+  const isFetchingProfileDetail = useSelector(
+    (state) => state.profile?.profileDetails?.isFetching
+  );
+
   var mainId = userData?.profile_id;
+
+  const [openOptions, setOpenOptions] = useState('');
+  const [listRemoved, setListRemoved] = useState([]);
+  const [listAdded, setListAdded] = useState([]);
+
+  var allFriendList = useMemo(() => {
+    return allFriends;
+  }, [allFriends]);
+
+  var isLoadingAllFriend = useMemo(() => {
+    var result = false;
+    if (isFetchingAllFriend) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingAllFriend]);
+
+  var checkId = useMemo(() => {
+    return allFriendList?.data?.some(
+      (e) => e.profile_id.toString() === queryParams.toString()
+    );
+  }, [queryParams]);
+
+  var checkQueryParam = useMemo(() => {
+    return Helper.isNullOrEmpty(queryParams);
+  }, [queryParams]);
+
+  var isLoadingProfileDetail = useMemo(() => {
+    var result = false;
+    if (isFetchingProfileDetail) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingProfileDetail]);
 
   // call get all friend once
   useLayoutEffect(() => {
@@ -62,7 +104,7 @@ export default function AllFriends() {
   useLayoutEffect(() => {
     let onDestroy = false;
     if (!onDestroy) {
-      if (!Helper.isNullOrEmpty(queryParams)) {
+      if (!checkQueryParam) {
         var id = queryParams;
         dispatch(
           getProfileSaga({
@@ -89,97 +131,115 @@ export default function AllFriends() {
         before: (
           <LeftbarTitle
             title="All Friends"
-            subTitle={Helper.isMultiple(
-              'Friend',
-              allFriends?.page?.totalElement,
-              'You need to get some friends!'
-            )}
+            subTitle={
+              isLoadingAllFriend
+                ? null
+                : Helper.isMultiple(
+                    'Friend',
+                    allFriendList?.page?.totalElement,
+                    'You need to get some friends!'
+                  )
+            }
           />
         ),
-        leftBarList: allFriends?.data?.map((x) => {
-          var profileChecked =
-            !Helper.isNullOrEmpty(queryParams) &&
-            x.profile_id === profileData?.profile_id;
+        after: isLoadingAllFriend && (
+          <div className="text-center pt-[4rem]">
+            <CircularProgress
+              style={{ color: 'var(--primary-color)' }}
+            />
+          </div>
+        ),
+        leftBarList: isLoadingAllFriend
+          ? null
+          : allFriendList?.data?.map((x) => {
+              var profileChecked =
+                !checkQueryParam &&
+                x.profile_id === profileData?.profile_id;
 
-          return {
-            left: {
-              url: x.avatar,
-              name: x.profile_name,
-            },
-            middle: (
-              <ClickAwayListener
-                onClickAway={(e) => {
-                  e.stopPropagation();
-                  if (openOptions) {
-                    setOpenOptions('');
-                  }
-                }}
-              >
-                <div>
-                  <LeftbarAllFriend
-                    profile={x}
-                    openOptions={[openOptions, setOpenOptions]}
-                    listUnfriend={listRemoved}
-                    listAdded={listAdded}
-                    handleUnfriend={() => {
-                      unfriendRequest({
-                        accessToken,
-                        refreshToken,
-                        id: x.profile_id,
-                        callRefreshProfile: profileChecked,
-                        dispatch,
-                      });
-
-                      setListRemoved((old) => [...old, x.profile_id]);
+              return {
+                left: {
+                  url: x.avatar,
+                  name: x.profile_name,
+                },
+                middle: (
+                  <ClickAwayListener
+                    onClickAway={(e) => {
+                      e.stopPropagation();
+                      if (openOptions) {
+                        setOpenOptions('');
+                      }
                     }}
-                    handleAddFriend={() => {
-                      addFriendRequest({
-                        accessToken,
-                        refreshToken,
-                        id: x.profile_id,
-                        callRefreshProfile: profileChecked,
-                        dispatch,
-                      });
+                  >
+                    <div>
+                      <LeftbarAllFriend
+                        profile={x}
+                        openOptions={[openOptions, setOpenOptions]}
+                        listUnfriend={listRemoved}
+                        listAdded={listAdded}
+                        handleUnfriend={() => {
+                          unfriendRequest({
+                            accessToken,
+                            refreshToken,
+                            id: x.profile_id,
+                            callRefreshProfile: profileChecked,
+                            dispatch,
+                          });
 
-                      setListAdded((old) => [...old, x.profile_id]);
-                    }}
-                    handleCancelRequest={() => {
-                      addFriendRequest({
-                        accessToken,
-                        refreshToken,
-                        id: x.profile_id,
-                        callRefreshProfile: profileChecked,
-                        dispatch,
-                      });
+                          setListRemoved((old) => [
+                            ...old,
+                            x.profile_id,
+                          ]);
+                        }}
+                        handleAddFriend={() => {
+                          addFriendRequest({
+                            accessToken,
+                            refreshToken,
+                            id: x.profile_id,
+                            callRefreshProfile: profileChecked,
+                            dispatch,
+                          });
 
-                      var filter = listAdded.filter(
-                        (e) => e !== x.profile_id
-                      );
-                      setListAdded(filter);
-                    }}
-                  />
-                </div>
-              </ClickAwayListener>
-            ),
-            onClick: () => {
-              navigate(`?id=${x.profile_id}`);
-            },
-            selected: profileChecked,
-            disabled: profileChecked,
-          };
-        }),
+                          setListAdded((old) => [
+                            ...old,
+                            x.profile_id,
+                          ]);
+                        }}
+                        handleCancelRequest={() => {
+                          addFriendRequest({
+                            accessToken,
+                            refreshToken,
+                            id: x.profile_id,
+                            callRefreshProfile: profileChecked,
+                            dispatch,
+                          });
+
+                          var filter = listAdded.filter(
+                            (e) => e !== x.profile_id
+                          );
+                          setListAdded(filter);
+                        }}
+                      />
+                    </div>
+                  </ClickAwayListener>
+                ),
+                onClick: () => {
+                  navigate(`?id=${x.profile_id}`);
+                },
+                selected: !isLoadingProfileDetail && profileChecked,
+                disabled: isLoadingProfileDetail
+                  ? true
+                  : profileChecked,
+              };
+            }),
         leftBarColor: 'white',
       }}
     >
-      {!Helper.isNullOrEmpty(queryParams) &&
-        allFriends?.data.some(
-          (e) => e.profile_id.toString() === queryParams.toString()
-        ) && (
-          <UserProfile
-            action={[setListRemoved, setListAdded]}
-            actionList={[listRemoved, listAdded]}
-          />
-        )}
+      {!checkQueryParam && checkId && (
+        <UserProfile
+          action={[setListRemoved, setListAdded]}
+          actionList={[listRemoved, listAdded]}
+        />
+      )}
     </TwoColumns>
   );
 }

@@ -59,25 +59,30 @@ export default function LeftBar(props) {
     >
       {before}
 
-      <List
-        className={cx(
-          classes.scroll,
-          `left-bar-list ${listClassname}`
-        )}
-      >
-        {Helper.isArrayList(leftBarList)
-          ? leftBarList.map((list, index) => {
-              return (
-                <ul key={index}>
-                  <LeftBarList leftBarList={list} multiList={index} />
-                  {index !== leftBarList.length - 1 && <MiddleHr />}
-                </ul>
-              );
-            })
-          : Array.isArray(leftBarList) && (
-              <LeftBarList leftBarList={leftBarList} />
-            )}
-      </List>
+      {leftBarList?.length > 0 && (
+        <List
+          className={cx(
+            classes.scroll,
+            `left-bar-list ${listClassname}`
+          )}
+        >
+          {Helper.isArrayList(leftBarList)
+            ? leftBarList.map((list, index) => {
+                return (
+                  <ul key={index}>
+                    <LeftBarList
+                      leftBarList={list}
+                      multiList={index}
+                    />
+                    {index !== leftBarList.length - 1 && <MiddleHr />}
+                  </ul>
+                );
+              })
+            : Array.isArray(leftBarList) && (
+                <LeftBarList leftBarList={leftBarList} />
+              )}
+        </List>
+      )}
 
       {after}
     </Box>
