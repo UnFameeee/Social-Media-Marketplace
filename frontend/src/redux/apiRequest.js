@@ -55,7 +55,11 @@ import {
   getListCartWithoutPaging,
   getProduct,
   getSellingProduct,
+  getSellingProductFailed,
+  getSellingProductStart,
   getShoppingProduct,
+  getShoppingProductFailed,
+  getShoppingProductStart,
 } from "./product/productSlice";
 
 const notify = (message, type) => {
@@ -467,6 +471,7 @@ export const getAllSellingProduct = async (
   dispatch
 ) => {
   try {
+    dispatch(getSellingProductStart())
     const res = await axiosInStanceJWT.post(
       `${api.product}/selling/all`,
       paging,
@@ -481,8 +486,10 @@ export const getAllSellingProduct = async (
     if (!res.data.message) {
       dispatch(getSellingProduct(res.data.results));
     } else {
+      dispatch(getSellingProductFailed())
     }
   } catch (error) {
+    dispatch(getSellingProductFailed())
     console.log(error);
   }
 };
@@ -493,6 +500,7 @@ export const getAllShoppingProduct = async (
   dispatch,
 ) => {
   try {
+    dispatch(getShoppingProductStart())
     const res = await axiosInStanceJWT.post(
       `${api.product}/shopping/all`,
       paging,
@@ -507,9 +515,12 @@ export const getAllShoppingProduct = async (
     if (!res.data.message) {
       dispatch(getShoppingProduct(res.data.results));
     } else {
+      dispatch(getShoppingProductFailed())
     }
   } catch (error) {
     console.log(error);
+    dispatch(getShoppingProductFailed())
+
   }
 };
 export const getAllShoppingCartList = async (

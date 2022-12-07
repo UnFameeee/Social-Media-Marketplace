@@ -1,6 +1,6 @@
 import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
-import { Tooltip, Pagination, Typography, Fab } from "@mui/material";
+import { Tooltip, Pagination, Typography, Fab, Skeleton } from "@mui/material";
 import { useSelector, shallowEqual, useDispatch } from "react-redux";
 import HeadSlider from "./HeadSlider";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
@@ -113,6 +113,9 @@ function Shopping() {
     (state) => state.product?.getShopping?.data,
     shallowEqual
   );
+  const isLoadingGetProduct = useSelector(
+    (state) => state.product.getShoppingFetching.isFetching
+  );
   const shoppingProductPaging = useSelector(
     (state) => state.product?.getShopping?.page
   );
@@ -144,7 +147,7 @@ function Shopping() {
   const handleChange = (event, value) => {
     let shoppingPage = value - 1;
     let paging = { page: shoppingPage, pageSize };
-    dispatch(changeShoppingProductPage({ accessToken, refreshToken, paging }));
+    dispatch(changeShoppingProductPage({ accessToken, refreshToken, paging,dispatch }));
   };
   //#endregion
   useEffect(() => {
@@ -192,32 +195,58 @@ function Shopping() {
             {productList?.length > 0 ? (
               <>
                 <div className="product-container my-[1rem]">
-                  {productList &&
-                    productList.map((product) => (
-                      <ProductCard
-                        key={product.product_id}
-                        productObj={product}
-                        arrayBtn={[
-                          {
-                            pos: 0,
-                            text: "view details",
-                            handle: handleViewDetail,
-                          },
-                          {
-                            pos: 1,
-                            text: "add to cart",
-                            handle: handleAddToCart,
-                          },
-                        ]}
-                      />
-                    ))}
+                  {isLoadingGetProduct
+                    ? [...Array(5)].map((index) => (
+                        <div key={index} className="loadingProductSkeleton">
+                          <Skeleton
+                            variant="rounded"
+                            sx={{ width: "100%", height: "30rem" }}
+                          />
+
+                          <div className=" flex items-center gap-[0.5rem] pr-[1rem]">
+                            <div>
+                              <Skeleton
+                                variant="circular"
+                                width={40}
+                                height={40}
+                              />
+                            </div>
+                            <div className=" w-full">
+                              <Skeleton
+                                variant="text"
+                                sx={{ fontSize: "3rem" }}
+                              />
+                            </div>
+                          </div>
+                          <Skeleton variant="text" sx={{ fontSize: "3rem" }} />
+                        </div>
+                      ))
+                    : productList &&
+                      productList.map((product) => (
+                        <ProductCard
+                          key={product.product_id}
+                          productObj={product}
+                          arrayBtn={[
+                            {
+                              pos: 0,
+                              text: "view details",
+                              handle: handleViewDetail,
+                            },
+                            {
+                              pos: 1,
+                              text: "add to cart",
+                              handle: handleAddToCart,
+                            },
+                          ]}
+                        />
+                      ))}
                 </div>
                 <div className="Pagination float-right">
                   <Typography>Page: {page + 1}</Typography>
                   <Pagination
                     page={page + 1}
                     onChange={handleChange}
-                    count={Math.round(totalElement / pageSize)}
+                    count={Math.round(totalElement / pageSize) +1}
                     defaultPage={1}
                     siblingCount={0}
                     variant="outlined"

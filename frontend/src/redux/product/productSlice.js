@@ -9,6 +9,9 @@ const initialState = {
       totalElement: 30,
     },
   },
+  getSellingFetching:{
+    isFetching:false,
+  },
   createSelling: {
     isFetching: false,
     isError: false,
@@ -22,6 +25,9 @@ const initialState = {
       totalElement: 30,
     },
   },
+  getShoppingFetching:{
+    isFetching:false,
+  },
   getProductDetail: {
     data: null,
   },
@@ -33,11 +39,17 @@ const initialState = {
     product: null,
   },
   getOrderPurchased: null,
+  getOrderPurchasedFetching:{
+    isFetching:false,
+  },
   createOrder: {
     isFetching: false,
     isError: false,
   },
   getOrderSold: null,
+  getOrderSoldFetching:{
+    isFetching:false,
+  },
 };
 export const productSlice = createSlice({
   name: "product",
@@ -49,6 +61,9 @@ export const productSlice = createSlice({
         pageSize: 30,
         totalElement: 30,
       },
+    },
+    getSellingFetching:{
+      isFetching:false,
     },
     createSelling: {
       isFetching: false,
@@ -63,6 +78,9 @@ export const productSlice = createSlice({
         totalElement: 30,
       },
     },
+    getShoppingFetching:{
+      isFetching:false,
+    },
     getProductDetail: {
       data: null,
     },
@@ -74,16 +92,29 @@ export const productSlice = createSlice({
       product: null,
     },
     getOrderPurchased: null,
+    getOrderPurchasedFetching:{
+      isFetching:false,
+    },
     createOrder: {
       isFetching: false,
     },
     getOrderSold: null,
+    getOrderSoldFetching:{
+      isFetching:false,
+    },
   },
   extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
     getSellingProductSaga() {},
     getSellingProduct: (state, action) => {
       state.getSelling = action.payload;
+      state.getSellingFetching.isFetching = false;
+    },
+    getSellingProductStart: (state) => {
+      state.getSellingFetching.isFetching = true;
+    },
+    getSellingProductFailed: (state) => {
+      state.getSellingFetching.isFetching = false;
     },
     createSellingProductSagaSuccess() {},
 
@@ -94,11 +125,17 @@ export const productSlice = createSlice({
     changeSellingProductPage: (state, action) => {
       state.getSelling.page.page = action.payload.paging.page;
     },
-
+    getShoppingProductStart:(state)=>{
+      state.getShoppingFetching.isFetching = true;
+    },
     getShoppingProductSaga() {},
     getShoppingProductSagaSuccess() {},
     getShoppingProduct: (state, action) => {
       state.getShopping = action.payload;
+      state.getShoppingFetching.isFetching = false;
+    },
+    getShoppingProductFailed:(state)=>{
+      state.getShoppingFetching.isFetching = false;
     },
     changeShoppingProductPage: (state, action) => {
       state.getShopping.page.page = action.payload.paging.page;
@@ -133,9 +170,15 @@ export const productSlice = createSlice({
     resetUpdateProduct: (state) => {
       state.update.product = null;
     },
-
+    getOrderPurchasedStart:(state)=>{
+      state.getOrderPurchasedFetching.isFetching = true;
+    },
     getOrderPurchased: (state, action) => {
       state.getOrderPurchased = action.payload;
+      state.getOrderPurchasedFetching.isFetching = false;
+    },
+    getOrderPurchasedFailed:(state)=>{
+      state.getOrderPurchasedFetching.isFetching = false;
     },
     receiveOrderPurchasedSuccess() {},
 
@@ -148,9 +191,15 @@ export const productSlice = createSlice({
     createOrderFail: (state) => {
       state.createOrder.isFetching = false;
     },
-
+    getOrderSoldStart:(state)=>{
+      state.getOrderSoldFetching.isFetching = true;
+    },
     getOrderSold: (state, action) => {
       state.getOrderSold = action.payload;
+      state.getOrderSoldFetching.isFetching = false;
+    },
+    getOrderSoldFailed:(state)=>{
+      state.getOrderSoldFetching.isFetching = false;
     },
     deleteOrderSoldSuccess() {},
     shippingOrderSoldSuccess() {},
@@ -161,12 +210,16 @@ export const {
   getProductDetail,
 
   getOrderSold,
+  getOrderSoldStart,
+  getOrderSoldFailed,
   deleteOrderSoldSuccess,
   shippingOrderSoldSuccess,
   paidOrderSoldSuccess,
 
   getOrderPurchased,
   receiveOrderPurchasedSuccess,
+  getOrderPurchasedStart,
+  getOrderPurchasedFailed,
 
   createOrderStart,
   createOrderSuccess,
@@ -183,9 +236,13 @@ export const {
   getShoppingProduct,
   getShoppingProductSagaSuccess,
   changeShoppingProductPage,
+  getShoppingProductStart,
+  getShoppingProductFailed,
 
   getSellingProductSaga,
   getSellingProduct,
+  getSellingProductStart,
+  getSellingProductFailed,
   createSellingProductSagaSuccess,
   deleteSellingProductSagaSuccess,
   updateSellingProductSagaSuccess,
