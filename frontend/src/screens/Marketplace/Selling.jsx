@@ -1,6 +1,6 @@
 import React from "react";
 import ThreeColumns from "../../components/Layout/ThreeColumns";
-import { Tooltip, Pagination, Typography, Fab } from "@mui/material";
+import { Tooltip, Pagination, Typography, Fab, Skeleton } from "@mui/material";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import HeadSlider from "./HeadSlider";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
@@ -125,6 +125,9 @@ function Selling() {
   const sellingProductPaging = useSelector(
     (state) => state.product?.getSelling?.page
   );
+  const isLoadingGetSellingProduct = useSelector(
+    (state) => state.product.getSellingFetching.isFetching
+  );
   const { totalElement, pageSize, page } = sellingProductPaging;
   // #endregion
   //#region declare function
@@ -195,7 +198,7 @@ function Selling() {
   const handleChange = (event, value) => {
     let sellingPage = value - 1;
     let paging = { page: sellingPage, pageSize };
-    dispatch(changeSellingProductPage({ accessToken, refreshToken, paging }));
+    dispatch(changeSellingProductPage({ accessToken, refreshToken, paging,dispatch }));
   };
   useEffect(() => {
     let paging;
@@ -248,30 +251,57 @@ function Selling() {
             {productList?.length > 0 ? (
               <>
                 <div className="product-container my-[1rem]">
+                  {}
                   <MUI.ConfirmDialog
                     modalProps={[openConfirmRemove, setOpenConfirmRemove]}
                     title="Remove Selling Product"
                     actionName="remove this product"
                     confirmAction={handleConfirmDeleteProduct}
                   />
-                  {productList &&
-                    productList?.map((product) => (
-                      <ProductCard
-                        key={product.product_id}
-                        productObj={product}
-                        arrayBtn={[
-                          { pos: 0, text: "update", handle: handleUpdate },
-                          { pos: 1, text: "delete", handle: handleDelete },
-                        ]}
-                      />
-                    ))}
+                  {isLoadingGetSellingProduct
+                    ? [...Array(5)].map((index) => (
+                        <div key={index} className="loadingProductSkeleton">
+                          <Skeleton
+                            variant="rounded"
+                            sx={{ width: "100%", height: "30rem" }}
+                          />
+
+                          <div className=" flex items-center gap-[0.5rem] pr-[1rem]">
+                            <div>
+                              <Skeleton
+                                variant="circular"
+                                width={40}
+                                height={40}
+                              />
+                            </div>
+                            <div className=" w-full">
+                              <Skeleton
+                                variant="text"
+                                sx={{ fontSize: "3rem" }}
+                              />
+                            </div>
+                          </div>
+                          <Skeleton variant="text" sx={{ fontSize: "3rem" }} />
+                        </div>
+                      ))
+                    : productList &&
+                      productList?.map((product) => (
+                        <ProductCard
+                          key={product.product_id}
+                          productObj={product}
+                          arrayBtn={[
+                            { pos: 0, text: "update", handle: handleUpdate },
+                            { pos: 1, text: "delete", handle: handleDelete },
+                          ]}
+                        />
+                      ))}
                 </div>
                 <div className="Pagination float-right">
                   <Typography>Page: {page + 1}</Typography>
                   <Pagination
                     page={page + 1}
                     onChange={handleChange}
-                    count={Math.round(totalElement / pageSize)}
+                    count={Math.round(totalElement / pageSize) + 1}
                     defaultPage={1}
                     siblingCount={0}
                     variant="outlined"

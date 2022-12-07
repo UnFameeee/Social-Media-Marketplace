@@ -5,6 +5,7 @@ import { revertAll } from "../resetStore";
 const initialState = {
   get: {
     data: [],
+    isFetching:false,
   },
   create:{
     isFetching:false,
@@ -17,6 +18,7 @@ export const commentSlice = createSlice({
   initialState: {
     get: {
       data: [],
+      isFetching:false,
     },
     create:{
       isFetching:false,
@@ -45,7 +47,8 @@ export const commentSlice = createSlice({
     likeCommentPostSaga() {},
     likeCommentPostSagaSuccess() {},
 
-    getCommentPostSaga() {
+    getCommentPostSaga:(state)=> {
+      state.get.isFetching =true;
     },
     getCommentPostSagaSuccess(state) {
       state.create.isFetching = false;
@@ -90,7 +93,11 @@ export const commentSlice = createSlice({
           }
         }
       }
+      state.get.isFetching =false;
     },
+    getCommentPostFail:(state)=>{
+      state.create.isFetching = false;
+    }
   },
 });
 export const {
@@ -105,6 +112,7 @@ export const {
   getCommentPostSaga,
   getCommentPostSagaSuccess,
   getCommentPostSuccess,
+  getCommentPostFail,
 } = commentSlice.actions;
 
 export default commentSlice.reducer;

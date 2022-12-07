@@ -5,7 +5,7 @@ function showSuccess(title = "Success") {
   toast.success(title);
 }
 
-function showError(title = "Error", autoClose = 5000) {
+function showError(title = "Error", autoClose = 8000) {
   toast.error(title, autoClose);
 }
 

@@ -1,15 +1,15 @@
-import React from 'react';
-import CardPost from '../../components/Card/CardPost';
-import { Avatar } from '@mui/material';
-import PostStatus from '../../components/PostStatus/PostStatus';
-import PostModal from './PostModal';
-import { useState } from 'react';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { getAllPost } from '../../redux/apiRequest';
-import { useEffect } from 'react';
-import ThreeColumns from '../../components/Layout/ThreeColumns';
-import { homeLeftbar } from '../../common/layoutConfigs/homeLeftbar';
-import styled from 'styled-components';
+import React from "react";
+import CardPost from "../../components/Card/CardPost";
+import { Avatar, Skeleton, Stack, Box } from "@mui/material";
+import PostStatus from "../../components/PostStatus/PostStatus";
+import PostModal from "./PostModal";
+import { useState } from "react";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
+import { getAllPost } from "../../redux/apiRequest";
+import { useEffect } from "react";
+import ThreeColumns from "../../components/Layout/ThreeColumns";
+import { homeLeftbar } from "../../common/layoutConfigs/homeLeftbar";
+import styled from "styled-components";
 
 const ResponSiveDiv = styled.div`
   @media screen and (max-width: 1620px) {
@@ -99,11 +99,11 @@ function Home() {
   const refreshToken = useSelector(
     (state) => state.auth.login.currentUser.refresh
   );
+  const getPostIsLoading = useSelector((state) => state.post.get.isFetching);
   const userData = useSelector((state) => state.auth.user.userData);
   const profileData = useSelector(
     (state) => state.profile?.profileDetails?.data
   );
-  const [reRender, setReRender] = useState(false);
   //#endregion
 
   //#region Function
@@ -133,14 +133,13 @@ function Home() {
                 left: (
                   <Avatar
                     style={{
-                      width: '3.6rem',
-                      height: '3.6rem',
-                      fontSize: '2rem',
+                      width: "3.6rem",
+                      height: "3.6rem",
+                      fontSize: "2rem",
                     }}
                     alt={userData.profile.profile_name}
                     src={
-                      userData.profile?.profile_id ==
-                      profileData?.profile_id
+                      userData.profile?.profile_id == profileData?.profile_id
                         ? profileData?.avatar
                         : userData.profile?.avatar
                     }
@@ -161,14 +160,30 @@ function Home() {
                 : userData.profile
             }
           />
-          {posts &&
-            posts.map((post) => (
-              <CardPost
-                postData={post}
-                key={post.post_id}
-                profile={userData.profile}
-              />
-            ))}
+          {getPostIsLoading
+            ? [...Array(2)].map((index) => (
+                <div key={index} className="flex flex-col gap-[1rem]">
+                  <div className=" flex items-center gap-[1rem] pr-[1rem]">
+                    <div>
+                      <Skeleton variant="circular" width={40} height={40} />
+                    </div>
+                    <div className=" w-full">
+                      <Skeleton variant="text" sx={{ fontSize: "3rem" }} />
+                    </div>
+                  </div>
+                  <Skeleton
+                    variant="rounded"
+                    sx={{ width: "70rem", height: "40rem" }}
+                  />
+                </div>
+              ))
+            : posts?.map((post) => (
+                <CardPost
+                  postData={post}
+                  key={post.post_id}
+                  profile={userData.profile}
+                />
+              ))}
         </ThreeColumns>
       </ResponSiveDiv>
     </>

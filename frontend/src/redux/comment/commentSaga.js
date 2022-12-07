@@ -3,6 +3,7 @@ import {
   commentPostSagaSuccess,
   deleteCommentPostSaga,
   deleteCommentPostSagaSuccess,
+  getCommentPostFail,
   getCommentPostSaga,
   getCommentPostSagaSuccess,
   getCommentPostSuccess,
@@ -60,16 +61,19 @@ const getCommentPostSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
+
       dispatch(getCommentPostSagaSuccess({ accessToken, refreshToken }));
       // if(paging) return { ...res, post_id,paging };
       // else return { ...res, post_id };
       return { ...res, post_id };
     } else {
+      dispatch(getCommentPostFail())
       notifyService.showError("Get comment Post Failed");
     }
   } catch (error) {
     console.log(error);
     notifyService.showError("Get comment Post Failed");
+    dispatch(getCommentPostFail())
   }
 };
 
