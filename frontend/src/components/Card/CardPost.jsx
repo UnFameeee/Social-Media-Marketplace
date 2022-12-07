@@ -7,7 +7,13 @@ import {
   ArrowDropDown,
   MoreHoriz,
 } from "@mui/icons-material";
-import { Avatar, Button, ClickAwayListener, Skeleton } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  ClickAwayListener,
+  Skeleton,
+  CircularProgress,
+} from "@mui/material";
 import MUI from "../MUI";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
@@ -58,6 +64,8 @@ function CardPost(props) {
   const isLoadingGetComment = useSelector(
     (state) => state.comment?.get.isFetching
   );
+  const likePostList = useSelector((state) => state.post.like.postLike);
+
   const [commentPaging, setCommentPaging] = useState({
     page: 0,
     pageSize: 10,
@@ -70,6 +78,55 @@ function CardPost(props) {
     slidesToScroll: 1,
     cssEase: "linear",
   };
+  const [disableLikeButton, setDisableLikeButton] = useState("false");
+  let isLoadingLikePost = useMemo(() => {
+    let result = false;
+    likePostList?.map((item) => {
+      if (item.post_id == post_id) {
+        result = item.isFetching;
+        setDisableLikeButton("false");
+      }
+    });
+    return result;
+  }, [likePostList]);
+  let isLoading = useMemo(() => {
+    var result = false;
+    if (isLoadingCreateComment?.isFetching) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isLoadingCreateComment]);
+  let rootComments = useMemo(() => {
+    var result = [];
+    if (comments) {
+      comments.map((comment) => {
+        if (comment.post_id === post_id) {
+          result = comment.list_comment;
+        }
+      });
+    }
+    return result;
+  }, [comments]);
+  let totalComment = useMemo(() => {
+    var result;
+    if (comments) {
+      comments.map((comment) => {
+        if (comment.post_id === post_id) {
+          result = {
+            totalCurrentShowComment: comment?.page.totalCurrentShowComment
+              ? comment?.page.totalCurrentShowComment
+              : null,
+            totalElement: comment?.page?.totalElement
+              ? comment?.page?.totalElement
+              : null,
+          };
+        }
+      });
+    }
+    return result;
+  }, [comments]);
   //#endregion
 
   //#region Function
@@ -156,45 +213,7 @@ function CardPost(props) {
       })
     );
   };
-  let isLoading = useMemo(() => {
-    var result = false;
-    if (isLoadingCreateComment?.isFetching) {
-      result = true;
-    } else {
-      result = false;
-    }
-    return result;
-  }, [isLoadingCreateComment]);
 
-  let rootComments = useMemo(() => {
-    var result = [];
-    if (comments) {
-      comments.map((comment) => {
-        if (comment.post_id === post_id) {
-          result = comment.list_comment;
-        }
-      });
-    }
-    return result;
-  }, [comments]);
-  let totalComment = useMemo(() => {
-    var result;
-    if (comments) {
-      comments.map((comment) => {
-        if (comment.post_id === post_id) {
-          result = {
-            totalCurrentShowComment: comment?.page.totalCurrentShowComment
-              ? comment?.page.totalCurrentShowComment
-              : null,
-            totalElement: comment?.page?.totalElement
-              ? comment?.page?.totalElement
-              : null,
-          };
-        }
-      });
-    }
-    return result;
-  }, [comments]);
   //#endregion
   return (
     <>
@@ -318,7 +337,11 @@ function CardPost(props) {
           <hr className="mb-[1rem]" />
           <div className="reactButton px-[1rem] flex mb-[1rem] items-center">
             <MUI.ButtonWithIcon
-              onClick={handleLikePost}
+              onClick={() => {
+                handleLikePost();
+                setDisableLikeButton("true");
+              }}
+              disable={disableLikeButton}
               className="button-with-icon flex gap-[1rem] w-full items-center"
             >
               {isLiked ? (
@@ -337,6 +360,12 @@ function CardPost(props) {
                   }}
                 />
               )}
+              {isLoadingLikePost && (
+                <CircularProgress
+                  sx={{ color: "var(--primary-color)", position: "absolute" }}
+                />
+              )}
+
               <span className=" leading-[1.3rem]">Like</span>
             </MUI.ButtonWithIcon>
             <MUI.ButtonWithIcon

@@ -384,8 +384,7 @@ export function* likeOnePost() {
 }
 function* handleLikePost(data) {
   try {
-    const likePost = yield call(likePostSagaRequest, data);
-    yield put(likePostSuccess(likePost.data));
+     yield call(likePostSagaRequest, data);
   } catch (error) {
     console.log(error);
   }
@@ -400,7 +399,7 @@ const likePostSagaRequest = async (data) => {
     id,
     dispatch,
   } = data.payload;
-  dispatch(likePostStart());
+  dispatch(likePostStart(postId));
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -415,7 +414,7 @@ const likePostSagaRequest = async (data) => {
       }
     );
     if (!res.data.message) {
-      // dispatch(likePostSuccess());
+      dispatch(likePostSuccess(postId));
       dispatch(
         likePostSagaSuccess({
           accessToken,
@@ -429,12 +428,12 @@ const likePostSagaRequest = async (data) => {
       );
       return res;
     } else {
-      dispatch(likePostFailed());
+      dispatch(likePostFailed(postId));
       // notify(res.data.message, "error");
     }
   } catch (error) {
     console.log(error);
-    dispatch(likePostFailed());
+    dispatch(likePostFailed(postId));
   }
 };
 //#endregion

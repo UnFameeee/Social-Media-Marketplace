@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { revertAll } from '../resetStore';
+import { createSlice } from "@reduxjs/toolkit";
+import { revertAll } from "../resetStore";
 const initialState = {
   get: {
     posts: null,
@@ -32,13 +32,11 @@ const initialState = {
     error: false,
   },
   like: {
-    success: false,
-    isFetching: false,
-    error: false,
+    postLike: [],
   },
 };
 export const postSlice = createSlice({
-  name: 'post',
+  name: "post",
   initialState: {
     get: {
       posts: null,
@@ -71,13 +69,10 @@ export const postSlice = createSlice({
       error: false,
     },
     like: {
-      success: false,
-      isFetching: false,
-      error: false,
+      postLike: [],
     },
   },
-  extraReducers: (builder) =>
-    builder.addCase(revertAll, () => initialState),
+  extraReducers: (builder) => builder.addCase(revertAll, () => initialState),
   reducers: {
     createPostStart: (state) => {
       state.create.isFetching = true;
@@ -159,17 +154,36 @@ export const postSlice = createSlice({
     updatePostSaga() {},
     updatePostSagaSuccess() {},
 
-    likePostStart: (state) => {
-      state.like.isFetching = true;
+    likePostStart: (state, action) => {
+      const preState = state.like.postLike;
+      let postLikeObj = {
+        post_id: action.payload,
+        isFetching: true,
+      };
+      if (state.like.postLike?.length > 0) {
+        const pos = state.like.postLike
+          .map((e) => e.post_id)
+          .indexOf(action.payload);
+        if (pos > -1) {
+          state.like.postLike[pos].isFetching = true;
+        } else {
+          state.like.postLike = [...preState, postLikeObj];
+        }
+      } else {
+        state.like.postLike.push(postLikeObj);
+      }
     },
-    likePostSuccess: (state) => {
-      state.like.isFetching = false;
-      state.like.success = true;
+    likePostSuccess: (state, action) => {
+      const pos = state.like.postLike
+        .map((e) => e.post_id)
+        .indexOf(action.payload);
+      state.like.postLike[pos].isFetching = false;
     },
-    likePostFailed: (state) => {
-      state.like.isFetching = false;
-      state.like.success = false;
-      state.like.error = true;
+    likePostFailed: (state, action) => {
+      const pos = state.like.postLike
+        .map((e) => e.post_id)
+        .indexOf(action.payload);
+      state.like.postLike[pos].isFetching = false;
     },
     likePostSaga() {},
     likePostSagaSuccess() {},
@@ -206,6 +220,5 @@ export const {
   updatePostSagaSuccess,
   likePostSaga,
   likePostSagaSuccess,
-  
 } = postSlice.actions;
 export default postSlice.reducer;
