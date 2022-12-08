@@ -62,3 +62,14 @@
   pointer-events: auto;
 }
 /* #endregion */
+
+/* #region skeleton */
+.friend-left-bar-skeleton {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+/* #endregion */

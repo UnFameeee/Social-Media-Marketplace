@@ -22,6 +22,7 @@ import {
   ClickAwayListener,
   Modal,
   Paper,
+  Skeleton,
   TextareaAutosize,
 } from '@mui/material';
 import SideBarButton from './SideBarButton';
@@ -309,15 +310,39 @@ function UserProfile(props) {
   return (
     <>
       {isLoadingProfileDetail ? (
-        <div className="text-center pt-[40rem]">
-          <CircularProgress
-            style={{
-              color: 'var(--primary-color)',
-              width: '6rem',
-              height: '6rem',
-            }}
-          />
-        </div>
+        <>
+          <div className="pt-[var(--navbar-height)]">
+            <Skeleton variant="rounded" height={460} />
+          </div>
+          <div className="mt-[2rem] flex mx-auto w-[120rem] gap-[2rem]">
+            <div className="leftSideInfo w-[45%]">
+              <Skeleton variant="rounded" width={520} height={420} />
+            </div>
+            <div className="rightSidePosts w-[55%]">
+              <div className="flex flex-col gap-[1rem]">
+                <div className="flex items-center gap-[1rem] pl-[1rem] w-[70rem]">
+                  <div>
+                    <Skeleton
+                      variant="circular"
+                      width={40}
+                      height={40}
+                    />
+                  </div>
+                  <div className=" flex-1">
+                    <Skeleton
+                      variant="text"
+                      sx={{ fontSize: '3rem' }}
+                    />
+                  </div>
+                </div>
+                <Skeleton
+                  variant="rounded"
+                  sx={{ width: '70rem', height: '36.5rem' }}
+                />
+              </div>
+            </div>
+          </div>
+        </>
       ) : (
         <>
           {/* save wallpaper or not */}
@@ -584,13 +609,13 @@ function UserProfile(props) {
           )}
 
           <div className="mt-[2rem] flex mx-auto w-[120rem] gap-[2rem]">
-            <div className="leftSideInfo w-[45%]  flex flex-col relative">
-              <div className="sticky top-[-83.5rem] ">
+            <div className="leftSideInfo w-[45%] flex flex-col relative">
+              <div className="sticky top-[-83.5rem]">
                 {/* profile description */}
                 {(!Helper.isEmptyObject(profile_description, true) ||
                   userData?.profile_id ===
                     profileData?.profile_id) && (
-                  <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem] ">
+                  <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem]">
                     <div className="flex flex-col">
                       <span className="font-bold text-[2.3rem]">
                         Intro
@@ -706,9 +731,11 @@ function UserProfile(props) {
 
                 {/* gallery images section */}
                 {isLoadingGallery ? (
-                  <div className="text-center pt-[2rem]">
-                    <CircularProgress
-                      style={{ color: 'var(--primary-color)' }}
+                  <div className="mb-[2rem]">
+                    <Skeleton
+                      variant="rounded"
+                      width={531}
+                      height={100}
                     />
                   </div>
                 ) : (
@@ -724,9 +751,11 @@ function UserProfile(props) {
 
                 {/* friends section */}
                 {isLoadingFriends ? (
-                  <div className="text-center pt-[2rem]">
-                    <CircularProgress
-                      style={{ color: 'var(--primary-color)' }}
+                  <div className="mb-[2rem]">
+                    <Skeleton
+                      variant="rounded"
+                      width={531}
+                      height={100}
                     />
                   </div>
                 ) : (
@@ -766,9 +795,25 @@ function UserProfile(props) {
 
             <div className="rightSidePosts w-[55%]">
               {isLoadingPosts ? (
-                <div className="text-center pt-[4rem]">
-                  <CircularProgress
-                    style={{ color: 'var(--primary-color)' }}
+                <div className="flex flex-col gap-[1rem]">
+                  <div className="flex items-center gap-[1rem] pl-[1rem] w-[70rem]">
+                    <div>
+                      <Skeleton
+                        variant="circular"
+                        width={40}
+                        height={40}
+                      />
+                    </div>
+                    <div className=" flex-1">
+                      <Skeleton
+                        variant="text"
+                        sx={{ fontSize: '3rem' }}
+                      />
+                    </div>
+                  </div>
+                  <Skeleton
+                    variant="rounded"
+                    sx={{ width: '70rem', height: '36.5rem' }}
                   />
                 </div>
               ) : (

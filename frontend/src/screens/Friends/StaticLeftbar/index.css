@@ -19,6 +19,7 @@
   padding: 12px;
   display: flex;
   flex-direction: column;
+  min-height: 19rem;
 }
 .bottom span {
   font-size: 18px;

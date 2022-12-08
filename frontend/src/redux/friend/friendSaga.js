@@ -4,7 +4,9 @@ import api from '../../common/environment/environment';
 import { leftBarPaging } from '../../common/constants/apiConfig';
 import {
   acceptSagaSuccess,
+  addFriendFail,
   addFriendSagaSuccess,
+  addFriendStart,
   denySagaSuccess,
   getAllFriendFailed,
   getAllFriendStart,
@@ -208,7 +210,7 @@ export async function addFriendRequest(data) {
     callRefreshProfile = false,
     dispatch,
   } = data;
-
+  dispatch(addFriendStart());
   try {
     const res = await axiosInStanceJWT.post(
       `${api.friend}/sendFriendRequest/${id}`,
@@ -243,10 +245,12 @@ export async function addFriendRequest(data) {
       return res;
     } else {
       notifyService.showError(res.data.message);
+      dispatch(addFriendFail());
     }
   } catch (error) {
     console.log(error);
     notifyService.showError('Add Friend Failed!');
+    dispatch(addFriendFail());
   }
 }
 // #endregion

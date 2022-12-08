@@ -1,6 +1,7 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { Skeleton, CircularProgress } from '@mui/material';
 import FriendCard from './FriendCard';
 import { Helper } from '../../../../utils/Helper';
 import {
@@ -13,7 +14,6 @@ import {
   denyFriendRequest,
 } from '../../../../redux/friend/friendSaga';
 import '../index.css';
-import { CircularProgress } from '@mui/material';
 
 const FriendHome = () => {
   // const reRenderLayout = useOutletContext();
@@ -36,11 +36,13 @@ const FriendHome = () => {
     shallowEqual
   );
   const isFetchingRequest = useSelector(
-    (state) => state.friends?.getRequests?.isFetching,
-    shallowEqual
+    (state) => state.friends?.getRequests?.isFetching
   );
   const isFetchingSuggestion = useSelector(
-    (state) => state.friends?.getSuggestion?.isFetching,
+    (state) => state.friends?.getSuggestion?.isFetching
+  );
+  const isFetchingAddFriend = useSelector(
+    (state) => state.friends?.addFriend?.isFetching,
     shallowEqual
   );
   // #endregion
@@ -62,11 +64,22 @@ const FriendHome = () => {
     }
     return result;
   }, [isFetchingSuggestion]);
+
+  var isLoadingAddFriend = useMemo(() => {
+    var result = false;
+    if (isFetchingAddFriend) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingAddFriend]);
   // #endregion
 
   // #region request section
   const [listConfirm, setListConfirm] = useState([]);
   const [listDeny, setListDeny] = useState([]);
+
   var requestList = useMemo(() => {
     return friendRequests;
   }, [friendRequests]);
@@ -112,8 +125,15 @@ const FriendHome = () => {
       </div>
 
       {isLoadingRequest ? (
-        <div className="text-center pt-[5rem]">
-          <CircularProgress sx={{ color: 'var(--primary-color)' }} />
+        <div className="friend-home-grid">
+          {[...Array(6)].map((item, index) => (
+            <Skeleton
+              key={index}
+              variant="rounded"
+              width={240}
+              height={350}
+            />
+          ))}
         </div>
       ) : (
         <>
@@ -181,8 +201,15 @@ const FriendHome = () => {
       </div>
 
       {isLoadingSuggestion ? (
-        <div className="text-center pt-[5rem]">
-          <CircularProgress sx={{ color: 'var(--primary-color)' }} />
+        <div className="friend-home-grid">
+          {[...Array(6)].map((item, index) => (
+            <Skeleton
+              key={index}
+              variant="rounded"
+              width={240}
+              height={350}
+            />
+          ))}
         </div>
       ) : (
         <>
@@ -199,6 +226,7 @@ const FriendHome = () => {
                       type="suggestions"
                       listAction={listAdded}
                       navigate={navigate}
+                      isLoadingAddFriend={isLoadingAddFriend}
                       firstButtonConfig={{
                         name: 'Add Friend',
                         onClick: () => {

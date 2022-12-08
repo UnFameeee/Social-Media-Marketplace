@@ -1,7 +1,7 @@
 import { useLayoutEffect, useState, useMemo } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CircularProgress, ClickAwayListener } from '@mui/material';
+import { CircularProgress, ClickAwayListener, Skeleton } from '@mui/material';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import UserProfile from '../../../UserProfile/UserProfile';
@@ -143,10 +143,15 @@ export default function AllFriends() {
           />
         ),
         after: isLoadingAllFriend && (
-          <div className="text-center pt-[4rem]">
-            <CircularProgress
-              style={{ color: 'var(--primary-color)' }}
-            />
+          <div className="friend-left-bar-skeleton">
+            {[...Array(8)].map((item, index) => (
+              <Skeleton
+                key={index}
+                variant="rounded"
+                width={360}
+                height={96}
+              />
+            ))}
           </div>
         ),
         leftBarList: isLoadingAllFriend
