@@ -6,6 +6,7 @@ import {
   deleteOrderSoldRequest,
   getAllOrderPurchasedFirstTime,
   getAllOrderSold,
+  getAllOrderSoldFirstTime,
   paidOrderSoldRequest,
   shippingOrderSoldRequest,
 } from "../../redux/product/productSaga";
@@ -37,7 +38,7 @@ function OrderSold() {
     deleteOrderSoldRequest(accessToken, refreshToken, order_line_id, dispatch);
   };
   useEffect(() => {
-    getAllOrderPurchasedFirstTime(accessToken, refreshToken, dispatch);
+    getAllOrderSoldFirstTime(accessToken, refreshToken, dispatch);
   }, []);
   return (
     <div className="Order-purchased pt-[4%] px-[430px] rounded-xl">
