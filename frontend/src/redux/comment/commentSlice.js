@@ -5,7 +5,7 @@ import { revertAll } from "../resetStore";
 const initialState = {
   get: {
     data: [],
-    isFetching: false,
+    isFetching: [],
   },
   create: {
     isFetching: false,
@@ -18,7 +18,7 @@ export const commentSlice = createSlice({
   initialState: {
     get: {
       data: [],
-      isFetching: false,
+      isFetching: [],
     },
     create: {
       isFetching: false,
@@ -47,8 +47,24 @@ export const commentSlice = createSlice({
     likeCommentPostSaga() {},
     likeCommentPostSagaSuccess() {},
 
-    getCommentPostSaga: (state) => {
-      state.get.isFetching = true;
+    getCommentPostSaga: (state,action) => {
+      const preState = state.get.isFetching;
+      let isFetchingObj ={
+        post_id:action.payload.post_id,
+        isFetching:true
+      }
+      if (state.get.isFetching?.length > 0) {
+        const pos = state.get.isFetching
+          .map((e) => e.post_id)
+          .indexOf(action.payload.post_id);
+        if (pos > -1) {
+          state.get.isFetching[pos].isFetching = true;
+        } else {
+          state.get.isFetching = [...preState, isFetchingObj];
+        }
+      } else {
+        state.get.isFetching.push(isFetchingObj);
+      }
     },
     getCommentPostSagaSuccess(state) {
       state.create.isFetching = false;
@@ -95,6 +111,7 @@ export const commentSlice = createSlice({
           state.get.data = [...preState, group_comment];
         }
       } else {
+        
         const post_id = action.payload.post_id;
         if (state.get.data.length > 0) {
           const pos = state.get.data.map((e) => e.post_id).indexOf(post_id);
@@ -104,10 +121,16 @@ export const commentSlice = createSlice({
           }
         }
       }
-      state.get.isFetching = false;
+      const pos = state.get.isFetching
+          .map((e) => e.post_id)
+          .indexOf(action.payload.post_id);
+      state.get.isFetching[pos].isFetching = false;
     },
-    getCommentPostFail: (state) => {
-      state.create.isFetching = false;
+    getCommentPostFail: (state,action) => {
+      const pos = state.get.isFetching
+          .map((e) => e.post_id)
+          .indexOf(action.payload.post_id);
+      state.get.isFetching[pos].isFetching = false;
     },
   },
 });

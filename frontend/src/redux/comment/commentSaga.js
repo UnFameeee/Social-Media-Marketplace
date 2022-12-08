@@ -73,7 +73,7 @@ const getCommentPostSagaRequest = async (data) => {
   } catch (error) {
     console.log(error);
     notifyService.showError("Get comment Post Failed");
-    dispatch(getCommentPostFail())
+    dispatch(getCommentPostFail(post_id))
   }
 };
 
