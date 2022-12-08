@@ -1,5 +1,5 @@
 import { AllowNull, AutoIncrement, Column, DataType, Default, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
-import { Role } from "src/common/constants/role.constant";
+
 @Table({
     tableName: "Profiles",
     timestamps: true,
@@ -49,9 +49,9 @@ export class Profile extends Model<Profile> {
     @Column
     isActivate: boolean;
 
-    @Default(Role.User)
-    @Column
-    role: Role;
+    // @Default(Role.User)
+    // @Column
+    // role: Role;
 
     // @AllowNull
     // @Column

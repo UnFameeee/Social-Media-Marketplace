@@ -61,7 +61,7 @@ function CardPost(props) {
     shallowEqual
   );
   const isLoadingCreateComment = useSelector((state) => state.comment?.create);
-  const isLoadingGetComment = useSelector(
+  const fetchingGetCommentList = useSelector(
     (state) => state.comment?.get.isFetching
   );
   const likePostList = useSelector((state) => state.post.like.postLike);
@@ -79,6 +79,16 @@ function CardPost(props) {
     cssEase: "linear",
   };
   const [disableLikeButton, setDisableLikeButton] = useState("false");
+  let isLoadingGetComment = useMemo(() => {
+    let result = false;
+    fetchingGetCommentList?.map((item) => {
+      if (item.post_id == post_id) {
+        result = item.isFetching;
+      }
+    });
+    return result;
+  }, [fetchingGetCommentList]);
+
   let isLoadingLikePost = useMemo(() => {
     let result = false;
     likePostList?.map((item) => {

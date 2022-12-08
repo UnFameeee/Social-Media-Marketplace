@@ -5,6 +5,7 @@ import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import { useEffect } from "react";
 import {
   getAllOrderPurchased,
+  getAllOrderPurchasedFirstTime,
   receiveOrderPurchasedRequest,
 } from "../../redux/product/productSaga";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,7 +33,7 @@ function OrderPurchased() {
   };
 
   useEffect(() => {
-    getAllOrderPurchased(accessToken, refreshToken, dispatch);
+    getAllOrderPurchasedFirstTime(accessToken, refreshToken, dispatch);
   }, []);
   return (
     <div className="Order-purchased pt-[4%] px-[430px] rounded-xl">
