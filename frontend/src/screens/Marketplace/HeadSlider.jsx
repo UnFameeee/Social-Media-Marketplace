@@ -2,12 +2,10 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import img1 from "../../assets/wallhaven-13dv2g_1920x1080.png";
-import img2 from "../../assets/wallhaven-4vgg35_1920x1080.png";
-import img3 from "../../assets/wallhaven-85335j_1920x1080.png";
-import img4 from "../../assets/wallhaven-p983ve_1920x1080.png";
-import img5 from "../../assets/wallhaven-weyyqr_1920x1080.png";
-import img6 from "../../assets/wallhaven-yjl8mk_1920x1080.png";
+function importAll(r) {
+  return r.keys().map(r);
+}
+const sliderImage = importAll(require.context("../../assets/sliderImage", false, /\.(png|jpe?g|svg)$/));
 function HeadSlider() {
   const settings = {
     arrows: false,
@@ -20,36 +18,14 @@ function HeadSlider() {
   };
   return (
     <Slider {...settings}>
-      <img
-        className="h-[300px] w-full object-cover rounded-xl"
-        src={img1}
-        alt=""
-      />
-      <img
-        className="h-[300px] w-full object-cover rounded-xl"
-        src={img2}
-        alt=""
-      />
-      <img
-        className="h-[300px] w-full object-cover rounded-xl"
-        src={img3}
-        alt=""
-      />
-      <img
-        className="h-[300px] w-full object-cover rounded-xl"
-        src={img4}
-        alt=""
-      />
-      <img
-        className="h-[300px] w-full object-cover rounded-xl"
-        src={img5}
-        alt=""
-      />
-      <img
-        className="h-[300px] w-full object-cover rounded-xl"
-        src={img6}
-        alt=""
-      />
+      {sliderImage?.map((item, index) => (
+        <img
+          key={index}
+          className="h-[300px] w-full object-fit rounded-xl"
+          src={item}
+          alt=""
+        />
+      ))}
     </Slider>
   );
 }

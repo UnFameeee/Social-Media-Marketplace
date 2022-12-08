@@ -31,6 +31,7 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  accept: {},
 };
 export const friendSlice = createSlice({
   name: 'friends',
@@ -65,6 +66,9 @@ export const friendSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    addFriend: {
+      isFetching: false,
+    },
   },
   extraReducers: (builder) =>
     builder.addCase(revertAll, () => initialState),
@@ -80,7 +84,7 @@ export const friendSlice = createSlice({
       state.getRequests.isFetching = false;
       state.getRequests.error = true;
     },
-    
+
     getSentRequestStart: (state) => {
       state.getSentRequests.isFetching = true;
     },
@@ -140,8 +144,17 @@ export const friendSlice = createSlice({
       state.getMutualFriends.isFetching = false;
       state.getMutualFriends.error = true;
     },
-    
-    addFriendSagaSuccess() {},
+
+    addFriendStart: (state) => {
+      state.addFriend.isFetching = true;
+    },
+    addFriendSagaSuccess(state) {
+      state.addFriend.isFetching = false;
+    },
+    addFriendFail: (state) => {
+      state.addFriend.isFetching = false;
+    },
+
     acceptSagaSuccess() {},
     denySagaSuccess() {},
     unfriendSagaSuccess() {},
@@ -152,7 +165,7 @@ export const {
   getRequestStart,
   getRequestSuccess,
   getRequestFailed,
-  
+
   getSentRequestStart,
   getSentRequestSuccess,
   getSentRequestFailed,
@@ -172,11 +185,13 @@ export const {
   getMutualFriendStart,
   getMutualFriendSuccess,
   getMutualFriendFailed,
-  
+
+  addFriendStart,
   addFriendSagaSuccess,
+  addFriendFail,
+
   acceptSagaSuccess,
   denySagaSuccess,
   unfriendSagaSuccess,
-  
 } = friendSlice.actions;
 export default friendSlice.reducer;
