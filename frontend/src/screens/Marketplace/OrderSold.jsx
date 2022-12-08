@@ -4,6 +4,7 @@ import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import { Skeleton } from "@mui/material";
 import {
   deleteOrderSoldRequest,
+  getAllOrderPurchasedFirstTime,
   getAllOrderSold,
   paidOrderSoldRequest,
   shippingOrderSoldRequest,
@@ -36,7 +37,7 @@ function OrderSold() {
     deleteOrderSoldRequest(accessToken, refreshToken, order_line_id, dispatch);
   };
   useEffect(() => {
-    getAllOrderSold(accessToken, refreshToken, dispatch);
+    getAllOrderPurchasedFirstTime(accessToken, refreshToken, dispatch);
   }, []);
   return (
     <div className="Order-purchased pt-[4%] px-[430px] rounded-xl">
