@@ -40,7 +40,7 @@ export class ProfileRepository {
                 attributes: ["profile_id", "profile_name", "email", "birth",
                     [Sequelize.col("profile_avatar.link"), "avatar"],
                     [Sequelize.col("profile_wallpaper.link"), "wallpaper"],
-                    "isActivate", "role", "createdAt", "updatedAt"
+                    "isActivate", "createdAt", "updatedAt"
                 ],
                 include: [
                     {
@@ -73,7 +73,7 @@ export class ProfileRepository {
     async findProfileById(profile_id: number, scope?: string): Promise<Profile> {
         try {
             return await this.profileRepository.scope(scope ? scope : SCOPE.WITHOUT_PASSWORD).findOne({
-                attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "role", "createdAt", "updatedAt"],
+                attributes: ["profile_id", "profile_name", "email", "birth", [Sequelize.col("profile_avatar.link"), "avatar"], [Sequelize.col("profile_wallpaper.link"), "wallpaper"], "isActivate", "createdAt", "updatedAt"],
                 include: [
                     {
                         model: ProfileAvatarImage,
@@ -110,7 +110,7 @@ export class ProfileRepository {
                 attributes: ["profile_id", "profile_name", "password", "email", "birth",
                     [Sequelize.col("profile_avatar.link"), "avatar"],
                     [Sequelize.col("profile_wallpaper.link"), "wallpaper"],
-                    "isActivate", "role", "createdAt", "updatedAt"
+                    "isActivate", "createdAt", "updatedAt"
                 ],
                 include: [
                     {
@@ -262,7 +262,7 @@ export class ProfileRepository {
                 attributes: ["profile_id", "profile_name", "email", "birth",
                     [Sequelize.col("profile_avatar.link"), "avatar"],
                     [Sequelize.col("profile_wallpaper.link"), "wallpaper"],
-                    "isActivate", "role", "createdAt", "updatedAt"
+                    "isActivate", "createdAt", "updatedAt"
                 ],
                 include: [
                     {
@@ -306,7 +306,7 @@ export class ProfileRepository {
                 attributes: ["profile_id", "profile_name", "email", "birth",
                     [Sequelize.col("profile_avatar.link"), "avatar"],
                     [Sequelize.col("profile_wallpaper.link"), "wallpaper"],
-                    "isActivate", "role", "createdAt", "updatedAt"
+                    "isActivate", "createdAt", "updatedAt"
                 ],
                 include: [
                     {
@@ -426,7 +426,7 @@ export class ProfileRepository {
                 attributes: ["profile_id", "profile_name", "email", "birth",
                     [Sequelize.col("profile_avatar.link"), "avatar"],
                     [Sequelize.col("profile_wallpaper.link"), "wallpaper"],
-                    "isActivate", "role", "createdAt", "updatedAt"
+                    "isActivate", "createdAt", "updatedAt"
                 ],
                 include: [
                     {
