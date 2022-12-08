@@ -25,6 +25,7 @@ import {
 import {
   createSellingProductRequest,
   deleteSellingProductRequest,
+  getSellingProductDetailRequest,
   updateSellingProductRequest,
 } from "../../redux/product/productSaga";
 
@@ -132,7 +133,9 @@ function Selling() {
   // #endregion
   //#region declare function
   const handleUpdate = (productObj) => {
-    dispatch(updateProduct(productObj));
+    let product_id =productObj.product_id
+    getSellingProductDetailRequest(accessToken,refreshToken,dispatch,product_id)
+    // dispatch(updateProduct(productObj));
     setShowManagerModal({ isShow: true, action: 2 });
   };
   const handleOpenModalCreate = () => {
