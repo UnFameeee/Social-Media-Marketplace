@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Skeleton } from '@mui/material';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import { LeftbarFriendSuggest } from '../LeftbarMiddleItem';
@@ -120,10 +120,15 @@ export default function FriendSuggestions() {
           />
         ),
         after: isLoadingSuggestion && (
-          <div className="text-center pt-[4rem]">
-            <CircularProgress
-              style={{ color: 'var(--primary-color)' }}
-            />
+          <div className="friend-left-bar-skeleton">
+            {[...Array(8)].map((item, index) => (
+              <Skeleton
+                key={index}
+                variant="rounded"
+                width={360}
+                height={96}
+              />
+            ))}
           </div>
         ),
         leftBarList: isLoadingSuggestion

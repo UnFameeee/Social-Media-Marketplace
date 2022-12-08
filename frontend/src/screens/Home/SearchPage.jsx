@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Skeleton } from '@mui/material';
 import { searchProfile } from '../../redux/apiRequest';
 import TwoColumns from '../../components/Layout/TwoColumns';
 import { Helper } from '../../utils/Helper';
@@ -139,10 +139,15 @@ export default function SearchPage() {
           />
         ),
         after: isLoadingProfileSearch && (
-          <div className="text-center pt-[4rem]">
-            <CircularProgress
-              style={{ color: 'var(--primary-color)' }}
-            />
+          <div className="friend-left-bar-skeleton">
+            {[...Array(8)].map((item, index) => (
+              <Skeleton
+                key={index}
+                variant="rounded"
+                width={360}
+                height={96}
+              />
+            ))}
           </div>
         ),
         leftBarList: isLoadingProfileSearch

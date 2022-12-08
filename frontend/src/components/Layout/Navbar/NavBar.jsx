@@ -15,6 +15,7 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   CircularProgress,
+  Skeleton,
 } from '@mui/material';
 import { IoLogOut } from 'react-icons/io5';
 import { RiMoreFill } from 'react-icons/ri';
@@ -36,7 +37,6 @@ import {
   getAllFriendNotification,
   getAllNotification,
   getAllUnreadNotification,
-  seenNotification,
 } from '../../../redux/notifications/notificationAPI';
 import {
   acceptFriendRequest,
@@ -63,7 +63,7 @@ export default function NavBar() {
   const [listDeny, setListDeny] = useState([]);
   // #endregion
 
-  // #redux variables
+  // #region redux variables
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -601,10 +601,15 @@ export default function NavBar() {
                       (isLoadingAllNotifications ||
                         isLoadingFriendNotifications ||
                         isLoadingUnreadNotifications) && (
-                        <div className="text-center pt-[2rem]">
-                          <CircularProgress
-                            style={{ color: 'var(--primary-color)' }}
-                          />
+                        <div className="friend-left-bar-skeleton">
+                          {[...Array(2)].map((item, index) => (
+                            <Skeleton
+                              key={index}
+                              variant="rounded"
+                              width={370}
+                              height={96}
+                            />
+                          ))}
                         </div>
                       )
                     }
