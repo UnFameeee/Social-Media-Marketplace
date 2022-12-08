@@ -1,4 +1,4 @@
-import { Avatar } from '@mui/material';
+import { Avatar, CircularProgress } from '@mui/material';
 import MUI from '../../../../components/MUI';
 import { Helper } from '../../../../utils/Helper';
 
@@ -8,9 +8,14 @@ export default function FriendCard(props) {
     type = 'requests',
     firstButtonConfig,
     secondButtonConfig,
-    hiddenButtonConfig = { disabled: true, className: 'cursor-not-allowed' },
+    hiddenButtonConfig = {
+      disabled: true,
+      className: 'cursor-not-allowed',
+    },
     navigate,
     listAction,
+    isLoadingAddFriend = false,
+    isLoadingAcceptFriend = false,
   } = props;
 
   function goTo() {
@@ -56,32 +61,45 @@ export default function FriendCard(props) {
           </div>
         )}
 
-        {confirmed || denied ? (
-          <MUI.Button
-            style={{ marginTop: '68px' }}
-            {...hiddenButtonConfig}
-          >
-            {confirmed && 'Request confirmed'}
-            {denied && 'Request denied'}
-          </MUI.Button>
+        {isLoadingAddFriend && (confirmed || denied) ? (
+          <div className="text-center mt-[2.6rem]">
+            <CircularProgress
+              style={{
+                color: 'var(--primary-color)',
+                cursor: 'auto',
+              }}
+            />
+          </div>
         ) : (
           <>
-            {firstButtonConfig && (
+            {confirmed || denied ? (
               <MUI.Button
-                style={{ marginTop: '12px' }}
-                {...firstButtonConfig}
+                style={{ marginTop: '68px' }}
+                {...hiddenButtonConfig}
               >
-                Confirm
+                {confirmed && 'Request confirmed'}
+                {denied && 'Request denied'}
               </MUI.Button>
-            )}
+            ) : (
+              <>
+                {firstButtonConfig && (
+                  <MUI.Button
+                    style={{ marginTop: '12px' }}
+                    {...firstButtonConfig}
+                  >
+                    Confirm
+                  </MUI.Button>
+                )}
 
-            {secondButtonConfig && (
-              <MUI.Button
-                style={{ marginTop: '12px' }}
-                {...secondButtonConfig}
-              >
-                Deny
-              </MUI.Button>
+                {secondButtonConfig && (
+                  <MUI.Button
+                    style={{ marginTop: '12px' }}
+                    {...secondButtonConfig}
+                  >
+                    Deny
+                  </MUI.Button>
+                )}
+              </>
             )}
           </>
         )}

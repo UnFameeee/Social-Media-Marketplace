@@ -87,9 +87,9 @@ export const register = async (model, dispatch, navigate) => {
   try {
     const res = await axios.post(`${apiUrl}/auth/register`, model);
     if (res) {
+      navigate("/login");
       dispatch(registerSuccess(res.data));
       notifyService.showSuccess("Register Successfully!");
-      navigate("/login");
     } else {
       notifyService.showError("Register Failed!");
       dispatch(registerFailed());
@@ -106,10 +106,10 @@ export const login = async (model, dispatch, navigate, from) => {
     if (res) {
       var token = res.data.access;
       var decoded = jwt_decode(token);
+      navigate(from, { replace: true });
       dispatch(loginSuccess(res.data));
       dispatch(userDataAssign(decoded));
       notifyService.showSuccess("Login Successfully!");
-      navigate(from, { replace: true });
     } else {
       notifyService.showError("Login Failed!");
       dispatch(loginFailed());

@@ -161,7 +161,7 @@ function Home() {
             }
           />
           {getPostIsLoading
-            ? [...Array(2)].map((index) => (
+            ? [...Array(2)].map((item,index) => (
                 <div key={index} className="flex flex-col gap-[1rem]">
                   <div className=" flex items-center gap-[1rem] pl-[1rem] w-[70rem]">
                     <div>
