@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Skeleton, CircularProgress } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import FriendCard from './FriendCard';
 import { Helper } from '../../../../utils/Helper';
 import {
@@ -14,6 +14,7 @@ import {
   denyFriendRequest,
 } from '../../../../redux/friend/friendSaga';
 import '../index.css';
+import { useRef } from 'react';
 
 const FriendHome = () => {
   // const reRenderLayout = useOutletContext();
@@ -42,11 +43,17 @@ const FriendHome = () => {
     (state) => state.friends?.getSuggestion?.isFetching
   );
   const isFetchingAddFriend = useSelector(
-    (state) => state.friends?.addFriend?.isFetching,
-    shallowEqual
+    (state) => state.friends?.addFriend?.isFetching
+  );
+  const isFetchingAcceptFriend = useSelector(
+    (state) => state.friends?.acceptFriend?.isFetching
+  );
+  const isFetchingDenyFriend = useSelector(
+    (state) => state.friends?.denyFriend?.isFetching
   );
   // #endregion
 
+  const currentId = useRef(null);
   // #region suggestion section
   const [listAdded, setListAdded] = useState([]);
   const [listRemoved, setListRemoved] = useState([]);
@@ -93,6 +100,26 @@ const FriendHome = () => {
     }
     return result;
   }, [isFetchingRequest]);
+
+  var isLoadingAcceptFriend = useMemo(() => {
+    var result = false;
+    if (isFetchingAcceptFriend) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingAcceptFriend]);
+
+  var isLoadingDenyFriend = useMemo(() => {
+    var result = false;
+    if (isFetchingDenyFriend) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingDenyFriend]);
   // #endregion
 
   useLayoutEffect(() => {
@@ -145,6 +172,8 @@ const FriendHome = () => {
                     profileDetails={item}
                     listAction={[listConfirm, listDeny]}
                     navigate={navigate}
+                    isLoading={isLoadingAcceptFriend || isLoadingDenyFriend}
+                    currentId={currentId.current}
                     firstButtonConfig={{
                       onClick: () => {
                         acceptFriendRequest({
@@ -158,6 +187,7 @@ const FriendHome = () => {
                           ...old,
                           item.profile_id,
                         ]);
+                        currentId.current = item.profile_id;
                       },
                     }}
                     secondButtonConfig={{
@@ -173,6 +203,7 @@ const FriendHome = () => {
                           ...old,
                           item.profile_id,
                         ]);
+                        currentId.current = item.profile_id;
                       },
                     }}
                   />
@@ -226,7 +257,8 @@ const FriendHome = () => {
                       type="suggestions"
                       listAction={listAdded}
                       navigate={navigate}
-                      isLoadingAddFriend={isLoadingAddFriend}
+                      isLoading={isLoadingAddFriend}
+                      currentId={currentId.current}
                       firstButtonConfig={{
                         name: 'Add Friend',
                         onClick: () => {
@@ -241,6 +273,8 @@ const FriendHome = () => {
                             ...old,
                             item.profile_id,
                           ]);
+
+                          currentId.current = item.profile_id;
                         },
                       }}
                       secondButtonConfig={{
@@ -266,6 +300,8 @@ const FriendHome = () => {
                             (e) => e !== item.profile_id
                           );
                           setListAdded(filter);
+
+                          currentId.current = item.profile_id;
                         },
                       }}
                     />

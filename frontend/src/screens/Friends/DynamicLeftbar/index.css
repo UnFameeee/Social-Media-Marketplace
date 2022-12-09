@@ -20,6 +20,9 @@
 .suggestions .action button {
   width: 92%;
 }
+.all-friend .left-bar-button .loading svg {
+  color: var(--primary-color);
+}
 .left-bar-button .MuiAvatar-root {
   width: 6rem;
   height: 6rem;
@@ -49,7 +52,7 @@
 .unimportant-text {
   font-size: 1.2rem;
   font-weight: 100;
-  color:#8c8c8c;
+  color: #8c8c8c;
   letter-spacing: 0.8px;
 }
 .action {

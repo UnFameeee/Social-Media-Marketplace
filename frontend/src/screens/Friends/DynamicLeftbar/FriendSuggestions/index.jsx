@@ -1,4 +1,4 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState, useRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CircularProgress, Skeleton } from '@mui/material';
@@ -18,6 +18,7 @@ export default function FriendSuggestions() {
   const location = useLocation();
   const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
 
+  // #region redux variables
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -37,23 +38,18 @@ export default function FriendSuggestions() {
   const isFetchingProfileDetail = useSelector(
     (state) => state.profile?.profileDetails?.isFetching
   );
+  const isFetchingAddCancel = useSelector(
+    (state) => state.friends?.addFriend?.isFetching
+  );
+  // #endregion
 
   const [listAdded, setListAdded] = useState([]);
   const [listRemoved, setListRemoved] = useState([]);
+  const currentId = useRef(null);
 
   var suggestionList = useMemo(() => {
     return friendSuggestions;
   }, [friendSuggestions]);
-
-  var isLoadingSuggestion = useMemo(() => {
-    var result = false;
-    if (isFetchingSuggestion) {
-      result = true;
-    } else {
-      result = false;
-    }
-    return result;
-  }, [isFetchingSuggestion]);
 
   var checkId = useMemo(() => {
     return suggestionList?.some(
@@ -65,6 +61,17 @@ export default function FriendSuggestions() {
     return Helper.isNullOrEmpty(queryParams);
   }, [queryParams]);
 
+  // #region loading variables
+  var isLoadingSuggestion = useMemo(() => {
+    var result = false;
+    if (isFetchingSuggestion) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingSuggestion]);
+
   var isLoadingProfileDetail = useMemo(() => {
     var result = false;
     if (isFetchingProfileDetail) {
@@ -74,6 +81,17 @@ export default function FriendSuggestions() {
     }
     return result;
   }, [isFetchingProfileDetail]);
+
+  var isLoadingAddCancel = useMemo(() => {
+    var result = false;
+    if (isFetchingAddCancel) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingAddCancel]);
+  // #endregion
 
   // call get all friend suggestions once
   useLayoutEffect(() => {
@@ -152,6 +170,8 @@ export default function FriendSuggestions() {
                       <LeftbarFriendSuggest
                         listAdded={listAdded}
                         profile={x}
+                        isLoading={isLoadingAddCancel}
+                        currentId={currentId.current}
                         firstButtonConfig={{
                           onClick: (e) => {
                             e.stopPropagation();
@@ -167,6 +187,8 @@ export default function FriendSuggestions() {
                               ...old,
                               x.profile_id,
                             ]);
+
+                            currentId.current = x.profile_id;
                           },
                         }}
                         secondButtonConfig={{
@@ -193,6 +215,8 @@ export default function FriendSuggestions() {
                               (e) => e !== x.profile_id
                             );
                             setListAdded(filter);
+                            
+                            currentId.current = x.profile_id;
                           },
                         }}
                       />

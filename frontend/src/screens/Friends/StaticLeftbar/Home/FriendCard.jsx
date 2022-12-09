@@ -14,8 +14,8 @@ export default function FriendCard(props) {
     },
     navigate,
     listAction,
-    isLoadingAddFriend = false,
-    isLoadingAcceptFriend = false,
+    isLoading = false,
+    currentId,
   } = props;
 
   function goTo() {
@@ -51,7 +51,7 @@ export default function FriendCard(props) {
         {profileDetails?.profile_name?.at(0)}
       </Avatar>
 
-      <div className="bottom">
+      <div className={`bottom ${type}`}>
         <span className="hover:underline" onClick={goTo}>
           {profileDetails.profile_name}
         </span>
@@ -61,7 +61,7 @@ export default function FriendCard(props) {
           </div>
         )}
 
-        {isLoadingAddFriend && (confirmed || denied) ? (
+        {isLoading && currentId === profileDetails?.profile_id ? (
           <div className="text-center mt-[2.6rem]">
             <CircularProgress
               style={{

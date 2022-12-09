@@ -1,7 +1,7 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState, useRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CircularProgress, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import { LeftbarSentRequest } from '../LeftbarMiddleItem';
@@ -18,6 +18,7 @@ export default function YourSentRequests() {
   const location = useLocation();
   const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
 
+  // #region redux variables
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -37,22 +38,17 @@ export default function YourSentRequests() {
   const isFetchingProfileDetail = useSelector(
     (state) => state.profile?.profileDetails?.isFetching
   );
+  const isFetchingCancel = useSelector(
+    (state) => state.friends?.addFriend?.isFetching
+  );
+  // #endregion
 
   const [listCancel, setListCancel] = useState([]);
+  const currentId = useRef(null);
 
   var sentList = useMemo(() => {
     return sentRequests;
   }, [sentRequests]);
-
-  var isLoadingSent = useMemo(() => {
-    var result = false;
-    if (isFetchingSent) {
-      result = true;
-    } else {
-      result = false;
-    }
-    return result;
-  }, [isFetchingSent]);
 
   var checkId = useMemo(() => {
     return sentList?.data?.some(
@@ -64,6 +60,17 @@ export default function YourSentRequests() {
     return Helper.isNullOrEmpty(queryParams);
   }, [queryParams]);
 
+  // #region loading variables
+  var isLoadingSent = useMemo(() => {
+    var result = false;
+    if (isFetchingSent) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingSent]);
+
   var isLoadingProfileDetail = useMemo(() => {
     var result = false;
     if (isFetchingProfileDetail) {
@@ -73,6 +80,17 @@ export default function YourSentRequests() {
     }
     return result;
   }, [isFetchingProfileDetail]);
+
+  var isLoadingCancel = useMemo(() => {
+    var result = false;
+    if (isFetchingCancel) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingCancel]);
+  // #endregion
 
   // call get all sent requests once
   useLayoutEffect(() => {
@@ -154,6 +172,8 @@ export default function YourSentRequests() {
                   <LeftbarSentRequest
                     profile={x}
                     listCancel={listCancel}
+                    isLoading={isLoadingCancel}
+                    currentId={currentId.current}
                     cancelButtonConfig={{
                       onClick: (e) => {
                         e.stopPropagation();
@@ -169,6 +189,8 @@ export default function YourSentRequests() {
                           ...old,
                           x.profile_id,
                         ]);
+                        
+                        currentId.current = x.profile_id;
                       },
                     }}
                   />

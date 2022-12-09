@@ -1,7 +1,7 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState, useRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CircularProgress, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import { LeftbarFriendRequest } from '../LeftbarMiddleItem';
@@ -21,6 +21,7 @@ export default function FriendRequests() {
   const location = useLocation();
   const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
 
+  // #region redux variables
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -40,23 +41,21 @@ export default function FriendRequests() {
   const isFetchingProfileDetail = useSelector(
     (state) => state.profile?.profileDetails?.isFetching
   );
+  const isFetchingAcceptFriend = useSelector(
+    (state) => state.friends?.acceptFriend?.isFetching
+  );
+  const isFetchingDenyFriend = useSelector(
+    (state) => state.friends?.denyFriend?.isFetching
+  );
+  // #endregion
 
   const [listConfirm, setListConfirm] = useState([]);
   const [listDeny, setListDeny] = useState([]);
+  const currentId = useRef(null);
 
   var requestList = useMemo(() => {
     return friendRequests;
   }, [friendRequests]);
-
-  var isLoadingRequest = useMemo(() => {
-    var result = false;
-    if (isFetchingRequest) {
-      result = true;
-    } else {
-      result = false;
-    }
-    return result;
-  }, [isFetchingRequest]);
 
   var checkId = useMemo(() => {
     return requestList?.data?.some(
@@ -68,6 +67,17 @@ export default function FriendRequests() {
     return Helper.isNullOrEmpty(queryParams);
   }, [queryParams]);
 
+  // #region loading variables
+  var isLoadingRequest = useMemo(() => {
+    var result = false;
+    if (isFetchingRequest) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingRequest]);
+
   var isLoadingProfileDetail = useMemo(() => {
     var result = false;
     if (isFetchingProfileDetail) {
@@ -77,6 +87,27 @@ export default function FriendRequests() {
     }
     return result;
   }, [isFetchingProfileDetail]);
+
+  var isLoadingAcceptFriend = useMemo(() => {
+    var result = false;
+    if (isFetchingAcceptFriend) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingAcceptFriend]);
+
+  var isLoadingDenyFriend = useMemo(() => {
+    var result = false;
+    if (isFetchingDenyFriend) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingDenyFriend]);
+  // #endregion
 
   // call get all friend requests once
   useLayoutEffect(() => {
@@ -158,6 +189,10 @@ export default function FriendRequests() {
                   <LeftbarFriendRequest
                     profile={x}
                     listAction={[listConfirm, listDeny]}
+                    isLoading={
+                      isLoadingAcceptFriend || isLoadingDenyFriend
+                    }
+                    currentId={currentId.current}
                     firstButtonConfig={{
                       onClick: (e) => {
                         e.stopPropagation();
@@ -173,6 +208,8 @@ export default function FriendRequests() {
                           ...old,
                           x.profile_id,
                         ]);
+
+                        currentId.current = x.profile_id;
                       },
                     }}
                     secondButtonConfig={{
@@ -187,6 +224,8 @@ export default function FriendRequests() {
                         });
 
                         setListDeny((old) => [...old, x.profile_id]);
+                        
+                        currentId.current = x.profile_id;
                       },
                     }}
                   />
