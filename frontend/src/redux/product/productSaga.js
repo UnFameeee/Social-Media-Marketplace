@@ -37,6 +37,7 @@ import {
   removeProductFromListCartWithoutPagingSuccess,
   resetListCartWithoutPaging,
   shippingOrderSoldSuccess,
+  updateProduct,
   updateSellingProductSagaSuccess,
 } from "./productSlice";
 import { removeUploadProductImages, uploadProductImages } from "../apiRequest";
@@ -64,7 +65,7 @@ function* handleGetSellingProduct(data) {
 const getSellingProductSagaRequest = async (data) => {
   const { accessToken, refreshToken, paging, dispatch } = data.payload;
   try {
-    dispatch(getSellingProductStart())
+    dispatch(getSellingProductStart());
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
@@ -81,12 +82,12 @@ const getSellingProductSagaRequest = async (data) => {
       console.log(res.data.results);
       return res.data.results;
     } else {
-      dispatch(getSellingProductFailed())
+      dispatch(getSellingProductFailed());
       notifyService.showError("Get List Selling Product Failed");
     }
   } catch (error) {
     console.log(error);
-    dispatch(getSellingProductFailed())
+    dispatch(getSellingProductFailed());
     notifyService.showError("Get List Selling Product Failed");
   }
 };
@@ -120,7 +121,12 @@ export const createSellingProductRequest = async (
         console.log(resImages);
       }
       dispatch(
-        createSellingProductSagaSuccess({ accessToken, refreshToken, paging,dispatch })
+        createSellingProductSagaSuccess({
+          accessToken,
+          refreshToken,
+          paging,
+          dispatch,
+        })
       );
       notifyService.showSuccess("Create Selling Product Success");
       return res;
@@ -130,6 +136,34 @@ export const createSellingProductRequest = async (
   } catch (error) {
     console.log(error);
     notifyService.showError("Create Selling Product Failed");
+  }
+};
+export const getSellingProductDetailRequest = async (
+  accessToken,
+  refreshToken,
+  dispatch,
+  product_id
+) => {
+  try {
+    const config = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+    const res = await axiosInStanceJWT.get(
+      `${api.product}/detail/${product_id}`,
+      {
+        headers: config,
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(updateProduct(res.data.results));
+    } else {
+      notifyService.showError("Get Selling Product Detail Failed");
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError("Get Selling Product Detail Failed");
   }
 };
 export const deleteSellingProductRequest = async (
@@ -153,7 +187,12 @@ export const deleteSellingProductRequest = async (
     );
     if (!res.data.message) {
       dispatch(
-        deleteSellingProductSagaSuccess({ accessToken, refreshToken, paging,dispatch })
+        deleteSellingProductSagaSuccess({
+          accessToken,
+          refreshToken,
+          paging,
+          dispatch,
+        })
       );
       notifyService.showSuccess("Delete Selling Product Success");
       return res;
@@ -208,7 +247,12 @@ export const updateSellingProductRequest = async (
         console.log(resImages);
       }
       dispatch(
-        updateSellingProductSagaSuccess({ accessToken, refreshToken, paging,dispatch })
+        updateSellingProductSagaSuccess({
+          accessToken,
+          refreshToken,
+          paging,
+          dispatch,
+        })
       );
       notifyService.showSuccess("Update Selling Product Success");
       return res;
@@ -238,7 +282,7 @@ function* handleGetShoppingProduct(data) {
 const getShoppingProductSagaRequest = async (data) => {
   const { accessToken, refreshToken, paging, dispatch } = data.payload;
   try {
-    dispatch(getShoppingProductStart())
+    dispatch(getShoppingProductStart());
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
@@ -254,12 +298,12 @@ const getShoppingProductSagaRequest = async (data) => {
     if (!res.data.message) {
       return res.data.results;
     } else {
-      dispatch(getShoppingProductFailed())
+      dispatch(getShoppingProductFailed());
       notifyService.showError("Get List Shopping Product Failed");
     }
   } catch (error) {
     console.log(error);
-    dispatch(getShoppingProductFailed())
+    dispatch(getShoppingProductFailed());
     notifyService.showError("Get List Shopping Product Failed");
   }
 };
@@ -479,7 +523,6 @@ export const getAllOrderPurchased = async (
   dispatch
 ) => {
   try {
-    
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
@@ -497,12 +540,11 @@ export const getAllOrderPurchased = async (
       dispatch(getOrderPurchased(res.data.results.data));
       return res.data.results.data;
     } else {
-      
       notifyService.showError("Get Order Purchased Failed");
     }
   } catch (error) {
     console.log(error);
-    
+
     notifyService.showError("Get Order Purchased Failed");
   }
 };
@@ -512,7 +554,7 @@ export const getAllOrderPurchasedFirstTime = async (
   dispatch
 ) => {
   try {
-    dispatch(getOrderPurchasedStart())
+    dispatch(getOrderPurchasedStart());
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
@@ -530,12 +572,12 @@ export const getAllOrderPurchasedFirstTime = async (
       dispatch(getOrderPurchased(res.data.results.data));
       return res.data.results.data;
     } else {
-      dispatch(getOrderPurchasedFailed())
+      dispatch(getOrderPurchasedFailed());
       notifyService.showError("Get Order Purchased Failed");
     }
   } catch (error) {
     console.log(error);
-    dispatch(getOrderPurchasedFailed())
+    dispatch(getOrderPurchasedFailed());
     notifyService.showError("Get Order Purchased Failed");
   }
 };
@@ -546,7 +588,7 @@ export const receiveOrderPurchasedRequest = async (
   dispatch
 ) => {
   try {
-    dispatch(getOrderPurchasedStart())
+    dispatch(getOrderPurchasedStart());
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
@@ -566,12 +608,12 @@ export const receiveOrderPurchasedRequest = async (
       );
       return res.data.results.data;
     } else {
-      dispatch(getOrderPurchasedFailed())
+      dispatch(getOrderPurchasedFailed());
       notifyService.showError("Change Shipping Status Of Order Sold Failed");
     }
   } catch (error) {
     console.log(error);
-    dispatch(getOrderPurchasedFailed())
+    dispatch(getOrderPurchasedFailed());
     notifyService.showError("Change Shipping Status Of Order Sold Failed");
   }
 };
@@ -626,9 +668,13 @@ export const getAllOrderSold = async (accessToken, refreshToken, dispatch) => {
     notifyService.showError("Get Order Sold Failed");
   }
 };
-export const getAllOrderSoldFirstTime = async (accessToken, refreshToken, dispatch) => {
+export const getAllOrderSoldFirstTime = async (
+  accessToken,
+  refreshToken,
+  dispatch
+) => {
   try {
-    dispatch(getOrderSoldStart())
+    dispatch(getOrderSoldStart());
     const config = {
       Authorization: `Bearer ${accessToken}`,
     };
@@ -646,12 +692,12 @@ export const getAllOrderSoldFirstTime = async (accessToken, refreshToken, dispat
       dispatch(getOrderSold(res.data.results.data));
       return res.data.results.data;
     } else {
-      dispatch(getOrderSoldFailed())
+      dispatch(getOrderSoldFailed());
       notifyService.showError("Get Order Sold Failed");
     }
   } catch (error) {
     console.log(error);
-    dispatch(getOrderSoldFailed())
+    dispatch(getOrderSoldFailed());
     notifyService.showError("Get Order Sold Failed");
   }
 };
