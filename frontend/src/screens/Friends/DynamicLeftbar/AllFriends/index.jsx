@@ -7,12 +7,19 @@ import LeftbarTitle from '../LeftbarTitle';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
 import { LeftbarAllFriend } from '../LeftbarMiddleItem';
-import { getProfileSaga } from '../../../../redux/profile/profileSlice';
-import { getAllFriendForMainUser } from '../../../../redux/friend/friendAPI';
+import {
+  getAllFriend,
+  getAllFriendForMainUser,
+} from '../../../../redux/friend/friendAPI';
 import {
   addFriendRequest,
   unfriendRequest,
 } from '../../../../redux/friend/friendSaga';
+import {
+  getGalleryImg,
+  getProfileDetail,
+} from '../../../../redux/profile/profileAPI';
+import { getPostByProfile } from '../../../../redux/apiRequest';
 import '../index.css';
 
 export default function AllFriends() {
@@ -73,6 +80,7 @@ export default function AllFriends() {
     return Helper.isNullOrEmpty(queryParams);
   }, [queryParams]);
 
+  // #region loading variables
   var isLoadingAllFriend = useMemo(() => {
     var result = false;
     if (isFetchingAllFriend) {
@@ -112,6 +120,7 @@ export default function AllFriends() {
     }
     return result;
   }, [isFetchingUnfriend]);
+  // #endregion
 
   // call get all friend once
   useLayoutEffect(() => {
@@ -135,15 +144,10 @@ export default function AllFriends() {
     if (!onDestroy) {
       if (!checkQueryParam) {
         var id = queryParams;
-        dispatch(
-          getProfileSaga({
-            accessToken,
-            refreshToken,
-            id,
-            callRefreshProfile: true,
-            dispatch,
-          })
-        );
+        getProfileDetail(accessToken, refreshToken, id, dispatch);
+        getPostByProfile(accessToken, refreshToken, id, dispatch);
+        getGalleryImg(accessToken, refreshToken, id, dispatch);
+        getAllFriend(accessToken, refreshToken, id, dispatch);
       }
     }
     return () => {

@@ -1,6 +1,8 @@
 import { put, takeLatest, call } from 'redux-saga/effects';
-import { axiosInStanceJWT } from '../axiosJWT';
 import api from '../../common/environment/environment';
+import { axiosInStanceJWT } from '../axiosJWT';
+import { notifyService } from '../../services/notifyService';
+import { galleryPaging } from '../../common/constants/apiConfig';
 import {
   updateAvtSagaSuccess,
   updateDetailSagaSuccess,
@@ -9,21 +11,22 @@ import {
   deleteWallpaperSagaSuccess,
   getProfileDetailSuccess,
   getProfileSaga,
-  getProfileSagaSuccess,
   getGallerySuccess,
-  getProfileDetailStart,
   getProfileDetailFailed,
-  getGalleryStart,
   getGalleryFailed,
+  updateAvtStart,
+  updateAvtFailed,
+  updateWallStart,
+  updateWallFailed,
+  updateDetailStart,
+  updateDetailFailed,
 } from './profileSlice';
-import { notifyService } from '../../services/notifyService';
 import {
   acceptSagaSuccess,
   addFriendSagaSuccess,
   denySagaSuccess,
   unfriendSagaSuccess,
 } from '../friend/friendSlice';
-import { galleryPaging } from '../../common/constants/apiConfig';
 import {
   createPostSagaSuccess,
   deletePostSagaSuccess,
@@ -34,7 +37,6 @@ import { updateUserAvt, updateUserWall } from '../auth/authSlice';
 export function* refreshProfile() {
   yield takeLatest(
     [
-      getProfileSaga.type,
       updateAvtSagaSuccess.type,
       updateWallpaperSagaSuccess.type,
       updateDetailSagaSuccess.type,
@@ -69,7 +71,17 @@ async function getProfileDetailSaga(data) {
     callRefreshGallery = true,
     dispatch,
   } = data.payload;
-  dispatch(getProfileDetailStart());
+  dispatch(
+    getProfileSaga({
+      accessToken,
+      refreshToken,
+      id,
+      callRefreshFriend,
+      callRefreshPost,
+      callRefreshGallery,
+      dispatch,
+    })
+  );
   try {
     const res = await axiosInStanceJWT.get(
       `${api.profile}/getProfileDetailById/${id}`,
@@ -82,17 +94,6 @@ async function getProfileDetailSaga(data) {
       }
     );
     if (!res.data.message) {
-      dispatch(
-        getProfileSagaSuccess({
-          accessToken,
-          refreshToken,
-          id,
-          callRefreshFriend,
-          callRefreshPost,
-          callRefreshGallery,
-          dispatch,
-        })
-      );
       return res;
     } else {
       console.log(res.data.message);
@@ -119,6 +120,8 @@ export async function updateAvtRequest(data) {
 
   var bodyFormData = new FormData();
   bodyFormData.append('file', avatar);
+
+  dispatch(updateAvtStart());
 
   try {
     const res = await axiosInStanceJWT.post(
@@ -149,10 +152,12 @@ export async function updateAvtRequest(data) {
       return res;
     } else {
       notifyService.showError(res.data.message);
+      dispatch(updateAvtFailed());
     }
   } catch (error) {
     console.log(error);
     notifyService.showError('Update Avatar Failed!');
+    dispatch(updateAvtFailed());
   }
 }
 // #endregion
@@ -170,6 +175,8 @@ export async function updateWallRequest(data) {
 
   var bodyFormData = new FormData();
   bodyFormData.append('file', wallpaper);
+
+  dispatch(updateWallStart());
 
   try {
     const res = await axiosInStanceJWT.post(
@@ -200,10 +207,12 @@ export async function updateWallRequest(data) {
       return res;
     } else {
       notifyService.showError(res.data.message);
+      dispatch(updateWallFailed());
     }
   } catch (error) {
     console.log(error);
     notifyService.showError('Update Wallpaper Failed!');
+    dispatch(updateWallFailed());
   }
 }
 // #endregion
@@ -218,7 +227,7 @@ export async function updateDetailRequest(data) {
     callRefreshProfile = true,
     dispatch,
   } = data;
-
+  dispatch(updateDetailStart());
   try {
     const res = await axiosInStanceJWT.put(
       `${api.profile}/description`,
@@ -247,10 +256,12 @@ export async function updateDetailRequest(data) {
       return res;
     } else {
       notifyService.showError(res.data.message);
+      dispatch(updateDetailFailed());
     }
   } catch (error) {
     console.log(error);
     notifyService.showError('Update Profile Failed!');
+    dispatch(updateDetailFailed());
   }
 }
 // #endregion
@@ -264,7 +275,7 @@ export async function deleteAvtRequest(data) {
     callRefreshProfile = true,
     dispatch,
   } = data;
-
+  dispatch(updateAvtStart());
   try {
     const res = await axiosInStanceJWT.delete(
       `${api.image}/profile_avatar/delete`,
@@ -293,10 +304,12 @@ export async function deleteAvtRequest(data) {
       return res;
     } else {
       notifyService.showError(res.data.message);
+      dispatch(updateAvtFailed());
     }
   } catch (error) {
     console.log(error);
     notifyService.showError('Remove Avatar Failed!');
+    dispatch(updateAvtFailed());
   }
 }
 // #endregion
@@ -310,7 +323,7 @@ export async function deleteWallRequest(data) {
     callRefreshProfile = true,
     dispatch,
   } = data;
-
+  dispatch(updateWallStart());
   try {
     const res = await axiosInStanceJWT.delete(
       `${api.image}/profile_wallpaper/delete`,
@@ -339,10 +352,12 @@ export async function deleteWallRequest(data) {
       return res;
     } else {
       notifyService.showError(res.data.message);
+      dispatch(updateWallFailed());
     }
   } catch (error) {
     console.log(error);
     notifyService.showError('Remove Wallpaper Failed!');
+    dispatch(updateWallFailed());
   }
 }
 // #endregion
@@ -351,7 +366,7 @@ export async function deleteWallRequest(data) {
 export function* getGalleryImageReq() {
   yield takeLatest(
     [
-      getProfileSagaSuccess.type,
+      getProfileSaga.type,
 
       createPostSagaSuccess.type,
       updatePostSagaSuccess.type,
@@ -372,7 +387,6 @@ function* handleGetGallery(data) {
 }
 async function getGallerySagaRequest(data) {
   const { accessToken, refreshToken, id, dispatch } = data.payload;
-  dispatch(getGalleryStart());
   try {
     const res = await axiosInStanceJWT.post(
       `${api.profile}/galleryImage/${id}`,

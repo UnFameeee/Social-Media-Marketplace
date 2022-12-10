@@ -34,7 +34,6 @@ import { ValidateForm, FormChildren } from '../../components/Form';
 import { cities } from '../../common/constants/listConstants';
 import { Helper } from '../../utils/Helper';
 import MUI from '../../components/MUI';
-import { getProfileSaga } from '../../redux/profile/profileSlice';
 import {
   acceptFriendRequest,
   addFriendRequest,
@@ -48,6 +47,12 @@ import {
   updateDetailRequest,
   updateWallRequest,
 } from '../../redux/profile/profileSaga';
+import {
+  getGalleryImg,
+  getProfileDetail,
+} from '../../redux/profile/profileAPI';
+import { getPostByProfile } from '../../redux/apiRequest';
+import { getAllFriend } from '../../redux/friend/friendAPI';
 import './index.css';
 
 function UserProfile(props) {
@@ -68,6 +73,9 @@ function UserProfile(props) {
   const refreshToken = useSelector(
     (state) => state.auth.login.currentUser.refresh
   );
+  const userData = useSelector(
+    (state) => state.auth?.user?.userData?.profile
+  );
   const posts = useSelector(
     (state) => state.post.getByProfile?.posts?.results?.data,
     shallowEqual
@@ -76,14 +84,13 @@ function UserProfile(props) {
     (state) => state.profile?.profileDetails?.data,
     shallowEqual
   );
-  const userData = useSelector(
-    (state) => state.auth?.user?.userData?.profile
-  );
   const allFriends = useSelector(
-    (state) => state.friends.getAll?.data
+    (state) => state.friends.getAll?.data,
+    shallowEqual
   );
   const galleryImgs = useSelector(
-    (state) => state.profile.galleryImg?.data
+    (state) => state.profile.galleryImg?.data,
+    shallowEqual
   );
   const isFetchingProfileDetail = useSelector(
     (state) => state.profile?.profileDetails?.isFetching
@@ -96,6 +103,15 @@ function UserProfile(props) {
   );
   const isFetchingFriend = useSelector(
     (state) => state.friends.getAll?.isFetching
+  );
+  const isFetchingAvt = useSelector(
+    (state) => state.profile?.updateAvt?.isFetching
+  );
+  const isFetchingWall = useSelector(
+    (state) => state.profile?.updateWall?.isFetching
+  );
+  const isFetchingDetail = useSelector(
+    (state) => state.profile?.updateDetail?.isFetching
   );
   // #endregion
 
@@ -139,6 +155,36 @@ function UserProfile(props) {
     }
     return result;
   }, [isFetchingFriend]);
+
+  var isLoadingAvt = useMemo(() => {
+    var result = false;
+    if (isFetchingAvt) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingAvt]);
+
+  var isLoadingWall = useMemo(() => {
+    var result = false;
+    if (isFetchingWall) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingWall]);
+
+  var isLoadingDetail = useMemo(() => {
+    var result = false;
+    if (isFetchingDetail) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingDetail]);
   // #endregion
 
   var id =
@@ -291,15 +337,10 @@ function UserProfile(props) {
     let onDestroy = false;
     if (!onDestroy) {
       if (Helper.checkURL('profile', {}, true)) {
-        dispatch(
-          getProfileSaga({
-            accessToken,
-            refreshToken,
-            id,
-            callRefreshProfile,
-            dispatch,
-          })
-        );
+        getProfileDetail(accessToken, refreshToken, id, dispatch);
+        getPostByProfile(accessToken, refreshToken, id, dispatch);
+        getGalleryImg(accessToken, refreshToken, id, dispatch);
+        getAllFriend(accessToken, refreshToken, id, dispatch);
       }
     }
     return () => {
@@ -309,248 +350,260 @@ function UserProfile(props) {
 
   return (
     <>
-      {isLoadingProfileDetail ? (
-        <>
-          <div className="pt-[var(--navbar-height)]">
-            <Skeleton variant="rounded" height={460} />
+      {/* save wallpaper or not */}
+      {wallpaper && wallpaperURL && (
+        <div id="updateWallpaper">
+          <div id="leftSide">
+            <MdWallpaper style={{ fontSize: '3.2rem' }} />
+            <span className="leading-[1.8rem] text-[1.8rem]">
+              Change your wallpaper
+            </span>
           </div>
-          <div className="mt-[2rem] flex mx-auto w-[120rem] gap-[2rem]">
-            <div className="leftSideInfo w-[45%]">
-              <Skeleton variant="rounded" width={520} height={420} />
-            </div>
-            <div className="rightSidePosts w-[55%]">
-              <div className="flex flex-col gap-[1rem]">
-                <div className="flex items-center gap-[1rem] pl-[1rem] w-[70rem]">
-                  <div>
-                    <Skeleton
-                      variant="circular"
-                      width={40}
-                      height={40}
-                    />
-                  </div>
-                  <div className=" flex-1">
-                    <Skeleton
-                      variant="text"
-                      sx={{ fontSize: '3rem' }}
-                    />
-                  </div>
-                </div>
-                <Skeleton
-                  variant="rounded"
-                  sx={{ width: '70rem', height: '36.5rem' }}
-                />
-              </div>
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          {/* save wallpaper or not */}
-          {wallpaper && wallpaperURL && (
-            <div id="updateWallpaper">
-              <div id="leftSide">
-                <MdWallpaper style={{ fontSize: '3.2rem' }} />
-                <span className="leading-[1.8rem] text-[1.8rem]">
-                  Change your wallpaper
-                </span>
-              </div>
-              <div id="rightSide">
-                <MUI.Button onClick={clearWallpaper}>
-                  Cancel
-                </MUI.Button>
-                <MUI.Button
-                  onClick={() => {
-                    updateWallRequest({
-                      accessToken,
-                      refreshToken,
-                      wallpaper,
-                      id,
-                      dispatch,
-                    });
+          <div id="rightSide">
+            <MUI.Button onClick={clearWallpaper}>Cancel</MUI.Button>
+            <MUI.Button
+              onClick={() => {
+                updateWallRequest({
+                  accessToken,
+                  refreshToken,
+                  wallpaper,
+                  id,
+                  dispatch,
+                });
 
-                    clearWallpaper();
+                clearWallpaper();
+              }}
+            >
+              Save changes
+            </MUI.Button>
+          </div>
+        </div>
+      )}
+
+      <div id="profileTop" className="shadow-md">
+        <div className="relative h-[46rem]">
+          {/* wallpaper - not using img to avoid the img show when theres no src */}
+          {isLoadingProfileDetail ? (
+            <Skeleton
+              id="wallpaper"
+              variant="rounded"
+              style={{ backgroundColor: 'rgba(0, 0, 0, 0.11)' }}
+            />
+          ) : (
+            <div
+              style={
+                !isLoadingWall
+                  ? wallpaperURL
+                    ? { backgroundImage: `url(${wallpaperURL}` }
+                    : {
+                        backgroundImage: `url(${profileData?.wallpaper}`,
+                      }
+                  : null
+              }
+              id="wallpaper"
+              className="shadow-lg"
+            >
+              {isLoadingWall && (
+                <CircularProgress
+                  style={{
+                    color: 'var(--primary-color)',
+                    width: '6rem',
+                    height: '6rem',
                   }}
-                >
-                  Save changes
-                </MUI.Button>
-              </div>
+                />
+              )}
             </div>
           )}
 
-          <div id="profileTop" className="shadow-md">
-            <div className="relative h-[46rem]">
-              {/* wallpaper - not using img to avoid the img show when theres no src */}
-              <div
-                style={
-                  wallpaperURL
-                    ? { backgroundImage: `url(${wallpaperURL}` }
-                    : profileData?.wallpaper
-                    ? {
-                        backgroundImage: `url(${profileData?.wallpaper}`,
+          {/* handle wallpaper actions */}
+          {profileData?.profile_id === userData?.profile_id &&
+            !isLoadingProfileDetail && (
+              <ClickAwayListener
+                onClickAway={() => {
+                  setMenuClicked(false);
+                }}
+              >
+                <div>
+                  <button
+                    id="editWallpaper"
+                    className="shadow-inner"
+                    onClick={() => {
+                      setMenuClicked(!menuClicked);
+                    }}
+                  >
+                    <PhotoCamera style={{ fontSize: '2.5rem' }} />
+                    <span className="text-[1.8rem]">
+                      Edit Wallpaper
+                    </span>
+                  </button>
+                  <input
+                    className="hidden"
+                    type="file"
+                    onChange={onImageChange}
+                    accept="image/*"
+                    id="wallpaperRef"
+                  />
+                  {menuClicked && (
+                    <MUI.Menu
+                      style={{
+                        width: 'auto',
+                        zIndex: 1,
+                        right: '1rem',
+                        bottom: profileData?.wallpaper
+                          ? '2rem'
+                          : '7.6rem',
+                      }}
+                      list={
+                        profileData?.wallpaper
+                          ? listUploadWall.concat({
+                              middle: 'Remove',
+                              onClick: () => {
+                                setOpenConfirmRemove(true);
+                                setMenuClicked(false);
+                              },
+                            })
+                          : listUploadWall
                       }
-                    : null
-                }
-                id="wallpaper"
-                className="shadow-lg"
-              ></div>
+                    />
+                  )}
 
-              {/* handle wallpaper actions */}
-              {profileData?.profile_id === userData?.profile_id && (
-                <ClickAwayListener
-                  onClickAway={() => {
-                    setMenuClicked(false);
+                  <MUI.ConfirmDialog
+                    modalProps={[
+                      openConfirmRemove,
+                      setOpenConfirmRemove,
+                    ]}
+                    title="Remove wallpaper"
+                    actionName="remove your wallpaper"
+                    confirmAction={() => {
+                      deleteWallRequest({
+                        accessToken,
+                        refreshToken,
+                        id,
+                        dispatch,
+                      });
+
+                      setOpenConfirmRemove(false);
+                      setWallpaper('');
+                    }}
+                  />
+                </div>
+              </ClickAwayListener>
+            )}
+
+          <div>
+            <div className="bigRoundAvt absolute left-[3.5rem] top-[26rem]">
+              {/* avatar */}
+              {isLoadingProfileDetail ? (
+                <Skeleton
+                  variant="circular"
+                  style={{
+                    width: '18rem',
+                    height: '18rem',
+                  }}
+                />
+              ) : isLoadingAvt ? (
+                <Avatar
+                  sx={{
+                    width: '18rem',
+                    height: '18rem',
                   }}
                 >
-                  <div>
-                    <button
-                      id="editWallpaper"
-                      className="shadow-inner"
-                      onClick={() => {
-                        setMenuClicked(!menuClicked);
-                      }}
-                    >
-                      <PhotoCamera style={{ fontSize: '2.5rem' }} />
-                      <span className="text-[1.8rem]">
-                        Edit Wallpaper
-                      </span>
-                    </button>
-                    <input
-                      className="hidden"
-                      type="file"
-                      onChange={onImageChange}
-                      accept="image/*"
-                      id="wallpaperRef"
-                    />
-                    {menuClicked && (
-                      <MUI.Menu
-                        style={{
-                          width: 'auto',
-                          zIndex: 1,
-                          right: '1rem',
-                          bottom: profileData?.wallpaper
-                            ? '2rem'
-                            : '7.6rem',
-                        }}
-                        list={
-                          profileData?.wallpaper
-                            ? listUploadWall.concat({
-                                middle: 'Remove',
-                                onClick: () => {
-                                  setOpenConfirmRemove(true);
-                                  setMenuClicked(false);
-                                },
-                              })
-                            : listUploadWall
-                        }
-                      />
-                    )}
-
-                    <MUI.ConfirmDialog
-                      modalProps={[
-                        openConfirmRemove,
-                        setOpenConfirmRemove,
-                      ]}
-                      title="Remove wallpaper"
-                      actionName="remove your wallpaper"
-                      confirmAction={() => {
-                        deleteWallRequest({
-                          accessToken,
-                          refreshToken,
-                          id,
-                          dispatch,
-                        });
-
-                        setOpenConfirmRemove(false);
-                        setWallpaper('');
-                      }}
-                    />
-                  </div>
-                </ClickAwayListener>
+                  <CircularProgress
+                    style={{
+                      color: 'var(--primary-color)',
+                    }}
+                  />
+                </Avatar>
+              ) : (
+                <Avatar
+                  sx={{
+                    width: '18rem',
+                    height: '18rem',
+                    fontSize: '10rem',
+                  }}
+                  alt={profileData?.profile_name}
+                  src={profileData?.avatar}
+                >
+                  {profileData?.profile_name?.at(0)}
+                </Avatar>
               )}
 
-              <div>
-                <div className="bigRoundAvt absolute left-[3.5rem] top-[26rem]">
-                  {/* avatar */}
-                  <Avatar
-                    sx={{
-                      width: '18rem',
-                      height: '18rem',
-                      fontSize: '10rem',
-                    }}
-                    alt={profileData?.profile_name}
-                    src={profileData?.avatar}
-                  >
-                    {profileData?.profile_name?.at(0)}
-                  </Avatar>
-
-                  {/* handle Avatar */}
-                  {profileData?.profile_id ===
-                    userData?.profile_id && (
-                    <>
-                      <button
-                        className="bg-white absolute right-0 top-[12rem] z-1 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer"
-                        onClick={() => {
-                          setOpenAvatarModal(true);
-                        }}
-                      >
-                        <PhotoCamera
-                          className=" bg-white right-0 top-[12rem] z-1"
-                          style={{ fontSize: '2.5rem' }}
-                        />
-                      </button>
-
-                      {/* edit avatar modal */}
-                      <UpdateAvatar
-                        modalProps={[
-                          openAvatarModal,
-                          setOpenAvatarModal,
-                        ]}
-                        profileData={profileData}
-                        actionProps={{
-                          accessToken: accessToken,
-                          refreshToken: refreshToken,
-                          id: profileData?.profile_id,
-                          dispatch: dispatch,
-                        }}
+              {/* handle Avatar */}
+              {profileData?.profile_id === userData?.profile_id &&
+                !isLoadingProfileDetail && (
+                  <>
+                    <button
+                      className="bg-white absolute right-0 top-[12rem] z-1 p-[0.65rem] rounded-[50%] shadow-lg hover:cursor-pointer"
+                      onClick={() => {
+                        setOpenAvatarModal(true);
+                      }}
+                    >
+                      <PhotoCamera
+                        className=" bg-white right-0 top-[12rem] z-1"
+                        style={{ fontSize: '2.5rem' }}
                       />
-                    </>
-                  )}
-                </div>
+                    </button>
 
-                <div className="flex pl-[24rem] pr-[4rem] items-center justify-center py-[3.6rem]">
-                  {/* profile name and its friend count */}
-                  <div className="flex-1 flex flex-col gap-[0.3rem] ">
-                    <span className=" font-semibold text-[3rem]">
-                      {profileData?.profile_name}
-                    </span>
-                    <span className="text-[1.8rem] leading-[2.4rem] font-bold text-gray-600">
-                      {allFriends?.page?.totalElement > 0 &&
-                        Helper.isMultiple(
-                          'friend',
-                          allFriends?.page?.totalElement,
-                          ''
-                        )}
-                    </span>
-                  </div>
-
-                  {/* handle profile action - mainly for other profiles (not the person who is logged in) */}
-                  <div className="flex items-end gap-[1rem]">
-                    <ProfileAction
-                      isMainUser={
-                        profileData?.profile_id ===
-                        userData?.profile_id
-                      }
-                      isFriend={profileData?.isFriend}
-                      isSentFriendReq={
-                        profileData?.isSentFriendRequest
-                      }
-                      navigate={navigate}
-                      action={handleActions}
+                    {/* edit avatar modal */}
+                    <UpdateAvatar
+                      modalProps={[
+                        openAvatarModal,
+                        setOpenAvatarModal,
+                      ]}
+                      profileData={profileData}
+                      actionProps={{
+                        accessToken: accessToken,
+                        refreshToken: refreshToken,
+                        id: profileData?.profile_id,
+                        dispatch: dispatch,
+                      }}
                     />
-                  </div>
-                </div>
+                  </>
+                )}
+            </div>
 
-                {/* tab in profile - dont delete 
+            <div className="flex pl-[24rem] pr-[4rem] items-center justify-center py-[3.6rem]">
+              {/* profile name and its friend count */}
+              {isLoadingProfileDetail ? (
+                <Skeleton
+                  variant="rounded"
+                  height={60}
+                  width={'100%'}
+                />
+              ) : (
+                <div className="flex-1 flex flex-col gap-[0.3rem] ">
+                  <span className=" font-semibold text-[3rem]">
+                    {profileData?.profile_name}
+                  </span>
+
+                  <span className="text-[1.8rem] leading-[2.4rem] font-bold text-gray-600">
+                    {allFriends?.page?.totalElement > 0 &&
+                      Helper.isMultiple(
+                        'friend',
+                        allFriends?.page?.totalElement,
+                        ''
+                      )}
+                  </span>
+                </div>
+              )}
+
+              {/* handle profile action - mainly for other profiles (not the person who is logged in) */}
+              {!isLoadingProfileDetail && (
+                <div className="flex items-end gap-[1rem]">
+                  <ProfileAction
+                    isMainUser={
+                      profileData?.profile_id === userData?.profile_id
+                    }
+                    isFriend={profileData?.isFriend}
+                    isSentFriendReq={profileData?.isSentFriendRequest}
+                    navigate={navigate}
+                    action={handleActions}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* tab in profile - dont delete 
             <hr className="mt-[1.5rem] h-[0.15rem] border-0 bg-slate-300 rounded-sm  w-full " />
             <div className="flex items-center py-[1.5rem] px-[1rem]">
               <HoverButton
@@ -569,272 +622,287 @@ function UserProfile(props) {
                 style={{ fontSize: '2.2rem' }}
               />
             </div> */}
-              </div>
-            </div>
           </div>
+        </div>
+      </div>
 
-          {/* handle when you visit someone profile and they had already send you a friend request */}
-          {profileData?.isSentFriendRequest === 'TARGET' && (
-            <div id="friendRequest">
-              <span className="flex-1 font-medium">
-                {profileData?.profile_name} sent you a friend request
+      {/* handle when you visit someone profile and they had already send you a friend request */}
+      {profileData?.isSentFriendRequest === 'TARGET' && (
+        <div id="friendRequest">
+          <span className="flex-1 font-medium">
+            {profileData?.profile_name} sent you a friend request
+          </span>
+          <div className="flex items-end gap-[1rem]">
+            <MUI.Button
+              className="gap-[0.8rem]"
+              style={{ minWidth: '14rem' }}
+              onClick={() => {
+                handleActions('accept');
+              }}
+            >
+              <FaUserPlus style={{ fontSize: '2.2rem' }} />
+              <span className=" text-[1.6rem] font-semibold">
+                Confirm
               </span>
-              <div className="flex items-end gap-[1rem]">
-                <MUI.Button
-                  className="gap-[0.8rem]"
-                  style={{ minWidth: '14rem' }}
-                  onClick={() => {
-                    handleActions('accept');
-                  }}
-                >
-                  <FaUserPlus style={{ fontSize: '2.2rem' }} />
-                  <span className=" text-[1.6rem] font-semibold">
-                    Confirm
-                  </span>
-                </MUI.Button>
-                <MUI.Button
-                  className="gap-[0.8rem]"
-                  style={{ minWidth: '14rem' }}
-                  onClick={() => {
-                    handleActions('deny');
-                  }}
-                >
-                  <FaUserMinus style={{ fontSize: '2.2rem' }} />
-                  <span className=" text-[1.6rem] font-semibold">
-                    Deny
-                  </span>
-                </MUI.Button>
-              </div>
-            </div>
-          )}
+            </MUI.Button>
+            <MUI.Button
+              className="gap-[0.8rem]"
+              style={{ minWidth: '14rem' }}
+              onClick={() => {
+                handleActions('deny');
+              }}
+            >
+              <FaUserMinus style={{ fontSize: '2.2rem' }} />
+              <span className=" text-[1.6rem] font-semibold">
+                Deny
+              </span>
+            </MUI.Button>
+          </div>
+        </div>
+      )}
 
-          <div className="mt-[2rem] flex mx-auto w-[120rem] gap-[2rem]">
-            <div className="leftSideInfo w-[45%] flex flex-col relative">
-              <div className="sticky top-[-83.5rem]">
-                {/* profile description */}
+      <div className="mt-[2rem] flex mx-auto w-[120rem] gap-[2rem]">
+        <div className="leftSideInfo w-[45%] flex flex-col relative">
+          <div className="sticky top-[-83.5rem]">
+            {/* profile description */}
+            {isLoadingProfileDetail ? (
+              <div className="mb-[2rem]">
+                <Skeleton
+                  variant="rounded"
+                  width={531}
+                  height={100}
+                />
+              </div>
+            ) : (
+              <>
                 {(!Helper.isEmptyObject(profile_description, true) ||
                   userData?.profile_id ===
                     profileData?.profile_id) && (
                   <div className="bg-white rounded-xl p-[1.5rem] shadow-md mb-[2rem]">
-                    <div className="flex flex-col">
-                      <span className="font-bold text-[2.3rem]">
-                        Intro
-                      </span>
-                      {!editBio ? (
-                        <>
-                          {profile_description?.description && (
-                            <span id="profileBio">
-                              {profile_description?.description}
-                            </span>
-                          )}
-                          {userData?.profile_id ===
-                            profileData?.profile_id && (
-                            <SideBarButton
-                              id="editBioBtn"
-                              label="Edit bio"
-                              onClick={() => {
-                                setEditBio(true);
-                              }}
+                    {isLoadingDetail ? (
+                      <div className="text-center">
+                        <CircularProgress
+                          style={{ color: 'var(--primary-color)' }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="flex flex-col">
+                        <span className="font-bold text-[2.3rem]">
+                          Intro
+                        </span>
+                        {!editBio ? (
+                          <>
+                            {profile_description?.description && (
+                              <span id="profileBio">
+                                {profile_description?.description}
+                              </span>
+                            )}
+                            {userData?.profile_id ===
+                              profileData?.profile_id && (
+                              <SideBarButton
+                                id="editBioBtn"
+                                label="Edit bio"
+                                onClick={() => {
+                                  setEditBio(true);
+                                }}
+                              />
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <TextareaAutosize
+                              placeholder="Describe Yourself"
+                              autoFocus
+                              maxLength="200"
+                              id="profileBioEditor"
+                              defaultValue={
+                                profile_description?.description
+                              }
                             />
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <TextareaAutosize
-                            placeholder="Describe Yourself"
-                            autoFocus
-                            maxLength="200"
-                            id="profileBioEditor"
-                            defaultValue={
-                              profile_description?.description
-                            }
-                          />
-                          <div id="editBioAction">
-                            <MUI.Button
-                              onClick={() => {
-                                setEditBio(false);
-                              }}
-                            >
-                              Cancel
-                            </MUI.Button>
-                            <MUI.Button
-                              onClick={() => {
-                                let description = {
-                                  description:
-                                    document.getElementById(
-                                      'profileBioEditor'
-                                    )?.value,
-                                };
-                                updateDetailRequest({
-                                  accessToken,
-                                  refreshToken,
-                                  description,
-                                  id,
-                                  dispatch,
-                                });
+                            <div id="editBioAction">
+                              <MUI.Button
+                                onClick={() => {
+                                  setEditBio(false);
+                                }}
+                              >
+                                Cancel
+                              </MUI.Button>
+                              <MUI.Button
+                                onClick={() => {
+                                  let description = {
+                                    description:
+                                      document.getElementById(
+                                        'profileBioEditor'
+                                      )?.value,
+                                  };
+                                  updateDetailRequest({
+                                    accessToken,
+                                    refreshToken,
+                                    description,
+                                    id,
+                                    dispatch,
+                                  });
 
-                                setEditBio(false);
-                              }}
-                            >
-                              Save
-                            </MUI.Button>
-                          </div>
-                        </>
-                      )}
+                                  setEditBio(false);
+                                }}
+                              >
+                                Save
+                              </MUI.Button>
+                            </div>
+                          </>
+                        )}
 
-                      {!Helper.isEmptyObject(
-                        descriptionWithoutBio,
-                        true
-                      ) && (
-                        <ul className="mt-[2rem] flex flex-col gap-[2rem] [&>li]:flex [&>li]:items-center [&>li]:gap-[1rem]">
-                          {Object.entries(descriptionWithoutBio)?.map(
-                            (x, index) => {
+                        {!Helper.isEmptyObject(
+                          descriptionWithoutBio,
+                          true
+                        ) && (
+                          <ul className="mt-[2rem] flex flex-col gap-[2rem] [&>li]:flex [&>li]:items-center [&>li]:gap-[1rem]">
+                            {Object.entries(
+                              descriptionWithoutBio
+                            )?.map((x, index) => {
                               return (
                                 <SideBarLi
                                   key={index}
                                   description={x}
                                 />
                               );
-                            }
-                          )}
-                        </ul>
-                      )}
-                      {userData?.profile_id ===
-                        profileData?.profile_id && (
-                        <SideBarButton
-                          label="Edit details"
-                          onClick={() => {
-                            setOpenDetailsModal(true);
-                          }}
-                        />
-                      )}
-                      {/* <SideBarButton label="Add Hobbies" />
+                            })}
+                          </ul>
+                        )}
+                        {userData?.profile_id ===
+                          profileData?.profile_id && (
+                          <SideBarButton
+                            label="Edit details"
+                            onClick={() => {
+                              setOpenDetailsModal(true);
+                            }}
+                          />
+                        )}
+                        {/* <SideBarButton label="Add Hobbies" />
                       <SideBarButton label="Add Featured" /> */}
 
-                      {/* edit details modal */}
-                      <EditDetails
-                        modalProps={[
-                          openDetailsModal,
-                          setOpenDetailsModal,
-                        ]}
-                        profileDescription={descriptionWithoutBio}
-                        actionProps={{
-                          accessToken: accessToken,
-                          refreshToken: refreshToken,
-                          id: profileData?.profile_id,
-                          dispatch: dispatch,
-                        }}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {/* gallery images section */}
-                {isLoadingGallery ? (
-                  <div className="mb-[2rem]">
-                    <Skeleton
-                      variant="rounded"
-                      width={531}
-                      height={100}
-                    />
-                  </div>
-                ) : (
-                  <GridSideInfo
-                    type="photo"
-                    leftLabel="Photos"
-                    // rightLabel={{ text: 'See all Photos' }}
-                    listImg={galleryImgs?.data?.map((x) => {
-                      return { url: x.link };
-                    })}
-                  />
-                )}
-
-                {/* friends section */}
-                {isLoadingFriends ? (
-                  <div className="mb-[2rem]">
-                    <Skeleton
-                      variant="rounded"
-                      width={531}
-                      height={100}
-                    />
-                  </div>
-                ) : (
-                  <GridSideInfo
-                    type="friendPhoto"
-                    leftLabel="Friends"
-                    rightLabel={
-                      userData?.profile_id === profileData?.profile_id
-                        ? {
-                            text: 'See all Friends',
-                            onClick: () => {
-                              if (
-                                parseInt(id) === userData?.profile_id
-                              ) {
-                                navigate('/friends/all');
-                              }
-                            },
-                          }
-                        : null
-                    }
-                    listImg={allFriends?.data?.map((x) => {
-                      return {
-                        id: x.profile_id,
-                        url: x.avatar,
-                        name: x.profile_name,
-                      };
-                    })}
-                    totalFriends={Helper.isMultiple(
-                      'friend',
-                      allFriends?.page?.totalElement
+                        {/* edit details modal */}
+                        <EditDetails
+                          modalProps={[
+                            openDetailsModal,
+                            setOpenDetailsModal,
+                          ]}
+                          profileDescription={descriptionWithoutBio}
+                          actionProps={{
+                            accessToken: accessToken,
+                            refreshToken: refreshToken,
+                            id: profileData?.profile_id,
+                            dispatch: dispatch,
+                          }}
+                        />
+                      </div>
                     )}
-                    navigate={navigate}
-                  />
-                )}
-              </div>
-            </div>
-
-            <div className="rightSidePosts w-[55%]">
-              {isLoadingPosts ? (
-                <div className="flex flex-col gap-[1rem]">
-                  <div className="flex items-center gap-[1rem] pl-[1rem] w-[70rem]">
-                    <div>
-                      <Skeleton
-                        variant="circular"
-                        width={40}
-                        height={40}
-                      />
-                    </div>
-                    <div className=" flex-1">
-                      <Skeleton
-                        variant="text"
-                        sx={{ fontSize: '3rem' }}
-                      />
-                    </div>
                   </div>
+                )}
+              </>
+            )}
+
+            {/* gallery images section */}
+            {isLoadingGallery ? (
+              <div className="mb-[2rem]">
+                <Skeleton
+                  variant="rounded"
+                  width={531}
+                  height={100}
+                />
+              </div>
+            ) : (
+              <GridSideInfo
+                type="photo"
+                leftLabel="Photos"
+                // rightLabel={{ text: 'See all Photos' }}
+                listImg={galleryImgs?.data?.map((x) => {
+                  return { url: x.link };
+                })}
+              />
+            )}
+
+            {/* friends section */}
+            {isLoadingFriends ? (
+              <div className="mb-[2rem]">
+                <Skeleton
+                  variant="rounded"
+                  width={531}
+                  height={100}
+                />
+              </div>
+            ) : (
+              <GridSideInfo
+                type="friendPhoto"
+                leftLabel="Friends"
+                rightLabel={
+                  userData?.profile_id === profileData?.profile_id
+                    ? {
+                        text: 'See all Friends',
+                        onClick: () => {
+                          if (parseInt(id) === userData?.profile_id) {
+                            navigate('/friends/all');
+                          }
+                        },
+                      }
+                    : null
+                }
+                listImg={allFriends?.data?.map((x) => {
+                  return {
+                    id: x.profile_id,
+                    url: x.avatar,
+                    name: x.profile_name,
+                  };
+                })}
+                totalFriends={Helper.isMultiple(
+                  'friend',
+                  allFriends?.page?.totalElement
+                )}
+                navigate={navigate}
+              />
+            )}
+          </div>
+        </div>
+
+        <div className="rightSidePosts w-[55%]">
+          {isLoadingPosts ? (
+            <div className="flex flex-col gap-[1rem]">
+              <div className="flex items-center gap-[1rem] pl-[1rem] w-[70rem]">
+                <div>
                   <Skeleton
-                    variant="rounded"
-                    sx={{ width: '70rem', height: '36.5rem' }}
+                    variant="circular"
+                    width={40}
+                    height={40}
                   />
                 </div>
-              ) : (
-                <>
-                  {profileData?.profile_id ===
-                    userData?.profile_id && (
-                    <PostStatus profile={profileData} />
-                  )}
-                  {posts?.map((post) => (
-                    <CardPost
-                      postData={post}
-                      key={post.post_id}
-                      profile={profileData}
-                    />
-                  ))}
-                </>
-              )}
+                <div className=" flex-1">
+                  <Skeleton
+                    variant="text"
+                    sx={{ fontSize: '3rem' }}
+                  />
+                </div>
+              </div>
+              <Skeleton
+                variant="rounded"
+                sx={{ width: '70rem', height: '36.5rem' }}
+              />
             </div>
-          </div>
-        </>
-      )}
+          ) : (
+            <>
+              {profileData?.profile_id === userData?.profile_id && (
+                <PostStatus profile={profileData} />
+              )}
+              {posts?.map((post) => (
+                <CardPost
+                  postData={post}
+                  key={post.post_id}
+                  profile={profileData}
+                />
+              ))}
+            </>
+          )}
+        </div>
+      </div>
     </>
   );
 }

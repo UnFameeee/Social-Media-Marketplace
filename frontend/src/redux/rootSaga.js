@@ -11,7 +11,6 @@ import {
   refreshAllFriendNotifications,
   refreshAllNotifications,
   refreshAllUnreadNotifications,
-  seenNotification,
 } from './notifications/notificationSaga';
 import {
   createNewPost,
@@ -60,12 +59,11 @@ export default function* rootSaga() {
     fork(getAllShoppingProduct),
     fork(getListCartWithoutPagingSG),
     fork(getAllOrderPurchasedSaga),
-    fork(getAllOrderSoldSaga)
+    fork(getAllOrderSoldSaga),
   ]);
   yield all([
     fork(refreshAllNotifications),
     fork(refreshAllUnreadNotifications),
     fork(refreshAllFriendNotifications),
-    fork(seenNotification),
   ]);
 }

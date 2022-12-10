@@ -7,9 +7,14 @@ import LeftbarTitle from '../LeftbarTitle';
 import { LeftbarFriendSuggest } from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
-import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 import { getAllSuggestions } from '../../../../redux/friend/friendAPI';
 import { addFriendRequest } from '../../../../redux/friend/friendSaga';
+import {
+  getGalleryImg,
+  getProfileDetail,
+} from '../../../../redux/profile/profileAPI';
+import { getPostByProfile } from '../../../../redux/apiRequest';
+import { getAllFriend } from '../../../../redux/friend/friendAPI';
 import '../index.css';
 
 export default function FriendSuggestions() {
@@ -109,14 +114,29 @@ export default function FriendSuggestions() {
     let onDestroy = false;
     if (!onDestroy) {
       if (!checkQueryParam) {
-        dispatch(
-          getProfileSaga({
-            accessToken,
-            refreshToken,
-            id: queryParams,
-            callRefreshProfile: true,
-            dispatch,
-          })
+        getProfileDetail(
+          accessToken,
+          refreshToken,
+          queryParams,
+          dispatch
+        );
+        getPostByProfile(
+          accessToken,
+          refreshToken,
+          queryParams,
+          dispatch
+        );
+        getGalleryImg(
+          accessToken,
+          refreshToken,
+          queryParams,
+          dispatch
+        );
+        getAllFriend(
+          accessToken,
+          refreshToken,
+          queryParams,
+          dispatch
         );
       }
     }
@@ -215,7 +235,7 @@ export default function FriendSuggestions() {
                               (e) => e !== x.profile_id
                             );
                             setListAdded(filter);
-                            
+
                             currentId.current = x.profile_id;
                           },
                         }}

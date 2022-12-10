@@ -20,12 +20,12 @@ import {
   unfriendStart,
 } from './friendSlice';
 import { notifyService } from '../../services/notifyService';
-import { getProfileSagaSuccess } from '../profile/profileSlice';
+import { getProfileSaga } from '../profile/profileSlice';
 
 // #region get all friends
 export function* refreshAllFriend() {
   yield takeLatest(
-    [getProfileSagaSuccess.type, unfriendSagaSuccess.type],
+    [getProfileSaga.type, unfriendSagaSuccess.type],
     handleRefreshAllSaga
   );
 }
