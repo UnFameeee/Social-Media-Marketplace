@@ -3,9 +3,12 @@ import { axiosInStanceJWT } from '../axiosJWT';
 import { leftBarPaging } from '../../common/constants/apiConfig';
 import { notifyService } from '../../services/notifyService';
 import {
+  getAllFriendFailed,
   getAllFriendForMainUserFailed,
   getAllFriendForMainUserStart,
   getAllFriendForMainUserSuccess,
+  getAllFriendStart,
+  getAllFriendSuccess,
   getRequestFailed,
   getRequestStart,
   getRequestSuccess,
@@ -146,6 +149,40 @@ export async function getAllFriendForMainUser(
     console.log(error);
     notifyService.showError(error.message);
     dispatch(getAllFriendForMainUserFailed());
+  }
+}
+// #endregion
+
+// #region get all friends
+export async function getAllFriend(
+  accessToken,
+  refreshToken,
+  id,
+  dispatch
+) {
+  dispatch(getAllFriendStart());
+  try {
+    const res = await axiosInStanceJWT.post(
+      `${api.friend}/all/${id}`,
+      leftBarPaging,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      dispatch(getAllFriendSuccess(res.data.results));
+    } else {
+      notifyService.showError(res.data.message);
+      dispatch(getAllFriendFailed());
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError(error.message);
+    dispatch(getAllFriendFailed());
   }
 }
 // #endregion

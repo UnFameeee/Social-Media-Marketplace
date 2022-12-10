@@ -3,23 +3,29 @@ import { axiosInStanceJWT } from '../axiosJWT';
 import api from '../../common/environment/environment';
 import { leftBarPaging } from '../../common/constants/apiConfig';
 import {
+  acceptFriendFail,
+  acceptFriendStart,
   acceptSagaSuccess,
   addFriendFail,
   addFriendSagaSuccess,
   addFriendStart,
+  denyFriendFail,
+  denyFriendStart,
   denySagaSuccess,
   getAllFriendFailed,
   getAllFriendStart,
   getAllFriendSuccess,
+  unfriendFail,
   unfriendSagaSuccess,
+  unfriendStart,
 } from './friendSlice';
 import { notifyService } from '../../services/notifyService';
-import { getProfileSagaSuccess } from '../profile/profileSlice';
+import { getProfileSaga } from '../profile/profileSlice';
 
 // #region get all friends
 export function* refreshAllFriend() {
   yield takeLatest(
-    [getProfileSagaSuccess.type, unfriendSagaSuccess.type],
+    [getProfileSaga.type, unfriendSagaSuccess.type],
     handleRefreshAllSaga
   );
 }
@@ -72,7 +78,7 @@ export async function acceptFriendRequest(data) {
     callRefreshProfile = false,
     dispatch,
   } = data;
-
+  dispatch(acceptFriendStart());
   try {
     const res = await axiosInStanceJWT.post(
       `${api.friend}/acceptFriendRequest/${id}`,
@@ -101,10 +107,12 @@ export async function acceptFriendRequest(data) {
       );
       return res;
     } else {
+      dispatch(acceptFriendFail());
       notifyService.showError(res.data.message);
     }
   } catch (error) {
     console.log(error);
+    dispatch(acceptFriendFail());
     notifyService.showError('Accept Friend Request Failed!');
   }
 }
@@ -119,7 +127,7 @@ export async function denyFriendRequest(data) {
     callRefreshProfile = false,
     dispatch,
   } = data;
-
+  dispatch(denyFriendStart());
   try {
     const res = await axiosInStanceJWT.post(
       `${api.friend}/denyFriendRequest/${id}`,
@@ -147,10 +155,12 @@ export async function denyFriendRequest(data) {
       );
       return res;
     } else {
+      dispatch(denyFriendFail());
       notifyService.showError(res.data.message);
     }
   } catch (error) {
     console.log(error);
+    dispatch(denyFriendFail());
     notifyService.showError('Deny Failed!');
   }
 }
@@ -165,7 +175,7 @@ export async function unfriendRequest(data) {
     callRefreshProfile,
     dispatch,
   } = data;
-
+  dispatch(unfriendStart());
   try {
     const res = await axiosInStanceJWT.post(
       `${api.friend}/unfriend/${id}`,
@@ -192,10 +202,12 @@ export async function unfriendRequest(data) {
       );
       return res;
     } else {
+      dispatch(unfriendFail());
       notifyService.showError(res.data.message);
     }
   } catch (error) {
     console.log(error);
+    dispatch(unfriendFail());
     notifyService.showError('Unfriend Failed!');
   }
 }

@@ -1,15 +1,20 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState, useRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { CircularProgress, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import { LeftbarSentRequest } from '../LeftbarMiddleItem';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
 import { getAllSentRequest } from '../../../../redux/friend/friendAPI';
-import { getProfileSaga } from '../../../../redux/profile/profileSlice';
 import { addFriendRequest } from '../../../../redux/friend/friendSaga';
+import {
+  getGalleryImg,
+  getProfileDetail,
+} from '../../../../redux/profile/profileAPI';
+import { getPostByProfile } from '../../../../redux/apiRequest';
+import { getAllFriend } from '../../../../redux/friend/friendAPI';
 import '../index.css';
 
 export default function YourSentRequests() {
@@ -18,6 +23,7 @@ export default function YourSentRequests() {
   const location = useLocation();
   const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
 
+  // #region redux variables
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -37,22 +43,17 @@ export default function YourSentRequests() {
   const isFetchingProfileDetail = useSelector(
     (state) => state.profile?.profileDetails?.isFetching
   );
+  const isFetchingCancel = useSelector(
+    (state) => state.friends?.addFriend?.isFetching
+  );
+  // #endregion
 
   const [listCancel, setListCancel] = useState([]);
+  const currentId = useRef(null);
 
   var sentList = useMemo(() => {
     return sentRequests;
   }, [sentRequests]);
-
-  var isLoadingSent = useMemo(() => {
-    var result = false;
-    if (isFetchingSent) {
-      result = true;
-    } else {
-      result = false;
-    }
-    return result;
-  }, [isFetchingSent]);
 
   var checkId = useMemo(() => {
     return sentList?.data?.some(
@@ -64,6 +65,17 @@ export default function YourSentRequests() {
     return Helper.isNullOrEmpty(queryParams);
   }, [queryParams]);
 
+  // #region loading variables
+  var isLoadingSent = useMemo(() => {
+    var result = false;
+    if (isFetchingSent) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingSent]);
+
   var isLoadingProfileDetail = useMemo(() => {
     var result = false;
     if (isFetchingProfileDetail) {
@@ -73,6 +85,17 @@ export default function YourSentRequests() {
     }
     return result;
   }, [isFetchingProfileDetail]);
+
+  var isLoadingCancel = useMemo(() => {
+    var result = false;
+    if (isFetchingCancel) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingCancel]);
+  // #endregion
 
   // call get all sent requests once
   useLayoutEffect(() => {
@@ -90,14 +113,29 @@ export default function YourSentRequests() {
     let onDestroy = false;
     if (!onDestroy) {
       if (!checkQueryParam) {
-        dispatch(
-          getProfileSaga({
-            accessToken,
-            refreshToken,
-            id: queryParams,
-            callRefreshProfile: true,
-            dispatch,
-          })
+        getProfileDetail(
+          accessToken,
+          refreshToken,
+          queryParams,
+          dispatch
+        );
+        getPostByProfile(
+          accessToken,
+          refreshToken,
+          queryParams,
+          dispatch
+        );
+        getGalleryImg(
+          accessToken,
+          refreshToken,
+          queryParams,
+          dispatch
+        );
+        getAllFriend(
+          accessToken,
+          refreshToken,
+          queryParams,
+          dispatch
         );
       }
     }
@@ -154,6 +192,8 @@ export default function YourSentRequests() {
                   <LeftbarSentRequest
                     profile={x}
                     listCancel={listCancel}
+                    isLoading={isLoadingCancel}
+                    currentId={currentId.current}
                     cancelButtonConfig={{
                       onClick: (e) => {
                         e.stopPropagation();
@@ -169,6 +209,8 @@ export default function YourSentRequests() {
                           ...old,
                           x.profile_id,
                         ]);
+
+                        currentId.current = x.profile_id;
                       },
                     }}
                   />

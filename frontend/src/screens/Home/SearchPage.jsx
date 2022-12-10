@@ -1,15 +1,15 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CircularProgress, Skeleton } from '@mui/material';
-import { searchProfile } from '../../redux/apiRequest';
+import { getPostByProfile, searchProfile } from '../../redux/apiRequest';
 import TwoColumns from '../../components/Layout/TwoColumns';
 import { Helper } from '../../utils/Helper';
 import LeftbarTitle from '../Friends/DynamicLeftbar/LeftbarTitle';
 import UserProfile from '../UserProfile/UserProfile';
-import { getProfileSaga } from '../../redux/profile/profileSlice';
 import { localStorageService } from '../../services/localStorageService';
-import { useMemo } from 'react';
+import { getGalleryImg, getProfileDetail } from '../../redux/profile/profileAPI';
+import { getAllFriend } from '../../redux/friend/friendAPI';
 
 export default function SearchPage() {
   const dispatch = useDispatch();
@@ -99,14 +99,29 @@ export default function SearchPage() {
     let onDestroy = false;
     if (!onDestroy) {
       if (!checkId) {
-        dispatch(
-          getProfileSaga({
-            accessToken,
-            refreshToken,
-            id: queryParams.id,
-            callRefreshProfile: true,
-            dispatch,
-          })
+        getProfileDetail(
+          accessToken,
+          refreshToken,
+          queryParams.id,
+          dispatch
+        );
+        getPostByProfile(
+          accessToken,
+          refreshToken,
+          queryParams.id,
+          dispatch
+        );
+        getGalleryImg(
+          accessToken,
+          refreshToken,
+          queryParams.id,
+          dispatch
+        );
+        getAllFriend(
+          accessToken,
+          refreshToken,
+          queryParams.id,
+          dispatch
         );
       }
     }

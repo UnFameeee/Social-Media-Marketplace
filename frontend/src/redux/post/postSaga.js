@@ -15,10 +15,8 @@ import {
   getPostByIdFailed,
   getPostByIdSuccess,
   getPostByProfileFailed,
-  getPostByProfileStart,
   getPostByProfileSuccess,
   getPostFailed,
-  getPostStart,
   getPostSuccess,
   likePostFailed,
   likePostSaga,
@@ -33,18 +31,15 @@ import {
 } from './postSlice';
 import { notifyService } from '../../services/notifyService';
 import { removeUploadImages, uploadImages } from '../apiRequest';
-import { getProfileSagaSuccess } from '../profile/profileSlice';
-import {
-  commentPostSagaSuccess,
-  getCommentPostSagaSuccess,
-} from '../comment/commentSlice';
+import { getProfileSaga } from '../profile/profileSlice';
+import { getCommentPostSagaSuccess } from '../comment/commentSlice';
 import { postPaging } from '../../common/constants/apiConfig';
 
 //#region reFreshPosts
 export function* reFreshPosts() {
   yield takeLatest(
     [
-      getProfileSagaSuccess.type,
+      getProfileSaga.type,
 
       createPostSagaSuccess.type,
       deletePostSagaSuccess.type,
@@ -71,11 +66,6 @@ function* handleReFreshPostSaga(data) {
 }
 const getAllPostSagaRequest = async (data) => {
   const { accessToken, refreshToken, id, dispatch } = data.payload;
-  if (data.payload?.id) {
-    dispatch(getPostByProfileStart());
-  } else {
-    // dispatch(getPostStart());
-  }
   try {
     const config = {
       Authorization: `Bearer ${accessToken}`,
@@ -94,7 +84,7 @@ const getAllPostSagaRequest = async (data) => {
       if (data.payload?.id) {
         dispatch(getPostByProfileFailed());
       } else {
-        //  dispatch(getPostFailed());
+        dispatch(getPostFailed());
       }
     }
   } catch (error) {
@@ -384,7 +374,7 @@ export function* likeOnePost() {
 }
 function* handleLikePost(data) {
   try {
-     yield call(likePostSagaRequest, data);
+    yield call(likePostSagaRequest, data);
   } catch (error) {
     console.log(error);
   }

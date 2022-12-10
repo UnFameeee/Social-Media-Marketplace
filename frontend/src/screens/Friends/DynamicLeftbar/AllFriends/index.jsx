@@ -1,18 +1,25 @@
-import { useLayoutEffect, useState, useMemo } from 'react';
+import { useLayoutEffect, useState, useMemo, useRef } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { CircularProgress, ClickAwayListener, Skeleton } from '@mui/material';
+import { ClickAwayListener, Skeleton } from '@mui/material';
 import TwoColumns from '../../../../components/Layout/TwoColumns';
 import LeftbarTitle from '../LeftbarTitle';
 import UserProfile from '../../../UserProfile/UserProfile';
 import { Helper } from '../../../../utils/Helper';
 import { LeftbarAllFriend } from '../LeftbarMiddleItem';
-import { getProfileSaga } from '../../../../redux/profile/profileSlice';
-import { getAllFriendForMainUser } from '../../../../redux/friend/friendAPI';
+import {
+  getAllFriend,
+  getAllFriendForMainUser,
+} from '../../../../redux/friend/friendAPI';
 import {
   addFriendRequest,
   unfriendRequest,
 } from '../../../../redux/friend/friendSaga';
+import {
+  getGalleryImg,
+  getProfileDetail,
+} from '../../../../redux/profile/profileAPI';
+import { getPostByProfile } from '../../../../redux/apiRequest';
 import '../index.css';
 
 export default function AllFriends() {
@@ -21,6 +28,7 @@ export default function AllFriends() {
   const location = useLocation();
   const queryParams = location.search.slice(1).replace(/id=/gi, ''); //remove all the "id=" with this regex
 
+  // #region redux variables
   const accessToken = useSelector(
     (state) => state.auth?.login?.currentUser?.access
   );
@@ -43,26 +51,24 @@ export default function AllFriends() {
   const isFetchingProfileDetail = useSelector(
     (state) => state.profile?.profileDetails?.isFetching
   );
+  const isFetchingAddCancel = useSelector(
+    (state) => state.friends?.addFriend?.isFetching
+  );
+  const isFetchingUnfriend = useSelector(
+    (state) => state.friends?.unfriend?.isFetching
+  );
+  // #endregion
 
   var mainId = userData?.profile_id;
 
   const [openOptions, setOpenOptions] = useState('');
   const [listRemoved, setListRemoved] = useState([]);
   const [listAdded, setListAdded] = useState([]);
+  const currentId = useRef(null);
 
   var allFriendList = useMemo(() => {
     return allFriends;
   }, [allFriends]);
-
-  var isLoadingAllFriend = useMemo(() => {
-    var result = false;
-    if (isFetchingAllFriend) {
-      result = true;
-    } else {
-      result = false;
-    }
-    return result;
-  }, [isFetchingAllFriend]);
 
   var checkId = useMemo(() => {
     return allFriendList?.data?.some(
@@ -74,6 +80,17 @@ export default function AllFriends() {
     return Helper.isNullOrEmpty(queryParams);
   }, [queryParams]);
 
+  // #region loading variables
+  var isLoadingAllFriend = useMemo(() => {
+    var result = false;
+    if (isFetchingAllFriend) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingAllFriend]);
+
   var isLoadingProfileDetail = useMemo(() => {
     var result = false;
     if (isFetchingProfileDetail) {
@@ -83,6 +100,27 @@ export default function AllFriends() {
     }
     return result;
   }, [isFetchingProfileDetail]);
+
+  var isLoadingAddCancel = useMemo(() => {
+    var result = false;
+    if (isFetchingAddCancel) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingAddCancel]);
+
+  var isLoadingUnfriend = useMemo(() => {
+    var result = false;
+    if (isFetchingUnfriend) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingUnfriend]);
+  // #endregion
 
   // call get all friend once
   useLayoutEffect(() => {
@@ -106,15 +144,10 @@ export default function AllFriends() {
     if (!onDestroy) {
       if (!checkQueryParam) {
         var id = queryParams;
-        dispatch(
-          getProfileSaga({
-            accessToken,
-            refreshToken,
-            id,
-            callRefreshProfile: true,
-            dispatch,
-          })
-        );
+        getProfileDetail(accessToken, refreshToken, id, dispatch);
+        getPostByProfile(accessToken, refreshToken, id, dispatch);
+        getGalleryImg(accessToken, refreshToken, id, dispatch);
+        getAllFriend(accessToken, refreshToken, id, dispatch);
       }
     }
     return () => {
@@ -181,6 +214,10 @@ export default function AllFriends() {
                         openOptions={[openOptions, setOpenOptions]}
                         listUnfriend={listRemoved}
                         listAdded={listAdded}
+                        isLoading={
+                          isLoadingAddCancel || isLoadingUnfriend
+                        }
+                        currentId={currentId.current}
                         handleUnfriend={() => {
                           unfriendRequest({
                             accessToken,
@@ -194,6 +231,8 @@ export default function AllFriends() {
                             ...old,
                             x.profile_id,
                           ]);
+
+                          currentId.current = x.profile_id;
                         }}
                         handleAddFriend={() => {
                           addFriendRequest({
@@ -208,6 +247,8 @@ export default function AllFriends() {
                             ...old,
                             x.profile_id,
                           ]);
+
+                          currentId.current = x.profile_id;
                         }}
                         handleCancelRequest={() => {
                           addFriendRequest({
@@ -222,6 +263,8 @@ export default function AllFriends() {
                             (e) => e !== x.profile_id
                           );
                           setListAdded(filter);
+
+                          currentId.current = x.profile_id;
                         }}
                       />
                     </div>

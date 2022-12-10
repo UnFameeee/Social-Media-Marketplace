@@ -31,7 +31,18 @@ const initialState = {
     isFetching: false,
     error: false,
   },
-  accept: {},
+  addFriend: {
+    isFetching: false,
+  },
+  acceptFriend: {
+    isFetching: false,
+  },
+  denyFriend: {
+    isFetching: false,
+  },
+  unfriend: {
+    isFetching: false,
+  },
 };
 export const friendSlice = createSlice({
   name: 'friends',
@@ -67,6 +78,15 @@ export const friendSlice = createSlice({
       error: false,
     },
     addFriend: {
+      isFetching: false,
+    },
+    acceptFriend: {
+      isFetching: false,
+    },
+    denyFriend: {
+      isFetching: false,
+    },
+    unfriend: {
       isFetching: false,
     },
   },
@@ -148,16 +168,42 @@ export const friendSlice = createSlice({
     addFriendStart: (state) => {
       state.addFriend.isFetching = true;
     },
-    addFriendSagaSuccess(state) {
+    addFriendSagaSuccess: (state) => {
       state.addFriend.isFetching = false;
     },
     addFriendFail: (state) => {
       state.addFriend.isFetching = false;
     },
 
-    acceptSagaSuccess() {},
-    denySagaSuccess() {},
-    unfriendSagaSuccess() {},
+    acceptFriendStart: (state) => {
+      state.acceptFriend.isFetching = true;
+    },
+    acceptSagaSuccess: (state) => {
+      state.acceptFriend.isFetching = false;
+    },
+    acceptFriendFail: (state) => {
+      state.acceptFriend.isFetching = false;
+    },
+
+    denyFriendStart: (state) => {
+      state.denyFriend.isFetching = true;
+    },
+    denySagaSuccess: (state) => {
+      state.denyFriend.isFetching = false;
+    },
+    denyFriendFail: (state) => {
+      state.denyFriend.isFetching = false;
+    },
+
+    unfriendStart: (state) => {
+      state.unfriend.isFetching = true;
+    },
+    unfriendSagaSuccess: (state) => {
+      state.unfriend.isFetching = false;
+    },
+    unfriendFail: (state) => {
+      state.unfriend.isFetching = false;
+    },
   },
 });
 
@@ -190,8 +236,16 @@ export const {
   addFriendSagaSuccess,
   addFriendFail,
 
+  acceptFriendStart,
   acceptSagaSuccess,
+  acceptFriendFail,
+
+  denyFriendStart,
   denySagaSuccess,
+  denyFriendFail,
+
+  unfriendStart,
   unfriendSagaSuccess,
+  unfriendFail
 } = friendSlice.actions;
 export default friendSlice.reducer;

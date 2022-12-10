@@ -5,9 +5,9 @@ import {
   getAllFriendNotificationSuccess,
   getAllNotificationSuccess,
   getAllUnreadNotificationSuccess,
-  seenNotificationSaga,
+  seenNotificationFailed,
   seenNotificationSagaSuccess,
-  seenNotificationSuccess,
+  seenNotificationStart,
 } from './notificationSlice';
 
 // #region get all notification
@@ -128,23 +128,13 @@ async function getAllFriendNotificatonSaga(data) {
 // #endregion
 
 // #region seen notification
-export function* seenNotification() {
-  yield takeLatest(
-    [seenNotificationSaga.type],
-    handleSeenNotificationSaga
-  );
-}
-function* handleSeenNotificationSaga(data) {
-  try {
-    const seen = yield call(seenNotificatonSaga, data);
-    yield put(seenNotificationSuccess(seen.data));
-  } catch (error) {
-    console.log(error);
-  }
-}
-async function seenNotificatonSaga(data) {
-  const { accessToken, refreshToken, notificationId, dispatch } =
-    data.payload;
+export async function seenNotificaton(
+  accessToken,
+  refreshToken,
+  notificationId,
+  dispatch
+) {
+  dispatch(seenNotificationStart());
   try {
     const res = await axiosInStanceJWT.put(
       `${api.notification}/read/${notificationId}`,
@@ -168,9 +158,11 @@ async function seenNotificatonSaga(data) {
       return res;
     } else {
       console.log(res.data.message);
+      dispatch(seenNotificationFailed());
     }
   } catch (error) {
     console.log(error);
+    dispatch(seenNotificationFailed());
   }
 }
 // #endregion

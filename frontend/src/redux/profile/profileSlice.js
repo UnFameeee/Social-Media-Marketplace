@@ -16,6 +16,15 @@ const initialState = {
     isFetching: false,
     error: false,
   },
+  updateAvt: {
+    isFetching: false,
+  },
+  updateWall: {
+    isFetching: false,
+  },
+  updateDetail: {
+    isFetching: false,
+  },
 };
 export const profileSlice = createSlice({
   name: 'profile',
@@ -35,10 +44,21 @@ export const profileSlice = createSlice({
       isFetching: false,
       error: false,
     },
+    updateAvt: {
+      isFetching: false,
+    },
+    updateWall: {
+      isFetching: false,
+    },
+    updateDetail: {
+      isFetching: false,
+    },
   },
   extraReducers: (builder) =>
     builder.addCase(revertAll, () => initialState),
   reducers: {
+    getProfileSaga() {},
+
     getProfileDetailStart: (state) => {
       state.profileDetails.isFetching = true;
     },
@@ -75,18 +95,46 @@ export const profileSlice = createSlice({
       state.profileSearch.error = true;
     },
 
-    getProfileSaga() {},
-    getProfileSagaSuccess() {},
+    updateDetailStart: (state) => {
+      state.updateDetail.isFetching = true;
+    },
+    updateDetailSagaSuccess: (state) => {
+      state.updateDetail.isFetching = false;
+    },
+    updateDetailFailed: (state) => {
+      state.updateDetail.isFetching = false;
+    },
 
-    updateDetailSagaSuccess() {},
-    updateAvtSagaSuccess() {},
-    deleteAvtSagaSuccess() {},
-    updateWallpaperSagaSuccess() {},
-    deleteWallpaperSagaSuccess() {},
+    updateAvtStart: (state) => {
+      state.updateAvt.isFetching = true;
+    },
+    updateAvtSagaSuccess: (state) => {
+      state.updateAvt.isFetching = false;
+    },
+    deleteAvtSagaSuccess: (state) => {
+      state.updateAvt.isFetching = false;
+    },
+    updateAvtFailed: (state) => {
+      state.updateAvt.isFetching = false;
+    },
+
+    updateWallStart: (state) => {
+      state.updateWall.isFetching = true;
+    },
+    updateWallpaperSagaSuccess: (state) => {
+      state.updateWall.isFetching = false;
+    },
+    deleteWallpaperSagaSuccess: (state) => {
+      state.updateWall.isFetching = false;
+    },
+    updateWallFailed: (state) => {
+      state.updateWall.isFetching = false;
+    },
   },
 });
 
 export const {
+  getProfileSaga,
   getProfileDetailStart,
   getProfileDetailSuccess,
   getProfileDetailFailed,
@@ -99,14 +147,18 @@ export const {
   getGallerySuccess,
   getGalleryFailed,
 
-  getProfileSaga,
-  getProfileSagaSuccess,
-
+  updateAvtStart,
   updateAvtSagaSuccess,
   deleteAvtSagaSuccess,
+  updateAvtFailed,
+
+  updateWallStart,
   updateWallpaperSagaSuccess,
   deleteWallpaperSagaSuccess,
+  updateWallFailed,
+
+  updateDetailStart,
   updateDetailSagaSuccess,
-  
+  updateDetailFailed,
 } = profileSlice.actions;
 export default profileSlice.reducer;
