@@ -83,8 +83,8 @@ function CardPost(props) {
   let isLoadingGetComment = useMemo(() => {
     let result = false;
     fetchingGetCommentList?.map((item) => {
-      if (item.post_id == post_id) {
-        result = item.isFetching;
+      if (item?.post_id == post_id) {
+        result = item?.isFetching;
       }
     });
     return result;
@@ -93,8 +93,8 @@ function CardPost(props) {
   let isLoadingLikePost = useMemo(() => {
     let result = false;
     likePostList?.map((item) => {
-      if (item.post_id == post_id) {
-        result = item.isFetching;
+      if (item?.post_id == post_id) {
+        result = item?.isFetching;
         setDisableLikeButton("false");
       }
     });
@@ -113,8 +113,8 @@ function CardPost(props) {
     var result = [];
     if (comments) {
       comments.map((comment) => {
-        if (comment.post_id === post_id) {
-          result = comment.list_comment;
+        if (comment?.post_id === post_id) {
+          result = comment?.list_comment;
         }
       });
     }
@@ -124,7 +124,7 @@ function CardPost(props) {
     var result;
     if (comments) {
       comments.map((comment) => {
-        if (comment.post_id === post_id) {
+        if (comment?.post_id === post_id) {
           result = {
             totalCurrentShowComment: comment?.page?.totalCurrentShowComment
               ? comment?.page?.totalCurrentShowComment
