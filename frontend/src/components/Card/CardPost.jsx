@@ -60,6 +60,7 @@ function CardPost(props) {
     (state) => state.comment?.get?.data,
     shallowEqual
   );
+  console.log("comments",comments?.page?.totalCurrentShowComment)
   const isLoadingCreateComment = useSelector((state) => state.comment?.create);
   const fetchingGetCommentList = useSelector(
     (state) => state.comment?.get.isFetching
@@ -125,8 +126,8 @@ function CardPost(props) {
       comments.map((comment) => {
         if (comment.post_id === post_id) {
           result = {
-            totalCurrentShowComment: comment?.page.totalCurrentShowComment
-              ? comment?.page.totalCurrentShowComment
+            totalCurrentShowComment: comment?.page?.totalCurrentShowComment
+              ? comment?.page?.totalCurrentShowComment
               : null,
             totalElement: comment?.page?.totalElement
               ? comment?.page?.totalElement
