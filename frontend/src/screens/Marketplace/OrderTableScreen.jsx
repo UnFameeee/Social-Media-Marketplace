@@ -106,7 +106,7 @@ function OrderTableScreen({ orderLine, actionBtns, ...props }) {
                       <MUI.Button
                         disabled={
                           (btn.text == "Delete" &&
-                            item.shipping_status != "SHIPPING") ||
+                            (item.shipping_status != "SHIPPING" || item.payment_status == "PURCHASED")) ||
                           (btn.text == "Receive" &&
                             item.shipping_status != "SHIPPING") ||
                           (btn.text == "Paid" &&
