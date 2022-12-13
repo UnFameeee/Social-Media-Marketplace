@@ -164,7 +164,7 @@ export const databaseProviders = [
             OrderLine.belongsTo(ShopOrder, { foreignKey: { name: "order_id", field: "order_id" } });
 
             Profile.hasMany(ShopOrder, { foreignKey: { name: "profile_id", field: "profile_id" } });
-            ShopOrder.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" }});
+            ShopOrder.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
 
             Profile.hasMany(Product, { foreignKey: { name: "profile_id", field: "profile_id" } });
             Product.belongsTo(Profile, { foreignKey: { name: "profile_id", field: "profile_id" } });
@@ -175,7 +175,7 @@ export const databaseProviders = [
             Product.hasOne(Variation, { foreignKey: { name: "product_id", field: "product_id" } });
             Variation.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
-            Product.hasMany(ProductImage, { foreignKey: { name: "product_id", field: "product_id" }, as: "product_image"});
+            Product.hasMany(ProductImage, { foreignKey: { name: "product_id", field: "product_id" }, as: "product_image" });
             ProductImage.belongsTo(Product, { foreignKey: { name: "product_id", field: "product_id" } });
 
             // Category.hasMany(SubCategory, { foreignKey: { name: "category_id", field: "category_id" } });
@@ -204,6 +204,10 @@ export const databaseProviders = [
                     user: configService.get('MYSQL_USER'),
                     password: configService.get('MYSQL_PASSWORD'),
                 });
+
+                // await sequelize.sync({ alter: false, force: false })
+                // await sequelize.authenticate();
+
                 connection.query(
                     `CREATE DATABASE IF NOT EXISTS \`${configService.get('MYSQL_DB')}\`;`,
                     async (err, results) => {
