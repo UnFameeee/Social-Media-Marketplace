@@ -206,9 +206,9 @@ export default function NavBar() {
         left: (
           <MUI.AvatarWithBadge
             avatarConfig={{
-              src: item.profile_sender_avatar,
-              alt: item.profile_sender_name,
-              children: item.profile_sender_name?.at(0),
+              src: item?.profile_sender_avatar,
+              alt: item?.profile_sender_name,
+              children: item?.profile_sender_name?.at(0),
               sx: {
                 width: '6rem',
                 height: '6rem',
@@ -216,9 +216,9 @@ export default function NavBar() {
               },
             }}
           >
-            {item.notification_type === NOTIFICATION_TYPE.LIKE ? (
+            {item?.notification_type === NOTIFICATION_TYPE.LIKE ? (
               <ThumbUpAlt />
-            ) : item.notification_type ===
+            ) : item?.notification_type ===
               NOTIFICATION_TYPE.COMMENT ? (
               <Comment />
             ) : (
@@ -227,13 +227,13 @@ export default function NavBar() {
           </MUI.AvatarWithBadge>
         ),
         middle:
-          item.notification_type ===
+          item?.notification_type ===
           NOTIFICATION_TYPE.FRIEND_REQUEST ? (
             <div className="w-[100%]">
               <LeftbarFriendRequest
                 profile={{
-                  profile_name: item.content,
-                  profile_id: item.profile_sender_id,
+                  profile_name: item?.content,
+                  profile_id: item?.profile_sender_id,
                 }}
                 listAction={[listConfirm, listDeny]}
                 isLoading={
@@ -246,17 +246,17 @@ export default function NavBar() {
                     acceptFriendRequest({
                       accessToken,
                       refreshToken,
-                      id: item.profile_sender_id,
+                      id: item?.profile_sender_id,
                       callRefreshProfile: Helper.checkURL('profile'),
                       dispatch,
                     });
 
                     setListConfirm((old) => [
                       ...old,
-                      item.profile_sender_id,
+                      item?.profile_sender_id,
                     ]);
                     
-                    currentId.current = item.profile_sender_id;
+                    currentId.current = item?.profile_sender_id;
                   },
                 }}
                 secondButtonConfig={{
@@ -265,25 +265,25 @@ export default function NavBar() {
                     denyFriendRequest({
                       accessToken,
                       refreshToken,
-                      id: item.profile_sender_id,
+                      id: item?.profile_sender_id,
                       callRefreshProfile: Helper.checkURL('profile'),
                       dispatch,
                     });
 
                     setListDeny((old) => [
                       ...old,
-                      item.profile_sender_id,
+                      item?.profile_sender_id,
                     ]);
 
-                    currentId.current = item.profile_sender_id;
+                    currentId.current = item?.profile_sender_id;
                   },
                 }}
               />
             </div>
           ) : (
-            item.content
+            item?.content
           ),
-        right: !item.was_seen && (
+        right: !item?.was_seen && (
           <GoPrimitiveDot
             style={{
               color: 'var(--primary-color)',
@@ -582,6 +582,7 @@ export default function NavBar() {
                 {rightGroup === 'notifications' && (
                   <MUI.Menu
                     classNameConfig={{
+                      menuClass: 'nav-notification',
                       menuItemClass: 'nav-notification',
                       middleClass: 'nav-notification',
                     }}
