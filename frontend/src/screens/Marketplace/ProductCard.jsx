@@ -75,8 +75,8 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
             }}
             alt={productObj?.Profile.profile_name}
             src={
-              productObj?.Profile?.profile_avatar
-                ? productObj?.Profile?.profile_avatar
+              productObj?.Profile?.avatar
+                ? productObj?.Profile?.avatar
                 : null
             }
           >

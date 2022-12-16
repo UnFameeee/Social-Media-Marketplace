@@ -94,6 +94,7 @@ export default function FriendCard(props) {
                 {secondButtonConfig && (
                   <MUI.Button
                     style={{ marginTop: '12px' }}
+                    color="secondary"
                     {...secondButtonConfig}
                   >
                     Deny

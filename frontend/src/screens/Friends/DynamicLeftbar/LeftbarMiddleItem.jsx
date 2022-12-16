@@ -62,6 +62,7 @@ export function LeftbarFriendRequest({
 
               <MUI.Button
                 className="action-btn"
+                color="secondary"
                 {...secondButtonConfig}
               >
                 Deny
@@ -105,6 +106,7 @@ export function LeftbarFriendSuggest({
           (!isLoading || !(currentId === profile?.profile_id)) && (
             <MUI.Button
               className="pointer-events-auto"
+              color="secondary"
               {...hiddenButtonConfig}
             >
               Cancel Request
@@ -138,6 +140,7 @@ export function LeftbarFriendSuggest({
 
               <MUI.Button
                 className="action-btn"
+                color="secondary"
                 {...secondButtonConfig}
               >
                 Remove
@@ -188,6 +191,7 @@ export function LeftbarSentRequest({
             <div className="action">
               <MUI.Button
                 className="action-btn"
+                color="secondary"
                 {...cancelButtonConfig}
               >
                 Cancel
@@ -318,6 +322,7 @@ export function LeftbarAllFriend({
             </MUI.Button>
           ) : (
             <MUI.Button
+              color="secondary"
               style={{ pointerEvents: 'auto', marginRight: '0.8rem' }}
               onClick={(e) => {
                 e.stopPropagation();

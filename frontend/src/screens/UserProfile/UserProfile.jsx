@@ -190,7 +190,7 @@ function UserProfile(props) {
     }
     return result;
   }, [isFetchingDetail]);
-  
+
   var isLoadingProfile = useMemo(() => {
     var result = false;
     if (isFetchingProfile) {
@@ -375,7 +375,9 @@ function UserProfile(props) {
             </span>
           </div>
           <div id="rightSide">
-            <MUI.Button onClick={clearWallpaper}>Cancel</MUI.Button>
+            <MUI.Button onClick={clearWallpaper} color="secondary">
+              Cancel
+            </MUI.Button>
             <MUI.Button
               onClick={() => {
                 updateWallRequest({
@@ -670,6 +672,7 @@ function UserProfile(props) {
             <MUI.Button
               className="gap-[0.8rem]"
               style={{ minWidth: '14rem' }}
+              color="secondary"
               onClick={() => {
                 handleActions('deny');
               }}
@@ -743,6 +746,7 @@ function UserProfile(props) {
                             />
                             <div id="editBioAction">
                               <MUI.Button
+                                color="secondary"
                                 onClick={() => {
                                   setEditBio(false);
                                 }}
@@ -1134,7 +1138,7 @@ function ProfileAction({
                     }
                     return x;
                   });
-                  
+
                   updateProfileRequest({
                     ...actionProps,
                     profile: values,
@@ -1266,6 +1270,7 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
             {profileData?.avatar && (
               <MUI.Button
                 className="w-[100%]"
+                color="secondary"
                 style={{ marginTop: '2rem' }}
                 onClick={() => {
                   setOpenConfirmRemove(true);
@@ -1303,6 +1308,7 @@ function UpdateAvatar({ modalProps, profileData, actionProps }) {
         <div className="mt-[2rem] text-right">
           <MUI.Button
             style={{ marginRight: '1.6rem' }}
+            color="secondary"
             onClick={handleClose}
           >
             Cancel
