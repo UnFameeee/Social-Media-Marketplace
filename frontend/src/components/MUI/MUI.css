@@ -79,6 +79,10 @@
 /* #endregion */
 
 /* #region notification */
+.MuiList-root.menu.nav-notification {
+  max-height: 94vh;
+  overflow-y: scroll;
+}
 .MuiMenuItem-root.menu-item.nav-notification {
   height: 8rem;
   justify-content: start;
