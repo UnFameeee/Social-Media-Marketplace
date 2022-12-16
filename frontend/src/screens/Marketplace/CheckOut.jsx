@@ -38,6 +38,7 @@ import GHTK_Shipping from "../../assets/GHTK-shipping-method.jpg";
 import NothingToSee from "./NothingToSee";
 import MarketPlaceLeftBar from "./MarketPlaceLeftBar";
 import PayPalCheckOutButton from "./PayPalCheckOutButton";
+import CurrencyFormat from "react-currency-format";
 import { useNavigate } from "react-router-dom";
 function CheckOut() {
   // #region declare variables
@@ -88,7 +89,7 @@ function CheckOut() {
     ward: true,
     detail_address: true,
   });
-  const [orderTimeout,setOrderTimeOut]=useState(false)
+  const [orderTimeout, setOrderTimeOut] = useState(false);
   //#endregion
   //#region declare function
   const handleChangeTab = (event, newValue) => {
@@ -206,11 +207,11 @@ function CheckOut() {
   //#endregion
   return (
     <>
-      {isLoadingCreateOrder ?  (
+      {isLoadingCreateOrder ? (
         <div className="sweet-loading absolute z-30 h-screen w-screen inset-0 items-center flex justify-center">
           <ClipLoader
             color="#9a6de1"
-            loading={isLoadingCreateOrder }
+            loading={isLoadingCreateOrder}
             size={150}
             aria-label="Loading Spinner"
             data-testid="loader"
@@ -383,7 +384,12 @@ function CheckOut() {
               </TableContainer>
               <div className="total flex flex-col justify-end text-end font-semibold text-[2.2rem] mr-[2rem] ">
                 <span>Total</span>
-                <span>{totalPrice}$</span>
+                <CurrencyFormat
+                  value={totalPrice}
+                  displayType={"text"}
+                  thousandSeparator={true}
+                  suffix={"₫"}
+                />
               </div>
             </TabPanel>
             <TabPanel value="2" sx={{ padding: "1.2rem", background: "white" }}>
@@ -452,9 +458,12 @@ function CheckOut() {
                               </ul>
                               <div className="cart-item-info-price flex items-center gap-[1rem]">
                                 <div className=" flex gap-[1.2rem] items-center">
-                                  <span className="text-[1.7rem] font-light">
-                                    ${item.price}
-                                  </span>
+                                  <CurrencyFormat
+                                    value={item.price}
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    suffix={"₫"}
+                                  />
                                   <span>x</span>
                                   <input
                                     className="border-[1px] rounded-lg outline-none border-gray-300 w-[5rem]"
@@ -467,7 +476,12 @@ function CheckOut() {
                                   className="flex-1 text-[2rem]"
                                   style={{ color: "var(--primary-color)" }}
                                 >
-                                  <span>${item.price * item.quantity}</span>
+                                  <CurrencyFormat
+                                    value={item.price * item.quantity}
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    suffix={"₫"}
+                                  />
                                 </div>
                               </div>
                             </div>
@@ -615,13 +629,31 @@ function CheckOut() {
                   </div>
                   <div className="payment-calc flex flex-col gap-[0.5rem] my-[0.5rem]">
                     <span className="title-payment-details font-bold text-primaryColor text-[1.7rem]">
-                      Merchandise Subtotal: {totalPrice}$
+                      Merchandise Subtotal: 
+                      <CurrencyFormat
+                        value={totalPrice}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        suffix={"₫"}
+                      />
                     </span>
                     <span className="title-payment-details font-bold text-primaryColor text-[1.7rem]">
-                      Shipping Subtotal: 0$ ({shippingMethod})
+                      Shipping Subtotal:
+                      <CurrencyFormat
+                        value={0}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        suffix={`₫ (${shippingMethod})`}
+                      />
                     </span>
                     <span className="title-payment-details font-bold text-primaryColor text-[1.7rem]">
-                      Total Payment: {totalPrice}$
+                      Total Payment:
+                      <CurrencyFormat
+                        value={totalPrice}
+                        displayType={"text"}
+                        thousandSeparator={true}
+                        suffix={`₫`}
+                      />
                     </span>{" "}
                   </div>
                   <div className="flex flex-col gap-[1rem]">

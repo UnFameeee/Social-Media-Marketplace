@@ -7,6 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ProductCartDetailModal from "./ProductCartDetailModal";
 import notFoundImage from "../../assets/noimage_1.png";
+import CurrencyFormat from "react-currency-format";
 
 function ProductCard({ arrayBtn, productObj, ...props }) {
   const userData = useSelector((state) => state.auth.user.userData);
@@ -75,9 +76,7 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
             }}
             alt={productObj?.Profile.profile_name}
             src={
-              productObj?.Profile?.avatar
-                ? productObj?.Profile?.avatar
-                : null
+              productObj?.Profile?.avatar ? productObj?.Profile?.avatar : null
             }
           >
             {productObj?.Profile.profile_name?.at(0)}
@@ -92,7 +91,12 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
         <div className="card-price mb-[1rem] flex text-[1.6rem]">
           <span className="text-[#9a6de1] flex-1">Price</span>
           <div className="flex gap-[1rem] font-bold justify-between">
-            <span>{productObj?.price} VND</span>
+            <CurrencyFormat
+              value={productObj?.price}
+              displayType={"text"}
+              thousandSeparator={true}
+              suffix={"₫"}
+            />
           </div>
         </div>
         <div className="btn-product-action">

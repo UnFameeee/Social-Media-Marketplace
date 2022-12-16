@@ -16,6 +16,7 @@ import nothingsToSeedImage from "../../assets/nothing--to-see-here.jpg";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import CurrencyFormat from "react-currency-format";
 import { getAllShoppingCartList } from "../../redux/apiRequest";
 import { useEffect } from "react";
 import { removeProductFromListCartWithoutPagingRequest } from "../../redux/product/productSaga";
@@ -175,7 +176,12 @@ function MarketPlaceLeftBarTab() {
 
                         <div className="flex flex-col">
                           <span className=" text-primaryColor text-[2rem]">
-                            ${cartItem.price}
+                            <CurrencyFormat
+                              value={cartItem.price}
+                              displayType={"text"}
+                              thousandSeparator={true}
+                              suffix={"₫"}
+                            />
                           </span>
                           <span>Qty: {cartItem.quantity}</span>
                         </div>
@@ -317,7 +323,12 @@ function MarketPlaceLeftBarTab() {
               <div className="card-price mb-[1rem] flex  text-[2.4rem]">
                 <span className="text-[#9a6de1] font-bold flex-1">Price</span>
                 <div className="flex gap-[1rem] font-bold justify-between">
-                  <span>{getProductDetail?.price} VND</span>
+                  <CurrencyFormat
+                    value={getProductDetail?.price}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    suffix={"₫"}
+                  />
                 </div>
               </div>
             </>
