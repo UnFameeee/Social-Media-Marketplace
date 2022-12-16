@@ -20,6 +20,9 @@ import {
   updateWallFailed,
   updateDetailStart,
   updateDetailFailed,
+  updateProfileStart,
+  updateProfileFailed,
+  updateProfileSagaSuccess,
 } from './profileSlice';
 import {
   acceptSagaSuccess,
@@ -42,6 +45,7 @@ export function* refreshProfile() {
       updateDetailSagaSuccess.type,
       deleteAvtSagaSuccess.type,
       deleteWallpaperSagaSuccess.type,
+      updateProfileSagaSuccess.type,
 
       addFriendSagaSuccess.type,
       unfriendSagaSuccess.type,
@@ -241,7 +245,7 @@ export async function updateDetailRequest(data) {
       }
     );
     if (!res.data.message) {
-      notifyService.showSuccess('Update Profile Successfully!');
+      notifyService.showSuccess('Update Profile Details Successfully!');
       dispatch(
         updateDetailSagaSuccess({
           accessToken,
@@ -260,8 +264,57 @@ export async function updateDetailRequest(data) {
     }
   } catch (error) {
     console.log(error);
-    notifyService.showError('Update Profile Failed!');
+    notifyService.showError('Update Profile Details Failed!');
     dispatch(updateDetailFailed());
+  }
+}
+// #endregion
+
+// #region update profile
+export async function updateProfileRequest(data) {
+  const {
+    accessToken,
+    refreshToken,
+    profile,
+    id,
+    callRefreshProfile = true,
+    dispatch,
+  } = data;
+  dispatch(updateProfileStart());
+  try {
+    const res = await axiosInStanceJWT.put(
+      `${api.profile}`,
+      profile,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        ACCESS_PARAM: accessToken,
+        REFRESH_PARAM: refreshToken,
+      }
+    );
+    if (!res.data.message) {
+      notifyService.showSuccess('Update Profile Successfully!');
+      dispatch(
+        updateProfileSagaSuccess({
+          accessToken,
+          refreshToken,
+          id,
+          callRefreshProfile,
+          callRefreshFriend: false,
+          callRefreshPost: false,
+          dispatch,
+        })
+      );
+      return res;
+    } else {
+      notifyService.showError(res.data.message);
+      dispatch(updateProfileFailed());
+    }
+  } catch (error) {
+    console.log(error);
+    notifyService.showError('Update Profile Failed!');
+    dispatch(updateProfileFailed());
   }
 }
 // #endregion
@@ -413,3 +466,4 @@ async function getGallerySagaRequest(data) {
   }
 }
 // #endregion
+

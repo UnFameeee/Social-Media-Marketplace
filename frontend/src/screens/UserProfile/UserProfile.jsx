@@ -25,6 +25,7 @@ import {
   Skeleton,
   TextareaAutosize,
 } from '@mui/material';
+import * as Yup from 'yup';
 import SideBarButton from './SideBarButton';
 import SideBarLi from './SideBarLi';
 import CardPost from '../../components/Card/CardPost';
@@ -45,6 +46,7 @@ import {
   deleteWallRequest,
   updateAvtRequest,
   updateDetailRequest,
+  updateProfileRequest,
   updateWallRequest,
 } from '../../redux/profile/profileSaga';
 import {
@@ -112,6 +114,9 @@ function UserProfile(props) {
   );
   const isFetchingDetail = useSelector(
     (state) => state.profile?.updateDetail?.isFetching
+  );
+  const isFetchingProfile = useSelector(
+    (state) => state.profile?.updateProfile?.isFetching
   );
   // #endregion
 
@@ -185,6 +190,16 @@ function UserProfile(props) {
     }
     return result;
   }, [isFetchingDetail]);
+  
+  var isLoadingProfile = useMemo(() => {
+    var result = false;
+    if (isFetchingProfile) {
+      result = true;
+    } else {
+      result = false;
+    }
+    return result;
+  }, [isFetchingProfile]);
   // #endregion
 
   var id =
@@ -596,8 +611,15 @@ function UserProfile(props) {
                     }
                     isFriend={profileData?.isFriend}
                     isSentFriendReq={profileData?.isSentFriendRequest}
-                    navigate={navigate}
                     action={handleActions}
+                    actionProps={{
+                      accessToken: accessToken,
+                      refreshToken: refreshToken,
+                      id: profileData?.profile_id,
+                      dispatch: dispatch,
+                    }}
+                    profileData={profileData}
+                    isLoadingProfile={isLoadingProfile}
                   />
                 </div>
               )}
@@ -911,10 +933,39 @@ function ProfileAction({
   isMainUser,
   isFriend,
   isSentFriendReq,
-  navigate,
   action,
+  actionProps,
+  profileData,
+  isLoadingProfile,
 }) {
   const [menuClicked, setMenuClicked] = useState(false);
+  const [editProfile, setEditProfile] = useState(false);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [valid, setValid] = useState(false);
+
+  // #region edit profile modal
+  const ref = useRef(null);
+  var profileModel = {
+    profile_name: profileData?.profile_name,
+    email: profileData?.email,
+    old_password: '',
+    new_password: '',
+  };
+  const schemaEditProfile = Yup.object().shape({
+    profile_name: Yup.string().required('Required'),
+    email: Yup.string()
+      .email('Your email is invalid')
+      .required('Required'),
+    old_password: Yup.string()
+      .min(8, 'Your password length must between 8 - 50')
+      .max(50, 'Your password length must between 8 - 50')
+      .matches(
+        /^.*((?=.*\d)(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/,
+        'Password must contain at least one uppercase, one lowercase, one number and one special case character'
+      )
+      .required('Required'),
+  });
+  // #endregion
 
   function handleFirstAction() {
     if (isMainUser) {
@@ -931,10 +982,11 @@ function ProfileAction({
     }
   }
 
-  function handleSecondAction() {
-    if (isMainUser) {
+  function handleClose() {
+    if (Helper.isDataChange(ref.current?.values, profileModel)) {
+      setOpenConfirm(true);
     } else {
-      navigate('/messenger');
+      setEditProfile(false);
     }
   }
 
@@ -1026,27 +1078,128 @@ function ProfileAction({
         </div>
       </ClickAwayListener>
 
-      {/* <MUI.Button
-        className="gap-[0.8rem]"
-        style={{ minWidth: '14rem' }}
-        onClick={handleSecondAction}
-      >
-        {isMainUser ? (
-          <>
-            <Edit style={{ fontSize: '2.2rem' }} />
+      {isMainUser && (
+        <>
+          <MUI.Button
+            className="gap-[0.8rem]"
+            style={{ minWidth: '14rem' }}
+            onClick={() => {
+              setEditProfile(true);
+            }}
+            disabled={isLoadingProfile}
+          >
+            {isLoadingProfile ? (
+              <CircularProgress
+                style={{
+                  width: '2.2rem',
+                  height: '2.2rem',
+                  color: 'var(--primary-color)',
+                }}
+              />
+            ) : (
+              <Edit style={{ fontSize: '2.2rem' }} />
+            )}
             <span className=" text-[1.6rem] font-semibold">
               Edit profile
             </span>
-          </>
-        ) : (
-          <>
-            <BiMessageRoundedDetail style={{ fontSize: '2.2rem' }} />
-            <span className=" text-[1.6rem] font-semibold">
-              Message
-            </span>
-          </>
-        )}
-      </MUI.Button> */}
+          </MUI.Button>
+
+          <Modal
+            open={editProfile}
+            onClose={handleClose}
+            closeAfterTransition
+          >
+            <Paper id="modal-wrapper">
+              <div className="text-center">
+                <span className="font-bold text-[2rem]">
+                  Update profile
+                </span>
+                <MUI.BetterIconButton
+                  onClick={handleClose}
+                  className="[&>button>svg]:text-[2rem] [&>div]:w-[3.2rem] [&>div]:h-[3.2rem] absolute top-[1.2rem] right-[1.2rem]"
+                >
+                  <CloseOutlined />
+                </MUI.BetterIconButton>
+              </div>
+
+              <ValidateForm
+                innerRef={ref}
+                initialValues={profileModel}
+                validationSchema={schemaEditProfile}
+                onSubmit={(values) => {
+                  // turn empty to null
+                  Object.keys(values).map((x) => {
+                    if (values[x] === '') {
+                      values[x] = null;
+                    }
+                    return x;
+                  });
+                  
+                  updateProfileRequest({
+                    ...actionProps,
+                    profile: values,
+                  });
+
+                  setEditProfile(false);
+                }}
+                handleValid={(data) => {
+                  setValid(data);
+                }}
+                style={{
+                  width: '52rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                }}
+              >
+                <FormChildren.InputForm
+                  name="profile_name"
+                  label="Name"
+                  required
+                />
+                <FormChildren.InputForm
+                  name="email"
+                  label="Email"
+                  required
+                />
+                <FormChildren.InputForm
+                  type="password"
+                  name="old_password"
+                  label="Old Password"
+                  required
+                />
+                <FormChildren.InputForm
+                  type="password"
+                  name="new_password"
+                  label="New Password"
+                />
+                <div className="w-[100%] flex justify-end gap-[1.2rem] mt-[1.2rem]">
+                  <MUI.Button
+                    type="button"
+                    name="Cancel"
+                    onClick={handleClose}
+                  />
+                  <MUI.Button
+                    type="submit"
+                    name="Save"
+                    disabled={!valid}
+                  />
+                </div>
+              </ValidateForm>
+
+              <MUI.ConfirmDialog
+                modalProps={[openConfirm, setOpenConfirm]}
+                title="Discard change"
+                actionName="discard change"
+                confirmAction={() => {
+                  setOpenConfirm(false);
+                  setEditProfile(false);
+                }}
+              />
+            </Paper>
+          </Modal>
+        </>
+      )}
     </>
   );
 }
@@ -1208,7 +1361,6 @@ function EditDetails({
   profileDescription,
   actionProps,
 }) {
-  const { accessToken, refreshToken, id, dispatch } = actionProps;
   const [openConfirm, setOpenConfirm] = useState(false);
   const ref = useRef(null);
 
@@ -1255,13 +1407,9 @@ function EditDetails({
           innerRef={ref}
           initialValues={descriptions}
           onSubmit={(values) => {
-            var description = values;
             updateDetailRequest({
-              accessToken,
-              refreshToken,
-              description,
-              id,
-              dispatch,
+              description: values,
+              ...actionProps,
             });
 
             modalProps[1](false);

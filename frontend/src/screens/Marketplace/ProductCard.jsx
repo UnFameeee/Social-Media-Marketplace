@@ -92,7 +92,7 @@ function ProductCard({ arrayBtn, productObj, ...props }) {
         <div className="card-price mb-[1rem] flex text-[1.6rem]">
           <span className="text-[#9a6de1] flex-1">Price</span>
           <div className="flex gap-[1rem] font-bold justify-between">
-            <span>{productObj?.price} USD</span>
+            <span>{productObj?.price} VND</span>
           </div>
         </div>
         <div className="btn-product-action">

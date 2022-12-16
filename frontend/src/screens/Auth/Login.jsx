@@ -23,76 +23,64 @@ export default function Login() {
 
   return (
     <>
-      {isLoadingLogin ? (
-        <div
-          style={{
-            height: '100vh',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <CircularProgress
-            style={{
-              width: '6rem',
-              height: '6rem',
-              color: 'var(--primary-color)',
+      <Face happy={valid} left="25%" />
+      <div className="form-wrap">
+        <div style={{ textAlign: 'center' }}>
+          <ValidateForm
+            initialValues={loginModel}
+            validationSchema={loginSchema}
+            onSubmit={(values) => {
+              login(values, dispatch, navigate, from);
             }}
-          />
-        </div>
-      ) : (
-        <>
-          <Face happy={valid} left="25%" />
-          <div className="form-wrap">
-            <div style={{ textAlign: 'center' }}>
-              <ValidateForm
-                initialValues={loginModel}
-                validationSchema={loginSchema}
-                onSubmit={(values) => {
-                  login(values, dispatch, navigate, from);
-                }}
-                handleValid={(data) => {
-                  setValid(data);
-                }}
-              >
-                <h1 className="form-title">Login</h1>
-                <FormChildren.InputForm
-                  name="email"
-                  label="Email"
-                  required
-                  autoComplete="username"
-                />
-                <FormChildren.InputForm
-                  type="password"
-                  name="password"
-                  label="Password"
-                  required
-                  autoComplete="current-password"
-                />
-                <FormChildren.CheckBoxForm
-                  name="remember"
-                  label="Remember Me"
-                  sx={{ textAlign: 'left' }}
-                />
-                <FormChildren.ButtonForm
-                  name="Login"
-                  disabled={!valid}
-                  startIcon={<LoginOutlinedIcon />}
-                />
-                <div className="form-bottom">
-                  You don't have an account yet?{' '}
-                  <Link
-                    className="form-bottom-special"
-                    to="/register"
-                  >
-                    Register now
-                  </Link>
-                </div>
-              </ValidateForm>
+            handleValid={(data) => {
+              setValid(data);
+            }}
+          >
+            <h1 className="form-title">Login</h1>
+            <FormChildren.InputForm
+              name="email"
+              label="Email"
+              required
+              autoComplete="username"
+            />
+            <FormChildren.InputForm
+              type="password"
+              name="password"
+              label="Password"
+              required
+              autoComplete="current-password"
+            />
+            {/* <FormChildren.CheckBoxForm
+              name="remember"
+              label="Remember Me"
+              sx={{ textAlign: 'left' }}
+            /> */}
+            <FormChildren.ButtonForm
+              name="Login"
+              disabled={!valid || isLoadingLogin}
+              startIcon={
+                isLoadingLogin ? (
+                  <CircularProgress
+                    style={{
+                      width: '2.4rem',
+                      height: '2.4rem',
+                      color: 'var(--primary-color)',
+                    }}
+                  />
+                ) : (
+                  <LoginOutlinedIcon />
+                )
+              }
+            />
+            <div className="form-bottom">
+              You don't have an account yet?{' '}
+              <Link className="form-bottom-special" to="/register">
+                Register now
+              </Link>
             </div>
-          </div>
-        </>
-      )}
+          </ValidateForm>
+        </div>
+      </div>
     </>
   );
 }
