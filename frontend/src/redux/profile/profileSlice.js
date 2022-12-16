@@ -25,6 +25,9 @@ const initialState = {
   updateDetail: {
     isFetching: false,
   },
+  updateProfile: {
+    isFetching: false,
+  }
 };
 export const profileSlice = createSlice({
   name: 'profile',
@@ -53,6 +56,9 @@ export const profileSlice = createSlice({
     updateDetail: {
       isFetching: false,
     },
+    updateProfile: {
+      isFetching: false,
+    }
   },
   extraReducers: (builder) =>
     builder.addCase(revertAll, () => initialState),
@@ -130,6 +136,16 @@ export const profileSlice = createSlice({
     updateWallFailed: (state) => {
       state.updateWall.isFetching = false;
     },
+
+    updateProfileStart: (state) => {
+      state.updateProfile.isFetching = true;
+    },
+    updateProfileSagaSuccess: (state) => {
+      state.updateProfile.isFetching = false;
+    },
+    updateProfileFailed: (state) => {
+      state.updateProfile.isFetching = false;
+    },
   },
 });
 
@@ -160,5 +176,9 @@ export const {
   updateDetailStart,
   updateDetailSagaSuccess,
   updateDetailFailed,
+
+  updateProfileStart,
+  updateProfileSagaSuccess,
+  updateProfileFailed,
 } = profileSlice.actions;
 export default profileSlice.reducer;

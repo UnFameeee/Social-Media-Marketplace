@@ -317,7 +317,7 @@ function MarketPlaceLeftBarTab() {
               <div className="card-price mb-[1rem] flex  text-[2.4rem]">
                 <span className="text-[#9a6de1] font-bold flex-1">Price</span>
                 <div className="flex gap-[1rem] font-bold justify-between">
-                  <span>{getProductDetail?.price} USD</span>
+                  <span>{getProductDetail?.price} VND</span>
                 </div>
               </div>
             </>
