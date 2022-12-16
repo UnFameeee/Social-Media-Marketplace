@@ -1,4 +1,8 @@
-import { Button as MuiButton } from '@mui/material';
+import {
+  Button as MuiButton,
+  createTheme,
+  ThemeProvider,
+} from '@mui/material';
 
 export default function Button(props) {
   const {
@@ -12,17 +16,30 @@ export default function Button(props) {
     ...other
   } = props;
 
+  const btnTheme = createTheme({
+    palette: {
+      primary: {
+        main: '#9a6de1',
+      },
+      secondary: {
+        main: '#e5e7eb',
+      },
+    },
+  });
+
   return (
-    <MuiButton
-      variant={variant}
-      size={size}
-      color={color}
-      onClick={onClick}
-      disabled={disabled}
-      {...(pascalCase && { sx: { textTransform: 'none' } })}
-      {...other}
-    >
-      {name || props.children}
-    </MuiButton>
+    <ThemeProvider theme={btnTheme}>
+      <MuiButton
+        variant={variant}
+        size={size}
+        color={color}
+        onClick={onClick}
+        disabled={disabled}
+        {...(pascalCase && { sx: { textTransform: 'none' } })}
+        {...other}
+      >
+        {name || props.children}
+      </MuiButton>
+    </ThemeProvider>
   );
 }

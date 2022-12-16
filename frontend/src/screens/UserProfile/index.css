@@ -96,7 +96,7 @@
   /* color: var(--primary-color); */
 }
 #gridSideButton {
-  color: #216fdb;
+  color: var(--primary-color);
   text-align: center;
   padding: 0.4rem 0.8rem;
 }

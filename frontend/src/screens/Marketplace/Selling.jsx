@@ -254,7 +254,6 @@ function Selling() {
             {productList?.length > 0 ? (
               <>
                 <div className="product-container my-[1rem]">
-                  {}
                   <MUI.ConfirmDialog
                     modalProps={[openConfirmRemove, setOpenConfirmRemove]}
                     title="Remove Selling Product"
