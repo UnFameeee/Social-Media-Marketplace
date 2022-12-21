@@ -54,6 +54,13 @@ npm i react
 https://www.mysql.com
 ```
 
+### Document
+```sh
+https://reactjs.org/docs/getting-started.html
+https://docs.nestjs.com
+https://dev.mysql.com/doc/
+```
+
 ## How to run the project on local machine (Follow the sequence)
 
 ### Back-End
