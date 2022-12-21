@@ -30,35 +30,41 @@ A big thanks for Mrs. Mai Anh Thơ for helping us with this project.
 
 ## Framework and Technology used
 ### Requirement
-- npm version 8.1.2
+- npm version 14.20.0
 ```sh
-npm install -g npm@8.1.2
+npm install -g npm@14.20.0
 ```
-- java SE DEvelopment Kit version 17
+- React version 18.x.x
 ```sh
-- https://www.oracle.com/java/technologies/downloads/#java17
+npm i react
 ```
-- For Backend Code, i used Springboot and IntelliJ IDEA as IDE for programming, you can use Eclipse instead of IntelliJ IDEA
+- NestJS version 9.x.x
 ```sh
-- https://www.jetbrains.com/idea/download/#section=windows
-- https://www.eclipse.org/downloads/
+- npm i @nestjs/core
+```
+- For Backend Code, i used Visual Studio Code as IDE for programming, you can use others IDE instead of Visual Studio Code
+```sh
+- https://code.visualstudio.com
 ```
 - React (Front-End)
-- NEstJS (Back-End)
-- PostgreSQL (Database) 
+- NestJS (Back-End)
+- MySQL (Database) 
 
 ```sh
+https://www.mysql.com
 ```
 
-## How to run the project on local (Follow the sequence)
+## How to run the project on local machine (Follow the sequence)
+
 ### Back-End
-1. Go to .env file change the string connection to database (MongoDB)
-2. Go to the folder api, then type: "yarn start"
-3. The Backend will start on localhost:5000
+1. Go to the folder "backend", then type: "npm install" on the cmd of vscode then enter.
+2. Go to .env file change the connection to database (MySQL)
+3. Then type: "npm run start" on the cmd of vscode then enter.
+4. The Backend will start on localhost:4321
 
 ### Front-End 
-1. Go to folder fe -> src -> helper, open file axios.js and changing this line: const baseURL = "{your backend hosted URL}";. For my project it is: const baseURL = "http://localhost:5000/api";
-2. Go to the folder fe, then type: "npm start"
+1. Go to the folder "frontend", then type: "npm install" on the cmd of vscode then enter.
+2. Then type: "npm run start" on the cmd of vscode then enter.
 3. The Frontend will start on localhost:3000
 
 ## Contribution
