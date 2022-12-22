@@ -20,7 +20,7 @@
 
 ## News-Website
 Social Media Marketplace. Cre: UnFame. <br/>
-This project was created for Specialized Essays of HCMUTE>
+This project was created for Specialized Essays of HCMUTE
 A big thanks for Mrs. Mai Anh Thơ for helping us with this project.
 
 ## Contributors
